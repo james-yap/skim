@@ -275,6 +275,25 @@ static void verticallyScrollToPage(PDFView *pdfView, PDFPage *page) {
     [clipView scrollPoint:bounds.origin];
 }
 
+static void horizontallyScrollToPage(PDFView *pdfView, PDFPage *page) {
+    NSScrollView *scrollView = [pdfView embeddedScrollView];
+    NSRect pageRect = [pdfView convertRect:[page boundsForBox:[pdfView displayBox]] fromPage:page];
+    CGFloat midX = NSMidX([pdfView bounds]);
+    if (NSMinX(pageRect) <= midX && NSMaxX(pageRect) >= midX)
+        return;
+    NSClipView *clipView = [scrollView contentView];
+    NSRect bounds = [clipView bounds];
+    NSRect docRect = [[scrollView documentView] frame];
+    if (NSWidth(bounds) >= NSWidth(docRect))
+        return;
+    CGFloat margin = 0.0;
+    if ([pdfView displaysPageBreaks])
+        margin = [pdfView pageBreakMargins].left;
+    pageRect = [pdfView convertRect:pageRect toView:clipView];
+    bounds.origin.x = fmin(NSMinX(pageRect) - margin, NSMaxX(docRect) - NSWidth(bounds));
+    [clipView scrollPoint:bounds.origin];
+}
+
 static void verticallyScrollToTop(PDFView *pdfView) {
     NSScrollView *scrollView = [pdfView embeddedScrollView];
     NSClipView *clipView = [scrollView contentView];
@@ -372,6 +391,8 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
         [self goToPage:page];
         if (hasVerticalLayout(self))
             verticallyScrollToPage(self, page);
+        if (([self displayMode] & kPDFDisplayTwoUp) != 0)
+            horizontallyScrollToPage(self, page);
    }
 }
 
