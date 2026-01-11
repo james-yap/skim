@@ -1532,7 +1532,7 @@ enum {
 }
 
 - (void)doInitialRewind {
-    if (rewindPage && ([self isPageAtIndexDisplayed:[rewindPage pageIndex]] == NO || NSPointInRect(SKCenterPoint([self bounds]), [self convertRect:[rewindPage boundsForBox:[self displayBox]] fromPage:rewindPage]) == NO))
+    if (rewindPage && [self pageForPoint:SKCenterPoint([self bounds]) nearest:NO] != rewindPage)
         [self doRewind];
 }
 
