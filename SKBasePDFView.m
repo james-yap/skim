@@ -320,10 +320,11 @@ static inline NSArray *defaultKeysToObserve() {
         [self horizontallyGoToPage:[doc pageAtIndex:[doc indexForPage:[self currentPage]] - 1]];
     } else {
         PDFDocument *doc = [self document];
-        NSInteger i = [doc indexForPage:[self currentPage]];
-        i -= (displayMode == kPDFDisplayTwoUpContinuous && (i > 1 || [self displaysAsBook] == NO)) ? 2 : 1;
+        NSUInteger i = [doc indexForPage:[self currentPage]];
+        if (displayMode == kPDFDisplayTwoUpContinuous && (i > 1 || [self displaysAsBook] == NO))
+            --i;
         [super goToPreviousPage:sender];
-        if (i >= 0)
+        if (i-- > 0)
             [self scrollToPage:[doc pageAtIndex:i] mode:kPDFDisplaySinglePageContinuous];
     }
 }
@@ -338,9 +339,10 @@ static inline NSArray *defaultKeysToObserve() {
     } else {
         PDFDocument *doc = [self document];
         NSUInteger i = [doc indexForPage:[self currentPage]];
-        i += (displayMode == kPDFDisplayTwoUpContinuous && (i > 0 || [self displaysAsBook] == NO) && i + 2 < [doc pageCount]) ? 2 : 1;
+        if (displayMode == kPDFDisplayTwoUpContinuous && (i > 0 || [self displaysAsBook] == NO) && i + 2 < [doc pageCount])
+            ++i;
         [super goToNextPage:sender];
-        if (i  < [doc pageCount])
+        if (++i  < [doc pageCount])
             [self scrollToPage:[doc pageAtIndex:i] mode:kPDFDisplaySinglePageContinuous];
     }
 }
