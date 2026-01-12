@@ -251,27 +251,41 @@ static void horizontallyGoToPage(PDFView *pdfView, PDFPage *page) {
     [clipView scrollPoint:bounds.origin];
 }
 
-static void verticallyScrollToPage(PDFView *pdfView, PDFPage *page) {
+static void verticallyScrollToPage(PDFView *pdfView, PDFPage *page, BOOL scrollHorizontally) {
     NSScrollView *scrollView = [pdfView embeddedScrollView];
     NSRect pageRect = [pdfView convertRect:[page boundsForBox:[pdfView displayBox]] fromPage:page];
-    CGFloat midY = NSMidY([pdfView bounds]);
-    if (NSMinY(pageRect) <= midY - 0.5 * [scrollView contentInsets].top && NSMaxY(pageRect) >= midY)
+    NSPoint center = SKCenterPoint([pdfView bounds]);
+    BOOL scrollVertically = (NSMinY(pageRect) > center.y - 0.5 * [scrollView contentInsets].top || NSMaxY(pageRect) < center.y);
+    scrollHorizontally = scrollHorizontally && (NSMinX(pageRect) > center.x || NSMaxX(pageRect) < center.x);
+    if (scrollHorizontally == NO && scrollHorizontally == NO)
         return;
     NSClipView *clipView = [scrollView contentView];
     NSRect bounds = [clipView bounds];
     NSRect docRect = [[scrollView documentView] frame];
     CGFloat margin = 0.0;
-    CGFloat inset = [clipView contentInsets].top;
-    CGFloat scrollerWidth = 0.0;
-    if ([pdfView displaysPageBreaks])
-        margin = [pdfView pageBreakMargins].top;
-    if ([scrollView hasHorizontalScroller] && [scrollView scrollerStyle] == NSScrollerStyleLegacy)
-        scrollerWidth = [pdfView convertSize:NSMakeSize(0.0, [NSScroller effectiveScrollerWidth]) toView:clipView].height;
-    pageRect = [pdfView convertRect:pageRect toView:clipView];
-    if ([clipView isFlipped])
-        bounds.origin.y = fmin(fmax(fmin(NSMaxY(pageRect) - 0.5 * (NSHeight(bounds) + fmax(scrollerWidth, inset)), NSMinY(pageRect) - margin - inset), NSMinY(docRect) - inset), NSMaxY(docRect) - NSHeight(bounds));
-    else
-        bounds.origin.y = fmax(fmin(fmax(NSMinY(pageRect) - 0.5 * (NSHeight(bounds) - fmax(scrollerWidth, inset)), NSMaxY(pageRect) + margin - NSHeight(bounds) + inset), NSMaxY(docRect) - NSHeight(bounds) + inset), NSMinY(docRect));
+    if (scrollHorizontally && NSWidth(bounds) >= NSWidth(docRect)) {
+        scrollHorizontally = NO;
+        if (scrollVertically == NO)
+            return;
+    }
+    if (scrollVertically) {
+        CGFloat inset = [clipView contentInsets].top;
+        CGFloat scrollerWidth = 0.0;
+        if ([pdfView displaysPageBreaks])
+            margin = [pdfView pageBreakMargins].top;
+        if ([scrollView hasHorizontalScroller] && [scrollView scrollerStyle] == NSScrollerStyleLegacy)
+            scrollerWidth = [pdfView convertSize:NSMakeSize(0.0, [NSScroller effectiveScrollerWidth]) toView:clipView].height;
+        pageRect = [pdfView convertRect:pageRect toView:clipView];
+        if ([clipView isFlipped])
+            bounds.origin.y = fmin(fmax(fmin(NSMaxY(pageRect) - 0.5 * (NSHeight(bounds) + fmax(scrollerWidth, inset)), NSMinY(pageRect) - margin - inset), NSMinY(docRect) - inset), NSMaxY(docRect) - NSHeight(bounds));
+        else
+            bounds.origin.y = fmax(fmin(fmax(NSMinY(pageRect) - 0.5 * (NSHeight(bounds) - fmax(scrollerWidth, inset)), NSMaxY(pageRect) + margin - NSHeight(bounds) + inset), NSMaxY(docRect) - NSHeight(bounds) + inset), NSMinY(docRect));
+    }
+    if (scrollHorizontally) {
+        if ([pdfView displaysPageBreaks])
+            margin = [pdfView pageBreakMargins].left;
+        bounds.origin.x = fmin(NSMinX(pageRect) - margin, NSMaxX(docRect) - NSWidth(bounds));
+    }
     [clipView scrollPoint:bounds.origin];
 }
 
@@ -339,7 +353,7 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
         }
         [super goToPreviousPage:sender];
         if (page)
-            verticallyScrollToPage(self, page);
+            verticallyScrollToPage(self, page, NO);
     }
 }
 
@@ -360,7 +374,7 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
         }
         [super goToNextPage:sender];
         if (page)
-            verticallyScrollToPage(self, page);
+            verticallyScrollToPage(self, page, NO);
     }
 }
 
@@ -390,8 +404,8 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
     } else {
         [self goToPage:page];
         if (hasVerticalLayout(self))
-            verticallyScrollToPage(self, page);
-        if (([self displayMode] & kPDFDisplayTwoUp) != 0)
+            verticallyScrollToPage(self, page, [self displayMode] == kPDFDisplayTwoUpContinuous);
+        else if ([self displayMode] == kPDFDisplayTwoUp)
             horizontallyScrollToPage(self, page);
    }
 }
@@ -408,7 +422,7 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
             dest.point.y -= NSHeight([clipView bounds]) - [clipView contentInsets].top;
         [clipView scrollPoint:dest.point];
     } else if (hasVerticalLayout(self)) {
-        verticallyScrollToPage(self, page);
+        verticallyScrollToPage(self, page, NO);
     }
 }
 
