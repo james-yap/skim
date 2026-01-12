@@ -225,14 +225,6 @@ static inline NSArray *defaultKeysToObserve() {
     }
 }
 
-static inline BOOL hasHorizontalLayout(PDFView *pdfView) {
-    return [pdfView displayDirection] == kPDFDisplayDirectionHorizontal && [pdfView displayMode] == kPDFDisplaySinglePageContinuous;
-}
-
-static inline BOOL hasVerticalLayout(PDFView *pdfView) {
-    return [pdfView displayDirection] == kPDFDisplayDirectionVertical && ([pdfView displayMode] & kPDFDisplaySinglePageContinuous);
-}
-
 - (void)horizontallyGoToPage:(PDFPage *)page {
     if (page == [self currentPage])
         return;
@@ -255,8 +247,8 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     NSScrollView *scrollView = [self embeddedScrollView];
     NSRect pageRect = [self convertRect:[page boundsForBox:[self displayBox]] fromPage:page];
     NSPoint center = SKCenterPoint([self bounds]);
-    BOOL vertically = (mode & kPDFDisplaySinglePageContinuous) != 0 && (NSMinY(pageRect) > center.y - 0.5 * [scrollView contentInsets].top || NSMaxY(pageRect) < center.y);
-    BOOL horizontally = (mode & kPDFDisplayTwoUp) != 0 && (NSMinX(pageRect) > center.x || NSMaxX(pageRect) < center.x);
+    BOOL vertically = (mode & kPDFDisplaySinglePageContinuous) && (NSMinY(pageRect) > center.y - 0.5 * [scrollView contentInsets].top || NSMaxY(pageRect) < center.y);
+    BOOL horizontally = (mode & kPDFDisplayTwoUp) && (NSMinX(pageRect) > center.x || NSMaxX(pageRect) < center.x);
     if (vertically == NO && horizontally == NO)
         return;
     NSClipView *clipView = [scrollView contentView];
@@ -289,8 +281,8 @@ static inline BOOL hasVerticalLayout(PDFView *pdfView) {
     [clipView scrollPoint:bounds.origin];
 }
 
-static void verticallyScrollToTop(PDFView *pdfView) {
-    NSScrollView *scrollView = [pdfView embeddedScrollView];
+- (void)verticallyScrollToTop {
+    NSScrollView *scrollView = [self embeddedScrollView];
     NSClipView *clipView = [scrollView contentView];
     NSRect bounds = [clipView bounds];
     CGFloat inset = [clipView contentInsets].top;
@@ -304,8 +296,8 @@ static void verticallyScrollToTop(PDFView *pdfView) {
     [clipView scrollPoint:bounds.origin];
 }
 
-static void verticallyScrollToBottom(PDFView *pdfView) {
-    NSScrollView *scrollView = [pdfView embeddedScrollView];
+- (void)verticallyScrollToBottom {
+    NSScrollView *scrollView = [self embeddedScrollView];
     NSClipView *clipView = [scrollView contentView];
     NSRect bounds = [clipView bounds];
     CGFloat inset = [clipView contentInsets].top;
@@ -320,15 +312,20 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
 }
 
 - (void)goToPreviousPage:(id)sender {
-    if (hasHorizontalLayout(self) && [self canGoToPreviousPage]) {
-        PDFDocument *doc = [self document];
-        PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] - 1];
-        [self horizontallyGoToPage:page];
+    PDFDisplayMode displayMode = [self displayMode];
+    if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
+        if ([self canGoToPreviousPage]) {
+            PDFDocument *doc = [self document];
+            PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] - 1];
+            [self horizontallyGoToPage:page];
+        } else {
+            [super goToPreviousPage:sender];
+        }
     } else {
         PDFPage *page = nil;
-        if (hasVerticalLayout(self)) {
+        if ((displayMode & kPDFDisplaySinglePageContinuous)) {
             NSUInteger i = [[self currentPage] pageIndex];
-            NSUInteger di = ([self displayMode] == kPDFDisplayTwoUpContinuous && (i > 1 || [self displaysAsBook] == NO)) ? 2 : 1;
+            NSUInteger di = (displayMode == kPDFDisplayTwoUpContinuous && (i > 1 || [self displaysAsBook] == NO)) ? 2 : 1;
             if (i >= di)
                 page = [[self document] pageAtIndex:i - di];
         }
@@ -339,15 +336,20 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
 }
 
 - (void)goToNextPage:(id)sender {
-    if (hasHorizontalLayout(self) && [self canGoToNextPage]) {
-        PDFDocument *doc = [self document];
-        PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] + 1];
-        [self horizontallyGoToPage:page];
+    PDFDisplayMode displayMode = [self displayMode];
+    if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
+        if ([self canGoToNextPage]) {
+            PDFDocument *doc = [self document];
+            PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] + 1];
+            [self horizontallyGoToPage:page];
+        } else {
+            [super goToNextPage:sender];
+        }
     } else {
         PDFPage *page = nil;
-        if (hasVerticalLayout(self)) {
+        if ((displayMode & kPDFDisplaySinglePageContinuous)) {
             NSUInteger i = [[self currentPage] pageIndex];
-            NSUInteger di = ([self displayMode] == kPDFDisplayTwoUpContinuous && (i > 0 || [self displaysAsBook] == NO)) ? 2 : 1;
+            NSUInteger di = (displayMode == kPDFDisplayTwoUpContinuous && (i > 0 || [self displaysAsBook] == NO)) ? 2 : 1;
             if (i + di  < [[self document] pageCount])
                 page = [[self document] pageAtIndex:i + di];
             else if (di == 2 && i + 1  < [[self document] pageCount])
@@ -360,7 +362,8 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
 }
 
 - (void)goToFirstPage:(id)sender {
-    if (hasHorizontalLayout(self) && [self canGoToFirstPage]) {
+    PDFDisplayMode displayMode = [self displayMode];
+    if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection] && [self canGoToFirstPage]) {
         PDFDocument *doc = [self document];
         PDFPage *page = [doc pageAtIndex:0];
         [self horizontallyGoToPage:page];
@@ -370,7 +373,8 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
 }
 
 - (void)goToLastPage:(id)sender {
-    if (hasHorizontalLayout(self) && [self canGoToLastPage]) {
+    PDFDisplayMode displayMode = [self displayMode];
+    if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection] && [self canGoToLastPage]) {
         PDFDocument *doc = [self document];
         PDFPage *page = [doc pageAtIndex:[doc pageCount] - 1];
         [self horizontallyGoToPage:page];
@@ -380,11 +384,11 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
 }
 
 - (void)goAndScrollToPage:(PDFPage *)page {
-    if (hasHorizontalLayout(self)) {
+    PDFDisplayMode displayMode = [self displayMode];
+    if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
         [self horizontallyGoToPage:page];
     } else {
         [self goToPage:page];
-        PDFDisplayMode displayMode = [self displayMode];
         if (displayMode != kPDFDisplaySinglePage)
             [self scrollToPage:page mode:displayMode];
    }
@@ -401,7 +405,7 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
         else
             dest.point.y -= NSHeight([clipView bounds]) - [clipView contentInsets].top;
         [clipView scrollPoint:dest.point];
-    } else if (hasVerticalLayout(self)) {
+    } else if ([self displayDirection] == kPDFDisplayDirectionVertical && ([self displayMode] & kPDFDisplaySinglePageContinuous)) {
         [self scrollToPage:page mode:kPDFDisplaySinglePageContinuous];
     }
 }
@@ -434,16 +438,17 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
     NSClipView *clipView = nil;
     NSRect bounds = NSZeroRect;
     NSUInteger pageIndex = NSNotFound;
+    PDFDisplayMode displayMode = [self displayMode];
     
-    if (([self displayMode] & kPDFDisplaySinglePageContinuous) == 0) {
+    if ((displayMode & kPDFDisplaySinglePageContinuous) == 0) {
         // Apple scrolls to the bottom of the next page rather than the top
         pageIndex = [[self currentPage] pageIndex];
-    } else if (hasVerticalLayout(self)) {
+    } else if (displayMode == kPDFDisplayTwoUpContinuous || [self displayDirection] == kPDFDisplayDirectionVertical) {
         // Apple scrolls by too much, so correct for it
         scrollView = [self embeddedScrollView];
         clipView = [scrollView contentView];
         bounds = [clipView bounds];
-    } else if (hasHorizontalLayout(self) && (keyDirection == -1 ? [self canGoToPreviousPage] : keyDirection == 1 ? [self canGoToNextPage] : NO)) {
+    } else if ((keyDirection == -1 ? [self canGoToPreviousPage] : keyDirection == 1 ? [self canGoToNextPage] : NO)) {
         clipView = [[self embeddedScrollView] contentView];
         bounds = [clipView bounds];
     }
@@ -471,16 +476,16 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
         // check whether we jumped pages
         NSUInteger currentPageIndex = [[self currentPage] pageIndex];
         if (currentPageIndex > pageIndex)
-            verticallyScrollToTop(self);
+            [self verticallyScrollToTop];
         else if (currentPageIndex < pageIndex)
-            verticallyScrollToBottom(self);
+            [self verticallyScrollToBottom];
     } else if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
         if (keyDirection == -1) {
             [self goToPreviousPage:sender];
-            verticallyScrollToBottom(self);
+            [self verticallyScrollToBottom];
         } else {
             [self goToNextPage:sender];
-            verticallyScrollToTop(self);
+            [self verticallyScrollToTop];
         }
     }
 }
@@ -490,16 +495,17 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
     NSClipView *clipView = nil;
     NSRect bounds = NSZeroRect;
     NSUInteger pageIndex = NSNotFound;
+    PDFDisplayMode displayMode = [self displayMode];
     
-    if (([self displayMode] & kPDFDisplaySinglePageContinuous) == 0) {
+    if ((displayMode & kPDFDisplaySinglePageContinuous) == 0) {
         // Apple scrolls to the top of the next page rather than the bottom
         pageIndex = [[self currentPage] pageIndex];
-    } else if (hasVerticalLayout(self)) {
+    } else if (displayMode == kPDFDisplayTwoUpContinuous || [self displayDirection] == kPDFDisplayDirectionVertical) {
         // Apple scrolls by too much, so correct for it
         scrollView = [self embeddedScrollView];
         clipView = [scrollView contentView];
         bounds = [clipView bounds];
-    } else if (hasHorizontalLayout(self) && (keyDirection == 1 ? [self canGoToNextPage] : keyDirection == -1 ? [self canGoToPreviousPage] : NO)) {
+    } else if ((keyDirection == 1 ? [self canGoToNextPage] : keyDirection == -1 ? [self canGoToPreviousPage] : NO)) {
         clipView = [[self embeddedScrollView] contentView];
         bounds = [clipView bounds];
     }
@@ -527,16 +533,16 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
         // check whether we jumped pages
         NSUInteger currentPageIndex = [[self currentPage] pageIndex];
         if (currentPageIndex < pageIndex)
-            verticallyScrollToBottom(self);
+            [self verticallyScrollToBottom];
         else if (currentPageIndex > pageIndex)
-            verticallyScrollToTop(self);
+            [self verticallyScrollToTop];
     } else if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
         if (keyDirection == 1) {
             [self goToNextPage:sender];
-            verticallyScrollToTop(self);
+            [self verticallyScrollToTop];
         } else {
             [self goToPreviousPage:sender];
-            verticallyScrollToBottom(self);
+            [self verticallyScrollToBottom];
         }
     }
 }
@@ -551,9 +557,9 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
         // check whether we jumped pages
         NSUInteger currentPageIndex = [[self currentPage] pageIndex];
         if (currentPageIndex > pageIndex)
-            verticallyScrollToTop(self);
+            [self verticallyScrollToTop];
         else if (currentPageIndex < pageIndex)
-            verticallyScrollToBottom(self);
+            [self verticallyScrollToBottom];
     }
 }
 
@@ -567,9 +573,9 @@ static void verticallyScrollToBottom(PDFView *pdfView) {
         // check whether we jumped pages
         NSUInteger currentPageIndex = [[self currentPage] pageIndex];
         if (currentPageIndex < pageIndex)
-            verticallyScrollToBottom(self);
+            [self verticallyScrollToBottom];
         else if (currentPageIndex > pageIndex)
-            verticallyScrollToTop(self);
+            [self verticallyScrollToTop];
     }
 }
 
