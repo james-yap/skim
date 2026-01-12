@@ -313,22 +313,18 @@ static inline NSArray *defaultKeysToObserve() {
 
 - (void)goToPreviousPage:(id)sender {
     PDFDisplayMode displayMode = [self displayMode];
-    if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
-        if ([self canGoToPreviousPage]) {
-            PDFDocument *doc = [self document];
-            PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] - 1];
-            [self horizontallyGoToPage:page];
-        } else {
-            [super goToPreviousPage:sender];
-        }
+    if ((displayMode & kPDFDisplaySinglePageContinuous) == 0 || [self canGoToPreviousPage] == NO) {
+        [super goToPreviousPage:sender];
+    } else if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
+        PDFDocument *doc = [self document];
+        PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] - 1];
+        [self horizontallyGoToPage:page];
     } else {
         PDFPage *page = nil;
-        if ((displayMode & kPDFDisplaySinglePageContinuous)) {
-            NSUInteger i = [[self currentPage] pageIndex];
-            NSUInteger di = (displayMode == kPDFDisplayTwoUpContinuous && (i > 1 || [self displaysAsBook] == NO)) ? 2 : 1;
-            if (i >= di)
-                page = [[self document] pageAtIndex:i - di];
-        }
+        NSUInteger i = [[self currentPage] pageIndex];
+        NSUInteger di = (displayMode == kPDFDisplayTwoUpContinuous && (i > 1 || [self displaysAsBook] == NO)) ? 2 : 1;
+        if (i >= di)
+            page = [[self document] pageAtIndex:i - di];
         [super goToPreviousPage:sender];
         if (page)
             [self scrollToPage:page mode:kPDFDisplaySinglePageContinuous];
@@ -337,24 +333,20 @@ static inline NSArray *defaultKeysToObserve() {
 
 - (void)goToNextPage:(id)sender {
     PDFDisplayMode displayMode = [self displayMode];
-    if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
-        if ([self canGoToNextPage]) {
-            PDFDocument *doc = [self document];
-            PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] + 1];
-            [self horizontallyGoToPage:page];
-        } else {
-            [super goToNextPage:sender];
-        }
+    if ((displayMode & kPDFDisplaySinglePageContinuous) == 0 || [self canGoToNextPage] == NO) {
+        [super goToNextPage:sender];
+    } else if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
+        PDFDocument *doc = [self document];
+        PDFPage *page = [doc pageAtIndex:[doc indexForPage:[self currentPage]] + 1];
+        [self horizontallyGoToPage:page];
     } else {
         PDFPage *page = nil;
-        if ((displayMode & kPDFDisplaySinglePageContinuous)) {
-            NSUInteger i = [[self currentPage] pageIndex];
-            NSUInteger di = (displayMode == kPDFDisplayTwoUpContinuous && (i > 0 || [self displaysAsBook] == NO)) ? 2 : 1;
-            if (i + di  < [[self document] pageCount])
-                page = [[self document] pageAtIndex:i + di];
-            else if (di == 2 && i + 1  < [[self document] pageCount])
-                page = [[self document] pageAtIndex:i + 1];
-        }
+        NSUInteger i = [[self currentPage] pageIndex];
+        NSUInteger di = (displayMode == kPDFDisplayTwoUpContinuous && (i > 0 || [self displaysAsBook] == NO)) ? 2 : 1;
+        if (i + di  < [[self document] pageCount])
+            page = [[self document] pageAtIndex:i + di];
+        else if (di == 2 && i + 1  < [[self document] pageCount])
+            page = [[self document] pageAtIndex:i + 1];
         [super goToNextPage:sender];
         if (page)
             [self scrollToPage:page mode:kPDFDisplaySinglePageContinuous];
