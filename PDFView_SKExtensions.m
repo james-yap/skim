@@ -149,9 +149,11 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
         
         // convert takes flipping and scaling into account
         NSPoint	newLocation = [clipView convertPoint:[theEvent locationInWindow] fromView:nil];
-        NSPoint	point = SKAddPoints([clipView bounds].origin, SKSubstractPoints(startLocation, newLocation));
+        NSRect bounds = [clipView bounds];
+        bounds.origin = SKAddPoints(bounds.origin, SKSubstractPoints(startLocation, newLocation));
+        bounds = [clipView constrainBoundsRect:bounds];
         
-        [clipView scrollToPoint:point];
+        [clipView scrollToPoint:bounds.origin];
         [scrollView reflectScrolledClipView:clipView];
 	}
     
