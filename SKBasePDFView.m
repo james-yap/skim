@@ -394,8 +394,10 @@ static inline NSArray *defaultKeysToObserve() {
         else
             bounds.origin.y -= NSHeight(bounds) - [clipView contentInsets].top;
         bounds = [clipView constrainBoundsRect:bounds];
-        [clipView scrollToPoint:bounds.origin];
-        [scrollView reflectScrolledClipView:clipView];
+        if (NSEqualPoints(bounds.origin, origin) == NO) {
+            [clipView scrollToPoint:bounds.origin];
+            [scrollView reflectScrolledClipView:clipView];
+        }
     } else if ([self displayDirection] == kPDFDisplayDirectionVertical && ([self displayMode] & kPDFDisplaySinglePageContinuous)) {
         [self scrollToPage:page mode:kPDFDisplaySinglePageContinuous];
     }
