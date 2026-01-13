@@ -387,12 +387,14 @@ static inline NSArray *defaultKeysToObserve() {
     if (NSEqualPoints(dest.point, SKUnspecifiedPoint) == NO) {
         NSScrollView *scrollView = [self embeddedScrollView];
         NSClipView *clipView = [scrollView contentView];
-        dest.point = [self convertPoint:[self convertPoint:dest.point fromPage:page] toView:clipView];
+        NSRect bounds = [clipView bounds];
+        bounds.origin = [self convertPoint:[self convertPoint:dest.point fromPage:page] toView:clipView];
         if ([clipView isFlipped])
-            dest.point.y -= [clipView contentInsets].top;
+            bounds.origin.y -= [clipView contentInsets].top;
         else
-            dest.point.y -= NSHeight([clipView bounds]) - [clipView contentInsets].top;
-        [clipView scrollToPoint:dest.point];
+            bounds.origin.y -= NSHeight([clipView bounds]) - [clipView contentInsets].top;
+        bounds = [clipView constrainBoundsRect:bounds];
+        [clipView scrollToPoint:bounds.origin];
         [scrollView reflectScrolledClipView:clipView];
     } else if ([self displayDirection] == kPDFDisplayDirectionVertical && ([self displayMode] & kPDFDisplaySinglePageContinuous)) {
         [self scrollToPage:page mode:kPDFDisplaySinglePageContinuous];
