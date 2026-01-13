@@ -388,6 +388,7 @@ static inline NSArray *defaultKeysToObserve() {
         NSScrollView *scrollView = [self embeddedScrollView];
         NSClipView *clipView = [scrollView contentView];
         NSRect bounds = [clipView bounds];
+        NSPoint origin = bounds.origin;
         bounds.origin = [self convertPoint:[self convertPoint:dest.point fromPage:page] toView:clipView];
         if ([clipView isFlipped])
             bounds.origin.y -= [clipView contentInsets].top;
