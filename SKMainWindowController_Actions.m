@@ -1135,9 +1135,11 @@
             page = [pdfView pageForPoint:point nearest:YES];
             [secondaryPdfView goToPage:page];
             [secondaryPdfView layoutDocumentView];
-            NSClipView *clipView = [[secondaryPdfView embeddedScrollView] contentView];
+            NSScrollView *scrollView = [secondaryPdfView embeddedScrollView];
+            NSClipView *clipView = [scrollView contentView];
             point = [secondaryPdfView convertPoint:[secondaryPdfView convertPoint:[pdfView convertPoint:point toPage:page] fromPage:page] toView:clipView];
-            [clipView scrollPoint:point];
+            [clipView scrollToPoint:point];
+            [scrollView reflectScrolledClipView:clipView];
             [secondaryPdfView resetHistory];
             
         } else {

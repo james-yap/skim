@@ -135,8 +135,9 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 }
 
 - (void)doDragContentWithEvent:(NSEvent *)theEvent {
-    NSView *contentView = [[self embeddedScrollView] contentView];
-    NSPoint startLocation = [contentView convertPoint:[theEvent locationInWindow] fromView:nil];
+    NSScrollView *scrollView = [self embeddedScrollView];
+    NSClipView *clipView = [scrollView contentView];
+    NSPoint startLocation = [clipView convertPoint:[theEvent locationInWindow] fromView:nil];
 	
     [[NSCursor closedHandCursor] push];
     
@@ -147,10 +148,11 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
             break;
         
         // convert takes flipping and scaling into account
-        NSPoint	newLocation = [contentView convertPoint:[theEvent locationInWindow] fromView:nil];
-        NSPoint	point = SKAddPoints([contentView bounds].origin, SKSubstractPoints(startLocation, newLocation));
+        NSPoint	newLocation = [clipView convertPoint:[theEvent locationInWindow] fromView:nil];
+        NSPoint	point = SKAddPoints([clipView bounds].origin, SKSubstractPoints(startLocation, newLocation));
         
-        [contentView scrollPoint:point];
+        [clipView scrollToPoint:point];
+        [scrollView reflectScrolledClipView:clipView];
 	}
     
     [NSCursor pop];
@@ -220,7 +222,8 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
             dest.point = [self convertPoint:[self convertPoint:dest.point fromPage:page] toView:clipView];
             if ([clipView isFlipped] == NO)
                 dest.point.y -= NSHeight([clipView visibleRect]) - [clipView contentInsets].top;
-            [clipView scrollPoint:dest.point];
+            [clipView scrollToPoint:dest.point];
+            [scrollView reflectScrolledClipView:clipView];
         }
     }
 }

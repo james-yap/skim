@@ -1027,7 +1027,8 @@ enum {
             bounds.origin.y = NSMinY(docRect);
     }
     if (NSEqualPoints(bounds.origin, currentOrigin) == NO) {
-        [clipView scrollPoint:bounds.origin];
+        [clipView scrollToPoint:bounds.origin];
+        [scrollView reflectScrolledClipView:clipView];
     }
 }
 
@@ -1527,7 +1528,8 @@ enum {
             else
                 bounds.origin.y = fmax(fmin(fmax(NSMidY(pageRect) - 0.5 * (NSHeight(bounds) - inset), NSMaxY(pageRect) + margin - NSHeight(bounds) + inset), NSMaxY(docRect) - NSHeight(bounds) + inset), NSMinY(docRect));
         }
-        [clipView scrollPoint:bounds.origin];
+        [clipView scrollToPoint:bounds.origin];
+        [scrollView reflectScrolledClipView:clipView];
     }
 }
 

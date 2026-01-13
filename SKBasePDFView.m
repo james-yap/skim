@@ -240,7 +240,8 @@ static inline NSArray *defaultKeysToObserve() {
         margin = [self pageBreakMargins].left;
     bounds.origin.x = fmin(fmax(fmin(NSMidX(pageBounds) - 0.5 * NSWidth(bounds), NSMinX(pageBounds) - margin), NSMinX(docRect)), NSMaxX(docRect) - NSWidth(bounds));
     [self goToPage:page];
-    [clipView scrollPoint:bounds.origin];
+    [clipView scrollToPoint:bounds.origin];
+    [scrollView reflectScrolledClipView:clipView];
 }
 
 - (void)scrollToPage:(PDFPage *)page mode:(PDFDisplayMode)mode {
@@ -278,7 +279,8 @@ static inline NSArray *defaultKeysToObserve() {
             margin = [self pageBreakMargins].left;
         bounds.origin.x = fmin(NSMinX(pageRect) - margin, NSMaxX(docRect) - NSWidth(bounds));
     }
-    [clipView scrollPoint:bounds.origin];
+    [clipView scrollToPoint:bounds.origin];
+    [scrollView reflectScrolledClipView:clipView];
 }
 
 - (void)verticallyScrollToTop {
@@ -293,7 +295,8 @@ static inline NSArray *defaultKeysToObserve() {
         bounds.origin.y = NSMinY(docRect) - inset;
     else
         bounds.origin.y = NSMaxY(docRect) - NSHeight(bounds) + inset;
-    [clipView scrollPoint:bounds.origin];
+    [clipView scrollToPoint:bounds.origin];
+    [scrollView reflectScrolledClipView:clipView];
 }
 
 - (void)verticallyScrollToBottom {
@@ -308,7 +311,8 @@ static inline NSArray *defaultKeysToObserve() {
         bounds.origin.y = NSMaxY(docRect) - NSHeight(bounds);
     else
         bounds.origin.y = NSMinY(docRect);
-    [clipView scrollPoint:bounds.origin];
+    [clipView scrollToPoint:bounds.origin];
+    [scrollView reflectScrolledClipView:clipView];
 }
 
 - (void)goToPreviousPage:(id)sender {
@@ -388,7 +392,8 @@ static inline NSArray *defaultKeysToObserve() {
             dest.point.y -= [clipView contentInsets].top;
         else
             dest.point.y -= NSHeight([clipView bounds]) - [clipView contentInsets].top;
-        [clipView scrollPoint:dest.point];
+        [clipView scrollToPoint:dest.point];
+        [scrollView reflectScrolledClipView:clipView];
     } else if ([self displayDirection] == kPDFDisplayDirectionVertical && ([self displayMode] & kPDFDisplaySinglePageContinuous)) {
         [self scrollToPage:page mode:kPDFDisplaySinglePageContinuous];
     }
@@ -455,7 +460,8 @@ static inline NSArray *defaultKeysToObserve() {
             bounds.origin.y = fmin(NSMaxY([[scrollView documentView] frame]) - height - inset, NSMinY(bounds) + offset);
         else
             return;
-        [clipView scrollPoint:bounds.origin];
+        [clipView scrollToPoint:bounds.origin];
+        [scrollView reflectScrolledClipView:clipView];
     } else if (pageIndex != NSNotFound) {
         // check whether we jumped pages
         NSUInteger currentPageIndex = [[self currentPage] pageIndex];
@@ -512,7 +518,8 @@ static inline NSArray *defaultKeysToObserve() {
             bounds.origin.y = fmax(NSMinY([[scrollView documentView] frame]) - inset, NSMinY(bounds) - offset);
         else
             return;
-        [clipView scrollPoint:bounds.origin];
+        [clipView scrollToPoint:bounds.origin];
+        [scrollView reflectScrolledClipView:clipView];
     } else if (pageIndex != NSNotFound) {
         // check whether we jumped pages
         NSUInteger currentPageIndex = [[self currentPage] pageIndex];
