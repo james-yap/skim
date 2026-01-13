@@ -222,7 +222,9 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
             NSRect bounds = [clipView bounds];
             NSPoint origin = bounds.origin;
             bounds.origin = [self convertPoint:[self convertPoint:dest.point fromPage:page] toView:clipView];
-            if ([clipView isFlipped] == NO)
+            if ([clipView isFlipped])
+                bounds.origin.y -= [clipView contentInsets].top;
+            else
                 bounds.origin.y -= NSHeight(bounds) - [clipView contentInsets].top;
             bounds = [clipView constrainBoundsRect:bounds];
             if (NSEqualPoints(bounds.origin, origin) == NO) {
