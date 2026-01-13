@@ -392,7 +392,7 @@ static inline NSArray *defaultKeysToObserve() {
         if ([clipView isFlipped])
             bounds.origin.y -= [clipView contentInsets].top;
         else
-            bounds.origin.y -= NSHeight([clipView bounds]) - [clipView contentInsets].top;
+            bounds.origin.y -= NSHeight(bounds) - [clipView contentInsets].top;
         bounds = [clipView constrainBoundsRect:bounds];
         [clipView scrollToPoint:bounds.origin];
         [scrollView reflectScrolledClipView:clipView];
