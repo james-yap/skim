@@ -219,10 +219,12 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
         if (@available(macOS 12.0, *)) {
             NSScrollView *scrollView = [self embeddedScrollView];
             NSClipView *clipView = [scrollView contentView];
-            dest.point = [self convertPoint:[self convertPoint:dest.point fromPage:page] toView:clipView];
+            NSRect bounds = [clipView bounds];
+            bounds.origin = [self convertPoint:[self convertPoint:dest.point fromPage:page] toView:clipView];
             if ([clipView isFlipped] == NO)
-                dest.point.y -= NSHeight([clipView visibleRect]) - [clipView contentInsets].top;
-            [clipView scrollToPoint:dest.point];
+                bounds.origin.y -= NSHeight(bounds) - [clipView contentInsets].top;
+            bounds = [clipView constrainBoundsRect:bounds];
+            [clipView scrollToPoint:bounds.origin];
             [scrollView reflectScrolledClipView:clipView];
         }
     }
