@@ -148,7 +148,7 @@
 #define PAGEINDEX_KEY               @"pageIndex"
 #define SCROLLPOINT_KEY             @"scrollPoint"
 #define LOCKED_KEY                  @"locked"
-#define CROPBOXES_KEY               @"cropBpxes"
+#define CROPBOXES_KEY               @"cropBoxes"
 
 #define TRANSITION_KEY      @"transition"
 #define PAGETRANSITIONS_KEY @"pageTransitions"
