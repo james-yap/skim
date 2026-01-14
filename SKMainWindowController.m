@@ -180,12 +180,13 @@ static char SKMainWindowTransitionsObservationContext;
 
 #pragma mark -    
 
+static SKDestination destinationFromSetup(NSDictionary *setup);
+static void setDestinationInSetup(SKDestination dest, NSMutableDictionary *setup);
+static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
+
 @interface SKMainWindowController ()
 
 - (void)cleanup;
-
-- (SKDestination)destinationFromSetup:(NSDictionary *)setup;
-- (void)setDestination:(SKDestination)dest inSetup:(NSMutableDictionary *)setup;
 
 - (void)applyLeftSideWidth:(CGFloat)leftSideWidth rightSideWidth:(CGFloat)rightSideWidth;
 
@@ -210,6 +211,7 @@ static char SKMainWindowTransitionsObservationContext;
 
 @end
 
+#pragma mark -
 
 @implementation SKMainWindowController
 
@@ -301,24 +303,6 @@ static char SKMainWindowTransitionsObservationContext;
     [noteTypeSheetController setDelegate:nil];
     [[pdfView document] setContainingDocument:nil];
     [self setPresentationNotesDocument:nil];
-}
-
-static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2) {
-    if ([setups1 count] == 0)
-        return [setups2 count] ? setups2 : nil;
-    else if ([setups2 count] == 0)
-        return setups1;
-    NSArray *keys = @[@"page", @"rect"];
-    NSMutableSet *set = [NSMutableSet set];
-    NSMutableArray *setups = [NSMutableArray arrayWithArray:setups1];
-    for (NSDictionary *setup in setups1)
-        [set addObject:[setup dictionaryWithValuesForKeys:keys]];
-    for (NSDictionary *setup in setups2) {
-        if ([set containsObject:[setup dictionaryWithValuesForKeys:keys]] == NO)
-            [setups addObject:setup];
-    }
-    return setups;
-    
 }
 
 - (void)windowDidLoad{
@@ -472,7 +456,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2) {
     }
     
     // Go to page?
-    SKDestination dest = [self destinationFromSetup:savedNormalSetup];
+    SKDestination dest = destinationFromSetup(savedNormalSetup);
     BOOL rememberPage = dest.pageIndex == NSNotFound && [sud boolForKey:SKRememberLastPageViewedKey];
     BOOL rememberSnapshots = [sud boolForKey:SKRememberSnapshotsKey];
     SKBookmark *recentDoc = nil;
@@ -483,7 +467,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2) {
         dest.pageIndex = [recentDoc pageIndex];
     if (dest.pageIndex != NSNotFound && [[pdfView document] pageCount] > dest.pageIndex) {
         if ([[pdfView document] isLocked]) {
-            [self setDestination:dest inSetup:savedNormalSetup];
+            setDestinationInSetup(dest, savedNormalSetup);
         } else if ([[pdfView currentPage] pageIndex] != dest.pageIndex || NSEqualPoints(dest.point, SKUnspecifiedPoint) == NO) {
             [pdfView goToSKDestination:dest];
             [lastViewedPages setCount:0];
@@ -602,7 +586,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2) {
             if ([snapshotSetups count])
                 [self showSnapshotsWithSetups:snapshotSetups];
             
-            SKDestination dest = [self destinationFromSetup:setup];
+            SKDestination dest = destinationFromSetup(setup);
             if (dest.pageIndex != NSNotFound && dest.pageIndex != [[pdfView currentPage] pageIndex])
                 [pdfView goToSKDestination:dest];
         }
@@ -620,7 +604,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2) {
         [setup setObject:NSStringFromRect([[self window] frame]) forKey:MAINWINDOWFRAME_KEY];
     [setup setObject:[NSNumber numberWithDouble:[self leftSideWidth]] forKey:LEFTSIDEPANEWIDTH_KEY];
     [setup setObject:[NSNumber numberWithDouble:[self rightSideWidth]] forKey:RIGHTSIDEPANEWIDTH_KEY];
-    [self setDestination:dest inSetup:setup];
+    setDestinationInSetup(dest, setup);
     if (cropBoxes)
         [setup setObject:cropBoxes forKey:CROPBOXES_KEY];
     if ([snapshots count])
@@ -633,28 +617,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2) {
     }
     
     return setup;
-}
-
-- (SKDestination)destinationFromSetup:(NSDictionary *)setup {
-    SKDestination dest = {NSNotFound, SKUnspecifiedPoint};
-    NSNumber *pageNumber = [setup objectForKey:PAGEINDEX_KEY];
-    if (pageNumber) {
-        dest.pageIndex = [pageNumber unsignedIntegerValue];
-        if (dest.pageIndex != NSNotFound) {
-            NSString *pointString = [setup objectForKey:SCROLLPOINT_KEY];
-            if (pointString)
-                dest.point = NSPointFromString(pointString);
-        }
-    }
-    return dest;
-}
-
-- (void)setDestination:(SKDestination)dest inSetup:(NSMutableDictionary *)setup {
-    if (dest.pageIndex != NSNotFound) {
-        [setup setObject:[NSNumber numberWithUnsignedInteger:dest.pageIndex] forKey:PAGEINDEX_KEY];
-        if (NSEqualPoints(dest.point, SKUnspecifiedPoint) == NO)
-            [setup setObject:NSStringFromPoint(dest.point) forKey:SCROLLPOINT_KEY];
-    }
 }
 
 #pragma mark UI updating
@@ -1169,7 +1131,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2) {
                if ([self interactionMode] == SKNormalMode)
                     [savedNormalSetup setDictionary:[pdfView displaySettings]];
                 [savedNormalSetup setObject:@YES forKey:LOCKED_KEY];
-                [self setDestination:dest inSetup:savedNormalSetup];
+                setDestinationInSetup(dest, savedNormalSetup);
                 if ([snapshotDicts count])
                     [savedNormalSetup setObject:snapshotDicts forKey:SNAPSHOTS_KEY];
             }
@@ -2107,7 +2069,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2) {
         mwcFlags.hasCropped = 1;
     }
     
-    SKDestination dest = [self destinationFromSetup:savedNormalSetup];
+    SKDestination dest = destinationFromSetup(savedNormalSetup);
     if (dest.pageIndex != NSNotFound) {
         [pdfView goToSKDestination:dest];
         [lastViewedPages setCount:0];
@@ -3256,3 +3218,43 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2) {
 }
 
 @end
+
+
+static SKDestination destinationFromSetup(NSDictionary *setup) {
+    SKDestination dest = {NSNotFound, SKUnspecifiedPoint};
+    NSNumber *pageNumber = [setup objectForKey:PAGEINDEX_KEY];
+    if (pageNumber) {
+        dest.pageIndex = [pageNumber unsignedIntegerValue];
+        if (dest.pageIndex != NSNotFound) {
+            NSString *pointString = [setup objectForKey:SCROLLPOINT_KEY];
+            if (pointString)
+                dest.point = NSPointFromString(pointString);
+        }
+    }
+    return dest;
+}
+
+static void setDestinationInSetup(SKDestination dest, NSMutableDictionary *setup) {
+    if (dest.pageIndex != NSNotFound) {
+        [setup setObject:[NSNumber numberWithUnsignedInteger:dest.pageIndex] forKey:PAGEINDEX_KEY];
+        if (NSEqualPoints(dest.point, SKUnspecifiedPoint) == NO)
+            [setup setObject:NSStringFromPoint(dest.point) forKey:SCROLLPOINT_KEY];
+    }
+}
+
+static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2) {
+    if ([setups1 count] == 0)
+        return [setups2 count] ? setups2 : nil;
+    else if ([setups2 count] == 0)
+        return setups1;
+    NSArray *keys = @[@"page", @"rect"];
+    NSMutableSet *set = [NSMutableSet set];
+    NSMutableArray *setups = [NSMutableArray arrayWithArray:setups1];
+    for (NSDictionary *setup in setups1)
+        [set addObject:[setup dictionaryWithValuesForKeys:keys]];
+    for (NSDictionary *setup in setups2) {
+        if ([set containsObject:[setup dictionaryWithValuesForKeys:keys]] == NO)
+            [setups addObject:setup];
+    }
+    return setups;
+}
