@@ -292,7 +292,7 @@
         </segmentedControl>
         <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jci-BQ-dkU">
             <rect key="frame" x="0.0" y="0.0" width="33" height="23"/>
-            <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="selectOne" id="01q-cu-5Rf">
+            <segmentedCell key="cell" borderStyle="border" alignment="left" style="texturedSquare" trackingMode="momentary" id="01q-cu-5Rf">
                 <font key="font" metaFont="system"/>
                 <segments>
                     <segment image="ToolbarDelete" imageScaling="proportionallyUpOrDown" width="27"/>
