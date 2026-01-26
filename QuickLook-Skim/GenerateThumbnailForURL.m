@@ -53,7 +53,7 @@ static void drawBackgroundAndApplicationIconInCurrentContext(QLThumbnailRequestR
     NSRect pageRect = { NSZeroPoint, _paperSize };
     NSRectFillUsingOperation(pageRect, NSCompositingOperationSourceOver);
     
-    NSURL *iconURL = (NSURL *)CFBridgingRelease(CFBundleCopyResourceURL(QLThumbnailRequestGetGeneratorBundle(thumbnail), CFSTR("Skim"), CFSTR("icns"), NULL));
+    NSURL *iconURL = (NSURL *)CFBridgingRelease(CFBundleCopyResourceURL(QLThumbnailRequestGetGeneratorBundle(thumbnail), CFSTR("Skim"), CFSTR("png"), NULL));
     NSImage *appIcon = [[NSImage alloc] initWithContentsOfFile:[iconURL path]];
     
     [appIcon drawInRect:_iconRect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:0.3];
