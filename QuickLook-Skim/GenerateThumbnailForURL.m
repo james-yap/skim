@@ -52,8 +52,9 @@ static void drawBackgroundAndApplicationIconInCurrentContext(CFBundleRef bundle)
     [[NSColor whiteColor] setFill];
     NSRect pageRect = { NSZeroPoint, _paperSize };
     NSRectFillUsingOperation(pageRect, NSCompositingOperationSourceOver);
+    BOOL isHR = CGContextGetUserSpaceToDeviceSpaceTransform([[NSGraphicsContext currentContext] CGContext]).a > 1.0;
     
-    NSURL *iconURL = (NSURL *)CFBridgingRelease(CFBundleCopyResourceURL(bundle, CFSTR("Skim"), CFSTR("png"), NULL));
+    NSURL *iconURL = (NSURL *)CFBridgingRelease(CFBundleCopyResourceURL(bundle, isHR ? CFSTR("Skim_2x") : CFSTR("Skim"), CFSTR("png"), NULL));
     NSImage *appIcon = [[NSImage alloc] initWithContentsOfURL:iconURL];
     
     [appIcon drawInRect:_iconRect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:0.3];
