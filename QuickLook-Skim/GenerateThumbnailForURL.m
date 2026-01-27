@@ -47,14 +47,14 @@ static const NSSize _containerSize = (NSSize) { 572, 752 };
 static const NSRect _iconRect = (NSRect) { { 50, 140 }, { 512, 512 } };
 
 // wash the app icon over a white page background
-static void drawBackgroundAndApplicationIconInCurrentContext(QLThumbnailRequestRef thumbnail)
+static void drawBackgroundAndApplicationIconInCurrentContext(CFBundleRef bundle)
 {
     [[NSColor whiteColor] setFill];
     NSRect pageRect = { NSZeroPoint, _paperSize };
     NSRectFillUsingOperation(pageRect, NSCompositingOperationSourceOver);
     
-    NSURL *iconURL = (NSURL *)CFBridgingRelease(CFBundleCopyResourceURL(QLThumbnailRequestGetGeneratorBundle(thumbnail), CFSTR("Skim"), CFSTR("png"), NULL));
-    NSImage *appIcon = [[NSImage alloc] initWithContentsOfFile:[iconURL path]];
+    NSURL *iconURL = (NSURL *)CFBridgingRelease(CFBundleCopyResourceURL(bundle, CFSTR("Skim"), CFSTR("png"), NULL));
+    NSImage *appIcon = [[NSImage alloc] initWithContentsOfURL:iconURL];
     
     [appIcon drawInRect:_iconRect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:0.3];
 }
@@ -202,8 +202,9 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
             NSData *data = [[NSData alloc] initWithContentsOfURL:(__bridge NSURL *)url options:NSDataReadingUncached error:NULL];
             
             if (data) {
+                CFBundleRef bundle = QLThumbnailRequestGetGeneratorBundle(thumbnail);
                 NSArray *notes = [SKQLConverter notesWithData:data];
-                NSAttributedString *attrString = [SKQLConverter attributedStringWithNotes:notes bundle:QLThumbnailRequestGetGeneratorBundle(thumbnail)];
+                NSAttributedString *attrString = [SKQLConverter attributedStringWithNotes:notes bundle:bundle];
                 
                 if (attrString) {
                     CGContextRef ctxt = QLThumbnailRequestCreateContext(thumbnail, *(CGSize *)&_paperSize, FALSE, NULL);
@@ -211,7 +212,7 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
                     [NSGraphicsContext saveGraphicsState];
                     [NSGraphicsContext setCurrentContext:nsContext];
                     
-                    drawBackgroundAndApplicationIconInCurrentContext(thumbnail);
+                    drawBackgroundAndApplicationIconInCurrentContext(bundle);
                     drawAttributedStringInCurrentContext(attrString);
                     
                     QLThumbnailRequestFlushContext(thumbnail, ctxt);
