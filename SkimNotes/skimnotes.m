@@ -121,8 +121,8 @@ static char *protocolStr = "@protocol SKNAgentListenerProtocol\n"
                            "- (bycopy nullable NSData *)textNotesAtPath:(in bycopy NSString *)aFile encoding:(NSStringEncoding)encoding;\n"
                            "@end";
 
-static char *xpcProtocolStr = "@protocol SKNXCPAgentListenerProtocol\n"
-                              "- (void)readSkimNotesAttURL:(NSURL *)aURL reply:(void (^)(NSData * _Nullable))reply;\n"
+static char *xpcProtocolStr = "@protocol SKNXPCAgentListenerProtocol\n"
+                              "- (void)readSkimNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData * _Nullable))reply;\n"
                               "- (void)readRTFNotesAtURL:(NSURL *)aURL reply:(void (^)(NSData * _Nullable))reply;\n"
                               "- (void)readTextNotesAtURL:(NSURL *)aURL reply:(void (^)(NSString * _Nullable))reply;\n"
                              "@end";
