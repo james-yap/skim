@@ -69,7 +69,7 @@ static char *versionStr = "SkimNotes command-line client, version 2.10.1";
 static char *getHelpStr = "skimnotes get: read Skim notes from a PDF\n"
                           "Usage: skimnotes get [-format skim|archive|plist|text|rtf] PDF_FILE [NOTES_FILE|-]\n\n"
                           "Reads Skim, Text, or RTF notes from extended attributes of PDF_FILE or the contents of PDF bundle PDF_FILE and writes to NOTES_FILE or standard output.\n"
-                          "Uses notes file with same base name as PDF_FILE if SKIM_FILE is not provided.\n"
+                          "Uses notes file with same base name as PDF_FILE if NOTES_FILE is not provided.\n"
                           "Reads Skim notes when no format is provided.";
 static char *setHelpStr = "skimnotes set: write Skim notes to a PDF\n"
                           "Usage: skimnotes set [-s|-n] PDF_FILE [SKIM_FILE|-] [TEXT_FILE] [RTF_FILE]\n\n"
