@@ -44,10 +44,12 @@ file="$2"
 shopt -s extglob
 [[ $# -gt 2 ]] && src="$3" || src=
 
-# expand relative paths and escape double-quotes
+# expand relative paths and escape double-quotes and backward slashes
 [[ "${file:0:1}" == "/" ]] || file="${PWD}/${file}"
+[[ "${file}" != *"\\"* ]] || file="${file//\\/\\\}"
 [[ "${file}" != *'"'* ]] || file="${file//\"/\\\"}"
 [[ -z "${src}" || "${src:0:1}" == "/" ]] || src="${PWD}/${src}"
+[[ -z "${src}" || "${src}" != *"\\"* ]] || src="${src//\\/\\\\}"
 [[ -z "${src}" || "${src}" != *'"'* ]] || src="${src//\"/\\\"}"
 
 [[ -z "${src}" ]] || from_source="from POSIX file \"${src}\""
