@@ -31,7 +31,7 @@ while [[ "${1:0:1}" == "-" ]]; do
   elif [[ "$1" == "-b" || "$1" == "-readingbar" ]]; then
     reading_bar="with showing reading bar"
   elif [[ "$1" == "-n" || "$1" == "-noselect" ]]; then
-    no_select="without selecting"
+    no_selecting="without selecting"
   elif [[ "$1" == "-g" || "$1" == "-background" ]]; then
     activate=
   elif [[ "$1" == "-z" || "$1" == "-zerobased" ]]; then
@@ -44,9 +44,11 @@ file="$2"
 shopt -s extglob
 [[ $# -gt 2 ]] && src="$3" || src=
 
-# expand relative paths
+# expand relative paths and escape double-quotes
 [[ "${file:0:1}" == "/" ]] || file="${PWD}/${file}"
+[[ "${file}" != *'"'* ]] || file="${file//\"/\\\"}"
 [[ -z "${src}" || "${src:0:1}" == "/" ]] || src="${PWD}/${src}"
+[[ -z "${src}" || "${src}" != *'"'* ]] || src="${src//\"/\\\"}"
 
 [[ -z "${src}" ]] || from_source="from POSIX file \"${src}\""
 
