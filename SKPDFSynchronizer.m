@@ -108,6 +108,10 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 
 // this should only be used from the server thread
 - (void)setSyncFileName:(NSString *)newSyncFileName {
+    // make sure the path is absolute and standardized
+    if ([newSyncFileName isAbsolutePath] == NO)
+        newSyncFileName = [[[self fileName] stringByDeletingLastPathComponent] stringByAppendingPathComponent:newSyncFileName];
+    newSyncFileName = [[newSyncFileName stringByResolvingSymlinksInPath] stringByStandardizingPath];
     [lock lock];
     if (syncFileName != newSyncFileName) {
         syncFileName = newSyncFileName;
@@ -128,11 +132,11 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 
 #pragma mark Support
 
-- (NSString *)sourceFileForFileName:(NSString *)file isTeX:(BOOL)isTeX {
+- (NSString *)sourceFileForFileName:(NSString *)file {
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([file isAbsolutePath] == NO)
         file = [[[self fileName] stringByDeletingLastPathComponent] stringByAppendingPathComponent:file];
-    if (isTeX && [fm fileExistsAtPath:file] == NO && [SKPDFSynchronizerTexExtensions containsObject:[[file pathExtension] lowercaseString]] == NO) {
+    if ([fm fileExistsAtPath:file] == NO && [SKPDFSynchronizerTexExtensions containsObject:[[file pathExtension] lowercaseString]] == NO) {
         for (NSString *extension in SKPDFSynchronizerTexExtensions) {
             NSString *tryFile = [file stringByAppendingPathExtension:extension];
             if ([fm fileExistsAtPath:tryFile]) {
@@ -166,13 +170,13 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
         parser = [[SKSyncTeXParser alloc] initWithFileName:theFileName];
     if (parser) {
         isPdfsync = pdfSync;
-        [self setSyncFileName:[self sourceFileForFileName:[parser syncFileName] isTeX:NO]];
+        [self setSyncFileName:[parser syncFileName]];
         if (sourceFileNames == nil)
             sourceFileNames = [[NSMutableDictionary alloc] init];
         else
             [sourceFileNames removeAllObjects];
         [parser enumerateSourceFilesUsingBlock:^(NSString *file){
-            [sourceFileNames setObject:file forKey:[self sourceFileForFileName:file isTeX:YES]];
+            [sourceFileNames setObject:file forKey:[self sourceFileForFileName:file]];
         }];
         rv = atomic_load(&shouldKeepRunning);
     }
@@ -218,7 +222,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
             BOOL success = [parser findFile:&foundFile line:&foundLine forLocation:point inRect:rect pageBounds:bounds atPageIndex:pageIndex];
             
             if (success && atomic_load(&shouldKeepRunning)) {
-                foundFile = [[sourceFileNames allKeysForObject:foundFile] firstObject] ?: [self sourceFileForFileName:foundFile isTeX:YES];
+                foundFile = [[sourceFileNames allKeysForObject:foundFile] firstObject] ?: [self sourceFileForFileName:foundFile];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [delegate synchronizerFoundLine:foundLine inFile:foundFile];
                 });
@@ -236,8 +240,8 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
             NSPoint foundPoint = NSZeroPoint;
             SKPDFSynchronizerOption foundOptions = options;
             BOOL success = NO;
-            NSString *fixedFile = [self sourceFileForFileName:file isTeX:YES];
-            NSString *sourceFile = [sourceFileNames objectForKey:fixedFile] ?: [sourceFileNames objectForKey:[[fixedFile stringByResolvingSymlinksInPath] stringByStandardizingPath]];
+            NSString *fixedFile = [self sourceFileForFileName:file];
+            NSString *sourceFile = [sourceFileNames objectForKey:fixedFile];
             if (sourceFile == nil) {
                 for (NSString *fn in sourceFileNames) {
                     if ([[fn lastPathComponent] caseInsensitiveCompare:[fixedFile lastPathComponent]] == NSOrderedSame) {
