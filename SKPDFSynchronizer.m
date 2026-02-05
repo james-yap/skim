@@ -188,7 +188,8 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
         
         if (theSyncFileName && [[NSFileManager defaultManager] fileExistsAtPath:theSyncFileName]) {
             NSDate *modDate = nil;
-            [[NSURL fileURLWithPath:theSyncFileName isDirectory:NO] getResourceValue:&modDate forKey:NSURLAttributeModificationDateKey error:NULL];
+            if (currentModDate)
+                [[NSURL fileURLWithPath:theSyncFileName isDirectory:NO] getResourceValue:&modDate forKey:NSURLAttributeModificationDateKey error:NULL];
         
             if (currentModDate && [modDate compare:currentModDate] != NSOrderedDescending)
                 rv = YES;
