@@ -43,14 +43,14 @@
 static NSArray *SKPDFSynchronizerTexExtensions = nil;
 
 @interface SKPDFSynchronizer ()
-@property (nullable, strong) NSString *syncFileName;
-@property (nullable, readonly) NSDate *lastModDate;
+@property (nonatomic, nullable, strong) NSString *syncFileName;
+@property (nonatomic, nullable, readonly) NSDate *lastModDate;
 @end
 
 @implementation SKPDFSynchronizer
 
-@synthesize delegate;
-@dynamic fileName, syncFileName, lastModDate;
+@synthesize delegate, syncFileName, lastModDate;
+@dynamic fileName;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -106,13 +106,6 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
     [lock unlock];
 }
 
-- (NSString *)syncFileName {
-    [lock lock];
-    NSString *file = syncFileName;
-    [lock unlock];
-    return file;
-}
-
 // this should only be used from the server thread
 - (void)setSyncFileName:(NSString *)newSyncFileName {
     // make sure the path is absolute and standardized
@@ -128,13 +121,6 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
         [[NSURL fileURLWithPath:syncFileName isDirectory:NO] getResourceValue:&modDate forKey:NSURLAttributeModificationDateKey error:NULL];
     lastModDate = modDate;
     [lock unlock];
-}
-
-- (NSDate *)lastModDate {
-    [lock lock];
-    NSDate *date = lastModDate;
-    [lock unlock];
-    return date;
 }
 
 #pragma mark Support
@@ -195,10 +181,12 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
     BOOL rv = NO;
     
     if (theFileName) {
+        [lock lock];
         NSString *theSyncFileName = [self syncFileName];
+        NSDate *currentModDate = [self lastModDate];
+        [lock unlock];
         
         if (theSyncFileName && [[NSFileManager defaultManager] fileExistsAtPath:theSyncFileName]) {
-            NSDate *currentModDate = [self lastModDate];
             NSDate *modDate = nil;
             [[NSURL fileURLWithPath:theSyncFileName isDirectory:NO] getResourceValue:&modDate forKey:NSURLAttributeModificationDateKey error:NULL];
         
