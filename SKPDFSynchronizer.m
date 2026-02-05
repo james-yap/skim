@@ -43,14 +43,14 @@
 static NSArray *SKPDFSynchronizerTexExtensions = nil;
 
 @interface SKPDFSynchronizer ()
-@property (nonatomic, nullable, strong) NSString *syncFileName;
+@property (nullable, strong) NSString *syncFileName;
 @property (nullable, readonly) NSDate *lastModDate;
 @end
 
 @implementation SKPDFSynchronizer
 
-@synthesize delegate, syncFileName;
-@dynamic fileName, lastModDate;
+@synthesize delegate;
+@dynamic fileName, syncFileName, lastModDate;
 
 + (void)initialize {
     SKINITIALIZE;
@@ -104,6 +104,13 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
         fileName = newFileName;
     }
     [lock unlock];
+}
+
+- (NSString *)syncFileName {
+    [lock lock];
+    NSString *file = syncFileName;
+    [lock unlock];
+    return file;
 }
 
 // this should only be used from the server thread
