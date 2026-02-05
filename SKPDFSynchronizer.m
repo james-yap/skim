@@ -239,14 +239,15 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
             NSString *fixedFile = [self sourceFileForFileName:file];
             NSString *sourceFile = [sourceFileNames objectForKey:fixedFile];
             if (sourceFile == nil) {
+                fixedFile = [fixedFile lastPathComponent];
                 for (NSString *fn in sourceFileNames) {
-                    if ([[fn lastPathComponent] caseInsensitiveCompare:[fixedFile lastPathComponent]] == NSOrderedSame) {
-                        sourceFile = [sourceFileNames objectForKey:fixedFile];
+                    if ([[fn lastPathComponent] caseInsensitiveCompare:fixedFile] == NSOrderedSame) {
+                        sourceFile = [sourceFileNames objectForKey:fn];
                         break;
                     }
                 }
                 if (sourceFile == nil)
-                    sourceFile = [fixedFile lastPathComponent];
+                    sourceFile = fixedFile;
             }
             success = [parser findPage:&foundPageIndex location:&foundPoint forLine:line inFile:sourceFile fromPageIndex:0];
             
