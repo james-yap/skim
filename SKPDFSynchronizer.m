@@ -249,7 +249,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
                 if (sourceFile == nil)
                     sourceFile = fixedFile;
             }
-            success = [parser findPage:&foundPageIndex location:&foundPoint forLine:line inFile:sourceFile fromPageIndex:0];
+            success = [parser findPage:&foundPageIndex location:&foundPoint forLine:line inFile:sourceFile fromPageIndex:pageIndex];
             
             if (success && atomic_load(&shouldKeepRunning)) {
                 if (isPdfsync)

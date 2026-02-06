@@ -94,7 +94,7 @@
 - (BOOL)findPage:(NSUInteger *)pageIndexPtr location:(NSPoint *)pointPtr forLine:(NSInteger)line inFile:(NSString *)file fromPageIndex:(NSUInteger)pageIndex  {
     BOOL rv = NO;
     const char *filename = [file UTF8String];
-    if (synctex_display_query(scanner, filename, (int)line + 1, 0, pageIndex) > 0) {
+    if (synctex_display_query(scanner, filename, (int)line + 1, 0, pageIndex + 1) > 0) {
         synctex_node_p node = synctex_scanner_next_result(scanner);
         if (node) {
             NSUInteger page = synctex_node_page(node);
