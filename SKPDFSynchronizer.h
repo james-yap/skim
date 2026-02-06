@@ -100,7 +100,7 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
 - (void)enumerateSourceFilesUsingBlock:(void (^)(NSString *file))block;
 
 - (BOOL)findFile:(NSString * _Nullable __autoreleasing * _Nonnull)filePtr line:(NSInteger *)linePtr forLocation:(NSPoint)point inRect:(NSRect)rect pageBounds:(NSRect)bounds atPageIndex:(NSUInteger)pageIndex;
-- (BOOL)findPage:(NSUInteger *)pageIndexPtr location:(NSPoint *)pointPtr forLine:(NSInteger)line inFile:(nullable NSString *)file fromPageIndex:(NSUInteger)pageIndex;
+- (BOOL)findPage:(NSUInteger *)pageIndexPtr location:(NSPoint *)pointPtr forLine:(NSInteger)line inFile:(nullable NSString *)file;
 
 @end
 

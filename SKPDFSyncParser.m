@@ -251,8 +251,9 @@ static inline SKPDFSyncRecord *recordForIndex(NSMapTable *records, NSInteger rec
     return rv;
 }
 
-- (BOOL)findPage:(NSUInteger *)pageIndexPtr location:(NSPoint *)pointPtr forLine:(NSInteger)line inFile:(NSString *)file fromPageIndex:(NSUInteger)pageIndex {
+- (BOOL)findPage:(NSUInteger *)pageIndexPtr location:(NSPoint *)pointPtr forLine:(NSInteger)line inFile:(NSString *)file {
     BOOL rv = NO;
+    NSUInteger pageIndex = *pageIndexPtr == NSNotFound ? 0 : *pageIndexPtr;
     NSArray *theLines = [lines objectForKey:file];
     if (theLines) {
         

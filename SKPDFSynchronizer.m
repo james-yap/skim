@@ -232,7 +232,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
         file = [self defaultSourceFile];
     dispatch_async(queue, ^{
         if (file && atomic_load(&shouldKeepRunning) && [self loadSyncFileIfNeeded]) {
-            NSUInteger foundPageIndex = NSNotFound;
+            NSUInteger foundPageIndex = pageIndex;
             NSPoint foundPoint = NSZeroPoint;
             SKPDFSynchronizerOption foundOptions = options;
             BOOL success = NO;
@@ -249,7 +249,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
                 if (sourceFile == nil)
                     sourceFile = fixedFile;
             }
-            success = [parser findPage:&foundPageIndex location:&foundPoint forLine:line inFile:sourceFile fromPageIndex:pageIndex];
+            success = [parser findPage:&foundPageIndex location:&foundPoint forLine:line inFile:sourceFile];
             
             if (success && atomic_load(&shouldKeepRunning)) {
                 if (isPdfsync)
