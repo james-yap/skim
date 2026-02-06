@@ -317,9 +317,9 @@
             source = [NSURL fileURLWithPath:source isDirectory:NO];
         else if ([source isKindOfClass:[NSURL class]] == NO)
             source = nil;
-        SKPDFSynchronizerOption options = SKPDFSynchronizerShowReadingBarMask;
+        SKPDFSynchronizerOptions options = SKPDFSynchronizerShowReadingBar;
         if ([[args objectForKey:@"Selecting"] boolValue])
-            options |= SKPDFSynchronizerSelectMask;
+            options |= SKPDFSynchronizerSelect;
         [[(SKMainDocument *)[page containingDocument] synchronizer] findPageAndLocationForLine:[location integerValue] inFile:[source path] fromPageIndex:[page pageIndex] options:options];
         return;
     } else {

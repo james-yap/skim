@@ -227,14 +227,14 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
     });
 }
 
-- (void)findPageAndLocationForLine:(NSInteger)line inFile:(NSString *)file fromPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOption)options {
+- (void)findPageAndLocationForLine:(NSInteger)line inFile:(NSString *)file fromPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOptions)options {
     if (file == nil)
         file = [self defaultSourceFile];
     dispatch_async(queue, ^{
         if (file && atomic_load(&shouldKeepRunning) && [self loadSyncFileIfNeeded]) {
             NSUInteger foundPageIndex = pageIndex;
             NSPoint foundPoint = NSZeroPoint;
-            SKPDFSynchronizerOption foundOptions = options;
+            SKPDFSynchronizerOptions foundOptions = options;
             BOOL success = NO;
             NSString *fixedFile = [self sourceFileForFileName:file];
             NSString *sourceFile = [sourceFileNames objectForKey:fixedFile];
@@ -253,9 +253,9 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
             
             if (success && atomic_load(&shouldKeepRunning)) {
                 if (isPdfsync)
-                    foundOptions &= ~SKPDFSynchronizerFlippedMask;
+                    foundOptions &= ~SKPDFSynchronizerFlipped;
                 else
-                    foundOptions |= SKPDFSynchronizerFlippedMask;
+                    foundOptions |= SKPDFSynchronizerFlipped;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [delegate synchronizerFoundLocation:foundPoint atPageIndex:foundPageIndex options:foundOptions];
                 });

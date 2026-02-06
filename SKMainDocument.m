@@ -1582,12 +1582,12 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     }
 }
 
-- (void)synchronizerFoundLocation:(NSPoint)point atPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOption)options {
+- (void)synchronizerFoundLocation:(NSPoint)point atPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOptions)options {
     PDFDocument *pdfDoc = [self pdfDocument];
     if (pageIndex < [pdfDoc pageCount]) {
-        if ((options & SKPDFSynchronizerFlippedMask))
+        if ((options & SKPDFSynchronizerFlipped))
             point.y = NSMaxY([[pdfDoc pageAtIndex:pageIndex] boundsForBox:kPDFDisplayBoxMediaBox]) - point.y;
-        [[self pdfView] displayLineAtPoint:point inPageAtIndex:pageIndex select:(options & SKPDFSynchronizerSelectMask) != 0 showReadingBar:(options & SKPDFSynchronizerShowReadingBarMask) != 0];
+        [[self pdfView] displayLineAtPoint:point inPageAtIndex:pageIndex select:(options & SKPDFSynchronizerSelect) != 0 showReadingBar:(options & SKPDFSynchronizerShowReadingBar) != 0];
     }
 }
 
@@ -2066,12 +2066,12 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
         [[self pdfView] goToRect:bounds onPage:page];
     } else if ([location isKindOfClass:[NSNumber class]]) {
         id source = [args objectForKey:@"Source"];
-        NSInteger options = SKPDFSynchronizerDefaultOptions;
+        NSInteger options = SKPDFSynchronizerDefault;
         BOOL showBar = [[args objectForKey:@"ShowReadingBar"] boolValue];
         if (showBar)
-            options |= SKPDFSynchronizerShowReadingBarMask;
+            options |= SKPDFSynchronizerShowReadingBar;
         if ([[args objectForKey:@"Selecting"] boolValue] || (showBar == NO && [args objectForKey:@"Selecting"] == nil))
-            options |= SKPDFSynchronizerSelectMask;
+            options |= SKPDFSynchronizerSelect;
         if ([source isKindOfClass:[NSString class]])
             source = [NSURL fileURLWithPath:source isDirectory:NO];
         else if ([source isKindOfClass:[NSURL class]] == NO)

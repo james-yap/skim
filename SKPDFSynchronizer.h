@@ -41,11 +41,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
-    SKPDFSynchronizerDefaultOptions = 0,
-    SKPDFSynchronizerSelectMask = 1 << 0,
-    SKPDFSynchronizerShowReadingBarMask = 1 << 1,
-    SKPDFSynchronizerFlippedMask = 1 << 2,
+typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOptions) {
+    SKPDFSynchronizerDefault = 0,
+    SKPDFSynchronizerSelect = 1 << 0,
+    SKPDFSynchronizerShowReadingBar = 1 << 1,
+    SKPDFSynchronizerFlipped = 1 << 2,
 };
 
 @protocol SKPDFSynchronizerDelegate, SKSyncParser;
@@ -73,7 +73,7 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
 @property (nullable, copy) NSString *fileName;
 
 - (void)findFileAndLineForLocation:(NSPoint)point inRect:(NSRect)rect pageBounds:(NSRect)bounds atPageIndex:(NSUInteger)pageIndex;
-- (void)findPageAndLocationForLine:(NSInteger)line inFile:(nullable NSString *)file fromPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOption)options;
+- (void)findPageAndLocationForLine:(NSInteger)line inFile:(nullable NSString *)file fromPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOptions)options;
 
 // this must be called to stop the DO server from running in the server thread
 - (void)terminate;
@@ -85,7 +85,7 @@ typedef NS_OPTIONS(NSUInteger, SKPDFSynchronizerOption) {
 @protocol SKPDFSynchronizerDelegate <NSObject>
 
 - (void)synchronizerFoundLine:(NSInteger)line inFile:(NSString *)file;
-- (void)synchronizerFoundLocation:(NSPoint)point atPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOption)options;
+- (void)synchronizerFoundLocation:(NSPoint)point atPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOptions)options;
 
 @end
 
