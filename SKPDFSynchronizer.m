@@ -129,7 +129,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
     NSFileManager *fm = [NSFileManager defaultManager];
     if ([file isAbsolutePath] == NO)
         file = [[[self fileName] stringByDeletingLastPathComponent] stringByAppendingPathComponent:file];
-    if ([fm fileExistsAtPath:file] == NO && [SKPDFSynchronizerTexExtensions containsObject:[[file pathExtension] lowercaseString]] == NO) {
+    if (file && [fm fileExistsAtPath:file] == NO && [SKPDFSynchronizerTexExtensions containsObject:[[file pathExtension] lowercaseString]] == NO) {
         for (NSString *extension in SKPDFSynchronizerTexExtensions) {
             NSString *tryFile = [file stringByAppendingPathExtension:extension];
             if ([fm fileExistsAtPath:tryFile]) {
@@ -144,6 +144,8 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 
 - (NSString *)defaultSourceFile {
     NSString *file = [[self fileName] stringByDeletingPathExtension];
+    if (file == nil)
+        return nil;
     NSFileManager *fm = [NSFileManager defaultManager];
     for (NSString *extension in SKPDFSynchronizerTexExtensions) {
         NSString *tryFile = [file stringByAppendingPathExtension:extension];
@@ -230,8 +232,10 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
 - (void)findPageAndLocationForLine:(NSInteger)line inFile:(NSString *)file fromPageIndex:(NSUInteger)pageIndex options:(SKPDFSynchronizerOptions)options {
     if (file == nil)
         file = [self defaultSourceFile];
+    if (file == nil)
+        return;
     dispatch_async(queue, ^{
-        if (file && atomic_load(&shouldKeepRunning) && [self loadSyncFileIfNeeded]) {
+        if (atomic_load(&shouldKeepRunning) && [self loadSyncFileIfNeeded]) {
             NSUInteger foundPageIndex = pageIndex;
             NSPoint foundPoint = NSZeroPoint;
             SKPDFSynchronizerOptions foundOptions = options;
