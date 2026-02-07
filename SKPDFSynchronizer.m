@@ -142,6 +142,19 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
     return [[file stringByResolvingSymlinksInPath] stringByStandardizingPath];
 }
 
+- (NSString *)sourceFileNameForFile:(NSString *)file {
+    file = [self sourceFileForFileName:file];
+    NSString *sourceFile = [sourceFileNames objectForKey:file];
+    if (sourceFile)
+        return sourceFile;
+    file = [file lastPathComponent];
+    for (NSString *fn in sourceFileNames) {
+        if ([[fn lastPathComponent] caseInsensitiveCompare:file] == NSOrderedSame)
+            return [sourceFileNames objectForKey:fn];
+    }
+    return file;
+}
+
 - (NSString *)defaultSourceFile {
     NSString *file = [[self fileName] stringByDeletingPathExtension];
     if (file == nil)
@@ -240,19 +253,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
             NSPoint foundPoint = NSZeroPoint;
             SKPDFSynchronizerOptions foundOptions = options;
             BOOL success = NO;
-            NSString *fixedFile = [self sourceFileForFileName:file];
-            NSString *sourceFile = [sourceFileNames objectForKey:fixedFile];
-            if (sourceFile == nil) {
-                fixedFile = [fixedFile lastPathComponent];
-                for (NSString *fn in sourceFileNames) {
-                    if ([[fn lastPathComponent] caseInsensitiveCompare:fixedFile] == NSOrderedSame) {
-                        sourceFile = [sourceFileNames objectForKey:fn];
-                        break;
-                    }
-                }
-                if (sourceFile == nil)
-                    sourceFile = fixedFile;
-            }
+            NSString *sourceFile = [self sourceFileNameForFile:file];
             success = [parser findPage:&foundPageIndex location:&foundPoint forLine:line inFile:sourceFile];
             
             if (success && atomic_load(&shouldKeepRunning)) {
