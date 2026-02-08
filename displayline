@@ -40,7 +40,7 @@ while [[ "${1:0:1}" == "-" ]]; do
   elif [[ "$1" == "-b" || "$1" == "-readingbar" ]]; then
     reading_bar="with showing reading bar"
   elif [[ "$1" == "-n" || "$1" == "-noselect" ]]; then
-    no_selecting="without selecting"
+    no_select="without selecting"
   elif [[ "$1" == "-g" || "$1" == "-background" ]]; then
     activate=
   elif [[ "$1" == "-z" || "$1" == "-zerobased" ]]; then
