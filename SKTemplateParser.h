@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isNotEmpty;
 
 - (NSString *)templateStringValue;
-- (NSAttributedString *)templateAttributedStringValueWithAttributes:(NSDictionary *)attributes;
+- (NSAttributedString *)templateAttributedStringValueWithAttributes:(NSDictionary<NSString *, id> *)attributes;
 
 @end
 
