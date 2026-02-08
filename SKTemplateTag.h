@@ -83,14 +83,14 @@ typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
 #pragma mark -
 
 @interface SKRichValueTemplateTag : SKValueTemplateTag {
-    NSDictionary<NSString *, id> *attributes;
+    NSDictionary<NSAttributedStringKey, id> *attributes;
     SKAttributeTemplate *linkTemplate;
 }
 
-- (instancetype)initWithKeyPath:(NSString *)aKeyPath attributes:(NSDictionary<NSString *, id> *)anAttributes NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithKeyPath:(NSString *)aKeyPath attributes:(NSDictionary<NSAttributedStringKey, id> *)anAttributes NS_DESIGNATED_INITIALIZER;
 - (instancetype)initWithKeyPath:(NSString *)aKeyPath NS_UNAVAILABLE;
 
-@property (nonatomic, readonly) NSDictionary<NSString *, id> *attributes;
+@property (nonatomic, readonly) NSDictionary<NSAttributedStringKey, id> *attributes;
 @property (nonatomic, nullable, readonly) SKAttributeTemplate *linkTemplate;
 
 @end
