@@ -80,7 +80,6 @@ NSString * const SKGroupedSearchResultPageIndexKey = @"pageIndex";
 }
 
 - (void)addMatch:(PDFSelection *)match {
-    [self willChangeValueForKey:SKGroupedSearchResultCountKey];
     CGFloat order = [match boundsOrderForPage:page];
     NSInteger i = [matches count];
     while (i-- > 0) {
@@ -88,6 +87,7 @@ NSString * const SKGroupedSearchResultPageIndexKey = @"pageIndex";
         if (order >= [prevResult boundsOrderForPage:page])
             break;
     }
+    [self willChangeValueForKey:SKGroupedSearchResultCountKey];
     [matches insertObject:match atIndex:i + 1];
     [self didChangeValueForKey:SKGroupedSearchResultCountKey];
 }
