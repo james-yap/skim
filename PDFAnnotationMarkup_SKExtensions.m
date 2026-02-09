@@ -272,7 +272,7 @@ static void replacement_setColor(id self, SEL _cmd, NSColor *color) {
     SKNoteText *noteText = objc_getAssociatedObject(self, &SKNoteTextKey);
     if (noteText == nil) {
         noteText = [[SKNoteText alloc] initWithNote:self];
-        objc_setAssociatedObject(self, &SKNoteTextKey, noteText, OBJC_ASSOCIATION_RETAIN);
+        objc_setAssociatedObject(self, &SKNoteTextKey, noteText, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return noteText;
 }
@@ -283,7 +283,7 @@ static void replacement_setColor(id self, SEL _cmd, NSColor *color) {
     NSString *textString = objc_getAssociatedObject(self, &SKTextStringKey);
     if (textString == nil) {
         textString = [[self selection] cleanedString] ?: @"";
-        objc_setAssociatedObject(self, &SKTextStringKey, textString, OBJC_ASSOCIATION_RETAIN);
+        objc_setAssociatedObject(self, &SKTextStringKey, textString, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return textString;
 }
@@ -302,7 +302,7 @@ static void replacement_setColor(id self, SEL _cmd, NSColor *color) {
     NSString *selString = [[self selectionWithPage:page] cleanedString];
     if ([selString length]) {
         // page should be future [self page] and textString will not have been called
-        objc_setAssociatedObject(self, &SKTextStringKey, selString, OBJC_ASSOCIATION_RETAIN);
+        objc_setAssociatedObject(self, &SKTextStringKey, selString, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [self setString:selString];
     }
 }
