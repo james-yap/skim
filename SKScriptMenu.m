@@ -104,7 +104,7 @@ static void fsevents_callback(FSEventStreamRef streamRef, void *clientCallBackIn
             
             scriptMenu = [menuItem submenu];
             
-            sortDescriptors = [[NSArray alloc] initWithObjects:[[NSSortDescriptor alloc] initWithKey:FILENAME_KEY ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)], nil];
+            sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:FILENAME_KEY ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)]];
             
             scriptFolders = [folders copy];
             
