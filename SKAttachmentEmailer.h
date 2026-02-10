@@ -43,7 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SKAttachmentEmailer : NSSharingService {
     NSString *mailAppID;
-    NSString *subject;
 }
 
 - (instancetype)init NS_DESIGNATED_INITIALIZER;
