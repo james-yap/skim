@@ -223,7 +223,7 @@ static NSCharacterSet *nonAlphanumericCharacterSet = nil;
         [self updateSearchString:searchString];
     
     __weak SKTypeSelectHelper *weakSelf = self;
-    [self startTimerWithBlock:^(NSTimer *aTimer){ [weakSelf typeSelectCleanTimeout:timer]; }];
+    [self startTimerWithBlock:^(NSTimer *aTimer){ [weakSelf typeSelectCleanTimeout:aTimer]; }];
     
     processing = NO;
 }
