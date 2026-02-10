@@ -46,8 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)screenForWindowHasMenuBar:(NSWindow *)window;
 
-@property (class, nonatomic, readonly) NSScreen *primaryScreen;
-
 @property (nonatomic, readonly) NSScreen *primaryScreen;
 
 @property (nonatomic, readonly) NSArray<NSScreen *> *alternateScreens;
