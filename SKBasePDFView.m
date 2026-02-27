@@ -81,21 +81,21 @@ static inline NSArray *defaultKeysToObserve() {
 - (void)commonBaseInitialization {
     minHistoryIndex = 0;
     
+    NSScrollView *scrollView = [self embeddedScrollView];
+    
     if (@available(macOS 10.14, *)) {
         [self setAppearance:nil];
-        [[[self embeddedScrollView] contentView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
+        [[scrollView contentView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-            [[self embeddedScrollView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
+            [scrollView setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
         
-        if (@available(macOS 11.0, *)) {} else {
-            [self handleScrollerStyleChangedNotification:nil];
-            
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
-                                                             name:NSPreferredScrollerStyleDidChangeNotification object:nil];
-        }
+        [self handleScrollerStyleChangedNotification:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
+                                                         name:NSPreferredScrollerStyleDidChangeNotification object:nil];
     }
     
-    [[self embeddedScrollView] setContentFilters:SKColorEffectFilters()];
+    [scrollView setContentFilters:SKColorEffectFilters()];
     
     NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
     for (NSString *key in defaultKeysToObserve())
@@ -134,13 +134,14 @@ static inline NSArray *defaultKeysToObserve() {
 }
 
 - (void)colorFiltersDidChange {
+    NSScrollView *scrollView = [self embeddedScrollView];
     if (@available(macOS 10.14, *)) {
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-            [[self embeddedScrollView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
+            [scrollView setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
         else
-            [[self embeddedScrollView] setAppearance:nil];
+            [scrollView setAppearance:nil];
     }
-    [[self embeddedScrollView] setContentFilters:SKColorEffectFilters()];
+    [scrollView setContentFilters:SKColorEffectFilters()];
 }
 
 - (void)viewDidChangeEffectiveAppearance {
@@ -151,12 +152,15 @@ static inline NSArray *defaultKeysToObserve() {
 }
 
 - (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {
-    if (@available(macOS 10.14, *)) {
+    if (@available(macOS 26.0, *)) {
+        [[self embeddedScrollView] setScrollerStyle:NSScrollerStyleOverlay];
+    } else if (@available(macOS 11.0, *)) {} else if (@available(macOS 10.14, *)) {
         NSAppearance *appearance = nil;
         if ([NSScroller preferredScrollerStyle] != NSScrollerStyleLegacy)
             appearance = [NSAppearance appearanceNamed:NSAppearanceNameAqua];
-        [[[self embeddedScrollView] verticalScroller] setAppearance:appearance];
-        [[[self embeddedScrollView] horizontalScroller] setAppearance:appearance];
+        NSScrollView *scrollView = [self embeddedScrollView];
+        [[scrollView verticalScroller] setAppearance:appearance];
+        [[scrollView horizontalScroller] setAppearance:appearance];
     }
 }
 

@@ -41,9 +41,9 @@
 @implementation NSScroller (SKExtensions)
 
 + (CGFloat)effectiveScrollerWidth {
-    if ([self preferredScrollerStyle] != NSScrollerStyleLegacy)
-        return 0.0;
-    return [self scrollerWidthForControlSize:NSControlSizeRegular scrollerStyle:NSScrollerStyleLegacy];
+    if (@available(macOS 26.0, *)) {} else if ([self preferredScrollerStyle] == NSScrollerStyleLegacy)
+        return [self scrollerWidthForControlSize:NSControlSizeRegular scrollerStyle:NSScrollerStyleLegacy];
+    return 0.0;
 }
 
 @end
