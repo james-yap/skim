@@ -39,7 +39,7 @@ codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" "${LOCATION}/Spo
 codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" "${LOCATION}/QuickLook/Skim.qlgenerator/Contents/MacOS/Skim"
 
 LOCATION="${CONTENTS_DIR}/Plugins"
-codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} --sign "${IDENTITY}" "${LOCATION}/SkimTransitions.plugin/Contents/MacOS/SkimTransitions"
+codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" "${LOCATION}/SkimTransitions.plugin/Contents/MacOS/SkimTransitions"
 
 LOCATION="${CONTENTS_DIR}/SharedSupport"
 codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" -i "net.sourceforge.skim-app.tool.skimnotes" "${LOCATION}/skimnotes"
