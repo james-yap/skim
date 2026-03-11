@@ -1896,7 +1896,7 @@
             [menuItem setTitle:NSLocalizedString(@"Show Notes Pane", @"Menu item title")];
         return [self interactionMode] != SKPresentationMode;
     } else if (action == @selector(changeLeftSidePaneState:)) {
-        [menuItem setState:mwcFlags.leftSidePaneState == (SKLeftSidePaneState)[menuItem tag] && [self displaysFindPane] == NO ? NSControlStateValueOn : NSControlStateValueOff];
+        [menuItem setState:(SKLeftSidePaneState)mwcFlags.leftSidePaneState != (SKLeftSidePaneState)[menuItem tag] ? NSControlStateValueOff : [self displaysFindPane] == NO ? NSControlStateValueOn : NSControlStateValueMixed];
         return (SKLeftSidePaneState)[menuItem tag] == SKSidePaneStateThumbnail || [[pdfView document] outlineRoot];
     } else if (action == @selector(changeRightSidePaneState:)) {
         [menuItem setState:mwcFlags.rightSidePaneState == (SKRightSidePaneState)[menuItem tag] ? NSControlStateValueOn : NSControlStateValueOff];
