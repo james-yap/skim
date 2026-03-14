@@ -178,6 +178,8 @@ static char SKMainWindowTransitionsObservationContext;
 
 #define SKTitleAndToolbarStyleKey @"SKTitleAndToolbarStyle"
 
+#define SKCollapseSidePanesInFullScreenKey @"SKCollapseSidePanesInFullScreen"
+
 #pragma mark -    
 
 static SKDestination destinationFromSetup(NSDictionary *setup);
@@ -550,10 +552,13 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 [savedNormalWindow setFrame:NSRectFromString(rectString) display:NO];
         }
         
-        NSNumber *leftWidthNumber = [setup objectForKey:LEFTSIDEPANEWIDTH_KEY];
-        NSNumber *rightWidthNumber = [setup objectForKey:RIGHTSIDEPANEWIDTH_KEY];
-        if (leftWidthNumber && rightWidthNumber)
-            [self applyLeftSideWidth:[leftWidthNumber doubleValue] rightSideWidth:[rightWidthNumber doubleValue]];
+        BOOL applySidePaneWidths = [self interactionMode] != SKFullScreenMode || [[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseSidePanesInFullScreenKey] == NO;
+        if (applySidePaneWidths) {
+            NSNumber *leftWidthNumber = [setup objectForKey:LEFTSIDEPANEWIDTH_KEY];
+            NSNumber *rightWidthNumber = [setup objectForKey:RIGHTSIDEPANEWIDTH_KEY];
+            if (leftWidthNumber && rightWidthNumber)
+                [self applyLeftSideWidth:[leftWidthNumber doubleValue] rightSideWidth:[rightWidthNumber doubleValue]];
+        }
         
         if ([[pdfView document] isLocked]) {
             NSArray *snapshotSetups = [savedNormalSetup objectForKey:SNAPSHOTS_KEY];
@@ -563,7 +568,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         } else {
             if ([self interactionMode] != SKNormalMode) {
                 [savedNormalSetup addEntriesFromDictionary:setup];
-                [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY, CROPBOXES_KEY, SNAPSHOTS_KEY, PAGEINDEX_KEY, SCROLLPOINT_KEY]];
+                [savedNormalSetup removeObjectsForKeys:@[CROPBOXES_KEY, SNAPSHOTS_KEY, PAGEINDEX_KEY, SCROLLPOINT_KEY]];
+                if (applySidePaneWidths)
+                    [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
             }
             if ([self interactionMode] == SKPresentationMode) {
                 NSMutableDictionary *mutableSetup = [setup mutableCopy];

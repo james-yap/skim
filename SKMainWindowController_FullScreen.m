@@ -73,8 +73,11 @@
 #define MAINWINDOWFRAME_KEY         @"windowFrame"
 #define TABGROUP_KEY                @"tabGroup"
 #define TABINDEX_KEY                @"tabIndex"
+#define LEFTSIDEPANEWIDTH_KEY       @"leftSidePaneWidth"
+#define RIGHTSIDEPANEWIDTH_KEY      @"rightSidePaneWidth"
 
 #define SKAutoHideToolbarInFullScreenKey @"SKAutoHideToolbarInFullScreen"
+#define SKCollapseSidePanesInFullScreenKey @"SKCollapseSidePanesInFullScreen"
 #define SKResizablePresentationKey @"SKResizablePresentation"
 
 #define AppleMenuBarVisibleInFullscreenKey @"AppleMenuBarVisibleInFullscreen"
@@ -82,6 +85,10 @@
 #define PRESENTATION_DURATION 0.5
 
 static CGFloat fullScreenToolbarOffset = 0.0;
+
+@interface SKMainWindowController (SKFullScreenPrivate)
+- (void)applyLeftSideWidth:(CGFloat)leftSideWidth rightSideWidth:(CGFloat)rightSideWidth;
+@end
 
 @implementation SKMainWindowController (FullScreen)
 
@@ -554,6 +561,11 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         NSColor *backgroundColor = [PDFView defaultFullScreenBackgroundColor];
         [pdfView setBackgroundColor:backgroundColor];
         [secondaryPdfView setBackgroundColor:backgroundColor];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseSidePanesInFullScreenKey]) {
+            [savedNormalSetup setObject:[NSNumber numberWithDouble:[self leftSideWidth]] forKey:LEFTSIDEPANEWIDTH_KEY];
+            [savedNormalSetup setObject:[NSNumber numberWithDouble:[self rightSideWidth]] forKey:RIGHTSIDEPANEWIDTH_KEY];
+            [self applyLeftSideWidth:0.0 rightSideWidth:0.0];
+        }
         if ([[pdfView document] isLocked] == NO) {
             NSDictionary *fullScreenSetup = [[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey];
             if ([fullScreenSetup count])
@@ -568,6 +580,12 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         NSColor *backgroundColor = [PDFView defaultBackgroundColor];
         [pdfView setBackgroundColor:backgroundColor];
         [secondaryPdfView setBackgroundColor:backgroundColor];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseSidePanesInFullScreenKey]) {
+            NSNumber *leftWidthNumber = [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY];
+            NSNumber *rightWidthNumber = [savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY];
+            if (leftWidthNumber && rightWidthNumber)
+                [self applyLeftSideWidth:[leftWidthNumber doubleValue] rightSideWidth:[rightWidthNumber doubleValue]];
+        }
         if ([[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey] count])
             [pdfView setDisplaySettingsAndRewind:savedNormalSetup];
     }
