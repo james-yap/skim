@@ -576,7 +576,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 NSMutableDictionary *mutableSetup = [setup mutableCopy];
                 [mutableSetup removeObjectsForKeys:@[@"displayMode", @"displayDirection"]];
                 [pdfView setDisplaySettings:mutableSetup];
-            } else if ([self interactionMode] != SKFullScreenMode || [[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey] count] == 0) {
+            } else if ([self interactionMode] == SKNormalMode || [[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey] count] == 0) {
                 if ([setup objectForKey:PAGEINDEX_KEY])
                     [pdfView setDisplaySettings:setup];
                 else
