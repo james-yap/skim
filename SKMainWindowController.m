@@ -190,7 +190,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 - (void)cleanup;
 
-- (void)applyLeftSideWidth:(CGFloat)leftSideWidth rightSideWidth:(CGFloat)rightSideWidth;
+- (void)applyLeftSideWidth:(NSNumber *)leftSideWidth rightSideWidth:(NSNumber *)rightSideWidth;
 
 - (void)updateTableFont;
 
@@ -413,7 +413,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     NSNumber *leftWidthNumber = [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKLeftSidePaneWidthKey];
     NSNumber *rightWidthNumber = [savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKRightSidePaneWidthKey];
     if (leftWidthNumber && rightWidthNumber)
-        [self applyLeftSideWidth:[leftWidthNumber doubleValue] rightSideWidth:[rightWidthNumber doubleValue]];
+        [self applyLeftSideWidth:leftWidthNumber rightSideWidth:rightWidthNumber];
     
     // this needs to be done before loading the PDFDocument
     [self resetThumbnailSizeIfNeeded];
@@ -532,9 +532,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     mwcFlags.settingUpWindow = 0;
 }
 
-- (void)applyLeftSideWidth:(CGFloat)leftSideWidth rightSideWidth:(CGFloat)rightSideWidth {
-    [splitView setPosition:leftSideWidth ofDividerAtIndex:0];
-    [splitView setPosition:[splitView maxPossiblePositionOfDividerAtIndex:1] - [splitView dividerThickness] - rightSideWidth ofDividerAtIndex:1];
+- (void)applyLeftSideWidth:(NSNumber *)leftSideWidth rightSideWidth:(NSNumber *)rightSideWidth {
+    [splitView setPosition:[leftSideWidth doubleValue] ofDividerAtIndex:0];
+    [splitView setPosition:[splitView maxPossiblePositionOfDividerAtIndex:1] - [splitView dividerThickness] - [rightSideWidth doubleValue] ofDividerAtIndex:1];
 }
 
 - (void)applySetup:(NSDictionary *)setup{
@@ -557,7 +557,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             NSNumber *leftWidthNumber = [setup objectForKey:LEFTSIDEPANEWIDTH_KEY];
             NSNumber *rightWidthNumber = [setup objectForKey:RIGHTSIDEPANEWIDTH_KEY];
             if (leftWidthNumber && rightWidthNumber)
-                [self applyLeftSideWidth:[leftWidthNumber doubleValue] rightSideWidth:[rightWidthNumber doubleValue]];
+                [self applyLeftSideWidth:leftWidthNumber rightSideWidth:rightWidthNumber];
         }
         
         if ([[pdfView document] isLocked]) {
