@@ -86,10 +86,6 @@
 
 static CGFloat fullScreenToolbarOffset = 0.0;
 
-@interface SKMainWindowController (SKFullScreenPrivate)
-- (void)applyLeftSideWidth:(NSNumber *)leftSideWidth rightSideWidth:(NSNumber *)rightSideWidth;
-@end
-
 @implementation SKMainWindowController (FullScreen)
 
 #pragma mark Side Windows
@@ -564,7 +560,8 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseSidePanesInFullScreenKey]) {
             [savedNormalSetup setObject:[self leftSideWidth] forKey:LEFTSIDEPANEWIDTH_KEY];
             [savedNormalSetup setObject:[self rightSideWidth] forKey:RIGHTSIDEPANEWIDTH_KEY];
-            [self applyLeftSideWidth:@0.0 rightSideWidth:@0.0];
+            [self setLeftSideWidth:@0.0];
+            [self setRightSideWidth:@0.0];
         }
         if ([[pdfView document] isLocked] == NO) {
             NSDictionary *fullScreenSetup = [[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey];
@@ -583,8 +580,10 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseSidePanesInFullScreenKey]) {
             NSNumber *leftWidthNumber = [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY];
             NSNumber *rightWidthNumber = [savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY];
-            if (leftWidthNumber && rightWidthNumber)
-                [self applyLeftSideWidth:leftWidthNumber rightSideWidth:rightWidthNumber];
+            if (leftWidthNumber && rightWidthNumber) {
+                [self setLeftSideWidth:leftWidthNumber];
+                [self setRightSideWidth:rightWidthNumber];
+            }
         }
         if ([[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey] count])
             [pdfView setDisplaySettingsAndRewind:savedNormalSetup];

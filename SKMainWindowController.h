@@ -272,7 +272,7 @@ enum {
 
 @property (nonatomic, readonly) BOOL displaysFindPane;
 @property (nonatomic, readonly) BOOL leftSidePaneIsOpen, rightSidePaneIsOpen;
-@property (nonatomic, readonly) NSNumber *leftSideWidth, *rightSideWidth;
+@property (nonatomic, strong) NSNumber *leftSideWidth, *rightSideWidth;
 
 @property (nonatomic, nullable, readonly) NSMenu *notesMenu;
 

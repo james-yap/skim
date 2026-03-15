@@ -190,8 +190,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 - (void)cleanup;
 
-- (void)applyLeftSideWidth:(NSNumber *)leftSideWidth rightSideWidth:(NSNumber *)rightSideWidth;
-
 - (void)updateTableFont;
 
 - (void)updatePageLabel;
@@ -412,8 +410,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     NSNumber *leftWidthNumber = [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKLeftSidePaneWidthKey];
     NSNumber *rightWidthNumber = [savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKRightSidePaneWidthKey];
-    if (leftWidthNumber && rightWidthNumber)
-        [self applyLeftSideWidth:leftWidthNumber rightSideWidth:rightWidthNumber];
+    if (leftWidthNumber && rightWidthNumber) {
+        [self setLeftSideWidth:leftWidthNumber];
+        [self setRightSideWidth:rightWidthNumber];
+    }
     
     // this needs to be done before loading the PDFDocument
     [self resetThumbnailSizeIfNeeded];
@@ -532,11 +532,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     mwcFlags.settingUpWindow = 0;
 }
 
-- (void)applyLeftSideWidth:(NSNumber *)leftSideWidth rightSideWidth:(NSNumber *)rightSideWidth {
-    [splitView setPosition:[leftSideWidth doubleValue] ofDividerAtIndex:0];
-    [splitView setPosition:[splitView maxPossiblePositionOfDividerAtIndex:1] - [splitView dividerThickness] - [rightSideWidth doubleValue] ofDividerAtIndex:1];
-}
-
 - (void)applySetup:(NSDictionary *)setup{
     if ([self isWindowLoaded] == NO) {
         [savedNormalSetup setDictionary:setup];
@@ -556,8 +551,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         if (applySidePaneWidths) {
             NSNumber *leftWidthNumber = [setup objectForKey:LEFTSIDEPANEWIDTH_KEY];
             NSNumber *rightWidthNumber = [setup objectForKey:RIGHTSIDEPANEWIDTH_KEY];
-            if (leftWidthNumber && rightWidthNumber)
-                [self applyLeftSideWidth:leftWidthNumber rightSideWidth:rightWidthNumber];
+            if (leftWidthNumber && rightWidthNumber) {
+                [self setLeftSideWidth:leftWidthNumber];
+                [self setRightSideWidth:rightWidthNumber];
+            }
         }
         
         if ([[pdfView document] isLocked]) {
@@ -1343,8 +1340,16 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     return [self leftSidePaneIsOpen] ? [NSNumber numberWithDouble:NSWidth([leftSideContentView frame])] : @0.0;
 }
 
+- (void)setLeftSideWidth:(NSNumber *)leftSideWidth {
+    [splitView setPosition:[leftSideWidth doubleValue] ofDividerAtIndex:0];
+}
+
 - (NSNumber *)rightSideWidth {
     return [self rightSidePaneIsOpen] ? [NSNumber numberWithDouble:NSWidth([rightSideContentView frame])] : @0.0;
+}
+
+- (void)setRightSideWidth:(NSNumber *)rightSideWidth {
+    [splitView setPosition:[splitView maxPossiblePositionOfDividerAtIndex:1] - [splitView dividerThickness] - [rightSideWidth doubleValue] ofDividerAtIndex:1];
 }
 
 - (BOOL)hasNotes {
