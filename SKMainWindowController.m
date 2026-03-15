@@ -609,8 +609,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [setup setObject:NSStringFromRect([savedNormalWindow frame]) forKey:MAINWINDOWFRAME_KEY];
     else
         [setup setObject:NSStringFromRect([[self window] frame]) forKey:MAINWINDOWFRAME_KEY];
-    [setup setObject:[NSNumber numberWithDouble:[self leftSideWidth]] forKey:LEFTSIDEPANEWIDTH_KEY];
-    [setup setObject:[NSNumber numberWithDouble:[self rightSideWidth]] forKey:RIGHTSIDEPANEWIDTH_KEY];
+    [setup setObject:[self leftSideWidth] forKey:LEFTSIDEPANEWIDTH_KEY];
+    [setup setObject:[self rightSideWidth] forKey:RIGHTSIDEPANEWIDTH_KEY];
     setDestinationInSetup(dest, setup);
     if (cropBoxes)
         [setup setObject:cropBoxes forKey:CROPBOXES_KEY];
@@ -1339,12 +1339,12 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         return NO == [splitView isSubviewCollapsed:rightSideContentView];
 }
 
-- (CGFloat)leftSideWidth {
-    return [self leftSidePaneIsOpen] ? NSWidth([leftSideContentView frame]) : 0.0;
+- (NSNumber *)leftSideWidth {
+    return [self leftSidePaneIsOpen] ? [NSNumber numberWithDouble:NSWidth([leftSideContentView frame])] : @0.0;
 }
 
-- (CGFloat)rightSideWidth {
-    return [self rightSidePaneIsOpen] ? NSWidth([rightSideContentView frame]) : 0.0;
+- (NSNumber *)rightSideWidth {
+    return [self rightSidePaneIsOpen] ? [NSNumber numberWithDouble:NSWidth([rightSideContentView frame])] : @0.0;
 }
 
 - (BOOL)hasNotes {
