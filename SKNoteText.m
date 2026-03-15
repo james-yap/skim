@@ -37,6 +37,7 @@
  */
 
 #import "SKNoteText.h"
+#import <Quartz/Quartz.h>
 #import "PDFAnnotation_SKExtensions.h"
 #import "NSAttributedString_SKExtensions.h"
 

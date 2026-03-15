@@ -43,6 +43,7 @@
 #import "NSValue_SKExtensions.h"
 #import "NSURL_SKExtensions.h"
 #import "SKTypeSelectHelper.h"
+#import <Quartz/Quartz.h>
 #import <SkimNotes/SkimNotes.h>
 #import "SKNotesPage.h"
 #import "SKPDFDocument.h"

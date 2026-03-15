@@ -37,9 +37,10 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+@class PDFPage;
 
 @interface SKNoteText : NSObject {
     __weak PDFAnnotation *note;

@@ -37,12 +37,11 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
 #import "SKNoteTypeSheetController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class SKNoteOutlineView, SKStatusBar;
+@class SKNoteOutlineView, SKStatusBar, PDFPage;
 
 @interface SKNotesDocument : NSDocument <NSWindowDelegate, NSToolbarDelegate, NSOutlineViewDataSource, SKNoteTypeSheetControllerDelegate> {
     SKNoteOutlineView *outlineView;

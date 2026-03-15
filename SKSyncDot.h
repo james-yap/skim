@@ -37,12 +37,13 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
 #import <stdatomic.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^SKSyncDotUpdateBlock)(BOOL finished);
+
+@class PDFPage;
 
 @interface SKSyncDot : NSObject {
     NSPoint point;

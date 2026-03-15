@@ -37,6 +37,7 @@
  */
 
 #import "SKGroupedSearchResult.h"
+#import <Quartz/Quartz.h>
 #import "PDFPage_SKExtensions.h"
 #import "PDFSelection_SKExtensions.h"
 #import "NSGeometry_SKExtensions.h"

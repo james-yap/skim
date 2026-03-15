@@ -37,6 +37,7 @@
  */
 
 #import "SKThumbnailStamp.h"
+#import <Quartz/Quartz.h>
 
 @implementation SKThumbnailStamp
 

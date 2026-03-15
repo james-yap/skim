@@ -37,6 +37,7 @@
  */
 
 #import "SKSyncDot.h"
+#import <Quartz/Quartz.h>
 #import "NSGeometry_SKExtensions.h"
 #import "NSShadow_SKExtensions.h"
 

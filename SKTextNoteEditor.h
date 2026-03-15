@@ -37,11 +37,11 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol SKTextNoteEditorDelegate;
+@class PDFAnnotation;
 
 @interface SKTextNoteEditor : NSView <NSTextViewDelegate> {
     NSTextView *textView;

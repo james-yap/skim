@@ -37,6 +37,7 @@
  */
 
 #import "SKTextNoteEditor.h"
+#import <Quartz/Quartz.h>
 #import "PDFAnnotation_SKExtensions.h"
 #import "NSEvent_SKExtensions.h"
 #import "SKChainedUndoManager.h"

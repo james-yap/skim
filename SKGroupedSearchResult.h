@@ -37,12 +37,13 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <Quartz/Quartz.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString * const SKGroupedSearchResultCountKey;
 extern NSString * const SKGroupedSearchResultPageIndexKey;
+
+@class PDFPage, PDFSelection;
 
 @interface SKGroupedSearchResult : NSObject {
     PDFPage *page;
