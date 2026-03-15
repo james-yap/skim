@@ -1337,7 +1337,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 }
 
 - (NSNumber *)leftSideWidth {
-    return [self leftSidePaneIsOpen] ? [NSNumber numberWithDouble:NSWidth([leftSideContentView frame])] : @0.0;
+    return [splitView isSubviewCollapsed:leftSideContentView] ? @0.0 : [NSNumber numberWithDouble:NSWidth([leftSideContentView frame])];
 }
 
 - (void)setLeftSideWidth:(NSNumber *)leftSideWidth {
@@ -1345,7 +1345,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 }
 
 - (NSNumber *)rightSideWidth {
-    return [self rightSidePaneIsOpen] ? [NSNumber numberWithDouble:NSWidth([rightSideContentView frame])] : @0.0;
+    return [splitView isSubviewCollapsed:rightSideContentView] ? @0.0 : [NSNumber numberWithDouble:NSWidth([rightSideContentView frame])];
 }
 
 - (void)setRightSideWidth:(NSNumber *)rightSideWidth {
