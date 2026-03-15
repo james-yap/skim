@@ -3246,6 +3246,8 @@ static void setDestinationInSetup(SKDestination dest, NSMutableDictionary *setup
         [setup setObject:[NSNumber numberWithUnsignedInteger:dest.pageIndex] forKey:PAGEINDEX_KEY];
         if (NSEqualPoints(dest.point, SKUnspecifiedPoint) == NO)
             [setup setObject:NSStringFromPoint(dest.point) forKey:SCROLLPOINT_KEY];
+        else
+            [setup removeObjectForKey:SCROLLPOINT_KEY];
     }
 }
 
