@@ -758,9 +758,14 @@
     NSDragOperation dragOp = NSDragOperationNone;
     if ([ov isEqual:rightSideController.noteOutlineView]) {
         NSPasteboard *pboard = [info draggingPasteboard];
-        if ([pboard canReadObjectForClasses:@[[NSColor class]] options:@{}] &&
-            anIndex == NSOutlineViewDropOnItemIndex && [(PDFAnnotation *)item type] != nil)
-            dragOp = NSDragOperationEvery;
+        if ([pboard canReadObjectForClasses:@[[NSColor class]] options:@{}]) {
+            if (anIndex == NSOutlineViewDropOnItemIndex && [(PDFAnnotation *)item type] != nil) {
+                dragOp = NSDragOperationEvery;
+            } else if ([ov selectedRow] != -1) {
+                [ov setDropItem:nil dropChildIndex:NSOutlineViewDropOnItemIndex];
+                dragOp = NSDragOperationEvery;
+            }
+        }
     }
     return dragOp;
 }
@@ -771,7 +776,13 @@
         if ([pboard canReadObjectForClasses:@[[NSColor class]] options:@{}]) {
             BOOL isShift = ([NSEvent modifierFlags] & NSEventModifierFlagShift) != 0;
             BOOL isAlt = ([NSEvent modifierFlags] & NSEventModifierFlagOption) != 0;
-            [item setColor:[NSColor colorFromPasteboard:pboard] alternate:isAlt updateDefaults:isShift];
+            NSColor *color = [NSColor colorFromPasteboard:pboard];
+            if (item) {
+                [item setColor:color alternate:isAlt updateDefaults:isShift];
+            } else {
+                for (PDFAnnotation *note in [self selectedNotes])
+                    [note setColor:color alternate:isAlt updateDefaults:isShift];
+            }
             return YES;
         }
     }
