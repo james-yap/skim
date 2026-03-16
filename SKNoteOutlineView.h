@@ -43,12 +43,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SKNoteOutlineView : SKOutlineView {
     NSMapTable *rowHeights;
+    BOOL dropping;
 }
 
 - (void)toggleTableColumn:(nullable id)sender;
 
 @property (nonatomic, readonly) CGFloat fullWidthCellWidth;
 @property (nonatomic, readonly) CGFloat outlineIndentation;
+
+@property (nonatomic, readonly, getter=isDropping) BOOL dropping;
 
 - (CGFloat)rowHeightForItem:(id)item;
 - (void)setRowHeight:(CGFloat)rowHeight forItem:(id)item;

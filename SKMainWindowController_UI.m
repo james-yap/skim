@@ -868,6 +868,13 @@
     }
 }
 
+- (BOOL)outlineView:(NSOutlineView *)ov shouldExpandItem:(id)item{
+    if ([ov isEqual:rightSideController.noteOutlineView]) {
+        return [rightSideController.noteOutlineView isDropping] == NO;
+    }
+    return YES;
+}
+
 - (void)outlineViewItemDidExpand:(NSNotification *)notification{
     if ([[notification object] isEqual:leftSideController.tocOutlineView]) {
         [self updateTocHighlights];

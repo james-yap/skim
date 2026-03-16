@@ -60,6 +60,7 @@
 
 @implementation SKNoteOutlineView
 
+@synthesize dropping;
 @dynamic fullWidthCellWidth, outlineIndentation, delegate;
 
 static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
@@ -225,6 +226,21 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     } else {
         return 16.0;
     }
+}
+
+- (NSDragOperation)draggingEntered:(id<NSDraggingInfo>)sender {
+    dropping = YES;
+    return [super draggingEntered:sender];
+}
+
+- (void)draggingExited:(id<NSDraggingInfo>)sender {
+    dropping = NO;
+    [super draggingExited:sender];
+}
+
+- (BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
+    dropping = NO;
+    return [super performDragOperation:sender];
 }
 
 @end
