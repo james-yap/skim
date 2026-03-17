@@ -113,6 +113,11 @@
 #define SKDocumentToolbarSplitPDFItemIdentifier @"SKDocumentToolbarSplitPDFItemIdentifier"
 #define SKDocumentToolbarPrintItemIdentifier @"SKDocumentToolbarPrintItemIdentifier"
 
+#define SKLastTextNoteTypeKey   @"SKLastTextNoteType"
+#define SKLastShapeNoteTypeKey  @"SKLastShapeNoteType"
+#define SKLastMarkupNoteTypeKey @"SKLastMarkupNoteType"
+#define SKLastLineNoteTypeKey   @"SKLastLineNoteType"
+
 static NSString *noteToolImageNames[] = {@"ToolbarTextNoteMenu", @"ToolbarAnchoredNoteMenu", @"ToolbarCircleNoteMenu", @"ToolbarSquareNoteMenu", @"ToolbarHighlightNoteMenu", @"ToolbarUnderlineNoteMenu", @"ToolbarStrikeOutNoteMenu", @"ToolbarLineNoteMenu", @"ToolbarInkNoteMenu"};
 
 static NSString *addNoteToolImageNames[] = {@"ToolbarAddTextNoteMenu", @"ToolbarAddAnchoredNoteMenu", @"ToolbarAddCircleNoteMenu", @"ToolbarAddSquareNoteMenu", @"ToolbarAddHighlightNoteMenu", @"ToolbarAddUnderlineNoteMenu", @"ToolbarAddStrikeOutNoteMenu", @"ToolbarAddLineNoteMenu", @"ToolbarAddInkNoteMenu"};
@@ -143,6 +148,7 @@ static char SKDefaultsObservationContext;
 @interface SKMainToolbarController ()
 - (void)handleColorSwatchFrameChangedNotification:(NSNotification *)notification;
 - (void)updateColorsMenu:(NSMenu *)menu;
+- (void)setNoteType:(NSInteger)type forButton:(NSSegmentedControl *)button;
 @end
 
 
@@ -464,6 +470,8 @@ static char SKDefaultsObservationContext;
             
         } else if ([identifier isEqualToString:SKDocumentToolbarNewTextNoteItemIdentifier]) {
             
+            [self setNoteType:[[NSUserDefaults standardUserDefaults] integerForKey:SKLastTextNoteTypeKey] forButton:textNoteButton];
+            
             menu = [NSMenu menu];
             [menu addItemWithTitle:NSLocalizedString(@"Text Note", @"Menu item title") imageNamed:SKImageNameToolbarAddTextNote action:@selector(createNewTextNote:) target:self tag:SKNoteTypeFreeText];
             [menu addItemWithTitle:NSLocalizedString(@"Anchored Note", @"Menu item title") imageNamed:SKImageNameToolbarAddAnchoredNote action:@selector(createNewTextNote:) target:self tag:SKNoteTypeAnchored];
@@ -481,6 +489,8 @@ static char SKDefaultsObservationContext;
             
         } else if ([identifier isEqualToString:SKDocumentToolbarNewCircleNoteItemIdentifier]) {
             
+            [self setNoteType:[[NSUserDefaults standardUserDefaults] integerForKey:SKLastShapeNoteTypeKey] forButton:circleNoteButton];
+            
             menu = [NSMenu menu];
             [menu addItemWithTitle:NSLocalizedString(@"Circle", @"Menu item title") imageNamed:SKImageNameToolbarAddCircleNote action:@selector(createNewCircleNote:) target:self tag:SKNoteTypeCircle];
             [menu addItemWithTitle:NSLocalizedString(@"Box", @"Menu item title") imageNamed:SKImageNameToolbarAddSquareNote action:@selector(createNewCircleNote:) target:self tag:SKNoteTypeSquare];
@@ -497,6 +507,8 @@ static char SKDefaultsObservationContext;
             [item setMenuFormRepresentation:menuItem];
             
         } else if ([identifier isEqualToString:SKDocumentToolbarNewMarkupItemIdentifier]) {
+            
+            [self setNoteType:[[NSUserDefaults standardUserDefaults] integerForKey:SKLastMarkupNoteTypeKey] forButton:markupNoteButton];
             
             menu = [NSMenu menu];
             [menu addItemWithTitle:NSLocalizedString(@"Highlight", @"Menu item title") imageNamed:SKImageNameToolbarAddHighlightNote action:@selector(createNewMarkupNote:) target:self tag:SKNoteTypeHighlight];
@@ -516,6 +528,8 @@ static char SKDefaultsObservationContext;
             [item setMenuFormRepresentation:menuItem];
             
         } else if ([identifier isEqualToString:SKDocumentToolbarNewLineItemIdentifier]) {
+            
+            [self setNoteType:[[NSUserDefaults standardUserDefaults] integerForKey:SKLastLineNoteTypeKey] forButton:lineNoteButton];
             
             menu = [NSMenu menu];
             [menu addItemWithTitle:NSLocalizedString(@"Line", @"Menu item title") imageNamed:SKImageNameToolbarAddLineNote action:@selector(createNewLineNote:) target:self tag:SKNoteTypeLine];
@@ -1269,30 +1283,38 @@ static char SKDefaultsObservationContext;
     [mainController.pdfView setDisplaysPageBreaks:NO == [mainController.pdfView displaysPageBreaks]];
 }
 
+- (void)setNoteType:(NSInteger)type forButton:(NSSegmentedControl *)button {
+    if (type != [button tagForSegment:0]) {
+        [button setTag:type forSegment:0];
+        [button setImage:[NSImage imageNamed:addNoteToolImageNames[type]] forSegment:0];
+    }
+}
+
 - (void)createNewNoteWithType:(NSInteger)type forButton:(NSSegmentedControl *)button {
     if ([mainController.pdfView canSelectNote]) {
         [mainController.pdfView addAnnotationWithType:type];
-        if (type != [button tagForSegment:0]) {
-            [button setTag:type forSegment:0];
-            [button setImage:[NSImage imageNamed:addNoteToolImageNames[type]] forSegment:0];
-        }
+        [self setNoteType:type forButton:button];
     } else NSBeep();
 }
 
 - (void)createNewTextNote:(id)sender {
     [self createNewNoteWithType:[sender tag] forButton:textNoteButton];
+    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:SKLastTextNoteTypeKey];
 }
 
 - (void)createNewCircleNote:(id)sender {
     [self createNewNoteWithType:[sender tag] forButton:circleNoteButton];
+    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:SKLastShapeNoteTypeKey];
 }
 
 - (void)createNewMarkupNote:(id)sender {
     [self createNewNoteWithType:[sender tag] forButton:markupNoteButton];
+    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:SKLastMarkupNoteTypeKey];
 }
 
 - (void)createNewLineNote:(id)sender {
     [self createNewNoteWithType:[sender tag] forButton:lineNoteButton];
+    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:SKLastLineNoteTypeKey];
 }
 
 - (IBAction)createNewNote:(id)sender {

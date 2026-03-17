@@ -63,6 +63,14 @@
 		<integer>0</integer>
 		<key>SKLastSecondarySelectsText</key>
 		<false/>
+		<key>SKLastTextNoteType</key>
+		<integer>0</integer>
+		<key>SKLastShapeNoteType</key>
+		<integer>2</integer>
+		<key>SKLastMarkupNoteType</key>
+		<integer>4</integer>
+		<key>SKLastLineNoteType</key>
+		<integer>7</integer>
 		<key>SKTableFontSize</key>
 		<real>12</real>
 		<key>SKSequentialPageNumbering</key>
@@ -324,6 +332,10 @@
 			<string>SKLastToolMode</string>
 			<string>SKLastAnnotationMode</string>
 			<string>SKLastSecondarySelectsText</string>
+			<string>SKLastTextNoteType</string>
+			<string>SKLastShapeNoteType</string>
+			<string>SKLastMarkupNoteType</string>
+			<string>SKLastLineNoteType</string>
 			<string>SKReadMissingNotesFromSkimFileOption</string>
 			<string>SKReadNonMissingNotesFromSkimFileOption</string>
 			<string>SKEnableAppleRemote</string>
