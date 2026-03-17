@@ -90,6 +90,7 @@
 
 #define DEFAULT_SPLIT_PDF_FACTOR 0.3
 
+#define SKShowNoteToolbarInFullScreenKey @"SKShowNoteToolbarInFullScreen"
 
 @interface SKMainWindowController (SKPrivateUI)
 - (void)updateLineInspector;
@@ -1166,6 +1167,8 @@
         if (noteToolbarController == nil) {
             noteToolbarController = [[SKNoteToolbarController alloc] init];
             [noteToolbarController setMainController:self];
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowNoteToolbarInFullScreenKey])
+                [noteToolbarController setFullScreenMinHeight:28.0];
         }
         [[self window] addTitlebarAccessoryViewController:noteToolbarController];
     }

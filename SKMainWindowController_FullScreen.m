@@ -628,7 +628,7 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
     if (showToolbarInFullScreen(window)) {
         CGFloat offset = fullScreenOffset(window);
         frame.size.height += offset;
-        NSUInteger i = noteToolbarController ? [[window titlebarAccessoryViewControllers] indexOfObject:noteToolbarController] : NSNotFound;
+        NSUInteger i = noteToolbarController && [noteToolbarController fullScreenMinHeight] <= 0.0 ? [[window titlebarAccessoryViewControllers] indexOfObject:noteToolbarController] : NSNotFound;
         if (i != NSNotFound) {
             noteToolbar = noteToolbarController;
             [window removeTitlebarAccessoryViewControllerAtIndex:i];
