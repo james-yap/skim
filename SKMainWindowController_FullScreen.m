@@ -596,10 +596,10 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
 }
 
 - (NSApplicationPresentationOptions)window:(NSWindow *)window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions)proposedOptions {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHideToolbarInFullScreenKey] == NO)
-        return proposedOptions;
-    else
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHideToolbarInFullScreenKey])
         return proposedOptions | NSApplicationPresentationAutoHideToolbar;
+    else
+        return proposedOptions;
 }
 
 - (NSArray *)customWindowsToEnterFullScreenForWindow:(NSWindow *)window {
