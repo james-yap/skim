@@ -480,7 +480,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     [layer setBounds:[[window contentView] bounds]];
     [layer setContentsScale:[window backingScaleFactor]];
     [layer setContents:CFBridgingRelease(cgImage)];
-    if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0 && showToolbarInFullScreen(window)) {
+    if (([window styleMask] & NSWindowStyleMaskFullScreen) != 0 && NSHeight([window frame]) > NSHeight([window contentLayoutRect])) {
         for (NSWindow *tbWindow in [window childWindows]) {
             if ([NSStringFromClass([tbWindow class]) containsString:@"Toolbar"]) {
                 CGImageRef tbCgImage = CGWindowListCreateImage(CGRectNull, kCGWindowListOptionIncludingWindow, (CGWindowID)[tbWindow windowNumber], kCGWindowImageBoundsIgnoreFraming | kCGWindowImageBestResolution);
