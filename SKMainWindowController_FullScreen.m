@@ -525,10 +525,8 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
     return view ? NSMaxY([[view window] convertRectToScreen:[view convertRect:[view bounds] toView:nil]]) - NSMaxY([[view window] frame]) : 0.0;
 }
 
-static inline CGFloat fullScreenOffset(NSWindow *window, CGFloat accessoryHeight) {
-    if (accessoryHeight > 0.0)
-        return NSHeight([window frame]) - NSHeight([window contentLayoutRect]) - accessoryHeight;
-    else if (hasUnifiedToolbar(window))
+static inline CGFloat fullScreenOffset(NSWindow *window) {
+    if (hasUnifiedToolbar(window))
         return 0.0;
     if (fullScreenToolbarOffset <= 0.0)
         fullScreenToolbarOffset = toolbarViewOffset(window);
@@ -634,13 +632,18 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
             showToolbarWindow = NO;
     }
     if (showToolbarWindow) {
-        CGFloat offset = fullScreenOffset(window, accessoryHeight);
-        frame.size.height += offset;
-        NSUInteger i = noteToolbarController && [noteToolbarController fullScreenMinHeight] <= 0.0 ? [[window titlebarAccessoryViewControllers] indexOfObject:noteToolbarController] : NSNotFound;
-        if (i != NSNotFound) {
-            noteToolbar = noteToolbarController;
-            [window removeTitlebarAccessoryViewControllerAtIndex:i];
+        CGFloat offset = 0.0;
+        if (accessoryHeight > 0.0) {
+            offset = NSHeight([window frame]) - NSHeight([window contentLayoutRect]) - accessoryHeight;
+        } else {
+            offset = fullScreenOffset(window);
+            NSUInteger i = noteToolbarController && [noteToolbarController fullScreenMinHeight] <= 0.0 ? [[window titlebarAccessoryViewControllers] indexOfObject:noteToolbarController] : NSNotFound;
+            if (i != NSNotFound) {
+                noteToolbar = noteToolbarController;
+                [window removeTitlebarAccessoryViewControllerAtIndex:i];
+            }
         }
+        frame.size.height += offset;
         [(SKMainWindow *)window setFrameWithoutConstrain:frame];
         if (showMenuBarInFullScreen && offset > 0.0) {
             blackLayer = [CALayer layer];
