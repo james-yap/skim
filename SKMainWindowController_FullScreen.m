@@ -505,10 +505,6 @@ static CGFloat fullScreenToolbarOffset = 0.0;
 
 #pragma mark NSWindowDelegate Full Screen Methods
 
-static inline BOOL showToolbarInFullScreen(NSWindow *window) {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHideToolbarInFullScreenKey] == NO && (window == nil || [[window toolbar] isVisible]);
-}
-
 static inline BOOL hasUnifiedToolbar(NSWindow *window) {
     if (@available(macOS 11.0, *))
         return [window toolbarStyle] != NSWindowToolbarStyleExpanded;
@@ -529,8 +525,10 @@ static inline CGFloat toolbarViewOffset(NSWindow *window) {
     return view ? NSMaxY([[view window] convertRectToScreen:[view convertRect:[view bounds] toView:nil]]) - NSMaxY([[view window] frame]) : 0.0;
 }
 
-static inline CGFloat fullScreenOffset(NSWindow *window) {
-    if (hasUnifiedToolbar(window))
+static inline CGFloat fullScreenOffset(NSWindow *window, CGFloat accessoryHeight) {
+    if (accessoryHeight > 0.0)
+        return NSHeight([window frame]) - NSHeight([window contentLayoutRect]) - accessoryHeight;
+    else if (hasUnifiedToolbar(window))
         return 0.0;
     if (fullScreenToolbarOffset <= 0.0)
         fullScreenToolbarOffset = toolbarViewOffset(window);
@@ -543,7 +541,7 @@ static inline CGFloat fullScreenOffset(NSWindow *window) {
 }
 
 static inline void saveFullScreenToolbarOffset(NSWindow *window) {
-    if (fullScreenToolbarOffset < 0.0 && showToolbarInFullScreen(window) && hasUnifiedToolbar(window) == NO) {
+    if (fullScreenToolbarOffset < 0.0 && [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHideToolbarInFullScreenKey] == NO && [[window toolbar] isVisible] && hasUnifiedToolbar(window) == NO) {
         CGFloat toolbarItemOffset = toolbarViewOffset(window);
         if (toolbarItemOffset < 0.0)
             // save the offset for the next time, we may guess it wrong as it varies between OS versions
@@ -600,7 +598,7 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
 }
 
 - (NSApplicationPresentationOptions)window:(NSWindow *)window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions)proposedOptions {
-    if (showToolbarInFullScreen(nil))
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHideToolbarInFullScreenKey] == NO)
         return proposedOptions;
     else
         return proposedOptions | NSApplicationPresentationAutoHideToolbar;
@@ -625,8 +623,18 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
     [self displayStaticContentInWindow:displayWindow ordered:NSWindowBelow];
     NSTitlebarAccessoryViewController *noteToolbar = nil;
     CALayer *blackLayer = nil;
-    if (showToolbarInFullScreen(window)) {
-        CGFloat offset = fullScreenOffset(window);
+    BOOL showToolbarWindow = [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHideToolbarInFullScreenKey] == NO;
+    CGFloat accessoryHeight = 0.0;
+    if (showToolbarWindow && [[window toolbar] isVisible] == NO) {
+        for (NSTitlebarAccessoryViewController *accessory in [window titlebarAccessoryViewControllers]) {
+            if ([accessory layoutAttribute] == NSLayoutAttributeBottom)
+                accessoryHeight += [accessory fullScreenMinHeight];
+        }
+        if (accessoryHeight <= 0.0)
+            showToolbarWindow = NO;
+    }
+    if (showToolbarWindow) {
+        CGFloat offset = fullScreenOffset(window, accessoryHeight);
         frame.size.height += offset;
         NSUInteger i = noteToolbarController && [noteToolbarController fullScreenMinHeight] <= 0.0 ? [[window titlebarAccessoryViewControllers] indexOfObject:noteToolbarController] : NSNotFound;
         if (i != NSNotFound) {
