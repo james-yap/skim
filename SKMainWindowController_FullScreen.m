@@ -652,9 +652,11 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
             [blackLayer setFrame:SKSliceRect([window convertRectFromScreen:frame], offset, NSRectEdgeMaxY)];
             [[[[window contentView] superview] layer] addSublayer:blackLayer];
         }
-        for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews]) {
-            if ([view isKindOfClass:[NSControl class]])
-                [view setAlphaValue:0.0];
+        if (accessoryHeight <= 0.0) {
+            for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews]) {
+                if ([view isKindOfClass:[NSControl class]])
+                    [view setAlphaValue:0.0];
+            }
         }
         [self windowWillEnterFullScreenStyle:window];
     } else {
