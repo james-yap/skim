@@ -619,30 +619,33 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
     NSWindow *displayWindow = savedNormalWindow;
     savedNormalWindow = nil;
     [self displayStaticContentInWindow:displayWindow ordered:NSWindowBelow];
-    NSTitlebarAccessoryViewController *noteToolbar = nil;
-    CALayer *blackLayer = nil;
     BOOL showToolbarWindow = [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHideToolbarInFullScreenKey] == NO;
-    CGFloat accessoryHeight = 0.0;
-    if (showToolbarWindow && [[window toolbar] isVisible] == NO) {
-        for (NSTitlebarAccessoryViewController *accessory in [window titlebarAccessoryViewControllers]) {
-            if ([accessory layoutAttribute] == NSLayoutAttributeBottom)
-                accessoryHeight += [accessory fullScreenMinHeight];
+    CGFloat offset = 0.0;
+    BOOL showNoteToolbar = NO;
+    CALayer *blackLayer = nil;
+    if (showToolbarWindow) {
+        if ([[window toolbar] isVisible]) {
+            offset = fullScreenOffset(window);
+            if (noteToolbarController && [noteToolbarController isHidden] == NO && [noteToolbarController fullScreenMinHeight] <= 0.0 && [[window titlebarAccessoryViewControllers] containsObject:noteToolbarController]) {
+                showNoteToolbar = YES;
+                [noteToolbarController setHidden:YES];
+            }
+            for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews]) {
+                if ([view isKindOfClass:[NSControl class]])
+                    [view setAlphaValue:0.0];
+            }
+        } else {
+            for (NSTitlebarAccessoryViewController *accessory in [window titlebarAccessoryViewControllers]) {
+                if ([accessory isHidden] == NO && [accessory layoutAttribute] == NSLayoutAttributeBottom)
+                    offset -= [accessory fullScreenMinHeight];
+            }
+            if (offset < 0.0)
+                offset += NSHeight([window frame]) - NSHeight([window contentLayoutRect]);
+            else
+                showToolbarWindow = NO;
         }
-        if (accessoryHeight <= 0.0)
-            showToolbarWindow = NO;
     }
     if (showToolbarWindow) {
-        CGFloat offset = 0.0;
-        if (accessoryHeight > 0.0) {
-            offset = NSHeight([window frame]) - NSHeight([window contentLayoutRect]) - accessoryHeight;
-        } else {
-            offset = fullScreenOffset(window);
-            NSUInteger i = noteToolbarController && [noteToolbarController fullScreenMinHeight] <= 0.0 ? [[window titlebarAccessoryViewControllers] indexOfObject:noteToolbarController] : NSNotFound;
-            if (i != NSNotFound) {
-                noteToolbar = noteToolbarController;
-                [window removeTitlebarAccessoryViewControllerAtIndex:i];
-            }
-        }
         frame.size.height += offset;
         [(SKMainWindow *)window setFrameWithoutConstrain:frame];
         if (showMenuBarInFullScreen && offset > 0.0) {
@@ -651,12 +654,6 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
             [blackLayer setZPosition:1.0];
             [blackLayer setFrame:SKSliceRect([window convertRectFromScreen:frame], offset, NSRectEdgeMaxY)];
             [[[[window contentView] superview] layer] addSublayer:blackLayer];
-        }
-        if (accessoryHeight <= 0.0) {
-            for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews]) {
-                if ([view isKindOfClass:[NSControl class]])
-                    [view setAlphaValue:0.0];
-            }
         }
         [self windowWillEnterFullScreenStyle:window];
     } else {
@@ -671,8 +668,8 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         completionHandler:^{
             [displayWindow orderOut:nil];
             [blackLayer removeFromSuperlayer];
-            if (noteToolbar)
-                [window addTitlebarAccessoryViewController:noteToolbar];
+            if (showNoteToolbar)
+                [noteToolbarController setHidden:NO];
         }];
 }
 
