@@ -621,14 +621,14 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
     [self displayStaticContentInWindow:displayWindow ordered:NSWindowBelow];
     BOOL showToolbarWindow = [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHideToolbarInFullScreenKey] == NO;
     CGFloat offset = 0.0;
-    BOOL showNoteToolbar = NO;
+    NSTitlebarAccessoryViewController *noteToolbar = nil;
     CALayer *blackLayer = nil;
     if (showToolbarWindow) {
         if ([[window toolbar] isVisible]) {
             offset = fullScreenOffset(window);
             if (noteToolbarController && [noteToolbarController isHidden] == NO && [noteToolbarController fullScreenMinHeight] <= 0.0 && [[window titlebarAccessoryViewControllers] containsObject:noteToolbarController]) {
-                showNoteToolbar = YES;
-                [noteToolbarController setHidden:YES];
+                noteToolbar = noteToolbarController;
+                [noteToolbar setHidden:YES];
             }
             for (NSView *view in [[[window standardWindowButton:NSWindowCloseButton] superview] subviews]) {
                 if ([view isKindOfClass:[NSControl class]])
@@ -668,8 +668,7 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         completionHandler:^{
             [displayWindow orderOut:nil];
             [blackLayer removeFromSuperlayer];
-            if (showNoteToolbar)
-                [noteToolbarController setHidden:NO];
+            [noteToolbar setHidden:NO];
         }];
 }
 
