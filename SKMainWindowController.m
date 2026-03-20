@@ -408,12 +408,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     [pdfView setDelegate:self];
     
-    NSNumber *widthNumber = [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKLeftSidePaneWidthKey];
-    if (widthNumber)
-        [self setLeftSideWidth:widthNumber];
-    widthNumber = [savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKRightSidePaneWidthKey] ?: @0.0;
-    if (widthNumber)
-        [self setRightSideWidth:widthNumber];
+    [self setLeftSideWidth:[savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKLeftSidePaneWidthKey]];
+    [self setRightSideWidth:[savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKRightSidePaneWidthKey] ?: @0.0];
     
     // this needs to be done before loading the PDFDocument
     [self resetThumbnailSizeIfNeeded];
@@ -1341,7 +1337,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 }
 
 - (void)setLeftSideWidth:(NSNumber *)leftSideWidth {
-    [splitView setPosition:[leftSideWidth doubleValue] ofDividerAtIndex:0];
+    if (leftSideWidth)
+        [splitView setPosition:[leftSideWidth doubleValue] ofDividerAtIndex:0];
 }
 
 - (NSNumber *)rightSideWidth {
@@ -1349,7 +1346,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 }
 
 - (void)setRightSideWidth:(NSNumber *)rightSideWidth {
-    [splitView setPosition:[splitView maxPossiblePositionOfDividerAtIndex:1] - [splitView dividerThickness] - [rightSideWidth doubleValue] ofDividerAtIndex:1];
+    if (rightSideWidth)
+        [splitView setPosition:[splitView maxPossiblePositionOfDividerAtIndex:1] - [splitView dividerThickness] - [rightSideWidth doubleValue] ofDividerAtIndex:1];
 }
 
 - (BOOL)hasNotes {

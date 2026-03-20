@@ -574,12 +574,8 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         [pdfView setBackgroundColor:backgroundColor];
         [secondaryPdfView setBackgroundColor:backgroundColor];
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseSidePanesInFullScreenKey]) {
-            NSNumber *leftWidthNumber = [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY];
-            NSNumber *rightWidthNumber = [savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY];
-            if (leftWidthNumber && rightWidthNumber) {
-                [self setLeftSideWidth:leftWidthNumber];
-                [self setRightSideWidth:rightWidthNumber];
-            }
+            [self setLeftSideWidth:[savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY]];
+            [self setRightSideWidth:[savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY]];
         }
         if ([[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey] count])
             [pdfView setDisplaySettingsAndRewind:savedNormalSetup];
