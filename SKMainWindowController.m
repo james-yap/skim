@@ -408,12 +408,12 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     [pdfView setDelegate:self];
     
-    NSNumber *leftWidthNumber = [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKLeftSidePaneWidthKey];
-    NSNumber *rightWidthNumber = [savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKRightSidePaneWidthKey];
-    if (leftWidthNumber && rightWidthNumber) {
-        [self setLeftSideWidth:leftWidthNumber];
-        [self setRightSideWidth:rightWidthNumber];
-    }
+    NSNumber *widthNumber = [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKLeftSidePaneWidthKey];
+    if (widthNumber)
+        [self setLeftSideWidth:widthNumber];
+    widthNumber = [savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKRightSidePaneWidthKey] ?: @0.0;
+    if (widthNumber)
+        [self setRightSideWidth:widthNumber];
     
     // this needs to be done before loading the PDFDocument
     [self resetThumbnailSizeIfNeeded];
