@@ -75,6 +75,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [sideView setAccessibilityLabel:NSLocalizedString(@"notes pane", @"Accessibility description")];
+    
     [button setHelp:NSLocalizedString(@"View Notes", @"Tool tip message") forSegment:SKSidePaneStateNote];
     [button setHelp:NSLocalizedString(@"View Snapshots", @"Tool tip message") forSegment:SKSidePaneStateSnapshot];
     

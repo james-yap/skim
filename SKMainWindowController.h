@@ -73,12 +73,12 @@ enum {
 @class SKPresentationNotesAuxiliary;
 
 @interface SKMainWindowController : NSWindowController <SKSnapshotWindowControllerDelegate, SKThumbnailDelegate, SKFindControllerDelegate, SKPDFViewDelegate, SKPDFDocumentDelegate, NSTouchBarDelegate> {
-    SKSplitView                         *splitView;
-    NSLayoutConstraint                  *topConstraint;
+    NSSplitViewController               *splitViewController;
+    
+    NSSplitViewController               *pdfSplitViewController;
     
     NSView                              *centerContentView;
-    SKSplitView                         *pdfSplitView;
-    NSView                              *pdfContentView;
+    
     SKPDFView                           *pdfView;
     
     SKSecondaryPDFView                  *secondaryPdfView;
@@ -96,9 +96,6 @@ enum {
     
     SKOverviewView                      *overviewView;
     NSView                              *overviewContentView;
-    
-    NSView                              *leftSideContentView;
-    NSView                              *rightSideContentView;
     
     SKStatusBar                         *statusBar;
     
@@ -155,10 +152,6 @@ enum {
     
     NSMutableDictionary<NSString *, id> *savedNormalSetup;
     
-    CGFloat                             lastLeftSidePaneWidth;
-    CGFloat                             lastRightSidePaneWidth;
-    CGFloat                             lastSplitPDFHeight;
-    
     CGFloat                             titleBarHeight;
     
     CGFloat                             thumbnailCacheSize;
@@ -188,11 +181,11 @@ enum {
         unsigned int updatingFont:1;
         unsigned int updatingFontAttributes:1;
         unsigned int updatingLine:1;
-        unsigned int settingUpWindow:1;
         unsigned int isEditingPDF:1;
         unsigned int isEditingTable:1;
         unsigned int isSwitchingFullScreen:1;
         unsigned int isAnimatingFindBar:1;
+        unsigned int isAnimatingSplitPDF:1;
         unsigned int wantsPresentationOrFullScreen:1;
         unsigned int hasCropped:1;
         unsigned int fullSizeContent:1;
@@ -202,17 +195,9 @@ enum {
     } mwcFlags;
 }
 
-@property (nonatomic, nullable, strong) IBOutlet SKSplitView *splitView;
-@property (nonatomic, nullable, strong) IBOutlet NSLayoutConstraint *topConstraint;
-
-@property (nonatomic, nullable, strong) IBOutlet NSView *centerContentView;
-@property (nonatomic, nullable, strong) IBOutlet SKSplitView *pdfSplitView;
-@property (nonatomic, nullable, strong) IBOutlet NSView *pdfContentView;
-@property (nonatomic, nullable, strong) IBOutlet NSLayoutConstraint *findBarTopConstraint;
-
 @property (nonatomic, nullable, strong) IBOutlet SKStatusBar *statusBar;
-    
-@property (nonatomic, nullable, strong) IBOutlet NSView *leftSideContentView, *rightSideContentView;
+
+@property (nonatomic, nullable, readonly) NSSplitView *splitView;
 
 @property (nonatomic, nullable, strong) NSString *searchString;
 

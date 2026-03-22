@@ -110,11 +110,6 @@
 #define SKLeftSidePaneWidthKey  @"SKLeftSidePaneWidth"
 #define SKRightSidePaneWidthKey @"SKRightSidePaneWidth"
 
-#define MIN_SIDE_PANE_WIDTH 100.0
-#define DEFAULT_SPLIT_PANE_HEIGHT 200.0
-#define MIN_SPLIT_PANE_HEIGHT 50.0
-#define MIN_PDF_PANE_HEIGHT 50.0
-
 #define SNAPSHOT_HEIGHT 200.0
 
 #define EXTRA_ROW_HEIGHT 2.0
@@ -1603,12 +1598,13 @@
 
 - (BOOL)PDFView:(PDFView *)aPDFView performAction:(PDFAction *)action {
     if ([action isKindOfClass:[PDFActionGoTo class]] && ([NSEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask) == NSEventModifierFlagShift) {
-        if ([secondaryPdfView window] == nil)
+        BOOL animating = NO;
+        if ([secondaryPdfView window] == nil) {
+            animating = [NSView shouldShowSlideAnimation];
             [self toggleSplitPDF:nil];
-        if ([pdfSplitView isAnimating]) {
-            [pdfSplitView enqueueOperation:^{
-                [secondaryPdfView performAction:action];
-            }];
+        }
+        if (animating) {
+            [secondaryPdfView performSelector:@selector(performAction:) withObject:action afterDelay:0.25];
         } else {
             [secondaryPdfView performAction:action];
         }
@@ -1651,147 +1647,6 @@
 
 - (NSUndoManager *)undoManagerForPDFView:(PDFView *)aPDFView {
     return [[self document] undoManager];
-}
-
-#pragma mark NSSplitView delegate protocol
-
-- (BOOL)splitView:(NSSplitView *)aSplitView canCollapseSubview:(NSView *)subview {
-    if ([aSplitView isEqual:splitView]) {
-        return [subview isEqual:centerContentView] == NO;
-    } else if ([aSplitView isEqual:pdfSplitView]) {
-        return [subview isEqual:secondaryPdfView];
-    }
-    return NO;
-}
-
-- (BOOL)splitView:(NSSplitView *)aSplitView doubleClickedOnDividerAtIndex:(NSInteger)dividerIndex {
-    if ([aSplitView isEqual:splitView]) {
-        if (dividerIndex == 0)
-            [self toggleLeftSidePane:aSplitView];
-        else if (dividerIndex == 1)
-            [self toggleRightSidePane:aSplitView];
-    } else if ([aSplitView isEqual:pdfSplitView]) {
-        if (dividerIndex == 0) {
-            CGFloat position = [pdfSplitView maxPossiblePositionOfDividerAtIndex:dividerIndex];
-            if (NSHeight([pdfContentView frame]) >= position) {
-                if (lastSplitPDFHeight <= 0.0)
-                    lastSplitPDFHeight = DEFAULT_SPLIT_PANE_HEIGHT;
-                if (lastSplitPDFHeight > NSHeight([pdfContentView frame]))
-                    lastSplitPDFHeight = floor(0.5 * NSHeight([pdfView frame]));
-                position -= lastSplitPDFHeight;
-            } else {
-                lastSplitPDFHeight = NSHeight([secondaryPdfView frame]);
-            }
-            [pdfSplitView setPosition:position ofDividerAtIndex:dividerIndex animate:YES];
-        }
-    }
-    return NO;
-}
-
-- (BOOL)splitView:(NSSplitView *)aSplitView shouldHideDividerAtIndex:(NSInteger)dividerIndex {
-    return [aSplitView isEqual:splitView];
-}
-
-- (CGFloat)splitView:(NSSplitView *)aSplitView constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex {
-    if ([aSplitView respondsToSelector:@selector(isAnimating)] && [(SKSplitView *)aSplitView isAnimating])
-        return proposedMax;
-    else if ([aSplitView isEqual:splitView] && dividerIndex == 1)
-        return proposedMax - MIN_SIDE_PANE_WIDTH;
-    else if ([aSplitView isEqual:pdfSplitView])
-        return proposedMax - MIN_SPLIT_PANE_HEIGHT;
-    return proposedMax;
-}
-
-- (CGFloat)splitView:(NSSplitView *)aSplitView constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex {
-    if ([aSplitView respondsToSelector:@selector(isAnimating)] && [(SKSplitView *)aSplitView isAnimating])
-        return proposedMin;
-    else if ([aSplitView isEqual:splitView] && dividerIndex == 0)
-        return proposedMin + MIN_SIDE_PANE_WIDTH;
-    else if ([aSplitView isEqual:pdfSplitView])
-        return proposedMin + titleBarHeight + MIN_PDF_PANE_HEIGHT;
-    return proposedMin;
-}
-
-- (void)splitView:(NSSplitView *)aSplitView resizeSubviewsWithOldSize:(NSSize)oldSize {
-    if ([aSplitView isEqual:splitView]) {
-        NSView *leftView = [[aSplitView subviews] objectAtIndex:0];
-        NSView *mainView = [[aSplitView subviews] objectAtIndex:1];
-        NSView *rightView = [[aSplitView subviews] objectAtIndex:2];
-        BOOL leftCollapsed = [aSplitView isSubviewCollapsed:leftView];
-        BOOL rightCollapsed = [aSplitView isSubviewCollapsed:rightView];
-        NSSize leftSize = [leftView frame].size;
-        NSSize mainSize = [mainView frame].size;
-        NSSize rightSize = [rightView frame].size;
-        CGFloat contentWidth = NSWidth([aSplitView frame]);
-        
-        if (leftCollapsed)
-            leftSize.width = 0.0;
-        else
-            contentWidth -= [aSplitView dividerThickness];
-        if (rightCollapsed)
-            rightSize.width = 0.0;
-        else
-            contentWidth -= [aSplitView dividerThickness];
-        
-        if (contentWidth < leftSize.width + rightSize.width) {
-            CGFloat oldContentWidth = oldSize.width;
-            if (leftCollapsed == NO)
-                oldContentWidth -= [aSplitView dividerThickness];
-            if (rightCollapsed == NO)
-                oldContentWidth -= [aSplitView dividerThickness];
-            CGFloat resizeFactor = contentWidth / oldContentWidth;
-            leftSize.width = floor(resizeFactor * leftSize.width);
-            rightSize.width = floor(resizeFactor * rightSize.width);
-        }
-        
-        mainSize.width = contentWidth - leftSize.width - rightSize.width;
-        leftSize.height = rightSize.height = mainSize.height = NSHeight([aSplitView frame]);
-        if (leftCollapsed == NO)
-            [leftView setFrameSize:leftSize];
-        if (rightCollapsed == NO)
-            [rightView setFrameSize:rightSize];
-        [mainView setFrameSize:mainSize];
-    } else if ([aSplitView isEqual:pdfSplitView] && [[aSplitView subviews] count] > 1) {
-        NSView *topView = [[aSplitView subviews] objectAtIndex:0];
-        NSView *bottomView = [[aSplitView subviews] objectAtIndex:1];
-        NSSize topSize = [topView frame].size;
-        NSSize bottomSize = [bottomView frame].size;
-        CGFloat contentHeight = NSHeight([aSplitView frame]) - [aSplitView dividerThickness];
-        
-        if (bottomSize.height <= 0.0 || contentHeight < titleBarHeight + MIN_PDF_PANE_HEIGHT + MIN_SPLIT_PANE_HEIGHT) {
-            topSize.height = contentHeight;
-            bottomSize.height = 0.0;
-        } else {
-            if (rand() % 2 == 0) {
-                topSize.height = floor(contentHeight * topSize.height / (oldSize.height - [aSplitView dividerThickness]));
-                bottomSize.height = contentHeight - topSize.height;
-            } else {
-                bottomSize.height = floor(contentHeight * bottomSize.height / (oldSize.height - [aSplitView dividerThickness]));
-                topSize.height = contentHeight - bottomSize.height;
-            }
-            if (bottomSize.height < MIN_SPLIT_PANE_HEIGHT) {
-                bottomSize.height = MIN_SPLIT_PANE_HEIGHT;
-                topSize.height = contentHeight - MIN_SPLIT_PANE_HEIGHT;
-            } else if (topSize.height < titleBarHeight + MIN_PDF_PANE_HEIGHT) {
-                topSize.height = titleBarHeight - MIN_PDF_PANE_HEIGHT;
-                bottomSize.height = contentHeight - titleBarHeight - MIN_PDF_PANE_HEIGHT;
-            }
-        }
-        topSize.width = bottomSize.width = NSWidth([aSplitView frame]);
-        [topView setFrameSize:topSize];
-        [bottomView setFrameSize:bottomSize];
-    }
-    [aSplitView adjustSubviews];
-}
-
-- (void)splitViewDidResizeSubviews:(NSNotification *)notification {
-    id sender = [notification object];
-    if ([sender isEqual:splitView] && [[[self window] frameAutosaveName] length] && mwcFlags.settingUpWindow == 0) {
-        CGFloat leftWidth = [splitView isSubviewCollapsed:leftSideContentView] ? 0.0 : NSWidth([leftSideContentView frame]);
-        CGFloat rightWidth = [splitView isSubviewCollapsed:rightSideContentView] ? 0.0 : NSWidth([rightSideContentView frame]);
-        [[NSUserDefaults standardUserDefaults] setFloat:leftWidth forKey:SKLeftSidePaneWidthKey];
-        [[NSUserDefaults standardUserDefaults] setFloat:rightWidth forKey:SKRightSidePaneWidthKey];
-    }
 }
 
 #pragma mark UI validation
@@ -2136,7 +1991,7 @@
 }
 
 - (void)handleNoteViewFrameDidChangeNotification:(NSNotification *)notification {
-    if (mwcFlags.autoResizeNoteRows && [splitView isAnimating] == NO) {
+    if (mwcFlags.autoResizeNoteRows) {
         [rightSideController.noteOutlineView resetRowHeights];
         [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
     }
@@ -2149,6 +2004,15 @@
 - (void)observeUndoManagerCheckpoint:(NSNotification *)notification {
     // Start the coalescing of note property changes over.
     undoGroupOldPropertiesPerNote = nil;
+}
+
+- (void)handleSplitViewDidResizeSubviewsNotification:(NSNotification *)notification {
+    NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
+    CGFloat width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
+    [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKLeftSidePaneWidthKey];
+    item = [[splitViewController splitViewItems] lastObject];
+    width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
+    [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKRightSidePaneWidthKey];
 }
 
 #pragma mark Observer registration
@@ -2177,6 +2041,10 @@
     // PDFPage
     [nc addObserver:self selector:@selector(handlePageLabelsChangedNotification:)
                              name:SKPDFPageLabelsChangedNotification object:nil];
+    // NSSplitView
+    if ([[[self window] frameAutosaveName] length])
+        [nc addObserver:self selector:@selector(handleSplitViewDidResizeSubviewsNotification:)
+                   name:NSSplitViewDidResizeSubviewsNotification object:[splitViewController splitView]];
 }
 
 @end

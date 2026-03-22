@@ -80,6 +80,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [sideView setAccessibilityLabel:NSLocalizedString(@"contents pane", @"Accessibility description")];
+    
     [button setHelp:NSLocalizedString(@"View Thumbnails", @"Tool tip message") forSegment:SKSidePaneStateThumbnail];
     [button setHelp:NSLocalizedString(@"View Table of Contents", @"Tool tip message") forSegment:SKSidePaneStateOutline];
     [alternateButton setHelp:NSLocalizedString(@"Separate search results", @"Tool tip message") forSegment:SKFindPaneStateSingular];

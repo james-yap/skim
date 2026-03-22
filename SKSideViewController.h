@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class SKMainWindowController, SKTopBarView;
 
 @interface SKSideViewController : NSViewController {
+    NSView *sideView;
     SKTopBarView *topBar;
     NSLayoutConstraint *topConstraint;
     NSSegmentedControl *button;
@@ -53,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL isAnimating;
 }
 
+@property (nonatomic, nullable, strong) IBOutlet NSView *sideView;
 @property (nonatomic, nullable, strong) IBOutlet SKTopBarView *topBar;
 @property (nonatomic, nullable, strong) IBOutlet NSLayoutConstraint *topConstraint;
 @property (nonatomic, nullable, strong) IBOutlet NSSegmentedControl *button, *alternateButton;

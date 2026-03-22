@@ -91,11 +91,11 @@ static CGFloat fullScreenToolbarOffset = 0.0;
 #pragma mark Side Windows
 
 - (void)showSideWindow {
-    if ([[leftSideController.view window] firstResponderIsDescendantOf:leftSideController.view])
-        [[leftSideController.view window] makeFirstResponder:nil];
+    if ([[leftSideController.view window] firstResponderIsDescendantOf:leftSideController.sideView])
+        [[leftSideController.sideView window] makeFirstResponder:nil];
     
     if (sideWindow == nil)
-        sideWindow = [[SKSideWindow alloc] initWithView:leftSideController.view];
+        sideWindow = [[SKSideWindow alloc] initWithView:leftSideController.sideView];
     
     if (mwcFlags.fullSizeContent) {
         [leftSideController.topBar setStyle:SKTopBarStylePresentation];
@@ -116,10 +116,10 @@ static CGFloat fullScreenToolbarOffset = 0.0;
 }
 
 - (void)hideSideWindow {
-    if ([[leftSideController.view window] isEqual:sideWindow]) {
+    if ([[leftSideController.sideView window] isEqual:sideWindow]) {
         [sideWindow remove];
         
-        if ([sideWindow firstResponderIsDescendantOf:leftSideController.view])
+        if ([sideWindow firstResponderIsDescendantOf:leftSideController.sideView])
             [sideWindow makeFirstResponder:nil];
         if (mwcFlags.fullSizeContent) {
             [leftSideController.topBar setStyle:SKTopBarStyleSearchBar];
@@ -128,9 +128,9 @@ static CGFloat fullScreenToolbarOffset = 0.0;
             [leftSideController.topBar setDrawsBackground:YES];
         }
         
-        [leftSideController.view setFrame:[leftSideContentView bounds]];
+        [leftSideController.sideView setFrame:[leftSideController.view bounds]];
         
-        [leftSideContentView addSubviewWithConstraints:leftSideController.view];
+        [leftSideController.view addSubviewWithConstraints:leftSideController.sideView];
         
         [self setLeftSidePaneState:mwcFlags.savedLeftSidePaneState];
         

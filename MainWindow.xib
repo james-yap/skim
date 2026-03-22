@@ -8,15 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SKMainWindowController">
             <connections>
-                <outlet property="centerContentView" destination="1321" id="1526"/>
-                <outlet property="findBarTopConstraint" destination="Twe-rt-5Qm" id="9jp-xi-0gz"/>
-                <outlet property="leftSideContentView" destination="769" id="774"/>
-                <outlet property="pdfContentView" destination="1315" id="1527"/>
-                <outlet property="pdfSplitView" destination="1314" id="1318"/>
-                <outlet property="rightSideContentView" destination="770" id="775"/>
-                <outlet property="splitView" destination="1385" id="1448"/>
                 <outlet property="statusBar" destination="2Zw-iS-Qai" id="5oD-6z-7iD"/>
-                <outlet property="topConstraint" destination="kue-s7-oZq" id="Tun-Zg-UFY"/>
                 <outlet property="window" destination="5" id="18"/>
             </connections>
         </customObject>
@@ -33,54 +25,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="1000" height="600"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <splitView dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1385" customClass="SKSplitView">
-                        <rect key="frame" x="0.0" y="22" width="1000" height="578"/>
-                        <subviews>
-                            <customView fixedFrame="YES" id="769" customClass="SKGroupView">
-                                <rect key="frame" x="0.0" y="0.0" width="250" height="578"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                            </customView>
-                            <customView id="1321">
-                                <rect key="frame" x="251" y="0.0" width="498" height="578"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <subviews>
-                                    <splitView dividerStyle="paneSplitter" translatesAutoresizingMaskIntoConstraints="NO" id="1314" customClass="SKSplitView">
-                                        <rect key="frame" x="0.0" y="0.0" width="498" height="578"/>
-                                        <subviews>
-                                            <customView fixedFrame="YES" id="1315">
-                                                <rect key="frame" x="0.0" y="0.0" width="498" height="578"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                            </customView>
-                                        </subviews>
-                                        <holdingPriorities>
-                                            <real value="250"/>
-                                        </holdingPriorities>
-                                        <connections>
-                                            <outlet property="delegate" destination="-2" id="1317"/>
-                                        </connections>
-                                    </splitView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="1314" secondAttribute="bottom" id="BwS-so-46O"/>
-                                    <constraint firstAttribute="trailing" secondItem="1314" secondAttribute="trailing" id="OE4-7n-0dl"/>
-                                    <constraint firstItem="1314" firstAttribute="top" secondItem="1321" secondAttribute="top" id="Twe-rt-5Qm"/>
-                                    <constraint firstItem="1314" firstAttribute="leading" secondItem="1321" secondAttribute="leading" id="xoo-8V-ElE"/>
-                                </constraints>
-                            </customView>
-                            <customView fixedFrame="YES" id="770" customClass="SKGroupView">
-                                <rect key="frame" x="750" y="0.0" width="250" height="578"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                            </customView>
-                        </subviews>
-                        <holdingPriorities>
-                            <real value="250"/>
-                            <real value="250"/>
-                            <real value="250"/>
-                        </holdingPriorities>
-                        <connections>
-                            <outlet property="delegate" destination="-2" id="1449"/>
-                        </connections>
-                    </splitView>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="2Zw-iS-Qai" customClass="SKStatusBar">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="22"/>
                         <constraints>
@@ -90,11 +34,7 @@
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="2Zw-iS-Qai" secondAttribute="bottom" id="Lpk-GO-C0x"/>
-                    <constraint firstItem="2Zw-iS-Qai" firstAttribute="top" secondItem="1385" secondAttribute="bottom" id="N1d-xY-GK9"/>
-                    <constraint firstAttribute="trailing" secondItem="1385" secondAttribute="trailing" id="P20-vk-75c"/>
                     <constraint firstAttribute="trailing" secondItem="2Zw-iS-Qai" secondAttribute="trailing" id="Rpa-Nl-KNp"/>
-                    <constraint firstItem="1385" firstAttribute="leading" secondItem="6" secondAttribute="leading" id="cwR-tV-s3T"/>
-                    <constraint firstItem="1385" firstAttribute="top" secondItem="6" secondAttribute="top" id="kue-s7-oZq"/>
                     <constraint firstItem="2Zw-iS-Qai" firstAttribute="leading" secondItem="6" secondAttribute="leading" id="vlN-aY-PV4"/>
                 </constraints>
             </view>

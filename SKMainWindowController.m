@@ -122,6 +122,11 @@
 #define MAX_PAGE_COLUMN_WIDTH_1 50.0
 #define MAX_MIN_COLUMN_WIDTH    100.0
 
+#define DEFAULT_SIDE_PANE_WIDTH 250.0
+#define MIN_SIDE_PANE_WIDTH 100.0
+#define MIN_PDF_PANE_WIDTH 100.0
+#define MIN_PDF_PANE_HEIGHT 50.0
+
 #define SEARCHRESULTS_KEY           @"searchResults"
 #define GROUPEDSEARCHRESULTS_KEY    @"groupedSearchResults"
 #define NOTES_KEY                   @"notes"
@@ -215,8 +220,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 @implementation SKMainWindowController
 
-@synthesize splitView, topConstraint, centerContentView, pdfSplitView, pdfContentView, findBarTopConstraint, statusBar, pdfView, secondaryPdfView, leftSideContentView, rightSideContentView, presentationNotesDocument, presentationNotesOffset, notes, thumbnails, snapshots, searchResults, groupedSearchResults, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
-@dynamic pdfDocument, selectedNotes, hasNotes, widgetProperties, currentPage, leftSidePaneState, rightSidePaneState, findPaneState, displaysFindPane, leftSidePaneIsOpen, rightSidePaneIsOpen, searchString, hasNoteToolbar, hasOverview, notesMenu;
+@synthesize statusBar, pdfView, secondaryPdfView, presentationNotesDocument, presentationNotesOffset, notes, thumbnails, snapshots, searchResults, groupedSearchResults, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
+@dynamic splitView, pdfDocument, selectedNotes, hasNotes, widgetProperties, currentPage, leftSidePaneState, rightSidePaneState, findPaneState, displaysFindPane, leftSidePaneIsOpen, rightSidePaneIsOpen, searchString, hasNoteToolbar, hasOverview, notesMenu;
 
 + (BOOL)automaticallyNotifiesObserversOfPageLabel { return NO; }
 
@@ -250,9 +255,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         pageLabels = [[NSArray alloc] init];
         
         lastViewedPages = [[NSPointerArray alloc] initWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality];
-        lastLeftSidePaneWidth = 0.0;
-        lastRightSidePaneWidth = 0.0;
-        lastSplitPDFHeight = 0.0;
         titleBarHeight = 0.0;
         thumbnailCacheSize = 0.0;
         snapshotCacheSize = 0.0;
@@ -274,13 +276,13 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 }
 
 - (void)dealloc {
-    if (mwcFlags.needsCleanup == 1)
+    if (mwcFlags.needsCleanup)
         SKENSURE_MAIN_THREAD( [self cleanup]; );
 }
 
 // this is called from windowWillClose:
 - (void)cleanup {
-    mwcFlags.needsCleanup = 0;
+    mwcFlags.needsCleanup = NO;
     if (activity) {
         [[NSProcessInfo processInfo] endActivity:activity];
         activity = nil;
@@ -290,8 +292,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [self clearWidgets];
     [self unregisterAsObserver];
     [[self window] setDelegate:nil];
-    [splitView setDelegate:nil];
-    [pdfSplitView setDelegate:nil];
     [leftSideController setMainController:nil];
     [rightSideController setMainController:nil];
     [toolbarController setMainController:nil];
@@ -312,9 +312,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     NSDocument *doc = [self document];
     NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
     
-    mwcFlags.needsCleanup = 0;
-    
-    mwcFlags.settingUpWindow = 1;
+    mwcFlags.needsCleanup = YES;
     
     // Set up the panes and subviews, needs to be done before we resize them
     
@@ -323,12 +321,42 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     rightSideController = [[SKRightSideViewController alloc] init];
     [rightSideController setMainController:self];
     
-    // make sure the first thing we call on the side view controllers is its view so their nib is loaded
-    [leftSideContentView addSubviewWithConstraints:leftSideController.view];
-    [rightSideContentView addSubviewWithConstraints:rightSideController.view];
+    splitViewController = [[NSSplitViewController alloc] init];
     
-    [leftSideContentView setAccessibilityLabel:NSLocalizedString(@"contents pane", @"Accessibility description")];
-    [rightSideContentView setAccessibilityLabel:NSLocalizedString(@"notes pane", @"Accessibility description")];
+    NSSplitViewItem *item = [NSSplitViewItem sidebarWithViewController:leftSideController];
+    [item setMinimumThickness:MIN_SIDE_PANE_WIDTH];
+    [item setCanCollapse:YES];
+    [item setHoldingPriority:260.0];
+    [item setSpringLoaded:NO];
+    if (@available(macOS 11.0, *))
+        [item setAllowsFullHeightLayout:NO];
+    [splitViewController addSplitViewItem:item];
+    NSViewController *viewController = [[NSViewController alloc] init];
+    centerContentView = [[NSView alloc] init];
+    [viewController setView:centerContentView];
+    item = [NSSplitViewItem splitViewItemWithViewController:viewController];
+    [item setMinimumThickness:MIN_PDF_PANE_WIDTH];
+    [item setHoldingPriority:250.0];
+    [splitViewController addSplitViewItem:item];
+    item = [NSSplitViewItem splitViewItemWithViewController:rightSideController];
+    [item setMinimumThickness:MIN_SIDE_PANE_WIDTH];
+    [item setCanCollapse:YES];
+    [item setHoldingPriority:255.0];
+    [splitViewController addSplitViewItem:item];
+    
+    NSView *view = [splitViewController view];
+    NSView *contentView = [window contentView];
+    NSArray *constraints = @[[[view leadingAnchor] constraintEqualToAnchor:[contentView leadingAnchor]],
+        [[contentView trailingAnchor] constraintEqualToAnchor:[view trailingAnchor]],
+        [[view topAnchor] constraintEqualToAnchor:[(mwcFlags.fullSizeContent ? contentView : [window contentLayoutGuide]) topAnchor]],
+        [[statusBar topAnchor] constraintEqualToAnchor:[view bottomAnchor]]];
+    [view setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [contentView addSubview:view];
+    [NSLayoutConstraint activateConstraints:constraints];
+    
+    // this sets the default widths to return to and ensures that the side views are loaded
+    [self setLeftSideWidth:@DEFAULT_SIDE_PANE_WIDTH];
+    [self setRightSideWidth:@DEFAULT_SIDE_PANE_WIDTH];
     
     if (mwcFlags.fullSizeContent) {
         [leftSideController setCurrentView:[[leftSideController currentView] superview]];
@@ -341,8 +369,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [rightSideController displayTableAtIndex:mwcFlags.rightSidePaneState animate:NO];
 
     // we need to create the PDFView before setting the toolbar
-    pdfView = [[SKPDFView alloc] initWithFrame:[pdfContentView bounds]];
-    [pdfView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    pdfView = [[SKPDFView alloc] initWithFrame:[centerContentView bounds]];
     
     // Set up the window
     
@@ -374,10 +401,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         titleBarHeight = NSHeight([window frame]) - NSHeight([window contentLayoutRect]);
         [leftSideController setTopInset:titleBarHeight];
         [rightSideController setTopInset:titleBarHeight];
-    } else if (topConstraint) {
-        [topConstraint setActive:NO];
-        topConstraint = [[splitView topAnchor] constraintEqualToAnchor:[[window contentLayoutGuide] topAnchor]];
-        [topConstraint setActive:YES];
     }
     
     [self setWindowFrameAutosaveNameOrCascade:SKMainWindowFrameAutosaveName];
@@ -429,7 +452,27 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [leftSideController.button setEnabled:NO forSegment:SKSidePaneStateOutline];
     
     // Due to a bug in Leopard we should only resize and swap in the PDFView after loading the PDFDocument
-    [pdfContentView addSubviewWithConstraints:pdfView];
+    
+    pdfSplitViewController  = [[NSSplitViewController alloc] init];
+    
+    viewController = [[NSViewController alloc] init];
+    [viewController setView:pdfView];
+    item = [NSSplitViewItem splitViewItemWithViewController:viewController];
+    [item setMinimumThickness:MIN_PDF_PANE_HEIGHT + titleBarHeight];
+    [pdfSplitViewController addSplitViewItem:item];
+    
+    [[pdfSplitViewController splitView] setVertical:NO];
+    
+    view = [pdfSplitViewController view];
+    constraints = @[[[view leadingAnchor] constraintEqualToAnchor:[centerContentView leadingAnchor]],
+        [[centerContentView trailingAnchor] constraintEqualToAnchor:[view trailingAnchor]],
+        [[view topAnchor] constraintEqualToAnchor:[centerContentView topAnchor]],
+        [[centerContentView bottomAnchor] constraintEqualToAnchor:[view bottomAnchor]]];
+    if (mwcFlags.fullSizeContent == NO)
+        findBarTopConstraint = [constraints objectAtIndex:2];
+    [view setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [centerContentView addSubview:view];
+    [NSLayoutConstraint activateConstraints:constraints];
     
     if (hasWindowSetup == NO) {
         NSInteger windowSizeOption = [sud integerForKey:SKInitialWindowSizeOptionKey];
@@ -524,8 +567,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     } else {
         [savedNormalSetup removeAllObjects];
     }
-    
-    mwcFlags.settingUpWindow = 0;
 }
 
 - (void)applySetup:(NSDictionary *)setup{
@@ -1216,6 +1257,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 #pragma mark Accessors
 
+- (NSSplitView *)splitView {
+    return [splitViewController splitView];
+}
+
 - (PDFDocument *)pdfDocument{
     return [pdfView document];
 }
@@ -1322,32 +1367,44 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if ([self interactionMode] == SKPresentationMode)
         return [sideWindow isVisible];
     else
-        return NO == [splitView isSubviewCollapsed:leftSideContentView];
+        return NO == [[[splitViewController splitViewItems] firstObject] isCollapsed];
 }
 
 - (BOOL)rightSidePaneIsOpen {
     if ([self interactionMode] == SKPresentationMode)
         return NO;
     else
-        return NO == [splitView isSubviewCollapsed:rightSideContentView];
+        return NO == [[[splitViewController splitViewItems] lastObject] isCollapsed];
 }
 
 - (NSNumber *)leftSideWidth {
-    return [splitView isSubviewCollapsed:leftSideContentView] ? @0.0 : [NSNumber numberWithDouble:NSWidth([leftSideContentView frame])];
+    NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
+    return [item isCollapsed] ? @0.0 : [NSNumber numberWithDouble:NSWidth([[[item viewController] view] frame])];
 }
 
 - (void)setLeftSideWidth:(NSNumber *)leftSideWidth {
-    if (leftSideWidth)
-        [splitView setPosition:[leftSideWidth doubleValue] ofDividerAtIndex:0];
+    if (leftSideWidth) {
+        CGFloat width = [leftSideWidth doubleValue];
+        [[[splitViewController splitViewItems] firstObject] setCollapsed:width <= 0.0];
+        if (width > 0.0)
+            [[splitViewController splitView] setPosition:width ofDividerAtIndex:0];
+    }
 }
 
 - (NSNumber *)rightSideWidth {
-    return [splitView isSubviewCollapsed:rightSideContentView] ? @0.0 : [NSNumber numberWithDouble:NSWidth([rightSideContentView frame])];
+    NSSplitViewItem *item = [[splitViewController splitViewItems] lastObject];
+    return [item isCollapsed] ? @0.0 : [NSNumber numberWithDouble:NSWidth([[[item viewController] view] frame])];
 }
 
 - (void)setRightSideWidth:(NSNumber *)rightSideWidth {
-    if (rightSideWidth)
-        [splitView setPosition:[splitView maxPossiblePositionOfDividerAtIndex:1] - [splitView dividerThickness] - [rightSideWidth doubleValue] ofDividerAtIndex:1];
+    if (rightSideWidth) {
+        CGFloat width = [rightSideWidth doubleValue];
+        [[[splitViewController splitViewItems] lastObject] setCollapsed:width <= 0.0];
+        if (width > 0.0) {
+            NSSplitView *sv = [splitViewController splitView];
+            [sv setPosition:[sv maxPossiblePositionOfDividerAtIndex:1] - [sv dividerThickness] - width ofDividerAtIndex:1];
+        }
+    }
 }
 
 - (BOOL)hasNotes {
@@ -1598,7 +1655,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     }
     
     BOOL isPresentation = [self interactionMode] == SKPresentationMode;
-    NSView *oldView = isPresentation ? presentationView : splitView;
+    NSView *oldView = isPresentation ? presentationView : [splitViewController view];
     NSView *contentView = [oldView superview];
     BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
     NSArray *constraints = @[
@@ -1665,7 +1722,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     // don't check interactionMode as this can be called from enterPresentation
     BOOL isPresentation = 0 == ([[overviewContentView window] styleMask] & NSWindowStyleMaskTitled);
-    NSView *newView = isPresentation ? presentationView : splitView;
+    NSView *newView = isPresentation ? presentationView : [splitViewController view];
     NSView *newKeyView = isPresentation ? presentationView : pdfView;
     NSView *contentView = [overviewContentView superview];
     BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
@@ -1794,20 +1851,18 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     CGFloat barHeight = [findController height];
     NSWindow *window = [self window];
     
-    if (mwcFlags.fullSizeContent)
-        findBarTopConstraint = nil;
-    else
-        findBarTopConstraint = [[pdfSplitView topAnchor] constraintEqualToAnchor:[contentView topAnchor]];
-    
     if ([window firstResponderIsDescendantOf:findBar])
         [window makeFirstResponder:pdfView];
     
     if (mwcFlags.fullSizeContent) {
+        findBarTopConstraint = nil;
         [[pdfView embeddedScrollView] setAutomaticallyAdjustsContentInsets:YES];
         if ([pdfView autoScales] && ([pdfView extendedDisplayMode] & kPDFDisplaySinglePageContinuous) == 0) {
             [pdfView setAutoScales:NO];
             [pdfView setAutoScales:YES];
         }
+    } else {
+        findBarTopConstraint = [[[pdfSplitViewController view] topAnchor] constraintEqualToAnchor:[contentView topAnchor]];
     }
     
     if (animate) {
@@ -1845,24 +1900,23 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     } else if (mwcFlags.isAnimatingFindBar == 0) {
         
         BOOL animate = [NSView shouldShowSlideAnimation];
-        NSView *contentView = mwcFlags.fullSizeContent ? pdfContentView : centerContentView;
         CGFloat barHeight = [findController height];
         NSLayoutConstraint *barTopConstraint = [findController topConstraint];
         NSArray *constraints = nil;
         
         [barTopConstraint setConstant:animate ? -barHeight : 0.0];
-        [contentView addSubview:findBar];
+        [centerContentView addSubview:findBar];
         constraints = @[
-            [[findBar leadingAnchor] constraintEqualToAnchor:[contentView leadingAnchor]],
-            [[contentView trailingAnchor] constraintEqualToAnchor:[findBar trailingAnchor]],
-            [[findBar topAnchor] constraintEqualToAnchor:[contentView topAnchor] constant:titleBarHeight]];
+            [[findBar leadingAnchor] constraintEqualToAnchor:[centerContentView leadingAnchor]],
+            [[centerContentView trailingAnchor] constraintEqualToAnchor:[findBar trailingAnchor]],
+            [[findBar topAnchor] constraintEqualToAnchor:[centerContentView topAnchor] constant:titleBarHeight]];
         [NSLayoutConstraint activateConstraints:constraints];
         if (mwcFlags.fullSizeContent == NO) {
             [findBarTopConstraint setActive:NO];
-            [[[pdfSplitView topAnchor] constraintEqualToAnchor:[findBar bottomAnchor]] setActive:YES];
+            [[[[pdfSplitViewController view] topAnchor] constraintEqualToAnchor:[findBar bottomAnchor]] setActive:YES];
         }
         findBarTopConstraint = [constraints objectAtIndex:2];
-        [contentView layoutSubtreeIfNeeded];
+        [centerContentView layoutSubtreeIfNeeded];
         
         [findController didAddFindBar];
         
@@ -1889,7 +1943,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                     mwcFlags.isAnimatingFindBar = NO;
                 }];
         } else {
-            [contentView layoutSubtreeIfNeeded];
+            [centerContentView layoutSubtreeIfNeeded];
             [[self window] recalculateKeyViewLoop];
             [findField selectText:nil];
         }
@@ -2644,6 +2698,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 [findBarTopConstraint setConstant:titleBarHeight];
                 [[pdfView embeddedScrollView] setContentInsets:NSEdgeInsetsMake([findController height] + titleBarHeight, 0.0, 0.0, 0.0)];
             }
+            [[[pdfSplitViewController splitViewItems] firstObject] setMinimumThickness:MIN_PDF_PANE_HEIGHT + titleBarHeight];
         }
         
     } else if (context == &SKMainWindowTransitionsObservationContext) {

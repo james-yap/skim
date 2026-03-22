@@ -82,13 +82,11 @@
 #import "SKPresentationView.h"
 #import "NSUserDefaults_SKExtensions.h"
 #import "SKNoteToolbarController.h"
+#import "NSView_SKExtensions.h"
 
 #define STATUSBAR_HEIGHT 22.0
 
-#define DEFAULT_SIDE_PANE_WIDTH 250.0
-#define MIN_SIDE_PANE_WIDTH 100.0
-
-#define DEFAULT_SPLIT_PDF_FACTOR 0.3
+#define MIN_SPLIT_PANE_HEIGHT 50.0
 
 #define SKShowNoteToolbarInFullScreenKey @"SKShowNoteToolbarInFullScreen"
 
@@ -783,7 +781,7 @@
 
 - (IBAction)toggleStatusBar:(id)sender {
     [[NSUserDefaults standardUserDefaults] setBool:(NO == [statusBar isVisible]) forKey:SKShowStatusBarKey];
-    NSView *view = [self hasOverview] ? overviewContentView : splitView;
+    NSView *view = [self hasOverview] ? overviewContentView : [splitViewController view];
     [statusBar toggleBelowView:view animate:sender != nil];
 }
 
@@ -792,11 +790,14 @@
         [self hideOverviewAnimating:YES completionHandler:^{ [self searchPDF:sender]; }];
         return;
     }
-    if ([self leftSidePaneIsOpen] == NO)
+    BOOL animating = NO;
+    if ([self leftSidePaneIsOpen] == NO) {
+        animating = [NSView shouldShowSlideAnimation];
         [self toggleLeftSidePane:sender];
+    }
     // workaround for an AppKit bug: when selecting immediately before the animation, the search fields does not display its text
-    if ([splitView isAnimating])
-        [splitView enqueueOperation:^{ [leftSideController.searchField selectText:self]; }];
+    if (animating)
+        [leftSideController.searchField performSelector:@selector(selectText:) withObject:nil afterDelay:0.25];
     else
         [leftSideController.searchField selectText:self];
 }
@@ -806,11 +807,14 @@
         [self hideOverviewAnimating:YES completionHandler:^{ [self filterNotes:sender]; }];
         return;
     }
-    if ([self rightSidePaneIsOpen] == NO)
+    BOOL animating = NO;
+    if ([self rightSidePaneIsOpen] == NO) {
+        animating = [NSView shouldShowSlideAnimation];
         [self toggleRightSidePane:sender];
+    }
     // workaround for an AppKit bug: when selecting immediately before the animation, the search fields does not display its text
-    if ([splitView isAnimating])
-        [splitView enqueueOperation:^{ [rightSideController.searchField selectText:self]; }];
+    if (animating)
+        [rightSideController.searchField performSelector:@selector(selectText:) withObject:nil afterDelay:0.25];
     else
         [rightSideController.searchField selectText:self];
 }
@@ -1025,19 +1029,15 @@
     } else if ([self hasOverview]) {
         [self hideOverviewAnimating:sender != nil completionHandler:^{ [self toggleLeftSidePane:sender]; }];
     } else {
-        CGFloat position = [splitView minPossiblePositionOfDividerAtIndex:0];
-        if ([self leftSidePaneIsOpen]) {
-            if ([[self window] firstResponderIsDescendantOf:leftSideContentView])
+        NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
+        BOOL collapse = [item isCollapsed] == NO;
+        if ([self leftSidePaneIsOpen])
+            if ([[self window] firstResponderIsDescendantOf:[[item viewController] view]])
                 [[self window] makeFirstResponder:pdfView];
-            lastLeftSidePaneWidth = fmaxf(MIN_SIDE_PANE_WIDTH, NSWidth([leftSideContentView frame]));
-        } else {
-            if(lastLeftSidePaneWidth <= 0.0)
-                lastLeftSidePaneWidth = DEFAULT_SIDE_PANE_WIDTH; // a reasonable value to start
-            if (lastLeftSidePaneWidth > 0.5 * NSWidth([centerContentView frame]))
-                lastLeftSidePaneWidth = floor(0.5 * NSWidth([centerContentView frame]));
-            position = lastLeftSidePaneWidth;
-        }
-        [splitView setPosition:position ofDividerAtIndex:0 animate:sender != nil];
+        if (sender == nil || [NSView shouldShowSlideAnimation] == NO)
+            [item setCollapsed:collapse];
+        else
+            [[item animator] setCollapsed:collapse];
     }
 }
 
@@ -1046,21 +1046,24 @@
     } else if ([self hasOverview]) {
         [self hideOverviewAnimating:sender != nil completionHandler:^{ [self toggleRightSidePane:sender]; }];
     } else {
-        CGFloat position = [splitView maxPossiblePositionOfDividerAtIndex:1];
-        if ([self rightSidePaneIsOpen]) {
-            if ([[self window] firstResponderIsDescendantOf:rightSideContentView])
+        NSSplitViewItem *item = [[splitViewController splitViewItems] lastObject];
+        BOOL collapse = [item isCollapsed] == NO;
+        if ([self leftSidePaneIsOpen])
+            if ([[self window] firstResponderIsDescendantOf:[[item viewController] view]])
                 [[self window] makeFirstResponder:pdfView];
-            lastRightSidePaneWidth = fmaxf(MIN_SIDE_PANE_WIDTH, NSWidth([rightSideContentView frame]));
-            [splitView setPosition:position ofDividerAtIndex:1 animate:sender != nil];
+        if (sender == nil || [NSView shouldShowSlideAnimation] == NO) {
+            [item setCollapsed:collapse];
+        } else if (mwcFlags.autoResizeNoteRows) {
+            mwcFlags.autoResizeNoteRows = NO;
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                    [[item animator] setCollapsed:collapse];
+                } completionHandler:^{
+                    mwcFlags.autoResizeNoteRows = YES;
+                    if (collapse == NO)
+                        [self resetNoteRowHeights];
+                }];
         } else {
-            if(lastRightSidePaneWidth <= 0.0)
-                lastRightSidePaneWidth = DEFAULT_SIDE_PANE_WIDTH; // a reasonable value to start
-            if (lastRightSidePaneWidth > 0.5 * NSWidth([centerContentView frame]))
-                lastRightSidePaneWidth = floor(0.5 * NSWidth([centerContentView frame]));
-            position -= lastRightSidePaneWidth + [splitView dividerThickness];
-            [splitView setPosition:position ofDividerAtIndex:1 animate:sender != nil];
-            if (mwcFlags.autoResizeNoteRows && [splitView isAnimating])
-               [splitView enqueueOperation:^{ [self resetNoteRowHeights]; }];
+            [[item animator] setCollapsed:collapse];
         }
     }
 }
@@ -1085,46 +1088,54 @@
 }
 
 - (IBAction)toggleSplitPDF:(id)sender {
-    if ([pdfSplitView isAnimating])
-        return;
-    
     if ([self hasOverview]) {
         [self hideOverviewAnimating:YES completionHandler:^{ [self toggleSplitPDF:sender]; }];
         return;
     }
     
+    if (mwcFlags.isAnimatingSplitPDF)
+        return;
+    
     if ([secondaryPdfView window]) {
         
-        lastSplitPDFHeight = NSHeight([secondaryPdfView frame]);
+        NSSplitViewItem *item = [[pdfSplitViewController splitViewItems] lastObject];
         
-        [pdfSplitView setPosition:[pdfSplitView maxPossiblePositionOfDividerAtIndex:0] ofDividerAtIndex:0 animate:YES];
-        if ([pdfSplitView isAnimating]) {
-            [pdfSplitView enqueueOperation:^{
-                [secondaryPdfView removeFromSuperview];
-                [pdfSplitView adjustSubviews];
-            }];
+        if ([item isCollapsed] || [NSView shouldShowSlideAnimation] == NO) {
+            [item setCollapsed:YES];
+            [[pdfSplitViewController splitView] setDividerStyle:NSSplitViewDividerStyleThin];
+            [pdfSplitViewController removeSplitViewItem:item];
         } else {
-            [secondaryPdfView removeFromSuperview];
-            [pdfSplitView adjustSubviews];
+            mwcFlags.isAnimatingSplitPDF = YES;
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                    [[item animator] setCollapsed:YES];
+                } completionHandler:^{
+                    [[pdfSplitViewController splitView] setDividerStyle:NSSplitViewDividerStyleThin];
+                    [pdfSplitViewController removeSplitViewItem:item];
+                    mwcFlags.isAnimatingSplitPDF = NO;
+                }];
         }
         
     } else {
         
         NSRect frame = [pdfView bounds];
-        
-        if (lastSplitPDFHeight <= 0.0)
-            lastSplitPDFHeight = floor(DEFAULT_SPLIT_PDF_FACTOR * (NSHeight(frame) - titleBarHeight));
-        
-        CGFloat position = NSHeight(frame) - lastSplitPDFHeight - [pdfSplitView dividerThickness];
+        NSSplitViewItem *item = nil;
         
         if (secondaryPdfView == nil) {
             NSPoint point = frame.origin;
             PDFPage *page = nil;
             BOOL fixedAtBottom = [[[pdfView embeddedScrollView] contentView] isFlipped] == NO;
-            secondaryPdfView = [[SKSecondaryPDFView alloc] initWithFrame:NSMakeRect(0.0, 0.0, NSWidth(frame), lastSplitPDFHeight)];
+            secondaryPdfView = [[SKSecondaryPDFView alloc] initWithFrame:NSMakeRect(0.0, 0.0, NSWidth(frame), 250.0)];
             [secondaryPdfView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-            [secondaryPdfView setHidden:YES];
-            [pdfSplitView addSubview:secondaryPdfView];
+            
+            NSViewController *viewController = [[NSViewController alloc] init];
+            [viewController setView:secondaryPdfView];
+            item = [NSSplitViewItem splitViewItemWithViewController:viewController];
+            [item setCanCollapse:YES];
+            [item setCollapsed:YES];
+            [item setMinimumThickness:MIN_SPLIT_PANE_HEIGHT];
+            [pdfSplitViewController addSplitViewItem:item];
+            [[pdfSplitViewController splitView] setDividerStyle:NSSplitViewDividerStylePaneSplitter];
+            
             // Because of a PDFView bug, display properties can not be changed before it is placed in a window
             [secondaryPdfView setSynchronizedPDFView:pdfView];
             [secondaryPdfView setBackgroundColor:[pdfView backgroundColor]];
@@ -1132,7 +1143,7 @@
             [secondaryPdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
             [secondaryPdfView setSynchronizeZoom:YES];
             [secondaryPdfView setDocument:[pdfView document]];
-            point.y += fixedAtBottom ? -lastSplitPDFHeight : lastSplitPDFHeight + [pdfSplitView dividerThickness];
+            point.y += fixedAtBottom ? -250.0 : 250.0 + [[pdfSplitViewController splitView] dividerThickness];
             page = [pdfView pageForPoint:point nearest:YES];
             [secondaryPdfView goToPage:page];
             [secondaryPdfView layoutDocumentView];
@@ -1144,11 +1155,26 @@
             [secondaryPdfView resetHistory];
             
         } else {
-            [secondaryPdfView setHidden:YES];
-            [pdfSplitView addSubview:secondaryPdfView];
+            NSViewController *viewController = [[NSViewController alloc] init];
+            [viewController setView:secondaryPdfView];
+            item = [NSSplitViewItem splitViewItemWithViewController:viewController];
+            [item setCanCollapse:YES];
+            [item setCollapsed:YES];
+            [item setMinimumThickness:50.0];
+            [pdfSplitViewController addSplitViewItem:item];
+            [[pdfSplitViewController splitView] setDividerStyle:NSSplitViewDividerStylePaneSplitter];
         }
         
-        [pdfSplitView setPosition:position ofDividerAtIndex:0 animate:YES];
+        if ([NSView shouldShowSlideAnimation]) {
+            mwcFlags.isAnimatingSplitPDF = YES;
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                    [[item animator] setCollapsed:NO];
+                } completionHandler:^{
+                    mwcFlags.isAnimatingSplitPDF = NO;
+                }];
+        } else {
+            [item setCollapsed:NO];
+        }
     }
     
     [[self window] recalculateKeyViewLoop];

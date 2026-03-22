@@ -50,7 +50,7 @@
 
 @implementation SKSideViewController
 
-@synthesize mainController, topBar, topConstraint, button, alternateButton, searchField, currentView;
+@synthesize mainController, sideView, topBar, topConstraint, button, alternateButton, searchField, currentView;
 @dynamic topInset, tableViews;
 
 - (void)viewDidLoad {
