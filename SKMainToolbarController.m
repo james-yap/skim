@@ -885,7 +885,7 @@ static char SKDefaultsObservationContext;
             
         } else if ([identifier isEqualToString:SKDocumentToolbarContentsPaneItemIdentifier]) {
             
-            menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Contents Pane", @"Menu item title") action:@selector(toggleLeftSidePane:) target:mainController];
+            menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Contents Pane", @"Menu item title") action:@selector(toggleLeftSidePane:) target:self];
             
             [item setLabels:NSLocalizedString(@"Contents Pane", @"Toolbar item label")];
             [item setToolTip:[mainController leftSidePaneIsOpen] ? NSLocalizedString(@"Hide Contents Pane", @"Tool tip message") : NSLocalizedString(@"Show Contents Pane", @"Tool tip message")];
@@ -896,7 +896,7 @@ static char SKDefaultsObservationContext;
             
         } else if ([identifier isEqualToString:SKDocumentToolbarNotesPaneItemIdentifier]) {
             
-            menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Notes Pane", @"Menu item title") action:@selector(toggleRightSidePane:) target:mainController];
+            menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Notes Pane", @"Menu item title") action:@selector(toggleRightSidePane:) target:self];
             
             [item setLabels:NSLocalizedString(@"Notes Pane", @"Toolbar item label")];
             [item setToolTip:[mainController rightSidePaneIsOpen] ? NSLocalizedString(@"Hide Notes Pane", @"Tool tip message") : NSLocalizedString(@"Show Notes Pane", @"Tool tip message")];
@@ -907,7 +907,7 @@ static char SKDefaultsObservationContext;
             
         } else if ([identifier isEqualToString:SKDocumentToolbarSplitPDFItemIdentifier]) {
             
-            menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Notes Pane", @"Menu item title") action:@selector(toggleSplitPDF:) target:mainController];
+            menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Notes Pane", @"Menu item title") action:@selector(toggleSplitPDF:) target:self];
             
             [item setLabels:NSLocalizedString(@"Split PDF", @"Toolbar item label")];
             [item setToolTip:[(NSView *)mainController.secondaryPdfView window] ? NSLocalizedString(@"Hide Split PDF", @"Tool tip message") : NSLocalizedString(@"Show Split PDF", @"Tool tip message")];
@@ -1518,7 +1518,7 @@ static char SKDefaultsObservationContext;
 - (void)handleSplitViewDidResizeSubviewsNotification:(NSNotification *)notification {
     NSSplitView *splitView = [notification object];
     NSInteger isLeftSideViewCollapsed = [splitView isSubviewCollapsed:[[splitView subviews] firstObject]];
-    NSInteger isRightSideViewCollapsed = [splitView isSubviewCollapsed:[[splitView subviews] lastObject]];
+    NSInteger isRightSideViewCollapsed = [splitView isSubviewCollapsed:[[splitView subviews] objectAtIndex:2]];
     if (isLeftSideViewCollapsed != [leftPaneButton tag]) {
         [leftPaneButton setTag:isLeftSideViewCollapsed];
         [self leftSidePaneDidShowOrHide];
