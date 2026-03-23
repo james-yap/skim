@@ -3148,7 +3148,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if ([controller thumbnail] == nil)
         [controller setThumbnail:[configuration placeholderThumbnailWithSize:snapshotCacheSize scale:backingScale]];
     
-    if ([rightSideController.snapshotTableView window] == nil || [self leftSidePaneIsOpen] == NO)
+    if ([rightSideController.snapshotTableView window] == nil || [self rightSidePaneIsOpen] == NO)
         queue = [[self class] backgroundThumbnailQueue];
     else if (lowPriority)
         queue = [[self class] thumbnailQueue];
