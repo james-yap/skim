@@ -2695,7 +2695,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         if (fabs(titleHeight - titleBarHeight) > 0.0) {
             titleBarHeight = titleHeight;
             [rightSideController setTopInset:titleBarHeight];
-            if ([self interactionMode] != SKPresentationMode || [self leftSidePaneIsOpen] == NO)
+            if ([sideWindow isVisible] == NO)
                 [leftSideController setTopInset:titleBarHeight];
             if ([[findController view] window]) {
                 [findBarTopConstraint setConstant:titleBarHeight];
