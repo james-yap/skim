@@ -191,6 +191,10 @@ static SKDestination destinationFromSetup(NSDictionary *setup);
 static void setDestinationInSetup(SKDestination dest, NSMutableDictionary *setup);
 static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
+@interface NSSplitViewItem (SKPrivateDeclarations)
+@property (nonatomic) BOOL revealsOnEdgeHoverInFullscreen;
+@end
+
 @interface SKMainWindowController ()
 
 - (void)cleanup;
@@ -342,6 +346,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [item setMinimumThickness:MIN_SIDE_PANE_WIDTH];
     [item setCanCollapse:YES];
     [item setHoldingPriority:255.0];
+    if ([item respondsToSelector:@selector(setRevealsOnEdgeHoverInFullscreen:)])
+        [item setRevealsOnEdgeHoverInFullscreen:YES];
     [splitViewController addSplitViewItem:item];
     
     NSView *view = [splitViewController view];
