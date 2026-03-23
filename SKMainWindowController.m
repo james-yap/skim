@@ -444,8 +444,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     // Show/hide left side pane if necessary
     BOOL hasOutline = ([[pdfView document] outlineRoot] != nil);
-    if ([sud boolForKey:SKOpenContentsPaneOnlyForTOCKey] && [self leftSidePaneIsOpen] != hasOutline)
-        [self toggleLeftSidePane:nil];
+    if ([sud boolForKey:SKOpenContentsPaneOnlyForTOCKey])
+        [[[splitViewController splitViewItems] firstObject] setCollapsed:hasOutline == NO];
     if (hasOutline)
         [self setLeftSidePaneState:SKSidePaneStateOutline];
     else
@@ -1787,8 +1787,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 - (void)setSearchString:(NSString *)searchString {
     if ([searchString length] > 0) {
-        if ([self leftSidePaneIsOpen] == NO)
-            [self toggleLeftSidePane:nil];
+        if ([self hasOverview])
+            [self hideOverviewAnimating:NO];
+        [[[splitViewController splitViewItems] firstObject] setCollapsed:NO];
         [leftSideController.searchField setStringValue:searchString];
         [self performSelector:@selector(search:) withObject:leftSideController.searchField afterDelay:0.0];
     } else {
@@ -2493,13 +2494,17 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         rect.size.width = rect.size.height = 1.0;
     } else {
         NSUInteger row = [[rightSideController.snapshotArrayController arrangedObjects] indexOfObject:controller];
-        BOOL shouldReopenRightSidePane = NO;
+        NSSplitViewItem *item = nil;
         if (isMiniaturize && [self interactionMode] != SKPresentationMode) {
-            if ([self rightSidePaneIsOpen] == NO) {
-                [self toggleRightSidePane:nil];
-                shouldReopenRightSidePane = [NSView shouldShowSlideAnimation];
-            }
+            item = [[splitViewController splitViewItems] lastObject];
             [self setRightSidePaneState:SKSidePaneStateSnapshot];
+            if ([item isCollapsed]) {
+                [item setCollapsed:NO];
+                if ([NSView shouldShowSlideAnimation] == NO)
+                    item = nil;
+            } else {
+                item = nil;
+            }
             if (row != NSNotFound)
                 [rightSideController.snapshotTableView scrollRowToVisible:row];
         }
@@ -2510,9 +2515,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             rect.size.width = rect.size.height = 1.0;
         }
         rect = [[self window] convertRectToScreen:[rightSideController.snapshotTableView convertRect:rect toView:nil]];
-        if (shouldReopenRightSidePane) {
-            [self toggleRightSidePane:nil];
-            [self toggleRightSidePane:self];
+        if (item) {
+            [item setCollapsed:YES];
+            [[item animator] setCollapsed:NO];
         }
     }
     [[self document] setRecentInfoNeedsUpdate:YES];

@@ -1027,29 +1027,29 @@
         else
             [self showSideWindow];
     } else if ([self hasOverview]) {
-        [self hideOverviewAnimating:sender != nil completionHandler:^{ [self toggleLeftSidePane:sender]; }];
+        [self hideOverviewAnimating:YES completionHandler:^{ [self toggleLeftSidePane:sender]; }];
     } else {
         NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
         BOOL collapse = [item isCollapsed] == NO;
         if (collapse && [[self window] firstResponderIsDescendantOf:[[item viewController] view]])
             [[self window] makeFirstResponder:pdfView];
-        if (sender == nil || [NSView shouldShowSlideAnimation] == NO)
-            [item setCollapsed:collapse];
-        else
+        if ([NSView shouldShowSlideAnimation])
             [[item animator] setCollapsed:collapse];
+        else
+            [item setCollapsed:collapse];
     }
 }
 
 - (IBAction)toggleRightSidePane:(id)sender {
     if ([self interactionMode] == SKPresentationMode) {
     } else if ([self hasOverview]) {
-        [self hideOverviewAnimating:sender != nil completionHandler:^{ [self toggleRightSidePane:sender]; }];
+        [self hideOverviewAnimating:YES completionHandler:^{ [self toggleRightSidePane:sender]; }];
     } else {
         NSSplitViewItem *item = [[splitViewController splitViewItems] lastObject];
         BOOL collapse = [item isCollapsed] == NO;
         if (collapse && [[self window] firstResponderIsDescendantOf:[[item viewController] view]])
             [[self window] makeFirstResponder:pdfView];
-        if (sender == nil || [NSView shouldShowSlideAnimation] == NO) {
+        if ([NSView shouldShowSlideAnimation] == NO) {
             [item setCollapsed:collapse];
         } else if (mwcFlags.autoResizeNoteRows && mwcFlags.rightSidePaneState == SKSidePaneStateNote) {
             mwcFlags.autoResizeNoteRows = NO;
