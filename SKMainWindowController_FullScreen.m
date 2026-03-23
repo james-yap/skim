@@ -324,7 +324,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     
     mwcFlags.isSwitchingFullScreen = 1;
     
-    if ([self leftSidePaneIsOpen])
+    if ([sideWindow isVisible])
         [self hideSideWindow];
     
     if ([[presentationNotesAuxiliary notes] count]) {
