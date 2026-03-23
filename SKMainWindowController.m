@@ -2496,9 +2496,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         BOOL shouldReopenRightSidePane = NO;
         if (isMiniaturize && [self interactionMode] != SKPresentationMode) {
             if ([self rightSidePaneIsOpen] == NO) {
-                [[self window] disableFlushWindow];
                 [self toggleRightSidePane:nil];
-                shouldReopenRightSidePane = YES;
+                shouldReopenRightSidePane = [NSView shouldShowSlideAnimation];
             }
             [self setRightSidePaneState:SKSidePaneStateSnapshot];
             if (row != NSNotFound)
@@ -2513,7 +2512,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         rect = [[self window] convertRectToScreen:[rightSideController.snapshotTableView convertRect:rect toView:nil]];
         if (shouldReopenRightSidePane) {
             [self toggleRightSidePane:nil];
-            [[self window] enableFlushWindow];
             [self toggleRightSidePane:self];
         }
     }

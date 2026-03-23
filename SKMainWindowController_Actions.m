@@ -1031,9 +1031,8 @@
     } else {
         NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
         BOOL collapse = [item isCollapsed] == NO;
-        if ([self leftSidePaneIsOpen])
-            if ([[self window] firstResponderIsDescendantOf:[[item viewController] view]])
-                [[self window] makeFirstResponder:pdfView];
+        if (collapse && [[self window] firstResponderIsDescendantOf:[[item viewController] view]])
+            [[self window] makeFirstResponder:pdfView];
         if (sender == nil || [NSView shouldShowSlideAnimation] == NO)
             [item setCollapsed:collapse];
         else
@@ -1048,9 +1047,8 @@
     } else {
         NSSplitViewItem *item = [[splitViewController splitViewItems] lastObject];
         BOOL collapse = [item isCollapsed] == NO;
-        if ([self leftSidePaneIsOpen])
-            if ([[self window] firstResponderIsDescendantOf:[[item viewController] view]])
-                [[self window] makeFirstResponder:pdfView];
+        if (collapse && [[self window] firstResponderIsDescendantOf:[[item viewController] view]])
+            [[self window] makeFirstResponder:pdfView];
         if (sender == nil || [NSView shouldShowSlideAnimation] == NO) {
             [item setCollapsed:collapse];
         } else if (mwcFlags.autoResizeNoteRows) {
