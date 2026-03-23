@@ -1136,12 +1136,12 @@ static char SKDefaultsObservationContext;
 
 - (void)leftSidePaneDidShowOrHide {
     NSToolbarItem *item = [toolbarItems objectForKey:SKDocumentToolbarContentsPaneItemIdentifier];
-    [item setToolTip:[mainController leftSidePaneIsOpen] ? NSLocalizedString(@"Hide Contents Pane", @"Tool tip message") : NSLocalizedString(@"Show Contents Pane", @"Tool tip message")];
+    [item setToolTip:[leftPaneButton tag] ? NSLocalizedString(@"Show Contents Pane", @"Tool tip message") : NSLocalizedString(@"Hide Contents Pane", @"Tool tip message")];
 }
 
 - (void)rightSidePaneDidShowOrHide {
     NSToolbarItem *item = [toolbarItems objectForKey:SKDocumentToolbarNotesPaneItemIdentifier];
-    [item setToolTip:[mainController rightSidePaneIsOpen] ? NSLocalizedString(@"Hide Notes Pane", @"Tool tip message") : NSLocalizedString(@"Show Notes Pane", @"Tool tip message")];
+    [item setToolTip:[rightPaneButton tag] ? NSLocalizedString(@"Show Notes Pane", @"Tool tip message") : NSLocalizedString(@"Hide Notes Pane", @"Tool tip message")];
 }
 
 - (void)splitPDFDidShowOrHide {
