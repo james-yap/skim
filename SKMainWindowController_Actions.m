@@ -1051,7 +1051,7 @@
             [[self window] makeFirstResponder:pdfView];
         if (sender == nil || [NSView shouldShowSlideAnimation] == NO) {
             [item setCollapsed:collapse];
-        } else if (mwcFlags.autoResizeNoteRows) {
+        } else if (mwcFlags.autoResizeNoteRows && mwcFlags.rightSidePaneState == SKSidePaneStateNote) {
             mwcFlags.autoResizeNoteRows = NO;
             [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                     [[item animator] setCollapsed:collapse];
