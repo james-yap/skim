@@ -788,35 +788,43 @@
 - (IBAction)searchPDF:(id)sender {
     if ([self hasOverview]) {
         [self hideOverviewAnimating:YES completionHandler:^{ [self searchPDF:sender]; }];
-        return;
+    } else {
+        NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
+        if ([item isCollapsed] == NO) {
+            [leftSideController.searchField selectText:nil];
+        } else if ([NSView shouldShowSlideAnimation]) {
+            // workaround for an AppKit bug: when selecting immediately before the animation, the search fields does not display its text
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                    [[item animator] setCollapsed:NO];
+                } completionHandler:^{
+                    [leftSideController.searchField selectText:nil];
+                }];
+        } else {
+            [item setCollapsed:NO];
+            [leftSideController.searchField selectText:nil];
+        }
     }
-    BOOL animating = NO;
-    if ([self leftSidePaneIsOpen] == NO) {
-        animating = [NSView shouldShowSlideAnimation];
-        [self toggleLeftSidePane:sender];
-    }
-    // workaround for an AppKit bug: when selecting immediately before the animation, the search fields does not display its text
-    if (animating)
-        [leftSideController.searchField performSelector:@selector(selectText:) withObject:nil afterDelay:0.25];
-    else
-        [leftSideController.searchField selectText:self];
 }
 
 - (IBAction)filterNotes:(id)sender {
     if ([self hasOverview]) {
         [self hideOverviewAnimating:YES completionHandler:^{ [self filterNotes:sender]; }];
-        return;
+    } else {
+        NSSplitViewItem *item = [[splitViewController splitViewItems] lastObject];
+        if ([item isCollapsed] == NO) {
+            [rightSideController.searchField selectText:nil];
+        } else if ([NSView shouldShowSlideAnimation]) {
+            // workaround for an AppKit bug: when selecting immediately before the animation, the search fields does not display its text
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                    [[item animator] setCollapsed:NO];
+                } completionHandler:^{
+                    [rightSideController.searchField selectText:nil];
+                }];
+        } else {
+            [item setCollapsed:NO];
+            [rightSideController.searchField selectText:nil];
+        }
     }
-    BOOL animating = NO;
-    if ([self rightSidePaneIsOpen] == NO) {
-        animating = [NSView shouldShowSlideAnimation];
-        [self toggleRightSidePane:sender];
-    }
-    // workaround for an AppKit bug: when selecting immediately before the animation, the search fields does not display its text
-    if (animating)
-        [rightSideController.searchField performSelector:@selector(selectText:) withObject:nil afterDelay:0.25];
-    else
-        [rightSideController.searchField selectText:self];
 }
 
 - (IBAction)search:(id)sender {
