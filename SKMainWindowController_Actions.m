@@ -1049,20 +1049,10 @@
         BOOL collapse = [item isCollapsed] == NO;
         if (collapse && [[self window] firstResponderIsDescendantOf:[[item viewController] view]])
             [[self window] makeFirstResponder:pdfView];
-        if ([NSView shouldShowSlideAnimation] == NO) {
-            [item setCollapsed:collapse];
-        } else if (mwcFlags.autoResizeNoteRows && mwcFlags.rightSidePaneState == SKSidePaneStateNote) {
-            mwcFlags.autoResizeNoteRows = NO;
-            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                    [[item animator] setCollapsed:collapse];
-                } completionHandler:^{
-                    mwcFlags.autoResizeNoteRows = YES;
-                    if (collapse == NO)
-                        [self resetNoteRowHeights];
-                }];
-        } else {
+        if ([NSView shouldShowSlideAnimation])
             [[item animator] setCollapsed:collapse];
-        }
+        else
+            [item setCollapsed:collapse];
     }
 }
 
