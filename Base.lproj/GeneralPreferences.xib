@@ -15,7 +15,7 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="1">
-            <rect key="frame" x="0.0" y="0.0" width="412" height="451"/>
+            <rect key="frame" x="0.0" y="0.0" width="368" height="427"/>
             <subviews>
                 <button toolTip="Open the contents pane only when the file has a table of contents" horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3">
                     <rect key="frame" x="18" y="317" width="252" height="18"/>
@@ -38,10 +38,10 @@
                     </connections>
                 </button>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="5">
-                    <rect key="frame" x="12" y="372" width="388" height="5"/>
+                    <rect key="frame" x="12" y="372" width="344" height="5"/>
                 </box>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="6">
-                    <rect key="frame" x="12" y="91" width="388" height="5"/>
+                    <rect key="frame" x="12" y="91" width="344" height="5"/>
                 </box>
                 <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7" userLabel="Check for Skim updates:">
                     <rect key="frame" x="18" y="109" width="153" height="16"/>
@@ -52,7 +52,7 @@
                     </textFieldCell>
                 </textField>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="8">
-                    <rect key="frame" x="12" y="136" width="388" height="5"/>
+                    <rect key="frame" x="12" y="136" width="344" height="5"/>
                 </box>
                 <popUpButton horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9">
                     <rect key="frame" x="174" y="102" width="88" height="25"/>
@@ -85,7 +85,7 @@
                     </connections>
                 </button>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="11">
-                    <rect key="frame" x="12" y="199" width="388" height="5"/>
+                    <rect key="frame" x="12" y="199" width="344" height="5"/>
                 </box>
                 <button toolTip="Automatically save a Skim notes file with the same file name whenever you save a PDF file" horizontalHuggingPriority="252" verticalHuggingPriority="750" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="12">
                     <rect key="frame" x="18" y="150" width="265" height="18"/>
@@ -145,7 +145,7 @@
                     </connections>
                 </button>
                 <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="19">
-                    <rect key="frame" x="12" y="50" width="388" height="5"/>
+                    <rect key="frame" x="12" y="50" width="344" height="5"/>
                 </box>
                 <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="20" userLabel="Save passwords in Keychain:">
                     <rect key="frame" x="18" y="23" width="178" height="16"/>
@@ -209,25 +209,8 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <popUpButton toolTip="Remember and reopen files from a previous run" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lVN-xI-ijg">
-                    <rect key="frame" x="29" y="383" width="127" height="25"/>
-                    <popUpButtonCell key="cell" type="push" title="Never" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="gtz-vr-anS" id="D0s-vg-Wzx">
-                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="menu"/>
-                        <menu key="menu" id="hqY-Yk-Ef0">
-                            <items>
-                                <menuItem title="Never" state="on" id="gtz-vr-anS"/>
-                                <menuItem title="Default launch" tag="1" id="njb-dx-Ovw"/>
-                                <menuItem title="Always" tag="2" id="jKc-Tn-o1b"/>
-                            </items>
-                        </menu>
-                    </popUpButtonCell>
-                    <connections>
-                        <binding destination="58" name="selectedTag" keyPath="values.SKReopenLastOpenFiles" id="tk5-Kv-QW6"/>
-                    </connections>
-                </popUpButton>
                 <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hos-Of-u1Q" userLabel="Open files:">
-                    <rect key="frame" x="18" y="415" width="204" height="16"/>
+                    <rect key="frame" x="18" y="390" width="204" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Reopen last open files at startup:" id="bXV-8Q-oZQ">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -294,6 +277,23 @@
                         </binding>
                     </connections>
                 </imageView>
+                <popUpButton toolTip="Remember and reopen files from a previous run" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lVN-xI-ijg">
+                    <rect key="frame" x="225" y="383" width="127" height="25"/>
+                    <popUpButtonCell key="cell" type="push" title="Never" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="gtz-vr-anS" id="D0s-vg-Wzx">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" id="hqY-Yk-Ef0">
+                            <items>
+                                <menuItem title="Never" state="on" id="gtz-vr-anS"/>
+                                <menuItem title="Default launch" tag="1" id="njb-dx-Ovw"/>
+                                <menuItem title="Always" tag="2" id="jKc-Tn-o1b"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <binding destination="58" name="selectedTag" keyPath="values.SKReopenLastOpenFiles" id="tk5-Kv-QW6"/>
+                    </connections>
+                </popUpButton>
             </subviews>
             <constraints>
                 <constraint firstItem="11" firstAttribute="top" secondItem="13" secondAttribute="bottom" constant="12" id="0FC-yH-TEU"/>
@@ -302,12 +302,12 @@
                 <constraint firstItem="YMN-MA-BZc" firstAttribute="leading" secondItem="hos-Of-u1Q" secondAttribute="leading" id="20r-lI-K3p"/>
                 <constraint firstItem="f9u-Df-2s9" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="32P-dV-Eex"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="13" secondAttribute="trailing" constant="20" symbolic="YES" id="3k2-tt-YTb"/>
+                <constraint firstItem="lVN-xI-ijg" firstAttribute="top" secondItem="1" secondAttribute="top" constant="20" id="3qZ-MY-mHn"/>
                 <constraint firstItem="14" firstAttribute="leading" secondItem="krj-lQ-Yls" secondAttribute="trailing" constant="8" symbolic="YES" id="4l7-ly-FGP"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="hos-Of-u1Q" secondAttribute="trailing" constant="20" symbolic="YES" id="6l3-zE-gSM"/>
                 <constraint firstItem="3" firstAttribute="leading" secondItem="hos-Of-u1Q" secondAttribute="leading" id="7ep-6b-PdA"/>
                 <constraint firstItem="14" firstAttribute="leading" secondItem="13" secondAttribute="leading" id="8iP-uW-VDS"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="9" secondAttribute="trailing" constant="20" symbolic="YES" id="9zb-Rk-CmA"/>
-                <constraint firstItem="lVN-xI-ijg" firstAttribute="top" secondItem="hos-Of-u1Q" secondAttribute="bottom" constant="8" symbolic="YES" id="A23-MT-CLp"/>
                 <constraint firstItem="19" firstAttribute="leading" secondItem="5" secondAttribute="leading" id="CG0-Ds-aXI"/>
                 <constraint firstItem="C1M-te-Zg5" firstAttribute="centerY" secondItem="f9u-Df-2s9" secondAttribute="centerY" id="CYv-P4-hyq"/>
                 <constraint firstItem="3" firstAttribute="top" secondItem="ClK-rQ-vsN" secondAttribute="bottom" constant="8" symbolic="YES" id="Dcc-qq-NoQ"/>
@@ -327,7 +327,6 @@
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="14" secondAttribute="trailing" constant="20" symbolic="YES" id="Lyc-Te-X32"/>
                 <constraint firstItem="fiY-dG-n4g" firstAttribute="leading" secondItem="15" secondAttribute="trailing" constant="8" symbolic="YES" id="Mem-6q-ZD4"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="15" secondAttribute="trailing" constant="20" symbolic="YES" id="Nkq-Ax-nJg"/>
-                <constraint firstItem="lVN-xI-ijg" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="32" id="Oje-sg-FbU"/>
                 <constraint firstItem="15" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="P2b-oG-3nq"/>
                 <constraint firstItem="hdM-1x-c8a" firstAttribute="leading" secondItem="f9u-Df-2s9" secondAttribute="trailing" constant="8" symbolic="YES" id="PtE-WF-LmK"/>
                 <constraint firstItem="19" firstAttribute="top" secondItem="4" secondAttribute="bottom" constant="12" id="Q1S-8k-zDI"/>
@@ -346,8 +345,8 @@
                 <constraint firstItem="6" firstAttribute="top" secondItem="9" secondAttribute="bottom" constant="12" id="XWD-bi-DNu"/>
                 <constraint firstItem="15" firstAttribute="leading" secondItem="1" secondAttribute="leading" priority="750" constant="20" symbolic="YES" id="Zu8-ZB-EUH"/>
                 <constraint firstItem="duc-5M-yv6" firstAttribute="firstBaseline" secondItem="20" secondAttribute="firstBaseline" id="Zx2-aa-pa9"/>
+                <constraint firstItem="lVN-xI-ijg" firstAttribute="leading" secondItem="hos-Of-u1Q" secondAttribute="trailing" constant="8" symbolic="YES" id="aIC-rd-fAF"/>
                 <constraint firstItem="12" firstAttribute="leading" secondItem="hos-Of-u1Q" secondAttribute="leading" id="bLu-jp-YjC"/>
-                <constraint firstItem="hos-Of-u1Q" firstAttribute="top" secondItem="1" secondAttribute="top" constant="20" symbolic="YES" id="bPi-A8-Wp7"/>
                 <constraint firstItem="18" firstAttribute="leading" secondItem="hos-Of-u1Q" secondAttribute="leading" id="dt2-ti-H14"/>
                 <constraint firstItem="C1M-te-Zg5" firstAttribute="leading" secondItem="hdM-1x-c8a" secondAttribute="trailing" constant="8" symbolic="YES" id="egg-kN-Twa"/>
                 <constraint firstItem="fiY-dG-n4g" firstAttribute="leading" secondItem="hdM-1x-c8a" secondAttribute="leading" id="fbM-jI-97E"/>
@@ -362,6 +361,7 @@
                 <constraint firstItem="4" firstAttribute="leading" secondItem="hos-Of-u1Q" secondAttribute="leading" id="lGd-Fh-0GF"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="duc-5M-yv6" secondAttribute="trailing" constant="20" symbolic="YES" id="ldM-OS-AyE"/>
                 <constraint firstItem="18" firstAttribute="top" secondItem="10" secondAttribute="bottom" constant="6" symbolic="YES" id="n6b-L7-vO4"/>
+                <constraint firstItem="lVN-xI-ijg" firstAttribute="firstBaseline" secondItem="hos-Of-u1Q" secondAttribute="firstBaseline" id="n6i-aG-e1H"/>
                 <constraint firstItem="13" firstAttribute="top" secondItem="14" secondAttribute="bottom" constant="12" symbolic="YES" id="npT-XL-y6y"/>
                 <constraint firstItem="krj-lQ-Yls" firstAttribute="leading" secondItem="fiY-dG-n4g" secondAttribute="trailing" constant="8" symbolic="YES" id="obG-T7-WAj"/>
                 <constraint firstItem="12" firstAttribute="top" secondItem="YMN-MA-BZc" secondAttribute="bottom" constant="6" symbolic="YES" id="pRs-P8-idK"/>
@@ -378,7 +378,7 @@
                 <constraint firstItem="9" firstAttribute="top" secondItem="8" secondAttribute="bottom" constant="12" id="wRZ-ah-TXh"/>
                 <constraint firstItem="9" firstAttribute="firstBaseline" secondItem="7" secondAttribute="firstBaseline" id="xO9-QM-sbG"/>
             </constraints>
-            <point key="canvasLocation" x="139" y="154.5"/>
+            <point key="canvasLocation" x="117" y="154.5"/>
         </customView>
         <userDefaultsController representsSharedInstance="YES" id="58"/>
     </objects>
