@@ -185,7 +185,7 @@ static char SKMainWindowSplitViewItemObservationContext;
 
 #define SKTitleAndToolbarStyleKey @"SKTitleAndToolbarStyle"
 
-#define SKCollapseSidePanesInFullScreenKey @"SKCollapseSidePanesInFullScreen"
+#define SKShowSidePanesInFullScreenKey @"SKShowSidePanesInFullScreen"
 
 #pragma mark -    
 
@@ -593,7 +593,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 [savedNormalWindow setFrame:NSRectFromString(rectString) display:NO];
         }
         
-        BOOL applySidePaneWidths = [self interactionMode] != SKFullScreenMode || [[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseSidePanesInFullScreenKey] == NO;
+        BOOL applySidePaneWidths = [self interactionMode] != SKFullScreenMode || [[NSUserDefaults standardUserDefaults] boolForKey:SKShowSidePanesInFullScreenKey];
         if (applySidePaneWidths) {
             [self setLeftSideWidth:[setup objectForKey:LEFTSIDEPANEWIDTH_KEY]];
             [self setRightSideWidth:[setup objectForKey:RIGHTSIDEPANEWIDTH_KEY]];

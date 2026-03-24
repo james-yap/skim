@@ -76,8 +76,8 @@
 #define LEFTSIDEPANEWIDTH_KEY       @"leftSidePaneWidth"
 #define RIGHTSIDEPANEWIDTH_KEY      @"rightSidePaneWidth"
 
-#define SKAutoHideToolbarInFullScreenKey @"SKAutoHideToolbarInFullScreen"
-#define SKCollapseSidePanesInFullScreenKey @"SKCollapseSidePanesInFullScreen"
+#define SKShowToolbarInFullScreenKey @"SKShowToolbarInFullScreen"
+#define SKShowSidePanesInFullScreenKey @"SKShowSidePanesInFullScreen"
 #define SKResizablePresentationKey @"SKResizablePresentation"
 
 #define AppleMenuBarVisibleInFullscreenKey @"AppleMenuBarVisibleInFullscreen"
@@ -539,7 +539,7 @@ static inline CGFloat fullScreenOffset(NSWindow *window) {
 }
 
 static inline void saveFullScreenToolbarOffset(NSWindow *window) {
-    if (fullScreenToolbarOffset < 0.0 && [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHideToolbarInFullScreenKey] == NO && [[window toolbar] isVisible] && hasUnifiedToolbar(window) == NO) {
+    if (fullScreenToolbarOffset < 0.0 && [[NSUserDefaults standardUserDefaults] boolForKey:SKShowToolbarInFullScreenKey] && [[window toolbar] isVisible] && hasUnifiedToolbar(window) == NO) {
         CGFloat toolbarItemOffset = toolbarViewOffset(window);
         if (toolbarItemOffset < 0.0)
             // save the offset for the next time, we may guess it wrong as it varies between OS versions
@@ -553,7 +553,7 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         NSColor *backgroundColor = [PDFView defaultFullScreenBackgroundColor];
         [pdfView setBackgroundColor:backgroundColor];
         [secondaryPdfView setBackgroundColor:backgroundColor];
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseSidePanesInFullScreenKey]) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowSidePanesInFullScreenKey] == NO) {
             [savedNormalSetup setObject:[self leftSideWidth] forKey:LEFTSIDEPANEWIDTH_KEY];
             [savedNormalSetup setObject:[self rightSideWidth] forKey:RIGHTSIDEPANEWIDTH_KEY];
             [self setLeftSideWidth:@0.0];
@@ -573,7 +573,7 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         NSColor *backgroundColor = [PDFView defaultBackgroundColor];
         [pdfView setBackgroundColor:backgroundColor];
         [secondaryPdfView setBackgroundColor:backgroundColor];
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseSidePanesInFullScreenKey]) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowSidePanesInFullScreenKey] == NO) {
             [self setLeftSideWidth:[savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY]];
             [self setRightSideWidth:[savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY]];
         }
@@ -592,10 +592,10 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
 }
 
 - (NSApplicationPresentationOptions)window:(NSWindow *)window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions)proposedOptions {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHideToolbarInFullScreenKey])
-        return proposedOptions | NSApplicationPresentationAutoHideToolbar;
-    else
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowToolbarInFullScreenKey])
         return proposedOptions;
+    else
+        return proposedOptions | NSApplicationPresentationAutoHideToolbar;
 }
 
 - (NSArray *)customWindowsToEnterFullScreenForWindow:(NSWindow *)window {
@@ -615,7 +615,7 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
     NSWindow *displayWindow = savedNormalWindow;
     savedNormalWindow = nil;
     [self displayStaticContentInWindow:displayWindow ordered:NSWindowBelow];
-    BOOL showToolbarWindow = [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHideToolbarInFullScreenKey] == NO;
+    BOOL showToolbarWindow = [[NSUserDefaults standardUserDefaults] boolForKey:SKShowToolbarInFullScreenKey];
     CGFloat offset = 0.0;
     NSTitlebarAccessoryViewController *noteToolbar = nil;
     CALayer *blackLayer = nil;
