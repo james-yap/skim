@@ -1084,6 +1084,9 @@
         
         NSSplitViewItem *item = [[pdfSplitViewController splitViewItems] lastObject];
         
+        if ([item isCollapsed] == NO && [[self window] firstResponderIsDescendantOf:secondaryPdfView])
+            [[self window] makeFirstResponder:pdfView];
+        
         if ([item isCollapsed] || [NSView shouldShowSlideAnimation] == NO) {
             [item setCollapsed:YES];
             [[pdfSplitViewController splitView] setDividerStyle:NSSplitViewDividerStyleThin];
