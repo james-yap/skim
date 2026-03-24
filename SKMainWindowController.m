@@ -570,7 +570,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if ([[pdfView document] isLocked]) {
         [window makeFirstResponder:[pdfView descendantOfClass:[NSSecureTextField class]]];
         [savedNormalSetup setObject:@YES forKey:LOCKED_KEY];
-        [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
+        [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY, MAINWINDOWFRAME_KEY]];
     } else {
         [savedNormalSetup removeAllObjects];
     }
@@ -602,6 +602,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             [savedNormalSetup addEntriesFromDictionary:setup];
             if (applySidePaneWidths)
                 [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
+            [savedNormalSetup removeObjectForKey:MAINWINDOWFRAME_KEY];
             if ([snapshotSetups count])
                 [savedNormalSetup setObject:mergedSnapshotSetups(snapshotSetups, [setup objectForKey:SNAPSHOTS_KEY]) forKey:SNAPSHOTS_KEY];
         } else {
@@ -615,6 +616,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 NSMutableDictionary *mutableSetup = [setup mutableCopy];
                 [mutableSetup removeObjectsForKeys:@[@"displayMode", @"displayDirection"]];
                 [pdfView setDisplaySettings:mutableSetup];
+                [savedNormalSetup removeObjectForKey:MAINWINDOWFRAME_KEY];
             } else if ([self interactionMode] == SKNormalMode || [[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey] count] == 0) {
                 if ([setup objectForKey:PAGEINDEX_KEY])
                     [pdfView setDisplaySettings:setup];
