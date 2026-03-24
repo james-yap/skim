@@ -539,7 +539,7 @@ static inline CGFloat fullScreenOffset(NSWindow *window) {
 }
 
 static inline void saveFullScreenToolbarOffset(NSWindow *window) {
-    if (fullScreenToolbarOffset < 0.0 && [[NSUserDefaults standardUserDefaults] boolForKey:SKShowToolbarInFullScreenKey] && [[window toolbar] isVisible] && hasUnifiedToolbar(window) == NO) {
+    if (fullScreenToolbarOffset < 0.0 && [[NSUserDefaults standardUserDefaults] integerForKey:SKShowToolbarInFullScreenKey] && [[window toolbar] isVisible] && hasUnifiedToolbar(window) == NO) {
         CGFloat toolbarItemOffset = toolbarViewOffset(window);
         if (toolbarItemOffset < 0.0)
             // save the offset for the next time, we may guess it wrong as it varies between OS versions
@@ -592,7 +592,7 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
 }
 
 - (NSApplicationPresentationOptions)window:(NSWindow *)window willUseFullScreenPresentationOptions:(NSApplicationPresentationOptions)proposedOptions {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowToolbarInFullScreenKey])
+    if ([[NSUserDefaults standardUserDefaults] integerForKey:SKShowToolbarInFullScreenKey])
         return proposedOptions;
     else
         return proposedOptions | NSApplicationPresentationAutoHideToolbar;
@@ -615,7 +615,7 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
     NSWindow *displayWindow = savedNormalWindow;
     savedNormalWindow = nil;
     [self displayStaticContentInWindow:displayWindow ordered:NSWindowBelow];
-    BOOL showToolbarWindow = [[NSUserDefaults standardUserDefaults] boolForKey:SKShowToolbarInFullScreenKey];
+    BOOL showToolbarWindow = [[NSUserDefaults standardUserDefaults] integerForKey:SKShowToolbarInFullScreenKey];
     CGFloat offset = 0.0;
     NSTitlebarAccessoryViewController *noteToolbar = nil;
     CALayer *blackLayer = nil;
