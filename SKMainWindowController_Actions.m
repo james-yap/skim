@@ -88,7 +88,7 @@
 
 #define MIN_SPLIT_PANE_HEIGHT 50.0
 
-#define SKShowNoteToolbarInFullScreenKey @"SKShowNoteToolbarInFullScreen"
+#define SKShowToolbarInFullScreenKey @"SKShowToolbarInFullScreen"
 
 @interface SKMainWindowController (SKPrivateUI)
 - (void)updateLineInspector;
@@ -1177,7 +1177,7 @@
         if (noteToolbarController == nil) {
             noteToolbarController = [[SKNoteToolbarController alloc] init];
             [noteToolbarController setMainController:self];
-            if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowNoteToolbarInFullScreenKey])
+            if ([[NSUserDefaults standardUserDefaults] integerForKey:SKShowToolbarInFullScreenKey] == 2)
                 [noteToolbarController setFullScreenMinHeight:28.0];
         }
         [[self window] addTitlebarAccessoryViewController:noteToolbarController];
