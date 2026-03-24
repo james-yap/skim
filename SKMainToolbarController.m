@@ -585,7 +585,7 @@ static char SKDefaultsObservationContext;
             [item setView:notesButton];
             [item setMenuFormRepresentation:menuItem];
             
-            [self noteToolbarDidShowOrHide];
+            [self noteToolbarDidShowOrHide:[mainController hasNoteToolbar]];
             
         } else if ([identifier isEqualToString:SKDocumentToolbarToolModeItemIdentifier]) {
             
@@ -1128,25 +1128,25 @@ static char SKDefaultsObservationContext;
     }
 }
 
-- (void)noteToolbarDidShowOrHide {
-    [notesButton setSelected:[mainController hasNoteToolbar] forSegment:0];
+- (void)noteToolbarDidShowOrHide:(BOOL)show {
+    [notesButton setSelected:show forSegment:0];
     NSToolbarItem *item = [toolbarItems objectForKey:SKDocumentToolbarNotesItemIdentifier];
-    [item setToolTip:[mainController hasNoteToolbar] ? NSLocalizedString(@"Hide Note Toolbar", @"Tool tip message") : NSLocalizedString(@"Show Note Toolbar", @"Tool tip message")];
+    [item setToolTip:show ? NSLocalizedString(@"Hide Note Toolbar", @"Tool tip message") : NSLocalizedString(@"Show Note Toolbar", @"Tool tip message")];
 }
 
-- (void)leftSidePaneDidShowOrHide {
+- (void)leftSidePaneDidShowOrHide:(BOOL)show {
     NSToolbarItem *item = [toolbarItems objectForKey:SKDocumentToolbarContentsPaneItemIdentifier];
-    [item setToolTip:[leftPaneButton tag] ? NSLocalizedString(@"Show Contents Pane", @"Tool tip message") : NSLocalizedString(@"Hide Contents Pane", @"Tool tip message")];
+    [item setToolTip:show ? NSLocalizedString(@"Hide Contents Pane", @"Tool tip message") : NSLocalizedString(@"Show Contents Pane", @"Tool tip message")];
 }
 
-- (void)rightSidePaneDidShowOrHide {
+- (void)rightSidePaneDidShowOrHide:(BOOL)show {
     NSToolbarItem *item = [toolbarItems objectForKey:SKDocumentToolbarNotesPaneItemIdentifier];
-    [item setToolTip:[rightPaneButton tag] ? NSLocalizedString(@"Show Notes Pane", @"Tool tip message") : NSLocalizedString(@"Hide Notes Pane", @"Tool tip message")];
+    [item setToolTip:show ? NSLocalizedString(@"Hide Notes Pane", @"Tool tip message") : NSLocalizedString(@"Show Notes Pane", @"Tool tip message")];
 }
 
-- (void)splitPDFDidShowOrHide {
+- (void)splitPDFDidShowOrHide:(BOOL)show {
     NSToolbarItem *item = [toolbarItems objectForKey:SKDocumentToolbarSplitPDFItemIdentifier];
-    [item setToolTip:[(NSView *)mainController.secondaryPdfView window] ? NSLocalizedString(@"Hide Split PDF", @"Tool tip message") : NSLocalizedString(@"Show Split PDF", @"Tool tip message")];
+    [item setToolTip:show ? NSLocalizedString(@"Hide Split PDF", @"Tool tip message") : NSLocalizedString(@"Show Split PDF", @"Tool tip message")];
 }
 
 - (IBAction)goToPreviousNextFirstLastPage:(id)sender {
@@ -1515,20 +1515,6 @@ static char SKDefaultsObservationContext;
     [pacerButton setImage:[NSImage imageNamed:name] forSegment:0];
 }
 
-- (void)handleSplitViewDidResizeSubviewsNotification:(NSNotification *)notification {
-    NSSplitView *splitView = [notification object];
-    NSInteger isLeftSideViewCollapsed = [splitView isSubviewCollapsed:[[splitView subviews] firstObject]];
-    NSInteger isRightSideViewCollapsed = [splitView isSubviewCollapsed:[[splitView subviews] objectAtIndex:2]];
-    if (isLeftSideViewCollapsed != [leftPaneButton tag]) {
-        [leftPaneButton setTag:isLeftSideViewCollapsed];
-        [self leftSidePaneDidShowOrHide];
-    }
-    if (isRightSideViewCollapsed != [rightPaneButton tag]) {
-        [rightPaneButton setTag:isRightSideViewCollapsed];
-        [self rightSidePaneDidShowOrHide];
-    }
-}
-
 - (void)registerForNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     
@@ -1560,8 +1546,6 @@ static char SKDefaultsObservationContext;
                              name:PDFViewDisplayBoxChangedNotification object:mainController.pdfView];
     [nc addObserver:self selector:@selector(handleChangedHistoryNotification:)
                              name:PDFViewChangedHistoryNotification object:mainController.pdfView];
-    [nc addObserver:self selector:@selector(handleSplitViewDidResizeSubviewsNotification:)
-                             name:NSSplitViewDidResizeSubviewsNotification object:mainController.splitView];
     
     [self handleChangedHistoryNotification:nil];
     [self handlePageChangedNotification:nil];

@@ -1031,8 +1031,6 @@
     } else {
         NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
         BOOL collapse = [item isCollapsed] == NO;
-        if (collapse && [[self window] firstResponderIsDescendantOf:[[item viewController] view]])
-            [[self window] makeFirstResponder:pdfView];
         if ([NSView shouldShowSlideAnimation])
             [[item animator] setCollapsed:collapse];
         else
@@ -1047,8 +1045,6 @@
     } else {
         NSSplitViewItem *item = [[splitViewController splitViewItems] lastObject];
         BOOL collapse = [item isCollapsed] == NO;
-        if (collapse && [[self window] firstResponderIsDescendantOf:[[item viewController] view]])
-            [[self window] makeFirstResponder:pdfView];
         if ([NSView shouldShowSlideAnimation])
             [[item animator] setCollapsed:collapse];
         else
@@ -1102,6 +1098,8 @@
                     mwcFlags.isAnimatingSplitPDF = NO;
                 }];
         }
+        
+        [toolbarController splitPDFDidShowOrHide:NO];
         
     } else {
         
@@ -1163,11 +1161,11 @@
         } else {
             [item setCollapsed:NO];
         }
+        
+        [toolbarController splitPDFDidShowOrHide:YES];
     }
     
     [[self window] recalculateKeyViewLoop];
-    
-    [toolbarController splitPDFDidShowOrHide];
 }
 
 - (IBAction)toggleNoteToolbar:(id)sender {
@@ -1186,7 +1184,7 @@
         }
         [[self window] addTitlebarAccessoryViewController:noteToolbarController];
     }
-    [toolbarController noteToolbarDidShowOrHide];
+    [toolbarController noteToolbarDidShowOrHide:[noteToolbarController isVisible]];
 }
 
 - (IBAction)toggleFullscreen:(id)sender {

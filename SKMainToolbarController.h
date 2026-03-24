@@ -108,8 +108,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)handleChangedHistoryNotification:(nullable NSNotification *)notification;
 - (void)handlePageChangedNotification:(nullable NSNotification *)notification;
 
-- (void)noteToolbarDidShowOrHide;
-- (void)splitPDFDidShowOrHide;
+- (void)leftSidePaneDidShowOrHide:(BOOL)show;
+- (void)rightSidePaneDidShowOrHide:(BOOL)show;
+- (void)noteToolbarDidShowOrHide:(BOOL)show;
+- (void)splitPDFDidShowOrHide:(BOOL)show;
 
 #pragma mark Actions
 

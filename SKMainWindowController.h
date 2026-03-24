@@ -197,8 +197,6 @@ enum {
 
 @property (nonatomic, nullable, strong) IBOutlet SKStatusBar *statusBar;
 
-@property (nonatomic, nullable, readonly) NSSplitView *splitView;
-
 @property (nonatomic, nullable, strong) NSString *searchString;
 
 - (SKTransitionController *)transitionControllerCreating:(BOOL)create;

@@ -174,6 +174,8 @@ static char SKMainWindowContentLayoutObservationContext;
 
 static char SKMainWindowTransitionsObservationContext;
 
+static char SKMainWindowSplitViewItemObservationContext;
+
 #define SKLeftSidePaneWidthKey @"SKLeftSidePaneWidth"
 #define SKRightSidePaneWidthKey @"SKRightSidePaneWidth"
 
@@ -225,7 +227,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 @implementation SKMainWindowController
 
 @synthesize statusBar, pdfView, secondaryPdfView, presentationNotesDocument, presentationNotesOffset, notes, thumbnails, snapshots, searchResults, groupedSearchResults, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
-@dynamic splitView, pdfDocument, selectedNotes, hasNotes, widgetProperties, currentPage, leftSidePaneState, rightSidePaneState, findPaneState, displaysFindPane, leftSidePaneIsOpen, rightSidePaneIsOpen, searchString, hasNoteToolbar, hasOverview, notesMenu;
+@dynamic pdfDocument, selectedNotes, hasNotes, widgetProperties, currentPage, leftSidePaneState, rightSidePaneState, findPaneState, displaysFindPane, leftSidePaneIsOpen, rightSidePaneIsOpen, searchString, hasNoteToolbar, hasOverview, notesMenu;
 
 + (BOOL)automaticallyNotifiesObserversOfPageLabel { return NO; }
 
@@ -1263,10 +1265,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 }
 
 #pragma mark Accessors
-
-- (NSSplitView *)splitView {
-    return [splitViewController splitView];
-}
 
 - (PDFDocument *)pdfDocument{
     return [pdfView document];
@@ -2567,6 +2565,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [NSApp addObserver:self forKeyPath:@"effectiveAppearance" options:0 context:&SKMainWindowAppObservationContext];
     if (mwcFlags.fullSizeContent)
         [[self window] addObserver:self forKeyPath:@"contentLayoutRect" options:0 context:&SKMainWindowContentLayoutObservationContext];
+    [[[splitViewController splitViewItems] firstObject] addObserver:self forKeyPath:@"collapsed" options:NSKeyValueObservingOptionPrior context:&SKMainWindowSplitViewItemObservationContext];
+    [[[splitViewController splitViewItems] lastObject] addObserver:self forKeyPath:@"collapsed" options:NSKeyValueObservingOptionPrior context:&SKMainWindowSplitViewItemObservationContext];
 }
 
 - (void)unregisterAsObserver {
@@ -2597,6 +2597,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         @try { [[presentationView transitionController] removeObserver:self forKeyPath:PAGETRANSITIONS_KEY context:&SKMainWindowTransitionsObservationContext]; }
         @catch (id e) {}
     }
+    @try { [[[splitViewController splitViewItems] firstObject] removeObserver:self forKeyPath:@"collapsed" context:&SKMainWindowSplitViewItemObservationContext]; }
+    @catch (id e) {}
+    @try { [[[splitViewController splitViewItems] lastObject] removeObserver:self forKeyPath:@"collapsed" context:&SKMainWindowSplitViewItemObservationContext]; }
+    @catch (id e) {}
 }
 
 #pragma mark Undo
@@ -2740,8 +2744,20 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             mwcFlags.updatingThumbnailSelection = 0;
         }
         
-    } else if (context == &SKPDFAnnotationPropertiesObservationContext) {
+    } else if (context == &SKMainWindowSplitViewItemObservationContext) {
         
+        NSSplitViewItem *item = object;
+        if ([[change objectForKey:NSKeyValueChangeNotificationIsPriorKey] boolValue]) {
+            if ([item isCollapsed] == NO && [[self window] firstResponderIsDescendantOf:[[item viewController] view]])
+                [[self window] makeFirstResponder:pdfView];
+        } else if ([item viewController] == leftSideController) {
+            [toolbarController leftSidePaneDidShowOrHide:[item isCollapsed] == NO];
+        } else if ([item viewController] == rightSideController) {
+            [toolbarController rightSidePaneDidShowOrHide:[item isCollapsed] == NO];
+        }
+        
+    } else if (context == &SKPDFAnnotationPropertiesObservationContext) {
+
         // The value of some note's property has changed
         PDFAnnotation *note = (PDFAnnotation *)object;
         // Ignore changes that aren't really changes.
