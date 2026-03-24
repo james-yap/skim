@@ -570,6 +570,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if ([[pdfView document] isLocked]) {
         [window makeFirstResponder:[pdfView descendantOfClass:[NSSecureTextField class]]];
         [savedNormalSetup setObject:@YES forKey:LOCKED_KEY];
+        [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
     } else {
         [savedNormalSetup removeAllObjects];
     }
@@ -592,17 +593,15 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
         BOOL applySidePaneWidths = [self interactionMode] != SKFullScreenMode || [[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseSidePanesInFullScreenKey] == NO;
         if (applySidePaneWidths) {
-            NSNumber *leftWidthNumber = [setup objectForKey:LEFTSIDEPANEWIDTH_KEY];
-            NSNumber *rightWidthNumber = [setup objectForKey:RIGHTSIDEPANEWIDTH_KEY];
-            if (leftWidthNumber && rightWidthNumber) {
-                [self setLeftSideWidth:leftWidthNumber];
-                [self setRightSideWidth:rightWidthNumber];
-            }
+            [self setLeftSideWidth:[setup objectForKey:LEFTSIDEPANEWIDTH_KEY]];
+            [self setRightSideWidth:[setup objectForKey:RIGHTSIDEPANEWIDTH_KEY]];
         }
         
         if ([[pdfView document] isLocked]) {
             NSArray *snapshotSetups = [savedNormalSetup objectForKey:SNAPSHOTS_KEY];
             [savedNormalSetup addEntriesFromDictionary:setup];
+            if (applySidePaneWidths)
+                [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
             if ([snapshotSetups count])
                 [savedNormalSetup setObject:mergedSnapshotSetups(snapshotSetups, [setup objectForKey:SNAPSHOTS_KEY]) forKey:SNAPSHOTS_KEY];
         } else {
