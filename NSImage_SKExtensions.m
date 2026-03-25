@@ -1392,13 +1392,17 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     
     MAKE_IMAGE(SKImageNameNotesPreferences, NO, 32.0, 32.0, 
         NSImage *clippingImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kClippingTextType)];
-        NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithSRGBRed:1.0 green:0.939 blue:0.495 alpha:1.0] endingColor:[NSColor colorWithSRGBRed:1.0 green:0.976 blue:0.810 alpha:1.0]];
-        [[NSColor blackColor] setFill];
-        [NSBezierPath fillRect:NSMakeRect(2.0, 0.0, 28.0, 32.0)];
+        NSImage *tmpImage = [NSImage imageWithSize:NSMakeSize(28.0, 32.0) drawingHandler:^(NSRect r1){
+            NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithSRGBRed:1.0 green:0.939 blue:0.495 alpha:1.0] endingColor:[NSColor colorWithSRGBRed:1.0 green:0.976 blue:0.810 alpha:1.0]];
+            [[NSColor blackColor] setFill];
+            [NSBezierPath fillRect:r1];
+            [clippingImage drawInRect:r1];
+            [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationMultiply];
+            [gradient drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) angle:90.0];
+            return YES;
+        }];
         [clippingImage drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
-        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationMultiply];
-        [gradient drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) angle:90.0];
-        [clippingImage drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
+        [tmpImage drawInRect:NSMakeRect(2.0, 0.0, 28.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceIn fraction:1.0];
     );
     
     MAKE_IMAGE(SKImageNameSyncPreferences, NO, 32.0, 32.0,
