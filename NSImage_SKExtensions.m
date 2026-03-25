@@ -940,9 +940,10 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
         if (img) {
             [img drawInRect:NSMakeRect(4.0, 4.0, 18.0, 12.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
         } else {
+            [[NSImage imageNamed:NSImageNameFontPanel] drawInRect:NSMakeRect(4.0, 1.0, 19.0, 19.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
+            [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationSourceIn];
             [[NSColor blackColor] setFill];
             [NSBezierPath fillRect:NSMakeRect(4.0, 1.0, 19.0, 19.0)];
-            [[NSImage imageNamed:NSImageNameFontPanel] drawInRect:NSMakeRect(4.0, 1.0, 19.0, 19.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
         }
     );
     
@@ -1382,8 +1383,10 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     MAKE_IMAGE(SKImageNameDisplayPreferences, NO, 32.0, 32.0,
         NSImage *fontImage = [NSImage imageNamed:NSImageNameFontPanel];
         NSImage *colorImage = [NSImage imageNamed:NSImageNameColorPanel];
-        NSRectFill(NSMakeRect(0.0, 0.0, 21.0, 29.0));
-        [fontImage drawInRect:NSMakeRect(-4.0, 0.0, 29.0, 29.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
+        [fontImage drawInRect:NSMakeRect(-4.0, 0.0, 29.0, 29.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationSourceIn];
+        [[NSColor blackColor] setFill];
+        [NSBezierPath fillRect:NSMakeRect(0.0, 0.0, 21.0, 29.0)];
         [colorImage drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationOver fraction:1.0];
     );
     
@@ -1401,9 +1404,10 @@ APPLY_NOTE_TYPES(DECLARE_NOTE_FUNCTIONS);
     MAKE_IMAGE(SKImageNameSyncPreferences, NO, 32.0, 32.0,
         NSImage *refreshImage = [NSImage imageNamed:NSImageNameRefreshTemplate];
         NSImage *genericDocImage = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericDocumentIcon)];
-        [[NSColor colorWithSRGBRed:0.3 green:0.45 blue:0.65 alpha:1.0] set];
-        NSRectFill(NSMakeRect(11.0, 10.0, 10.0, 12.0));
-        [refreshImage drawInRect:NSMakeRect(11.0, 10.0, 10.0, 12.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
+        [refreshImage drawInRect:NSMakeRect(11.0, 10.0, 10.0, 12.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
+        [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationSourceIn];
+        [[NSColor colorWithSRGBRed:0.3 green:0.45 blue:0.65 alpha:1.0] setFill];
+        [NSBezierPath fillRect:NSMakeRect(11.0, 10.0, 10.0, 12.0)];
         [genericDocImage drawInRect:NSMakeRect(0.0, 0.0, 32.0, 32.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationOver fraction:1.0];
     );
 }

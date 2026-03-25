@@ -404,9 +404,10 @@ static Class SKBookmarkClass = Nil;
             icon = [self iconForFileType:type hasSetup:NO];
             NSImage *badge = [NSImage imageNamed:NSImageNameSmartBadgeTemplate];
             icon = [NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect) {
+                [badge drawInRect:NSMakeRect(8.0, 0.0, 8.0, 8.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
+                [[NSGraphicsContext currentContext] setCompositingOperation:NSCompositingOperationSourceIn];
                 [[NSColor darkGrayColor] setFill];
                 [NSBezierPath fillRect:NSMakeRect(8.0, 0.0, 8.0, 8.0)];
-                [badge drawInRect:NSMakeRect(8.0, 0.0, 8.0, 8.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
                 [icon drawInRect:rect fromRect:NSZeroRect operation:NSCompositingOperationDestinationOver fraction:1.0];
                 return YES;
             }];

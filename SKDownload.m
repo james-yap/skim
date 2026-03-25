@@ -95,7 +95,7 @@ static NSSet *keysAffectedByStatus = nil;
     static NSImage *cancelImage = nil;
     if (cancelImage == nil) {
         cancelImage = [NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect){
-            [[NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate] drawInRect:NSInsetRect(rect, 1.0, 1.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
+            [[NSImage imageNamed:NSImageNameStopProgressFreestandingTemplate] drawInRect:NSInsetRect(rect, 1.0, 1.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
             return YES;
         }];
         [cancelImage setTemplate:YES];
@@ -108,7 +108,7 @@ static NSSet *keysAffectedByStatus = nil;
     static NSImage *resumeImage = nil;
     if (resumeImage == nil) {
         resumeImage = [NSImage imageWithSize:NSMakeSize(16.0, 16.0) flipped:NO drawingHandler:^(NSRect rect){
-            [[NSImage imageNamed:NSImageNameRefreshFreestandingTemplate] drawInRect:NSInsetRect(rect, 1.0, 1.0) fromRect:NSZeroRect operation:NSCompositingOperationDestinationAtop fraction:1.0];
+            [[NSImage imageNamed:NSImageNameRefreshFreestandingTemplate] drawInRect:NSInsetRect(rect, 1.0, 1.0) fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:1.0];
             return YES;
         }];
         [resumeImage setTemplate:YES];
