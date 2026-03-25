@@ -602,7 +602,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             [savedNormalSetup addEntriesFromDictionary:setup];
             if (applySidePaneWidths)
                 [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
-            [savedNormalSetup removeObjectForKey:MAINWINDOWFRAME_KEY];
+            if ([self interactionMode] != SKFullScreenMode)
+                [savedNormalSetup removeObjectForKey:MAINWINDOWFRAME_KEY];
             if ([snapshotSetups count])
                 [savedNormalSetup setObject:mergedSnapshotSetups(snapshotSetups, [setup objectForKey:SNAPSHOTS_KEY]) forKey:SNAPSHOTS_KEY];
         } else {
