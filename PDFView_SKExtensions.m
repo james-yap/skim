@@ -316,15 +316,6 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     return pageRect;
 }
 
-static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *darkBackgroundColorKey) {
-    NSColor *color = nil;
-    if (SKHasDarkAppearance())
-        color = [[NSUserDefaults standardUserDefaults] colorForKey:darkBackgroundColorKey];
-    if (color == nil)
-        color = [[NSUserDefaults standardUserDefaults] colorForKey:backgroundColorKey];
-    return color;
-}
-
 - (void)setCursorForMouse:(NSEvent *)theEvent {
     if (theEvent == nil)
         theEvent = [NSEvent mouseEventWithType:NSEventTypeMouseMoved
@@ -337,6 +328,15 @@ static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *d
                                     clickCount:1
                                       pressure:0.0];
     [self setCursorForAreaOfInterest:[self areaOfInterestForMouse:theEvent]];
+}
+
+static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *darkBackgroundColorKey) {
+    NSColor *color = nil;
+    if (SKHasDarkAppearance())
+        color = [[NSUserDefaults standardUserDefaults] colorForKey:darkBackgroundColorKey];
+    if (color == nil)
+        color = [[NSUserDefaults standardUserDefaults] colorForKey:backgroundColorKey];
+    return color;
 }
 
 + (NSColor *)defaultBackgroundColor {
