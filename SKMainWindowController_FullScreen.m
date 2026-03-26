@@ -675,8 +675,10 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
 
 - (void)windowDidFailToEnterFullScreen:(NSWindow *)window {
     [self windowWillExitFullScreenStyle:window];
-    if ([[pdfView document] isLocked] == NO || [savedNormalSetup count] == 1)
+    if ([[pdfView document] isLocked] == NO)
         [savedNormalSetup removeAllObjects];
+    else
+        [savedNormalSetup removeObjectsForKeys:@[MAINWINDOWFRAME_KEY, LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
     [self forceSubwindowsOnTop:NO];
     savedNormalWindow = nil;
     mwcFlags.isSwitchingFullScreen = 0;
@@ -716,8 +718,10 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
     NSString *frameString = [savedNormalSetup objectForKey:MAINWINDOWFRAME_KEY];
     if (frameString)
         [[self window] setFrame:NSRectFromString(frameString) display:YES];
-    if ([[pdfView document] isLocked] == NO || [savedNormalSetup count] == 1)
+    if ([[pdfView document] isLocked] == NO)
         [savedNormalSetup removeAllObjects];
+    else
+        [savedNormalSetup removeObjectsForKeys:@[MAINWINDOWFRAME_KEY, LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
     [self forceSubwindowsOnTop:NO];
     mwcFlags.isSwitchingFullScreen = 0;
     if (mwcFlags.wantsPresentationOrFullScreen) {
