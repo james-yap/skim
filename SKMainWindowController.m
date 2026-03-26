@@ -1187,6 +1187,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                     [savedNormalSetup setObject:snapshotDicts forKey:SNAPSHOTS_KEY];
             }
         }
+        
+        if ([oldPdfDoc isLocked])
+            [savedNormalSetup removeObjectForKey:CROPBOXES_KEY];
     }
     
     if (unlocked && pageCount) {
