@@ -1175,21 +1175,18 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
         [oldPdfDoc setContainingDocument:nil];
         
-        if (unlocked == [oldPdfDoc isLocked]) {
-            if (unlocked) {
-                [self performSelector:@selector(documentDidUnlockDelayed) withObject:nil afterDelay:0.0];
-            } else {
-               if ([self interactionMode] == SKNormalMode)
-                    [savedNormalSetup setDictionary:[pdfView displaySettings]];
-                [savedNormalSetup setObject:@YES forKey:LOCKED_KEY];
-                setDestinationInSetup(dest, savedNormalSetup);
-                if ([snapshotDicts count])
-                    [savedNormalSetup setObject:snapshotDicts forKey:SNAPSHOTS_KEY];
-            }
-        }
-        
-        if ([oldPdfDoc isLocked])
+        if ([oldPdfDoc isLocked]) {
             [savedNormalSetup removeObjectForKey:CROPBOXES_KEY];
+            if (unlocked)
+                [self performSelector:@selector(documentDidUnlockDelayed) withObject:nil afterDelay:0.0];
+        } else if (unlocked == NO) {
+            if ([self interactionMode] == SKNormalMode)
+                 [savedNormalSetup setDictionary:[pdfView displaySettings]];
+             [savedNormalSetup setObject:@YES forKey:LOCKED_KEY];
+             setDestinationInSetup(dest, savedNormalSetup);
+             if ([snapshotDicts count])
+                 [savedNormalSetup setObject:snapshotDicts forKey:SNAPSHOTS_KEY];
+        }
     }
     
     if (unlocked && pageCount) {
