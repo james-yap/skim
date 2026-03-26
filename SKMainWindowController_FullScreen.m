@@ -174,7 +174,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
             // make sure we can synchronize the page between the presentationView and the pdfView
             if ([pdfView displayMode] != kPDFDisplaySinglePage)
                 [pdfView setExtendedDisplayMode:kPDFDisplaySinglePage];
-            [pdfView goAndScrollToPage:page];
+            [pdfView goToPage:page];
         }
         if ([self presentationNotesDocument]) {
             PDFDocument *pdfDoc = [[self presentationNotesDocument] pdfDocument];
