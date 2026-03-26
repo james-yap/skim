@@ -2155,7 +2155,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if ([self interactionMode] == SKNormalMode)
         [savedNormalSetup removeAllObjects];
     else
-        [savedNormalSetup removeObjectForKey:LOCKED_KEY];
+        [savedNormalSetup removeObjectsForKeys:@[LOCKED_KEY, SNAPSHOTS_KEY, CROPBOXES_KEY, PAGEINDEX_KEY, SCROLLPOINT_KEY]];
     
     // somehow the password field remains first responder after it has been removed
     if ([[[self window] firstResponder] isKindOfClass:[NSTextView class]] && [[(NSTextView *)[[self window] firstResponder] delegate] isKindOfClass:[NSSecureTextField class]] )
