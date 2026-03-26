@@ -591,7 +591,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 [savedNormalWindow setFrame:NSRectFromString(rectString) display:NO];
         }
         
-        BOOL applySidePaneWidths = [self interactionMode] != SKFullScreenMode || [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] == nil;
+        BOOL applySidePaneWidths = ([self interactionMode] != SKFullScreenMode || [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] == nil) && [setup objectForKey:LEFTSIDEPANEWIDTH_KEY];
         if (applySidePaneWidths) {
             [self setLeftSideWidth:[setup objectForKey:LEFTSIDEPANEWIDTH_KEY]];
             [self setRightSideWidth:[setup objectForKey:RIGHTSIDEPANEWIDTH_KEY]];
