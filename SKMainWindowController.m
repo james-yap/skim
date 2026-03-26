@@ -1175,17 +1175,17 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
         [oldPdfDoc setContainingDocument:nil];
         
-        if ([oldPdfDoc isLocked]) {
-            [savedNormalSetup removeObjectForKey:CROPBOXES_KEY];
-            if (unlocked)
+        if (unlocked == [oldPdfDoc isLocked]) {
+            if (unlocked) {
                 [self performSelector:@selector(documentDidUnlockDelayed) withObject:nil afterDelay:0.0];
-        } else if (unlocked == NO) {
-            if ([self interactionMode] == SKNormalMode)
-                 [savedNormalSetup setDictionary:[pdfView displaySettings]];
-             [savedNormalSetup setObject:@YES forKey:LOCKED_KEY];
-             setDestinationInSetup(dest, savedNormalSetup);
-             if ([snapshotDicts count])
-                 [savedNormalSetup setObject:snapshotDicts forKey:SNAPSHOTS_KEY];
+            } else {
+                if ([self interactionMode] == SKNormalMode)
+                     [savedNormalSetup setDictionary:[pdfView displaySettings]];
+                 [savedNormalSetup setObject:@YES forKey:LOCKED_KEY];
+                 setDestinationInSetup(dest, savedNormalSetup);
+                 if ([snapshotDicts count])
+                     [savedNormalSetup setObject:snapshotDicts forKey:SNAPSHOTS_KEY];
+            }
         }
     }
     
@@ -1195,6 +1195,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             [pdfDocument setChangedCropBoxes:cropBoxes];
             mwcFlags.hasCropped = 1;
         }
+        [savedNormalSetup removeObjectForKey:CROPBOXES_KEY];
     }
     
     if ([noteDicts count]) {
