@@ -617,9 +617,14 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             }
             if ([setup objectForKey:AUTOSCALES_KEY]) {
                 if ([self interactionMode] == SKPresentationMode) {
-                    NSMutableDictionary *mutableSetup = [setup mutableCopy];
-                    [mutableSetup removeObjectsForKeys:@[@"displayMode", @"displayDirection"]];
-                    [pdfView setDisplaySettings:mutableSetup];
+                    if ([[setup objectForKey:@"displayMode"] integerValue] != kPDFDisplaySinglePage) {
+                        NSMutableDictionary *mutableSetup = [setup mutableCopy];
+                        [mutableSetup setObject:@0 forKey:@"displayMode"];
+                        [mutableSetup setObject:@0 forKey:@"displayDirection"];
+                        [pdfView setDisplaySettings:mutableSetup];
+                    } else {
+                        [pdfView setDisplaySettings:setup];
+                    }
                     [savedNormalSetup removeObjectForKey:MAINWINDOWFRAME_KEY];
                 } else if ([self interactionMode] == SKNormalMode || [[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey] count] == 0) {
                     if ([setup objectForKey:PAGEINDEX_KEY])
