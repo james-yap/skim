@@ -147,7 +147,8 @@
 #define MAINWINDOWFRAME_KEY         @"windowFrame"
 #define LEFTSIDEPANEWIDTH_KEY       @"leftSidePaneWidth"
 #define RIGHTSIDEPANEWIDTH_KEY      @"rightSidePaneWidth"
-#define AUTOSCALES_KEY              @"autoScales"
+#define DISPLAYMODE_KEY             @"displayMode"
+#define DISPLAYDIRECTION_KEY        @"displayDirection"
 #define TABGROUP_KEY                @"tabGroup"
 #define TABINDEX_KEY                @"tabIndex"
 #define PAGEINDEX_KEY               @"pageIndex"
@@ -615,12 +616,12 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 if (applySidePaneWidths)
                     [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
             }
-            if ([setup objectForKey:AUTOSCALES_KEY]) {
+            if ([setup objectForKey:DISPLAYMODE_KEY]) {
                 if ([self interactionMode] == SKPresentationMode) {
-                    if ([[setup objectForKey:@"displayMode"] integerValue] != kPDFDisplaySinglePage) {
+                    if ([[setup objectForKey:DISPLAYMODE_KEY] integerValue] != kPDFDisplaySinglePage) {
                         NSMutableDictionary *mutableSetup = [setup mutableCopy];
-                        [mutableSetup setObject:@0 forKey:@"displayMode"];
-                        [mutableSetup setObject:@0 forKey:@"displayDirection"];
+                        [mutableSetup setObject:@0 forKey:DISPLAYMODE_KEY];
+                        [mutableSetup setObject:@0 forKey:DISPLAYDIRECTION_KEY];
                         [pdfView setDisplaySettings:mutableSetup];
                     } else {
                         [pdfView setDisplaySettings:setup];
@@ -2139,7 +2140,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 - (void)documentDidUnlockDelayed {
     NSDictionary *settings = [self interactionMode] == SKFullScreenMode ? [[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey] : nil;
     if ([settings count] == 0)
-        settings = [savedNormalSetup objectForKey:AUTOSCALES_KEY] ? savedNormalSetup : [[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultPDFDisplaySettingsKey];
+        settings = [savedNormalSetup objectForKey:DISPLAYMODE_KEY] ? savedNormalSetup : [[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultPDFDisplaySettingsKey];
     [pdfView setDisplaySettings:settings];
     
     NSArray *cropBoxes = [savedNormalSetup objectForKey:CROPBOXES_KEY];
