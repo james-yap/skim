@@ -247,7 +247,7 @@ enum {
 - (void)applySetup:(NSDictionary *)setup {
     if ([self primaryWindowController] == nil)
         [self makeWindowControllers];
-    [[self primaryWindowController] applySetup:setup];
+    [[self primaryWindowController] setCurrentSetup:setup];
 }
 
 - (void)applyOptions:(NSDictionary *)options {

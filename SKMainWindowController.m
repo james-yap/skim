@@ -226,7 +226,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 @implementation SKMainWindowController
 
 @synthesize statusBar, pdfView, secondaryPdfView, presentationNotesDocument, presentationNotesOffset, notes, thumbnails, snapshots, searchResults, groupedSearchResults, tags, rating, pageLabel, interactionMode, placeholderPdfDocument;
-@dynamic pdfDocument, selectedNotes, hasNotes, widgetProperties, currentPage, leftSidePaneState, rightSidePaneState, findPaneState, displaysFindPane, leftSidePaneIsOpen, rightSidePaneIsOpen, searchString, hasNoteToolbar, hasOverview, notesMenu;
+@dynamic pdfDocument, selectedNotes, hasNotes, widgetProperties, currentPage, currentSetup, leftSidePaneState, rightSidePaneState, findPaneState, displaysFindPane, leftSidePaneIsOpen, rightSidePaneIsOpen, searchString, hasNoteToolbar, hasOverview, notesMenu;
 
 + (BOOL)automaticallyNotifiesObserversOfPageLabel { return NO; }
 
@@ -577,7 +577,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     }
 }
 
-- (void)applySetup:(NSDictionary *)setup{
+- (void)setCurrentSetup:(NSDictionary *)setup{
     if ([self isWindowLoaded] == NO) {
         [savedNormalSetup setDictionary:setup];
     } else {

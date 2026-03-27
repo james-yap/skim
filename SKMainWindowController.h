@@ -294,8 +294,7 @@ enum {
 - (void)addAnnotationsWithProperties:(NSArray<NSDictionary<NSString *, id> *> *)noteDicts replacing:(BOOL)replacing;
 - (void)addConvertedAnnotationsWithProperties:(NSArray<NSDictionary<NSString *, id> *> *)noteDicts removeAnnotations:(nullable NSArray<PDFAnnotation *> *)notesToRemove;
 
-- (void)applySetup:(NSDictionary<NSString *, id> *)setup;
-- (NSDictionary<NSString *, id> *)currentSetup;
+@property (nonatomic, copy) NSDictionary<NSString *, id> *currentSetup;
 
 - (void)updateSubtitle;
 - (void)updateLeftStatus;
