@@ -615,16 +615,18 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 if (applySidePaneWidths)
                     [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
             }
-            if ([self interactionMode] == SKPresentationMode) {
-                NSMutableDictionary *mutableSetup = [setup mutableCopy];
-                [mutableSetup removeObjectsForKeys:@[@"displayMode", @"displayDirection"]];
-                [pdfView setDisplaySettings:mutableSetup];
-                [savedNormalSetup removeObjectForKey:MAINWINDOWFRAME_KEY];
-            } else if ([self interactionMode] == SKNormalMode || [[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey] count] == 0) {
-                if ([setup objectForKey:PAGEINDEX_KEY])
-                    [pdfView setDisplaySettings:setup];
-                else
-                    [pdfView setDisplaySettingsAndRewind:setup];
+            if ([setup objectForKey:AUTOSCALES_KEY]) {
+                if ([self interactionMode] == SKPresentationMode) {
+                    NSMutableDictionary *mutableSetup = [setup mutableCopy];
+                    [mutableSetup removeObjectsForKeys:@[@"displayMode", @"displayDirection"]];
+                    [pdfView setDisplaySettings:mutableSetup];
+                    [savedNormalSetup removeObjectForKey:MAINWINDOWFRAME_KEY];
+                } else if ([self interactionMode] == SKNormalMode || [[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey] count] == 0) {
+                    if ([setup objectForKey:PAGEINDEX_KEY])
+                        [pdfView setDisplaySettings:setup];
+                    else
+                        [pdfView setDisplaySettingsAndRewind:setup];
+                }
             }
             
             NSArray *cropBoxes = [setup objectForKey:CROPBOXES_KEY];
