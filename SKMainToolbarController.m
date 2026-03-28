@@ -492,8 +492,8 @@ static char SKDefaultsObservationContext;
             [self setNoteType:[[NSUserDefaults standardUserDefaults] integerForKey:SKLastShapeNoteTypeKey] forButton:circleNoteButton];
             
             menu = [NSMenu menu];
-            [menu addItemWithTitle:NSLocalizedString(@"Circle", @"Menu item title") imageNamed:SKImageNameToolbarAddCircleNote action:@selector(createNewCircleNote:) target:self tag:SKNoteTypeCircle];
-            [menu addItemWithTitle:NSLocalizedString(@"Box", @"Menu item title") imageNamed:SKImageNameToolbarAddSquareNote action:@selector(createNewCircleNote:) target:self tag:SKNoteTypeSquare];
+            [menu addItemWithTitle:NSLocalizedString(@"Circle", @"Menu item title") imageNamed:SKImageNameToolbarAddCircleNote action:@selector(createNewShapeNote:) target:self tag:SKNoteTypeCircle];
+            [menu addItemWithTitle:NSLocalizedString(@"Box", @"Menu item title") imageNamed:SKImageNameToolbarAddSquareNote action:@selector(createNewShapeNote:) target:self tag:SKNoteTypeSquare];
             [circleNoteButton setMenu:menu forSegment:0];
             
             menuItem = [[NSMenuItem alloc] initWithSubmenuAndTitle:NSLocalizedString(@"Add Shape", @"Toolbar item label")];
@@ -1067,7 +1067,7 @@ static char SKDefaultsObservationContext;
     } else if (action == @selector(createNewTextNote:)) {
         [menuItem setState:[textNoteButton tagForSegment:0] == [menuItem tag] ? NSControlStateValueOn : NSControlStateValueOff];
         return [mainController interactionMode] != SKPresentationMode && [mainController hasOverview] == NO && [mainController.pdfView.document allowsNotes] && ([mainController.pdfView toolMode] == SKToolModeText || [mainController.pdfView toolMode] == SKToolModeNote) && [mainController.pdfView hideNotes] == NO;
-    } else if (action == @selector(createNewCircleNote:)) {
+    } else if (action == @selector(createNewShapeNote:)) {
         [menuItem setState:[circleNoteButton tagForSegment:0] == [menuItem tag] ? NSControlStateValueOn : NSControlStateValueOff];
         return [mainController hasOverview] == NO && [mainController.pdfView canSelectNote];
     } else if (action == @selector(createNewMarkupNote:)) {
@@ -1302,7 +1302,7 @@ static char SKDefaultsObservationContext;
     [self createNewNoteWithType:[sender tag] forButton:textNoteButton defaultsKey:SKLastTextNoteTypeKey];
 }
 
-- (void)createNewCircleNote:(id)sender {
+- (void)createNewShapeNote:(id)sender {
     [self createNewNoteWithType:[sender tag] forButton:circleNoteButton defaultsKey:SKLastShapeNoteTypeKey];
 }
 

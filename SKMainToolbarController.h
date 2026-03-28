@@ -140,7 +140,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)changeBookMode:(nullable id)sender;
 - (IBAction)changePageBreaks:(nullable id)sender;
 - (void)createNewTextNote:(nullable id)sender;
-- (void)createNewCircleNote:(nullable id)sender;
+- (void)createNewShapeNote:(nullable id)sender;
 - (void)createNewMarkupNote:(nullable id)sender;
 - (void)createNewLineNote:(nullable id)sender;
 - (void)toggleNoteToolbar:(nullable id)sender;
