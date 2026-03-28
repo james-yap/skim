@@ -128,8 +128,9 @@ static char SKToolbarObservationContext;
     [fontsButton setHelp:NSLocalizedString(@"Fonts", @"Tool tip message") forSegment:0];
     [fontsButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     menu = [NSMenu menu];
-    for (NSInteger i = 9; i < 19; i++) {
-        [menu addItemWithTitle:[NSString stringWithFormat:@"%ld", (long)i] action:@selector(selectFontSize:) target:self tag:i];
+    NSInteger sizes[11] = {9, 10, 11, 12, 13, 14, 16, 18, 20, 24, 36};
+    for (NSInteger i = 0; i < 11; i++) {
+        [menu addItemWithTitle:[NSString stringWithFormat:@"%ld", (long)sizes[i]] action:@selector(selectFontSize:) target:self tag:sizes[i]];
     }
     [fontsButton setMenu:menu forSegment:0];
     
