@@ -1711,10 +1711,12 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 [NSLayoutConstraint activateConstraints:constraints];
             }
             completionHandler:^{
+                [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
                 [[self window] recalculateKeyViewLoop];
                 [touchBarController overviewChanged];
             }];
     } else {
+        [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
         [contentView replaceSubview:oldView with:overviewContentView];
         [NSLayoutConstraint activateConstraints:constraints];
     }
