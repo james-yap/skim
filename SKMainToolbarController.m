@@ -1073,7 +1073,7 @@ static char SKDefaultsObservationContext;
     } else if (action == @selector(createNewMarkupNote:)) {
         [menuItem setState:[markupNoteButton tagForSegment:0] == [menuItem tag] ? NSControlStateValueOn : NSControlStateValueOff];
         return [mainController hasOverview] == NO && [mainController.pdfView canSelectNote];
-    } else if (action == @selector(toggleFullScreen:)) {
+    } else if (action == @selector(toggleFullscreen:)) {
         return [mainController canEnterFullscreen] || [mainController canExitFullscreen];
     } else if (action == @selector(togglePresentation:)) {
         return [mainController canEnterPresentation] || [mainController canExitPresentation];
