@@ -1290,31 +1290,28 @@ static char SKDefaultsObservationContext;
     }
 }
 
-- (void)createNewNoteWithType:(NSInteger)type forButton:(NSSegmentedControl *)button {
+- (void)createNewNoteWithType:(NSInteger)type forButton:(NSSegmentedControl *)button defaultsKey:(NSString *)defaultsKey  {
     if ([mainController.pdfView canSelectNote]) {
         [mainController.pdfView addAnnotationWithType:type];
         [self setNoteType:type forButton:button];
+        [[NSUserDefaults standardUserDefaults] setInteger:type forKey:defaultsKey];
     } else NSBeep();
 }
 
 - (void)createNewTextNote:(id)sender {
-    [self createNewNoteWithType:[sender tag] forButton:textNoteButton];
-    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:SKLastTextNoteTypeKey];
+    [self createNewNoteWithType:[sender tag] forButton:textNoteButton defaultsKey:SKLastTextNoteTypeKey];
 }
 
 - (void)createNewCircleNote:(id)sender {
-    [self createNewNoteWithType:[sender tag] forButton:circleNoteButton];
-    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:SKLastShapeNoteTypeKey];
+    [self createNewNoteWithType:[sender tag] forButton:circleNoteButton defaultsKey:SKLastShapeNoteTypeKey];
 }
 
 - (void)createNewMarkupNote:(id)sender {
-    [self createNewNoteWithType:[sender tag] forButton:markupNoteButton];
-    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:SKLastMarkupNoteTypeKey];
+    [self createNewNoteWithType:[sender tag] forButton:markupNoteButton defaultsKey:SKLastMarkupNoteTypeKey];
 }
 
 - (void)createNewLineNote:(id)sender {
-    [self createNewNoteWithType:[sender tag] forButton:lineNoteButton];
-    [[NSUserDefaults standardUserDefaults] setInteger:[sender tag] forKey:SKLastLineNoteTypeKey];
+    [self createNewNoteWithType:[sender tag] forButton:lineNoteButton defaultsKey:SKLastLineNoteTypeKey];
 }
 
 - (IBAction)createNewNote:(id)sender {
