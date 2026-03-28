@@ -164,6 +164,11 @@
     [toolbar setDelegate:self];
     [window setToolbar:toolbar];
     
+    if (@available(macOS 11.0, *)) {
+        if ([[[NSLocale currentLocale] languageCode] isEqualToString:@"pl"])
+            [window setToolbarStyle:NSWindowToolbarStylePreference];
+    }
+    
     [contentView setWantsLayer:YES];
     
     // we want to restore the top of the window, while without the force it restores the bottom position without the size
