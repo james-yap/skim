@@ -850,6 +850,9 @@ enum {
 }
 
 - (NSUndoManager *)undoManager {
+    // make sure we get the correct undoManager also when we are not in the document's window,
+    // e.g. in presentation mode
+    // this can happen when undoing form edits
     NSUndoManager *undoManager = nil;
     if ([[self delegate] respondsToSelector:@selector(undoManagerForPDFView:)])
         undoManager = [[self delegate] undoManagerForPDFView:self];
@@ -2651,7 +2654,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (annotation == nil || [self isEditingAnnotation:annotation])
         return;
     
-    if ([self canSelectNote] && [self window]) {
+    if ([self canSelectNote] && [self window] && [self isHiddenOrHasHiddenAncestor] == NO) {
         if (currentAnnotation != annotation)
             [self setCurrentAnnotation:annotation];
         [self editCurrentAnnotation:nil];
@@ -2691,7 +2694,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             if ([[self delegate] respondsToSelector:@selector(PDFView:editAnnotation:)])
                 [[self delegate] PDFView:self editAnnotation:currentAnnotation];
             
-        } else if ([self window]) {
+        } else if ([self window] && [self isHiddenOrHasHiddenAncestor] == NO) {
             
             [self scrollAnnotationToVisible:currentAnnotation];
             [self editTextNoteWithEvent:nil];
