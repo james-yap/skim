@@ -1196,7 +1196,7 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
 }
 
 - (void)handleWindowDidResignKeyNotification:(NSNotification *)notification {
-    if ([self isHidden] == NO) {
+    if ([self isHiddenOrHasHiddenAncestor] == NO) {
         [self cancelDelayedRequests];
         pvFlags.cursorHidden = NO;
         [[NSCursor arrowCursor] set];
@@ -1204,7 +1204,7 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
 }
 
 - (void)handleWindowDidBecomeKeyNotification:(NSNotification *)notification {
-    if (pvFlags.cursorHidden == NO && [self isHidden] == NO) {
+    if (pvFlags.cursorHidden == NO && [self isHiddenOrHasHiddenAncestor] == NO) {
         [self performSelectorOnce:@selector(setCursorForMouse:) afterDelay:0.0];
         [self performSelectorOnce:@selector(autoHide) afterDelay:AUTO_HIDE_DELAY];
     }
@@ -1256,13 +1256,17 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
     [super viewDidMoveToWindow];
 }
 
-- (void)setHidden:(BOOL)hidden {
-    BOOL wasHidden = [self isHidden];
+- (void)viewDidHide {
     [self cancelDelayedRequests];
-    if (hidden && wasHidden == NO)
-        [self resetAutoHide];
-    [super setHidden:hidden];
-    if (hidden == NO && wasHidden && [[self window] isKeyWindow])
+    [self resetAutoHide];
+    
+    [super viewDidHide];
+}
+
+- (void)viewDidUnhide {
+    [super viewDidUnhide];
+    
+    if ([[self window] isKeyWindow])
         [self handleWindowDidBecomeKeyNotification:nil];
 }
 

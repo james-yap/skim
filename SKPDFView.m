@@ -3203,6 +3203,18 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [super viewWillMoveToWindow:newWindow];
 }
 
+- (void)viewDidHide {
+    [self commitEditing];
+    
+    [self removeLoupeWindow];
+    
+    [self stopPacer];
+    
+    [self setTemporaryToolMode:SKToolModeNone];
+    
+    [super viewDidHide];
+}
+
 #pragma mark Dark mode
 
 - (void)viewDidChangeEffectiveAppearance {
