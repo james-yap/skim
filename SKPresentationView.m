@@ -1196,15 +1196,37 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
 }
 
 - (void)handleWindowDidResignKeyNotification:(NSNotification *)notification {
-    [self cancelDelayedRequests];
-    pvFlags.cursorHidden = NO;
-    [[NSCursor arrowCursor] set];
+    if ([self isHidden] == NO) {
+        [self cancelDelayedRequests];
+        pvFlags.cursorHidden = NO;
+        [[NSCursor arrowCursor] set];
+    }
 }
 
 - (void)handleWindowDidBecomeKeyNotification:(NSNotification *)notification {
-    if (pvFlags.cursorHidden == NO) {
+    if (pvFlags.cursorHidden == NO && [self isHidden] == NO) {
         [self performSelectorOnce:@selector(setCursorForMouse:) afterDelay:0.0];
         [self performSelectorOnce:@selector(autoHide) afterDelay:AUTO_HIDE_DELAY];
+    }
+}
+
+- (void)resetAutoHide {
+    if ([pageLayer opacity] < 1.0) {
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        [pageLayer setOpacity:1.0];
+        [CATransaction commit];
+    }
+    pvFlags.cursorHidden = NO;
+    [NSCursor setHiddenUntilMouseMoves:NO];
+    [[NSCursor arrowCursor] set];
+    if (navWindow) {
+        [navWindow remove];
+        navWindow = nil;
+    }
+    if (cursorWindow) {
+        [cursorWindow remove];
+        cursorWindow = nil;
     }
 }
 
@@ -1221,23 +1243,7 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
         [nc addObserver:self selector:@selector(handleWindowDidBecomeKeyNotification:) name:NSWindowDidBecomeKeyNotification object:newWindow];
         [nc addObserver:self selector:@selector(handleWindowDidResignKeyNotification:) name:NSWindowDidResignKeyNotification object:newWindow];
     } else {
-        if ([pageLayer opacity] < 1.0) {
-            [CATransaction begin];
-            [CATransaction setDisableActions:YES];
-            [pageLayer setOpacity:1.0];
-            [CATransaction commit];
-        }
-        pvFlags.cursorHidden = NO;
-        [NSCursor setHiddenUntilMouseMoves:NO];
-        [[NSCursor arrowCursor] set];
-        if (navWindow) {
-            [navWindow remove];
-            navWindow = nil;
-        }
-        if (cursorWindow) {
-            [cursorWindow remove];
-            cursorWindow = nil;
-        }
+        [self resetAutoHide];
     }
     
     [super viewWillMoveToWindow:newWindow];
@@ -1248,6 +1254,16 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
         [self handleWindowDidBecomeKeyNotification:nil];
     
     [super viewDidMoveToWindow];
+}
+
+- (void)setHidden:(BOOL)hidden {
+    BOOL wasHidden = [self isHidden];
+    [self cancelDelayedRequests];
+    if (hidden && wasHidden == NO)
+        [self resetAutoHide];
+    [super setHidden:hidden];
+    if (hidden == NO && wasHidden && [[self window] isKeyWindow])
+        [self handleWindowDidBecomeKeyNotification:nil];
 }
 
 @end

@@ -1672,12 +1672,11 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     BOOL isPresentation = [self interactionMode] == SKPresentationMode;
     NSView *oldView = isPresentation ? presentationView : [splitViewController view];
     NSView *contentView = [oldView superview];
-    BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
     NSArray *constraints = @[
-        [[overviewContentView leadingAnchor] constraintEqualToAnchor:[contentView leadingAnchor]],
-        [[contentView trailingAnchor] constraintEqualToAnchor:[overviewContentView trailingAnchor]],
-        [[overviewContentView topAnchor] constraintEqualToAnchor:[(mwcFlags.fullSizeContent || isPresentation ? contentView : [[self window] contentLayoutGuide]) topAnchor]],
-        [(hasStatus ? [statusBar topAnchor] : [contentView bottomAnchor]) constraintEqualToAnchor:[overviewContentView bottomAnchor]]];
+        [[overviewContentView leadingAnchor] constraintEqualToAnchor:[oldView leadingAnchor]],
+        [[oldView trailingAnchor] constraintEqualToAnchor:[overviewContentView trailingAnchor]],
+        [[overviewContentView topAnchor] constraintEqualToAnchor:[oldView topAnchor]],
+        [[oldView bottomAnchor] constraintEqualToAnchor:[overviewContentView bottomAnchor]]];
     
     [overviewContentView setFrame:[oldView frame]];
     [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
@@ -1707,7 +1706,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     if (animate) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext * context){
-                [[contentView animator] replaceSubview:oldView with:overviewContentView];
+                [[contentView animator] addSubview:overviewContentView];
+                [[oldView animator] setHidden:YES];
                 [NSLayoutConstraint activateConstraints:constraints];
             }
             completionHandler:^{
@@ -1717,7 +1717,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             }];
     } else {
         [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
-        [contentView replaceSubview:oldView with:overviewContentView];
+        [contentView addSubview:overviewContentView];
+        [oldView setHidden:YES];
         [NSLayoutConstraint activateConstraints:constraints];
     }
     [[self window] makeFirstResponder:overviewView];
@@ -1741,18 +1742,11 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     BOOL isPresentation = 0 == ([[overviewContentView window] styleMask] & NSWindowStyleMaskTitled);
     NSView *newView = isPresentation ? presentationView : [splitViewController view];
     NSView *newKeyView = isPresentation ? presentationView : pdfView;
-    NSView *contentView = [overviewContentView superview];
-    BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
-    NSArray *constraints = @[
-        [[newView leadingAnchor] constraintEqualToAnchor:[contentView leadingAnchor]],
-        [[contentView trailingAnchor] constraintEqualToAnchor:[newView trailingAnchor]],
-        [[newView topAnchor] constraintEqualToAnchor:[(mwcFlags.fullSizeContent || isPresentation ? contentView : [[contentView window] contentLayoutGuide]) topAnchor]],
-        [(hasStatus ? [statusBar topAnchor] : [contentView bottomAnchor]) constraintEqualToAnchor:[newView bottomAnchor]]];
     
     if (animate) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [[contentView animator] replaceSubview:overviewContentView with:newView];
-                [NSLayoutConstraint activateConstraints:constraints];
+                [[overviewContentView animator] removeFromSuperview];
+                [[newView animator] setHidden:NO];
             }
             completionHandler:^{
                 [[self window] recalculateKeyViewLoop];
@@ -1763,8 +1757,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                     handler();
             }];
     } else {
-        [contentView replaceSubview:overviewContentView with:newView];
-        [NSLayoutConstraint activateConstraints:constraints];
+        [overviewContentView removeFromSuperview];
+        [newView setHidden:NO];
         [touchBarController overviewChanged];
         [noteToolbarController validateButtons];
         [[newKeyView window] makeFirstResponder:newKeyView];
