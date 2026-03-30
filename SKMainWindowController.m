@@ -1705,23 +1705,24 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     }
     
     if (animate) {
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext * context){
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [[contentView animator] addSubview:overviewContentView];
-                [[oldView animator] setHidden:YES];
                 [NSLayoutConstraint activateConstraints:constraints];
             }
             completionHandler:^{
+                [[self window] makeFirstResponder:overviewView];
+                [oldView setHidden:YES];
                 [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
                 [[self window] recalculateKeyViewLoop];
-                [touchBarController overviewChanged];
             }];
     } else {
-        [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
         [contentView addSubview:overviewContentView];
-        [oldView setHidden:YES];
         [NSLayoutConstraint activateConstraints:constraints];
+        [[self window] makeFirstResponder:overviewView];
+        [oldView setHidden:YES];
+        [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
+        [[self window] recalculateKeyViewLoop];
     }
-    [[self window] makeFirstResponder:overviewView];
     if (isPresentation)
         [NSCursor setHiddenUntilMouseMoves:NO];
     [touchBarController overviewChanged];
@@ -1740,28 +1741,26 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     // don't check interactionMode as this can be called from enterPresentation
     BOOL isPresentation = 0 == ([[overviewContentView window] styleMask] & NSWindowStyleMaskTitled);
-    NSView *newView = isPresentation ? presentationView : [splitViewController view];
-    NSView *newKeyView = isPresentation ? presentationView : pdfView;
+    
+    [isPresentation ? presentationView : [splitViewController view] setHidden:NO];
+    [[self window] makeFirstResponder:isPresentation ? presentationView : pdfView];
     
     if (animate) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [[overviewContentView animator] removeFromSuperview];
-                [[newView animator] setHidden:NO];
             }
             completionHandler:^{
                 [[self window] recalculateKeyViewLoop];
                 [touchBarController overviewChanged];
                 [noteToolbarController validateButtons];
-                [[newKeyView window] makeFirstResponder:newKeyView];
                 if (handler)
                     handler();
             }];
     } else {
         [overviewContentView removeFromSuperview];
-        [newView setHidden:NO];
+        [[self window] recalculateKeyViewLoop];
         [touchBarController overviewChanged];
         [noteToolbarController validateButtons];
-        [[newKeyView window] makeFirstResponder:newKeyView];
         if (handler)
             handler();
     }
