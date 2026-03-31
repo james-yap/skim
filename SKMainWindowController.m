@@ -1767,8 +1767,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         if (handler)
             handler();
     }
-    [[self window] makeFirstResponder:isPresentation ? presentationView : pdfView];
-    [[self window] recalculateKeyViewLoop];
+    [[contentView window] makeFirstResponder:isPresentation ? presentationView : pdfView];
+    [[contentView window] recalculateKeyViewLoop];
     [touchBarController overviewChanged];
     [noteToolbarController validateButtons];
     if ([splitViewController respondsToSelector:@selector(_setHasItemToRevealOnEdgeHover:)]) {
