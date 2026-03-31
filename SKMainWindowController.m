@@ -1761,15 +1761,20 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 [[contentView animator] replaceSubview:overviewContentView with:newView];
                 [NSLayoutConstraint activateConstraints:constraints];
             }
-            completionHandler:handler];
+            completionHandler:^{
+                [[contentView window] makeFirstResponder:isPresentation ? presentationView : pdfView];
+                [[contentView window] recalculateKeyViewLoop];
+                if (handler)
+                    handler();
+            }];
     } else {
         [contentView replaceSubview:overviewContentView with:newView];
         [NSLayoutConstraint activateConstraints:constraints];
+        [[contentView window] makeFirstResponder:isPresentation ? presentationView : pdfView];
+        [[contentView window] recalculateKeyViewLoop];
         if (handler)
             handler();
     }
-    [[contentView window] makeFirstResponder:isPresentation ? presentationView : pdfView];
-    [[contentView window] recalculateKeyViewLoop];
     [touchBarController overviewChanged];
     [noteToolbarController validateButtons];
     if ([splitViewController respondsToSelector:@selector(_setHasItemToRevealOnEdgeHover:)]) {
