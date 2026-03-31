@@ -283,7 +283,7 @@
     if ([pdfView hideNotes] == NO)
         [pdfView setCurrentAnnotation:nil];
     [pdfView setHideNotes:[pdfView hideNotes] == NO];
-    [touchBarController handleToolModeChangedNotification:nil];
+    [touchBarController canSelectNoteChanged];
     [noteToolbarController validateButtons];
 }
 

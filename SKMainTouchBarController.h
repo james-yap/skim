@@ -64,6 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)handleToolModeChangedNotification:(nullable NSNotification *)notification;
 - (void)interactionModeChanged;
 - (void)overviewChanged;
+- (void)canSelectNoteChanged;
 
 @end
 
