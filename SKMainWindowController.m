@@ -196,6 +196,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 @property (nonatomic) BOOL revealsOnEdgeHoverInFullscreen;
 @end
 
+@interface NSSplitViewController (SKPrivateDeclarations)
+- (void)_setHasItemToRevealOnEdgeHover:(BOOL)flag;
+@end
+
 @interface SKMainWindowController ()
 
 - (void)cleanup;
@@ -1672,11 +1676,13 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     BOOL isPresentation = [self interactionMode] == SKPresentationMode;
     NSView *oldView = isPresentation ? presentationView : [splitViewController view];
     NSView *contentView = [oldView superview];
+    BOOL useContentTop = mwcFlags.fullSizeContent || isPresentation;
+    BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
     NSArray *constraints = @[
-        [[overviewContentView leadingAnchor] constraintEqualToAnchor:[oldView leadingAnchor]],
-        [[oldView trailingAnchor] constraintEqualToAnchor:[overviewContentView trailingAnchor]],
-        [[overviewContentView topAnchor] constraintEqualToAnchor:[oldView topAnchor]],
-        [[oldView bottomAnchor] constraintEqualToAnchor:[overviewContentView bottomAnchor]]];
+        [[overviewContentView leadingAnchor] constraintEqualToAnchor:[contentView leadingAnchor]],
+        [[contentView trailingAnchor] constraintEqualToAnchor:[overviewContentView trailingAnchor]],
+        [[overviewContentView topAnchor] constraintEqualToAnchor:[(useContentTop ? contentView : [[self window] contentLayoutGuide]) topAnchor]],
+        [(hasStatus ? [statusBar topAnchor] : [contentView bottomAnchor]) constraintEqualToAnchor:[overviewContentView bottomAnchor]]];
     
     [overviewContentView setFrame:[oldView frame]];
     [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
@@ -1706,25 +1712,22 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     if (animate) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [[contentView animator] addSubview:overviewContentView];
+                [context setDuration:0.5];
+                [[contentView animator] replaceSubview:oldView with:overviewContentView];
                 [NSLayoutConstraint activateConstraints:constraints];
             }
             completionHandler:^{
-                [[self window] makeFirstResponder:overviewView];
-                [oldView setHidden:YES];
                 [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
-                [[self window] recalculateKeyViewLoop];
             }];
     } else {
-        [contentView addSubview:overviewContentView];
+        [contentView replaceSubview:oldView with:overviewContentView];
         [NSLayoutConstraint activateConstraints:constraints];
-        [[self window] makeFirstResponder:overviewView];
-        [oldView setHidden:YES];
         [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
-        [[self window] recalculateKeyViewLoop];
     }
     if (isPresentation)
         [NSCursor setHiddenUntilMouseMoves:NO];
+    [[self window] makeFirstResponder:overviewView];
+    [[self window] recalculateKeyViewLoop];
     [touchBarController overviewChanged];
     [noteToolbarController validateButtons];
 }
@@ -1741,28 +1744,36 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     // don't check interactionMode as this can be called from enterPresentation
     BOOL isPresentation = 0 == ([[overviewContentView window] styleMask] & NSWindowStyleMaskTitled);
-    
-    [isPresentation ? presentationView : [splitViewController view] setHidden:NO];
-    [[self window] makeFirstResponder:isPresentation ? presentationView : pdfView];
+    NSView *newView = isPresentation ? presentationView : [splitViewController view];
+    NSView *contentView = [overviewContentView superview];
+    BOOL useContentTop = mwcFlags.fullSizeContent || isPresentation;
+    BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
+    NSArray *constraints = @[
+        [[newView leadingAnchor] constraintEqualToAnchor:[contentView leadingAnchor]],
+        [[contentView trailingAnchor] constraintEqualToAnchor:[newView trailingAnchor]],
+        [[newView topAnchor] constraintEqualToAnchor:[(useContentTop ? contentView : [[self window] contentLayoutGuide]) topAnchor]],
+        [(hasStatus ? [statusBar topAnchor] : [contentView bottomAnchor]) constraintEqualToAnchor:[newView bottomAnchor]]];
     
     if (animate) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [[overviewContentView animator] removeFromSuperview];
+                [context setDuration:0.5];
+                [[contentView animator] replaceSubview:overviewContentView with:newView];
+                [NSLayoutConstraint activateConstraints:constraints];
             }
-            completionHandler:^{
-                [[self window] recalculateKeyViewLoop];
-                [touchBarController overviewChanged];
-                [noteToolbarController validateButtons];
-                if (handler)
-                    handler();
-            }];
+            completionHandler:handler];
     } else {
-        [overviewContentView removeFromSuperview];
-        [[self window] recalculateKeyViewLoop];
-        [touchBarController overviewChanged];
-        [noteToolbarController validateButtons];
+        [contentView replaceSubview:overviewContentView with:newView];
+        [NSLayoutConstraint activateConstraints:constraints];
         if (handler)
             handler();
+    }
+    [[self window] makeFirstResponder:isPresentation ? presentationView : pdfView];
+    [[self window] recalculateKeyViewLoop];
+    [touchBarController overviewChanged];
+    [noteToolbarController validateButtons];
+    if ([splitViewController respondsToSelector:@selector(_setHasItemToRevealOnEdgeHover:)]) {
+        [splitViewController _setHasItemToRevealOnEdgeHover:NO];
+        [splitViewController _setHasItemToRevealOnEdgeHover:YES];
     }
 }
 
