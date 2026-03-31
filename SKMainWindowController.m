@@ -1678,6 +1678,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     NSView *contentView = [oldView superview];
     BOOL useContentTop = mwcFlags.fullSizeContent || isPresentation;
     BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
+    NSUInteger pageIndex = [[pdfView currentPage] pageIndex];
     NSArray *constraints = @[
         [[overviewContentView leadingAnchor] constraintEqualToAnchor:[contentView leadingAnchor]],
         [[contentView trailingAnchor] constraintEqualToAnchor:[overviewContentView trailingAnchor]],
@@ -1685,8 +1686,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [(hasStatus ? [statusBar topAnchor] : [contentView bottomAnchor]) constraintEqualToAnchor:[overviewContentView bottomAnchor]]];
     
     [overviewContentView setFrame:[oldView frame]];
-    [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
-    [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
+    [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:pageIndex]];
+    [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:pageIndex]];
     [overviewView setAllowsMultipleSelection:isPresentation == NO && [[self pdfDocument] allowsSaving]];
     
     if (@available(macOS 10.14, *)) {
@@ -1717,7 +1718,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 [NSLayoutConstraint activateConstraints:constraints];
             }
             completionHandler:^{
-                [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
+                [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:pageIndex]];
             }];
     } else {
         [contentView replaceSubview:oldView with:overviewContentView];
