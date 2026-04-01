@@ -81,6 +81,8 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
 - (void)handlePageChangedNotification:(NSNotification *)notification;
 - (void)handleToolModeChangedNotification:(NSNotification *)notification;
 - (void)handleAnnotationModeChangedNotification:(NSNotification *)notification;
+- (void)handleCanSelectNoteChangedNotification:(NSNotification *)notification;
+- (void)handleOverviewChangedNotification:(NSNotification *)notification;
 
 @end
 
@@ -145,7 +147,7 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
                 zoomInActualOutButton = [NSSegmentedControl segmentedControlWithImages:images trackingMode:NSSegmentSwitchTrackingMomentary target:self action:@selector(zoomInActualOut:)];
                 [zoomInActualOutButton setSegmentStyle:NSSegmentStyleSeparated];
                 [self handleScaleChangedNotification:nil];
-                [self overviewChanged];
+                [self handleOverviewChangedNotification:nil];
             }
             item = [[NSCustomTouchBarItem alloc] initWithIdentifier:identifier];
             [(NSCustomTouchBarItem *)item setView:zoomInActualOutButton];
@@ -415,6 +417,10 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
         [annotationModeButton selectSegmentWithTag:[mainController.pdfView annotationMode]];
 }
 
+- (void)handleCanSelectNoteChangedNotification:(NSNotification *)notification {
+    [noteButton setEnabled:[mainController interactionMode] != SKPresentationMode && [mainController hasOverview] == NO && [mainController.pdfView canSelectNote]];
+}
+
 - (void)interactionModeChanged {
     SKInteractionMode mode = [mainController interactionMode];
     
@@ -424,11 +430,11 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
     BOOL enabled = mode != SKPresentationMode && [mainController hasOverview] == NO;
     [toolModeButton setEnabled:enabled];
     [annotationModeButton setEnabled:enabled];
-    [noteButton setEnabled:enabled];
+    [noteButton setEnabled:enabled && [mainController.pdfView canSelectNote]];
     [self handleScaleChangedNotification:nil];
 }
 
-- (void)overviewChanged {
+- (void)handleOverviewChangedNotification:(NSNotification *)notification {
     BOOL showPDF = [mainController hasOverview] == NO;
     
     BOOL enabled = [mainController interactionMode] != SKPresentationMode && showPDF;
@@ -437,10 +443,6 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
     [noteButton setEnabled:enabled && [mainController.pdfView canSelectNote]];
     
     [zoomInActualOutButton setEnabled:showPDF];
-}
-
-- (void)canSelectNoteChanged {
-    [noteButton setEnabled:[mainController interactionMode] != SKPresentationMode && [mainController hasOverview] == NO && [mainController.pdfView canSelectNote]];
 }
 
 - (void)registerForNotifications {
@@ -456,6 +458,10 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
                              name:SKPDFViewTemporaryToolModeChangedNotification object:mainController.pdfView];
     [nc addObserver:self selector:@selector(handleAnnotationModeChangedNotification:)
                name:SKPDFViewAnnotationModeChangedNotification object:mainController.pdfView];
+    [nc addObserver:self selector:@selector(handleCanSelectNoteChangedNotification:)
+               name:SKPDFViewCanSelectNoteDidChangeNotification object:mainController.pdfView];
+    [nc addObserver:self selector:@selector(handleOverviewChangedNotification:)
+               name:SKMainWindowControllerDidShowOrHideOverviewNotification object:mainController.pdfView];
 }
 
 @end

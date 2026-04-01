@@ -118,6 +118,7 @@ NSNotificationName const SKPDFViewReadingBarDidChangeNotification = @"SKPDFViewR
 NSNotificationName const SKPDFViewSelectionChangedNotification = @"SKPDFViewSelectionChangedNotification";
 NSNotificationName const SKPDFViewMagnificationChangedNotification = @"SKPDFViewMagnificationChangedNotification";
 NSNotificationName const SKPDFViewPacerStartedOrStoppedNotification = @"SKPDFViewPacerStartedOrStoppedNotification";
+NSNotificationName const SKPDFViewCanSelectNoteDidChangeNotification = @"SKPDFViewCanSelectNoteDidChangeNotification";
 
 NSString * const SKPDFViewAnnotationKey = @"annotation";
 NSString * const SKPDFViewPageKey = @"page";
@@ -607,6 +608,8 @@ enum {
     }
     
     [loupeController updateContents];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewCanSelectNoteDidChangeNotification object:self];
 }
 
 - (void)setBackgroundColor:(NSColor *)newBackgroundColor {
@@ -643,6 +646,7 @@ enum {
         
         [[NSUserDefaults standardUserDefaults] setInteger:toolMode forKey:SKLastToolModeKey];
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewToolModeChangedNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewCanSelectNoteDidChangeNotification object:self];
         [self setCursorForMouse:nil];
         [self resetPDFToolTipRects];
         if (toolMode == SKToolModeMagnify && [[NSUserDefaults standardUserDefaults] boolForKey:SKMagnifyWithMousePressedKey] == NO)
@@ -859,6 +863,11 @@ enum {
     if (undoManager == nil)
         undoManager = [super undoManager];
     return undoManager;
+}
+
+- (void)setHideNotes:(BOOL)flag {
+    hideNotes = flag;
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewCanSelectNoteDidChangeNotification object:self];
 }
 
 - (BOOL)canAddNotes {
@@ -3121,6 +3130,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                              name:SKPDFDocumentWillMoveAnnotationNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleDidMoveAnnotationNotification:)
                              name:SKPDFDocumentDidMoveAnnotationNotification object:pdfDoc];
+    [nc addObserver:self selector:@selector(handleDocumentDidUnlockNotification:)
+                             name:PDFDocumentDidUnlockNotification object:pdfDoc];
 }
 
 - (void)unregisterForDocumentNotifications {
@@ -3131,6 +3142,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     [nc removeObserver:self name:SKPDFDocumentDidRemoveAnnotationNotification object:pdfDoc];
     [nc removeObserver:self name:SKPDFDocumentWillMoveAnnotationNotification object:pdfDoc];
     [nc removeObserver:self name:SKPDFDocumentDidMoveAnnotationNotification object:pdfDoc];
+    [nc removeObserver:self name:PDFDocumentDidUnlockNotification object:pdfDoc];
 }
 
 - (void)handlePageChangedNotification:(NSNotification *)notification {
@@ -3175,6 +3187,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)handleOpenOrCloseUndoGroupNotification:(NSNotification *)notification {
     wantsNewUndoGroup = NO;
+}
+
+- (void)handleDocumentDidUnlockNotification:(NSNotification *)notification {
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewCanSelectNoteDidChangeNotification object:self];
 }
 
 #pragma mark Key and window changes

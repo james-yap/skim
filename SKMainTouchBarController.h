@@ -61,10 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSTouchBar *)makeTouchBar;
 
-- (void)handleToolModeChangedNotification:(nullable NSNotification *)notification;
 - (void)interactionModeChanged;
-- (void)overviewChanged;
-- (void)canSelectNoteChanged;
 
 @end
 

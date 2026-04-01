@@ -186,6 +186,8 @@ static char SKMainWindowSplitViewItemObservationContext;
 
 #define SKTitleAndToolbarStyleKey @"SKTitleAndToolbarStyle"
 
+NSNotificationName const SKMainWindowControllerDidShowOrHideOverviewNotification = @"SKMainWindowControllerDidShowOrHideOverviewNotification";
+
 #pragma mark -    
 
 static SKDestination destinationFromSetup(NSDictionary *setup);
@@ -1729,8 +1731,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [NSCursor setHiddenUntilMouseMoves:NO];
     [[self window] makeFirstResponder:overviewView];
     [[self window] recalculateKeyViewLoop];
-    [touchBarController overviewChanged];
-    [noteToolbarController validateButtons];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKMainWindowControllerDidShowOrHideOverviewNotification object:self];
 }
 
 - (void)hideOverviewAnimating:(BOOL)animate completionHandler:(void (^)(void))handler {
@@ -1775,8 +1776,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         if (handler)
             handler();
     }
-    [touchBarController overviewChanged];
-    [noteToolbarController validateButtons];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKMainWindowControllerDidShowOrHideOverviewNotification object:self];
     if ([splitViewController respondsToSelector:@selector(_setHasItemToRevealOnEdgeHover:)]) {
         [splitViewController _setHasItemToRevealOnEdgeHover:NO];
         [splitViewController _setHasItemToRevealOnEdgeHover:YES];

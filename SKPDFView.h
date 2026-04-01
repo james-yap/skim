@@ -58,6 +58,7 @@ extern NSNotificationName const SKPDFViewReadingBarDidChangeNotification;
 extern NSNotificationName const SKPDFViewSelectionChangedNotification;
 extern NSNotificationName const SKPDFViewMagnificationChangedNotification;
 extern NSNotificationName const SKPDFViewPacerStartedOrStoppedNotification;
+extern NSNotificationName const SKPDFViewCanSelectNoteDidChangeNotification;
 
 extern NSString * const SKPDFViewAnnotationKey;
 extern NSString * const SKPDFViewPageKey;

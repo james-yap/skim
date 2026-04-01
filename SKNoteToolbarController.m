@@ -55,6 +55,7 @@ static char SKToolbarObservationContext;
 
 @interface SKNoteToolbarController ()
 - (void)updateSizeMode;
+- (void)handleValidationChangedNotification:(NSNotification *)notification;
 @end
 
 @implementation SKNoteToolbarController
@@ -134,7 +135,9 @@ static char SKToolbarObservationContext;
     }
     [fontsButton setMenu:menu forSegment:0];
     
-    [self validateButtons];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleValidationChangedNotification:) name:SKPDFViewCanSelectNoteDidChangeNotification object:mainController.pdfView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleValidationChangedNotification:) name:SKMainWindowControllerDidShowOrHideOverviewNotification object:mainController];
+    [self handleValidationChangedNotification:nil];
     
     NSView *view = [[NSView alloc] init];
     [view addSubview:noteButton];
@@ -162,6 +165,7 @@ static char SKToolbarObservationContext;
 
 - (void)setMainController:(SKMainWindowController *)newMainController {
     if (mainController) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
         if (noteButton) {
             @try { [[[mainController window] toolbar] removeObserver:self forKeyPath:@"sizeMode" context:&SKToolbarObservationContext]; }
             @catch (id e) {}
@@ -244,7 +248,7 @@ static char SKToolbarObservationContext;
     [linesButton setControlSize:controlSize];
 }
 
-- (void)validateButtons {
+- (void)handleValidationChangedNotification:(NSNotification *)notification {
     [noteButton setEnabled:[mainController hasOverview] == NO && [mainController.pdfView canSelectNote]];
 }
 

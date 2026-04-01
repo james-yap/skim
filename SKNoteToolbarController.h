@@ -58,8 +58,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)selectFontSize:(nullable id)sender;
 - (void)selectLineWidth:(nullable id)sender;
 
-- (void)validateButtons;
-
 @end
 
 NS_ASSUME_NONNULL_END
