@@ -2528,8 +2528,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             if ([item isCollapsed]) {
                 [item setCollapsed:NO];
                 [[splitViewController splitView] layoutSubtreeIfNeeded];
-                if ([NSView shouldShowSlideAnimation] == NO)
-                    item = nil;
             } else {
                 item = nil;
             }
@@ -2544,8 +2542,13 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         }
         rect = [[self window] convertRectToScreen:[rightSideController.snapshotTableView convertRect:rect toView:nil]];
         if (item) {
-            [item setCollapsed:YES];
-            [[item animator] setCollapsed:NO];
+            if ([NSView shouldShowSlideAnimation]) {
+                [item setCollapsed:YES];
+                [[item animator] setCollapsed:NO];
+                DISPATCH_MAIN_AFTER_SEC(1.25, ^{ [[item animator] setCollapsed:YES]; });
+            } else {
+                DISPATCH_MAIN_AFTER_SEC(1.5, ^{ [item setCollapsed:YES]; });
+            }
         }
     }
     [[self document] setRecentInfoNeedsUpdate:YES];
