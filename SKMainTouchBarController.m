@@ -461,7 +461,7 @@ static NSString *noteToolImageNames[] = {@"TouchBarTextNotePopover", @"TouchBarA
     [nc addObserver:self selector:@selector(handleCanSelectNoteChangedNotification:)
                name:SKPDFViewCanSelectNoteDidChangeNotification object:mainController.pdfView];
     [nc addObserver:self selector:@selector(handleOverviewChangedNotification:)
-               name:SKMainWindowControllerDidShowOrHideOverviewNotification object:mainController.pdfView];
+               name:SKMainWindowControllerDidShowOrHideOverviewNotification object:mainController];
 }
 
 @end
