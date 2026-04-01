@@ -893,8 +893,6 @@ static char SKDefaultsObservationContext;
             [item setView:leftPaneButton];
             [item setMenuFormRepresentation:menuItem];
             
-            [leftPaneButton setTag:[mainController leftSidePaneIsOpen] == NO];
-            
         } else if ([identifier isEqualToString:SKDocumentToolbarNotesPaneItemIdentifier]) {
             
             menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Notes Pane", @"Menu item title") action:@selector(toggleRightSidePane:) target:self];
@@ -903,8 +901,6 @@ static char SKDefaultsObservationContext;
             [item setToolTip:[mainController rightSidePaneIsOpen] ? NSLocalizedString(@"Hide Notes Pane", @"Tool tip message") : NSLocalizedString(@"Show Notes Pane", @"Tool tip message")];
             [item setView:rightPaneButton];
             [item setMenuFormRepresentation:menuItem];
-            
-            [rightPaneButton setTag:[mainController rightSidePaneIsOpen] == NO];
             
         } else if ([identifier isEqualToString:SKDocumentToolbarSplitPDFItemIdentifier]) {
             
