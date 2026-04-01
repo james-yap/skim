@@ -74,7 +74,7 @@ extern NSNotificationName const SKMainWindowControllerDidShowOrHideOverviewNotif
 @class SKLeftSideViewController, SKRightSideViewController, SKMainToolbarController, SKMainTouchBarController, SKNoteToolbarController, SKProgressController, SKNoteTypeSheetController, SKSnapshotWindowController, SKTransitionController;
 @class SKPresentationNotesAuxiliary;
 
-@interface SKMainWindowController : NSWindowController <SKSnapshotWindowControllerDelegate, SKThumbnailDelegate, SKFindControllerDelegate, SKPDFViewDelegate, SKPDFDocumentDelegate, NSTouchBarDelegate> {
+@interface SKMainWindowController : NSWindowController <SKSnapshotWindowControllerDelegate, SKThumbnailDelegate, SKFindControllerDelegate, SKPDFViewDelegate, SKPDFDocumentDelegate, NSTouchBarDelegate, NSCollectionViewDataSource> {
     NSSplitViewController               *splitViewController;
     
     NSSplitViewController               *pdfSplitViewController;

@@ -1667,7 +1667,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [overviewView setCollectionViewLayout:layout];
         [self updateOverviewItemSize];
         [overviewView registerClass:[SKThumbnailItem class] forItemWithIdentifier:@"thumbnail"];
-        [overviewView setDataSource:(id<NSCollectionViewDataSource>)self];
+        [overviewView setDataSource:self];
         [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:[[pdfView currentPage] pageIndex]]];
         [overviewView setTypeSelectHelper:[leftSideController.thumbnailTableView typeSelectHelper]];
         [overviewView setAction:@selector(hideOverview:)];
