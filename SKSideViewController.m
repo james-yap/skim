@@ -60,6 +60,14 @@
 
 #pragma mark Accessors
 
+- (void)setMainController:(SKMainWindowController *)newMainController {
+    if (newMainController == nil) {
+        [[self tableViews] setValue:nil forKey:@"delegate"];
+        [[self tableViews] setValue:nil forKey:@"dataSource"];
+    }
+    mainController = newMainController;
+}
+
 - (NSArray *)tableViews { return @[]; }
 
 - (CGFloat)topInset {

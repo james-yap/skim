@@ -145,19 +145,6 @@
     }
 }
 
-- (void)setMainController:(SKMainWindowController *)newMainController {
-    if (newMainController == nil) {
-        [thumbnailTableView setDelegate:nil];
-        [thumbnailTableView setDataSource:nil];
-        [findTableView setDelegate:nil];
-        [groupedFindTableView setDelegate:nil];
-        [groupedFindTableView setDataSource:nil];
-        [tocOutlineView setDelegate:nil];
-        [tocOutlineView setDataSource:nil];
-    }
-    [super setMainController:newMainController];
-}
-
 - (NSArray *)tableViews {
     return [NSArray arrayWithObjects:thumbnailTableView, tocOutlineView, findTableView, groupedFindTableView, nil];
 }
