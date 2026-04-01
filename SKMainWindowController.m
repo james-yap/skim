@@ -2527,6 +2527,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             [self setRightSidePaneState:SKSidePaneStateSnapshot];
             if ([item isCollapsed]) {
                 [item setCollapsed:NO];
+                [[splitViewController splitView] layoutSubtreeIfNeeded];
                 if ([NSView shouldShowSlideAnimation] == NO)
                     item = nil;
             } else {
