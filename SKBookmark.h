@@ -54,7 +54,8 @@ typedef NS_ENUM(NSInteger, SKBookmarkType) {
 
 + (NSArray<SKBookmark *> *)bookmarksForURLs:(NSArray<NSURL *> *)urls;
 
-- (nullable instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex snapshots:(nullable NSArray<NSDictionary<NSString *, id> *> *)aSnapshots label:(nullable NSString *)aLabel;
+- (nullable instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel;
+- (nullable instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex snapshots:(nullable NSArray<NSDictionary<NSString *, id> *> *)aSnapshots;
 - (nullable instancetype)initWithSetup:(NSDictionary<NSString *, id> *)aSetupDict label:(nullable NSString *)aLabel;
 - (nullable instancetype)initFolderWithChildren:(nullable NSArray<SKBookmark *> *)aChildren label:(nullable NSString *)aLabel;
 - (nullable instancetype)initRootWithChildrenProperties:(nullable NSArray<NSDictionary<NSString *, id> *> *)childrenProperties;

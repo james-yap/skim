@@ -164,7 +164,7 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
                     {
                         PDFPage *page = [self currentPage];
                         NSUInteger pageIndex = page ? [page pageIndex] : NSNotFound;
-                        bookmark = [[SKBookmark alloc] initWithURL:[self fileURL] pageIndex:pageIndex snapshots:nil label:label];
+                        bookmark = [[SKBookmark alloc] initWithURL:[self fileURL] pageIndex:pageIndex label:label];
                         break;
                     }
                     case SKAddBookmarkTypeSetup:

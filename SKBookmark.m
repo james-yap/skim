@@ -73,6 +73,7 @@
     NSUInteger pageIndex;
     NSDictionary *setup;
 }
+- (nullable instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex snapshots:(nullable NSArray<NSDictionary<NSString *, id> *> *)aSnapshots label:(nullable NSString *)aLabel;
 @end
 
 @interface SKFolderBookmark : SKBookmark {
@@ -134,7 +135,7 @@ static Class SKBookmarkClass = Nil;
                 [array addObject:bookmark];
             }
         } else if ((docClass = [dc documentClassForType:fileType])) {
-            if ((bookmark = [[self alloc] initWithURL:url pageIndex:([docClass isPDFDocument] ? 0 : NSNotFound) snapshots:nil label:label])) {
+            if ((bookmark = [[self alloc] initWithURL:url pageIndex:([docClass isPDFDocument] ? 0 : NSNotFound) label:label])) {
                 [array addObject:bookmark];
             }
         }
@@ -143,7 +144,12 @@ static Class SKBookmarkClass = Nil;
     return array;
 }
 
-- (instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex snapshots:(NSArray *)aSnapshots label:(NSString *)aLabel {
+- (instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
+    [self doesNotRecognizeSelector:_cmd];
+    return nil;
+}
+
+- (instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex snapshots:(NSArray *)aSnapshots {
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
@@ -318,6 +324,14 @@ static Class SKBookmarkClass = Nil;
 
 - (instancetype)init {
     return nil;
+}
+
+- (instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex label:(NSString *)aLabel {
+    return (id)[[SKFileBookmark alloc] initWithURL:aURL pageIndex:aPageIndex snapshots:nil label:aLabel];
+}
+
+- (instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex snapshots:(NSArray *)aSnapshots {
+    return (id)[[SKFileBookmark alloc] initWithURL:aURL pageIndex:aPageIndex snapshots:aSnapshots label:nil];
 }
 
 - (instancetype)initWithURL:(NSURL *)aURL pageIndex:(NSUInteger)aPageIndex snapshots:(NSArray *)aSnapshots label:(NSString *)aLabel {
@@ -736,7 +750,7 @@ static Class SKBookmarkClass = Nil;
                             aPageNumber = [docClass isPDFDocument] ? 0 : NSNotFound;
                         if (aLabel == nil)
                             [aURL getResourceValue:&aLabel forKey:NSURLLocalizedNameKey error:NULL];
-                        bookmark = [[SKBookmark alloc] initWithURL:aURL pageIndex:aPageNumber snapshots:nil label:aLabel];
+                        bookmark = [[SKBookmark alloc] initWithURL:aURL pageIndex:aPageNumber label:aLabel];
                     }
                 } else {
                     [[NSScriptCommand currentCommand] setScriptErrorNumber:NSArgumentsWrongScriptError];

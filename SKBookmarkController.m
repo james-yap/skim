@@ -265,7 +265,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
         return YES;
     
     if (fileURL) {
-        SKBookmark *info = [[SKBookmark alloc] initWithURL:fileURL pageIndex:pageIndex snapshots:snapshots label:nil];
+        SKBookmark *info = [[SKBookmark alloc] initWithURL:fileURL pageIndex:pageIndex snapshots:snapshots];
         if (info) {
             SKBookmark *oldInfo = [self recentDocumentAtURL:fileURL];
             if (oldInfo)
