@@ -1359,7 +1359,7 @@ static BOOL isIgnorablePOSIXError(NSError *error) {
 
 static NSDate *fileModificationDate(NSURL *fileURL) {
     NSDate *modDate = nil;
-    [fileURL getResourceValue:&modDate forKey:NSURLAttributeModificationDateKey error:NULL];
+    [fileURL getResourceValue:&modDate forKey:NSURLContentModificationDateKey error:NULL];
     return modDate;
 }
 
