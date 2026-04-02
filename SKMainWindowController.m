@@ -155,6 +155,10 @@
 #define LOCKED_KEY                  @"locked"
 #define CROPBOXES_KEY               @"cropBoxes"
 
+#define LABEL_KEY       @"label"
+#define EXPANDED_KEY    @"expanded"
+#define CHILDREN_KEY    @"children"
+
 #define TRANSITION_KEY      @"transition"
 #define PAGETRANSITIONS_KEY @"pageTransitions"
 
@@ -615,7 +619,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         } else {
             if ([self interactionMode] != SKNormalMode) {
                 [savedNormalSetup addEntriesFromDictionary:setup];
-                [savedNormalSetup removeObjectsForKeys:@[CROPBOXES_KEY, SNAPSHOTS_KEY, PAGEINDEX_KEY, SCROLLPOINT_KEY]];
+                [savedNormalSetup removeObjectsForKeys:@[CROPBOXES_KEY, SNAPSHOTS_KEY, PAGEINDEX_KEY, SCROLLPOINT_KEY, SKDocumentSetupBookmarkKey, SKDocumentSetupAliasKey, SKDocumentSetupTabsKey, LABEL_KEY]];
                 if (applySidePaneWidths)
                     [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
             }
@@ -798,10 +802,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         }
     }
 }
-
-#define LABEL_KEY @"label"
-#define EXPANDED_KEY @"expanded"
-#define CHILDREN_KEY @"children"
 
 - (NSDictionary *)expansionStateForOutline:(PDFOutline *)anOutline {
     if (anOutline == nil)
