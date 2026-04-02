@@ -136,8 +136,6 @@
         [[firstResponder window] makeFirstResponder:firstResponder];
         [[contentView window] recalculateKeyViewLoop];
     } else {
-        isAnimating = YES;
-        
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [context setDuration:DURATION]; 
                 [[contentView animator] replaceSubview:oldView with:newView];
@@ -150,7 +148,6 @@
             completionHandler:^{
                 [[firstResponder window] makeFirstResponder:firstResponder];
                 [[contentView window] recalculateKeyViewLoop];
-                isAnimating = NO;
         }];
     }
 }

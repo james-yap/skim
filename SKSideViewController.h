@@ -51,7 +51,6 @@ NS_ASSUME_NONNULL_BEGIN
     NSSearchField *searchField;
     NSView *currentView;
     __weak SKMainWindowController *mainController;
-    BOOL isAnimating;
 }
 
 @property (nonatomic, nullable, strong) IBOutlet NSView *sideView;
