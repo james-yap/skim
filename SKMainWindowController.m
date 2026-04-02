@@ -319,7 +319,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     // savedNormalSetup can contain pageIndex and snapshots from non-setup bookmarks
     BOOL hasWindowSetup = [savedNormalSetup count] > 2;
     NSWindow *window = [self window];
-    NSDocument *doc = [self document];
     NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
     
     mwcFlags.needsCleanup = YES;
@@ -450,6 +449,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     // NB: the next line will load the PDF document and annotations, so necessary setup must be finished first!
     // windowControllerDidLoadNib: is not called automatically because the document overrides makeWindowControllers
+    NSDocument *doc = [self document];
     [doc windowControllerDidLoadNib:self];
     
     // Show/hide left side pane if necessary
