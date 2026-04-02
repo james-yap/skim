@@ -295,9 +295,6 @@ enum { SKFileUpdateOptionYes=NSAlertFirstButtonReturn, SKFileUpdateOptionNo=NSAl
 
 - (void)didUpdateFromURL:(NSURL *)fileURL {
     fucFlags.fileChangedOnDisk = NO;
-    NSDate *modDate = nil;
-    [[fileURL URLByResolvingSymlinksInPath] getResourceValue:&modDate forKey:NSURLAttributeModificationDateKey error:NULL];
-    lastModifiedDate = modDate;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {

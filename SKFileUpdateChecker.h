@@ -54,7 +54,6 @@ NS_ASSUME_NONNULL_BEGIN
     
     dispatch_source_t source;
     
-    NSDate *lastModifiedDate;
     NSTimer *fileUpdateTimer;
 }
 

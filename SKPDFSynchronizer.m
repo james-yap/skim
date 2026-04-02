@@ -118,7 +118,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
     }
     NSDate *modDate = nil;
     if (syncFileName)
-        [[NSURL fileURLWithPath:syncFileName isDirectory:NO] getResourceValue:&modDate forKey:NSURLAttributeModificationDateKey error:NULL];
+        [[NSURL fileURLWithPath:syncFileName isDirectory:NO] getResourceValue:&modDate forKey:NSURLContentModificationDateKey error:NULL];
     lastModDate = modDate;
     [lock unlock];
 }
@@ -204,7 +204,7 @@ static NSArray *SKPDFSynchronizerTexExtensions = nil;
         if (theSyncFileName && [[NSFileManager defaultManager] fileExistsAtPath:theSyncFileName]) {
             NSDate *modDate = nil;
             if (currentModDate)
-                [[NSURL fileURLWithPath:theSyncFileName isDirectory:NO] getResourceValue:&modDate forKey:NSURLAttributeModificationDateKey error:NULL];
+                [[NSURL fileURLWithPath:theSyncFileName isDirectory:NO] getResourceValue:&modDate forKey:NSURLContentModificationDateKey error:NULL];
         
             if (currentModDate && [modDate compare:currentModDate] != NSOrderedDescending)
                 rv = YES;
