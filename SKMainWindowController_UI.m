@@ -1599,7 +1599,7 @@
 - (BOOL)PDFView:(PDFView *)aPDFView performAction:(PDFAction *)action {
     if ([action isKindOfClass:[PDFActionGoTo class]] && ([NSEvent modifierFlags] & NSEventModifierFlagDeviceIndependentFlagsMask) == NSEventModifierFlagShift) {
         BOOL animating = NO;
-        if ([secondaryPdfView window] == nil) {
+        if ([secondaryPdfView superview] == nil) {
             animating = [NSView shouldShowSlideAnimation];
             [self toggleSplitPDF:nil];
         }
@@ -1791,7 +1791,7 @@
             [menuItem setTitle:NSLocalizedString(@"Show Overview", @"Menu item title")];
         return YES;
     } else if (action == @selector(toggleSplitPDF:)) {
-        if ([(NSView *)secondaryPdfView window])
+        if ([(NSView *)secondaryPdfView superview])
             [menuItem setTitle:NSLocalizedString(@"Hide Split PDF", @"Menu item title")];
         else
             [menuItem setTitle:NSLocalizedString(@"Show Split PDF", @"Menu item title")];

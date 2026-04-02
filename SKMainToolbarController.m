@@ -907,7 +907,7 @@ static char SKDefaultsObservationContext;
             menuItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Notes Pane", @"Menu item title") action:@selector(toggleSplitPDF:) target:self];
             
             [item setLabels:NSLocalizedString(@"Split PDF", @"Toolbar item label")];
-            [item setToolTip:[(NSView *)mainController.secondaryPdfView window] ? NSLocalizedString(@"Hide Split PDF", @"Tool tip message") : NSLocalizedString(@"Show Split PDF", @"Tool tip message")];
+            [item setToolTip:[(NSView *)mainController.secondaryPdfView superview] ? NSLocalizedString(@"Hide Split PDF", @"Tool tip message") : NSLocalizedString(@"Show Split PDF", @"Tool tip message")];
             [item setView:splitPDFButton];
             [item setMenuFormRepresentation:menuItem];
             

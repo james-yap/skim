@@ -1073,7 +1073,7 @@
     if (mwcFlags.isAnimatingSplitPDF)
         return;
     
-    if ([secondaryPdfView window]) {
+    if ([secondaryPdfView superview]) {
         
         NSSplitViewItem *item = [[pdfSplitViewController splitViewItems] lastObject];
         
