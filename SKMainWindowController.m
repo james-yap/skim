@@ -122,7 +122,6 @@
 #define MAX_PAGE_COLUMN_WIDTH_1 50.0
 #define MAX_MIN_COLUMN_WIDTH    100.0
 
-#define DEFAULT_SIDE_PANE_WIDTH 250.0
 #define MIN_SIDE_PANE_WIDTH 100.0
 #define MIN_PDF_PANE_WIDTH 100.0
 #define MIN_PDF_PANE_HEIGHT 50.0
@@ -337,6 +336,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     NSSplitViewItem *item = [NSSplitViewItem sidebarWithViewController:leftSideController];
     [item setMinimumThickness:MIN_SIDE_PANE_WIDTH];
     [item setCanCollapse:YES];
+    [item setCollapsed:NO];
     [item setHoldingPriority:260.0];
     [item setSpringLoaded:NO];
     if (@available(macOS 11.0, *))
@@ -352,6 +352,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     item = [NSSplitViewItem splitViewItemWithViewController:rightSideController];
     [item setMinimumThickness:MIN_SIDE_PANE_WIDTH];
     [item setCanCollapse:YES];
+    [item setCollapsed:NO];
     [item setHoldingPriority:255.0];
     if ([item respondsToSelector:@selector(setRevealsOnEdgeHoverInFullscreen:)])
         [item setRevealsOnEdgeHoverInFullscreen:YES];
@@ -366,10 +367,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [view setTranslatesAutoresizingMaskIntoConstraints:NO];
     [contentView addSubview:view];
     [NSLayoutConstraint activateConstraints:constraints];
-    
-    // this sets the default widths to return to and ensures that the side views are loaded
-    [self setLeftSideWidth:@DEFAULT_SIDE_PANE_WIDTH];
-    [self setRightSideWidth:@DEFAULT_SIDE_PANE_WIDTH];
     
     if (mwcFlags.fullSizeContent) {
         [leftSideController setCurrentView:[[leftSideController currentView] superview]];
