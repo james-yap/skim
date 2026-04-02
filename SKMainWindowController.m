@@ -1865,9 +1865,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 	}
 }
 
-- (void)removeFindController {
+- (BOOL)removeFindController {
     if (mwcFlags.isAnimatingFindBar)
-        return;
+        return NO;
     
     BOOL animate = [NSView shouldShowSlideAnimation];
     NSView *findBar = [findController view];
@@ -1909,6 +1909,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [contentView layoutSubtreeIfNeeded];
         [window recalculateKeyViewLoop];
     }
+    
+    return YES;
 }
 
 - (void)showFindBar {

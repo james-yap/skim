@@ -133,13 +133,14 @@
     if (window == nil)
         return;
     
+    if ([delegate removeFindController] == NO)
+        return;
+        
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:window];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:window];
     [self windowDidResignKey:nil];
     
     [messageField setHidden:YES];
-    
-    [delegate removeFindController];
 }
 
 - (IBAction)toggleCaseInsensitiveFind:(id)sender {

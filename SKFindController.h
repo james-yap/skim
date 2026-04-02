@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol SKFindControllerDelegate <NSObject>
 - (BOOL)findString:(NSString *)string forward:(BOOL)forward;
-- (void)removeFindController;
+- (BOOL)removeFindController;
 @end
 
 NS_ASSUME_NONNULL_END
