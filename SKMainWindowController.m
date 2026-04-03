@@ -2038,7 +2038,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         } else {
             [self updateRightStatus];
         }
-        if ([pdfView toolMode] == SKToolModeMove || [pdfView toolMode] == SKToolModeMagnify || [pdfView toolMode] == SKToolModeSelect)
+        if ([pdfView toolMode] != SKToolModeText && [pdfView toolMode] != SKToolModeNote)
             [pdfView setCurrentSelection:nil];
     }
 }
