@@ -67,7 +67,6 @@
 #import "SKDocumentController.h"
 #import "SKFindController.h"
 #import "NSColor_SKExtensions.h"
-#import "SKSplitView.h"
 #import "SKScrollView.h"
 #import "SKDocumentController.h"
 #import "NSError_SKExtensions.h"

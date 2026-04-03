@@ -58,7 +58,6 @@
 #import "SKStatusBar.h"
 #import "SKSideWindow.h"
 #import "SKImageToolTipWindow.h"
-#import "SKSplitView.h"
 #import "SKLineInspector.h"
 #import "NSEvent_SKExtensions.h"
 #import "NSWindowController_SKExtensions.h"

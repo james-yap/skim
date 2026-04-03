@@ -56,7 +56,6 @@
 #import <SkimNotes/SkimNotes.h>
 #import "PDFAnnotation_SKExtensions.h"
 #import "SKNoteText.h"
-#import "SKSplitView.h"
 #import "NSBezierPath_SKExtensions.h"
 #import "NSUserDefaults_SKExtensions.h"
 #import "SKOutlineView.h"

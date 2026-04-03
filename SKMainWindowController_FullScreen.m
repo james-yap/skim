@@ -46,7 +46,6 @@
 #import "SKRightSideViewController.h"
 #import "SKApplication.h"
 #import "SKTableView.h"
-#import "SKSplitView.h"
 #import "SKStringConstants.h"
 #import "SKMainTouchBarController.h"
 #import "SKMainDocument.h"

@@ -70,7 +70,7 @@ enum {
 extern NSNotificationName const SKMainWindowControllerDidShowOrHideOverviewNotification;
 
 @class PDFAnnotation, PDFSelection, SKGroupedSearchResult;
-@class SKSecondaryPDFView, SKPresentationView, SKStatusBar, SKFindController, SKSplitView, SKFieldEditor, SKOverviewView, SKSideWindow;
+@class SKSecondaryPDFView, SKPresentationView, SKStatusBar, SKFindController, SKFieldEditor, SKOverviewView, SKSideWindow;
 @class SKLeftSideViewController, SKRightSideViewController, SKMainToolbarController, SKMainTouchBarController, SKNoteToolbarController, SKProgressController, SKNoteTypeSheetController, SKSnapshotWindowController, SKTransitionController;
 @class SKPresentationNotesAuxiliary;
 
