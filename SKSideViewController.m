@@ -62,8 +62,8 @@
 
 - (void)setMainController:(SKMainWindowController *)newMainController {
     if (newMainController == nil) {
-        [[self tableViews] setValue:nil forKey:@"delegate"];
         [[self tableViews] setValue:nil forKey:@"dataSource"];
+        [[self tableViews] setValue:nil forKey:@"delegate"];
     }
     mainController = newMainController;
 }
