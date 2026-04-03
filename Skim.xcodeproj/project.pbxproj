@@ -140,7 +140,6 @@
 		CE4D97FD0C3C2BFF002C20CB /* SKColorSwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4D97FB0C3C2BFF002C20CB /* SKColorSwatch.m */; };
 		CE4E1E9A12BCFF5A005227ED /* HIDRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4E1E9912BCFF5A005227ED /* HIDRemote.m */; };
 		CE4EBDDA0B7BF3B30091F228 /* SKSideWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4EBDD90B7BF3B30091F228 /* SKSideWindow.m */; };
-		CE4EC88C0B7E6EDB0091F228 /* SKSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE4EC88B0B7E6EDB0091F228 /* SKSplitView.m */; };
 		CE4F9DEE0BC1BE3A005BE0A1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE4F9DEC0BC1BE3A005BE0A1 /* Localizable.strings */; };
 		CE5234A61A6424F200710CF2 /* NSShadow_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5234A51A6424F200710CF2 /* NSShadow_SKExtensions.m */; };
 		CE5347141645DD3000737191 /* SKAttachmentEmailer.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5347131645DD3000737191 /* SKAttachmentEmailer.m */; };
@@ -968,8 +967,6 @@
 		CE4EBDD90B7BF3B30091F228 /* SKSideWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKSideWindow.m; sourceTree = "<group>"; };
 		CE4EC4F30B7E24490091F228 /* SKPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKPreferenceController.h; sourceTree = "<group>"; };
 		CE4EC4F40B7E24490091F228 /* SKPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKPreferenceController.m; sourceTree = "<group>"; };
-		CE4EC88A0B7E6EDB0091F228 /* SKSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKSplitView.h; sourceTree = "<group>"; };
-		CE4EC88B0B7E6EDB0091F228 /* SKSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKSplitView.m; sourceTree = "<group>"; };
 		CE4F96F10CFB4ABA00DBEA14 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = ru; path = ru.lproj/Credits.rtf; sourceTree = "<group>"; };
 		CE4F96F40CFB4AC200DBEA14 /* ru */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CE4F96F70CFB4ACA00DBEA14 /* ru */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1898,8 +1895,6 @@
 				CEAE1C460CA1877F00849B0F /* SKSecondaryPDFView.m */,
 				F92DB5AA0B36FE1F002A26E9 /* SKSnapshotPDFView.h */,
 				F92DB5AB0B36FE1F002A26E9 /* SKSnapshotPDFView.m */,
-				CE4EC88A0B7E6EDB0091F228 /* SKSplitView.h */,
-				CE4EC88B0B7E6EDB0091F228 /* SKSplitView.m */,
 				CEAF079A0C4139EB00C3ECBB /* SKStatusBar.h */,
 				CEAF079B0C4139EB00C3ECBB /* SKStatusBar.m */,
 				CE5BF7FE0C7CBF6300EBDCF7 /* SKTableView.h */,
@@ -2811,7 +2806,6 @@
 				CEEA05D32CCD49F400D7417A /* PDFAnnotationStamp_SKExtensions.m in Sources */,
 				CE4EBDDA0B7BF3B30091F228 /* SKSideWindow.m in Sources */,
 				CE2526362B3834E40084F43D /* NSToolbarItem_SKExtensions.m in Sources */,
-				CE4EC88C0B7E6EDB0091F228 /* SKSplitView.m in Sources */,
 				CE38ECD30B8093B200A1B779 /* NSString_SKExtensions.m in Sources */,
 				F9CDD67B0B837A7F006363C3 /* SKPreferenceController.m in Sources */,
 				CE0463CB0B84D24300C11E4A /* SKApplication.m in Sources */,
