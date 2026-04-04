@@ -1733,7 +1733,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     // don't check interactionMode as this can be called from enterPresentation
     BOOL isPresentation = 0 == ([[overviewContentView window] styleMask] & NSWindowStyleMaskTitled);
-    NSView *newView = isPresentation ? presentationView : [splitViewController view];
     NSView *contentView = [overviewContentView superview];
     
     if (animate) {
@@ -1748,7 +1747,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     }
     
     [overviewContentView removeFromSuperview];
-    [newView setHidden:NO];
+    [(isPresentation ? presentationView : [splitViewController view]) setHidden:NO];
     [[contentView window] makeFirstResponder:isPresentation ? presentationView : pdfView];
     [[contentView window] recalculateKeyViewLoop];
     
