@@ -1735,13 +1735,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     BOOL isPresentation = 0 == ([[overviewContentView window] styleMask] & NSWindowStyleMaskTitled);
     NSView *newView = isPresentation ? presentationView : [splitViewController view];
     NSView *contentView = [overviewContentView superview];
-    BOOL useContentTop = mwcFlags.fullSizeContent || isPresentation;
-    BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
-    NSArray *constraints = @[
-        [[newView leadingAnchor] constraintEqualToAnchor:[contentView leadingAnchor]],
-        [[contentView trailingAnchor] constraintEqualToAnchor:[newView trailingAnchor]],
-        [[newView topAnchor] constraintEqualToAnchor:[(useContentTop ? contentView : [[self window] contentLayoutGuide]) topAnchor]],
-        [(hasStatus ? [statusBar topAnchor] : [contentView bottomAnchor]) constraintEqualToAnchor:[newView bottomAnchor]]];
     
     if (animate) {
         if (handler) {
@@ -1756,7 +1749,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     [overviewContentView removeFromSuperview];
     [newView setHidden:NO];
-    [NSLayoutConstraint activateConstraints:constraints];
     [[contentView window] makeFirstResponder:isPresentation ? presentationView : pdfView];
     [[contentView window] recalculateKeyViewLoop];
     
