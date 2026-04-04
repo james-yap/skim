@@ -778,8 +778,7 @@
 
 - (IBAction)toggleStatusBar:(id)sender {
     [[NSUserDefaults standardUserDefaults] setBool:(NO == [statusBar isVisible]) forKey:SKShowStatusBarKey];
-    NSView *view = [self hasOverview] ? overviewContentView : [splitViewController view];
-    [statusBar toggleBelowView:view animate:sender != nil];
+    [statusBar toggleBelowView:[splitViewController view] animate:sender != nil];
 }
 
 - (void)selectSearchFieldForSideViewController:(SKSideViewController *)sideViewController {

@@ -200,10 +200,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 @property (nonatomic) BOOL revealsOnEdgeHoverInFullscreen;
 @end
 
-@interface NSSplitViewController (SKPrivateDeclarations)
-- (void)_setHasItemToRevealOnEdgeHover:(BOOL)flag;
-@end
-
 @interface SKMainWindowController ()
 
 - (void)cleanup;
@@ -1674,14 +1670,12 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     BOOL isPresentation = [self interactionMode] == SKPresentationMode;
     NSView *oldView = isPresentation ? presentationView : [splitViewController view];
     NSView *contentView = [oldView superview];
-    BOOL useContentTop = mwcFlags.fullSizeContent || isPresentation;
-    BOOL hasStatus = isPresentation == NO && [statusBar isVisible];
     NSUInteger pageIndex = [[pdfView currentPage] pageIndex];
     NSArray *constraints = @[
-        [[overviewContentView leadingAnchor] constraintEqualToAnchor:[contentView leadingAnchor]],
-        [[contentView trailingAnchor] constraintEqualToAnchor:[overviewContentView trailingAnchor]],
-        [[overviewContentView topAnchor] constraintEqualToAnchor:[(useContentTop ? contentView : [[self window] contentLayoutGuide]) topAnchor]],
-        [(hasStatus ? [statusBar topAnchor] : [contentView bottomAnchor]) constraintEqualToAnchor:[overviewContentView bottomAnchor]]];
+        [[overviewContentView leadingAnchor] constraintEqualToAnchor:[oldView leadingAnchor]],
+        [[oldView trailingAnchor] constraintEqualToAnchor:[overviewContentView trailingAnchor]],
+        [[overviewContentView topAnchor] constraintEqualToAnchor:[oldView topAnchor]],
+        [[oldView bottomAnchor] constraintEqualToAnchor:[overviewContentView bottomAnchor]]];
     
     [overviewContentView setFrame:[oldView frame]];
     [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:pageIndex]];
@@ -1710,19 +1704,15 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     }
     
     if (animate) {
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [context setDuration:0.5];
-                [[contentView animator] replaceSubview:oldView with:overviewContentView];
-                [NSLayoutConstraint activateConstraints:constraints];
-            }
-            completionHandler:^{
-                [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:pageIndex]];
-            }];
-    } else {
-        [contentView replaceSubview:oldView with:overviewContentView];
-        [NSLayoutConstraint activateConstraints:constraints];
-        [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]];
+        CAAnimation *animation = [CATransition animation];
+        [animation setDuration:0.5];
+        [[contentView layer] addAnimation:animation forKey:@"transition"];
     }
+    
+    [contentView addSubview:overviewContentView];
+    [oldView setHidden:YES];
+    [NSLayoutConstraint activateConstraints:constraints];
+    dispatch_async(dispatch_get_main_queue(), ^{ [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]]; });
     if (isPresentation)
         [NSCursor setHiddenUntilMouseMoves:NO];
     [[self window] makeFirstResponder:overviewView];
@@ -1753,30 +1743,29 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [(hasStatus ? [statusBar topAnchor] : [contentView bottomAnchor]) constraintEqualToAnchor:[newView bottomAnchor]]];
     
     if (animate) {
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [context setDuration:0.5];
-                [[contentView animator] replaceSubview:overviewContentView with:newView];
-                [NSLayoutConstraint activateConstraints:constraints];
-            }
-            completionHandler:^{
-                [[contentView window] makeFirstResponder:isPresentation ? presentationView : pdfView];
-                [[contentView window] recalculateKeyViewLoop];
-                if (handler)
-                    handler();
-            }];
-    } else {
-        [contentView replaceSubview:overviewContentView with:newView];
-        [NSLayoutConstraint activateConstraints:constraints];
-        [[contentView window] makeFirstResponder:isPresentation ? presentationView : pdfView];
-        [[contentView window] recalculateKeyViewLoop];
-        if (handler)
+        if (handler) {
+            [CATransaction begin];
+            [CATransaction setCompletionBlock:handler];
+        }
+        CAAnimation *animation = [CATransition animation];
+        [animation setDuration:0.5];
+        [[contentView layer] addAnimation:animation forKey:@"transition"];
+    }
+    
+    [overviewContentView removeFromSuperview];
+    [newView setHidden:NO];
+    [NSLayoutConstraint activateConstraints:constraints];
+    [[contentView window] makeFirstResponder:isPresentation ? presentationView : pdfView];
+    [[contentView window] recalculateKeyViewLoop];
+    
+    if (handler) {
+        if (animate)
+            [CATransaction commit];
+        else
             handler();
     }
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:SKMainWindowControllerDidShowOrHideOverviewNotification object:self];
-    if ([splitViewController respondsToSelector:@selector(_setHasItemToRevealOnEdgeHover:)]) {
-        [splitViewController _setHasItemToRevealOnEdgeHover:NO];
-        [splitViewController _setHasItemToRevealOnEdgeHover:YES];
-    }
 }
 
     
