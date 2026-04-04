@@ -1718,6 +1718,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [NSCursor setHiddenUntilMouseMoves:NO];
     [[self window] makeFirstResponder:overviewView];
     [[self window] recalculateKeyViewLoop];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:SKMainWindowControllerDidShowOrHideOverviewNotification object:self];
 }
 
@@ -1751,14 +1752,14 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [[contentView window] makeFirstResponder:isPresentation ? presentationView : pdfView];
     [[contentView window] recalculateKeyViewLoop];
     
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKMainWindowControllerDidShowOrHideOverviewNotification object:self];
+    
     if (handler) {
         if (animate)
             [CATransaction commit];
         else
             handler();
     }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKMainWindowControllerDidShowOrHideOverviewNotification object:self];
 }
 
     
