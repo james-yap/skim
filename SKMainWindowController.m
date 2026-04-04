@@ -417,8 +417,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [[statusBar rightField] setTarget:self];
 
     if ([sud boolForKey:SKShowStatusBarKey] == NO)
-        [self toggleStatusBar:nil];
-    
+        [statusBar toggleBelowView:[splitViewController view] animate:NO];
+
     NSMenu *menu = [[NSMenu alloc] init];
     [menu addItemWithTitle:NSLocalizedString(@"Display note size", @"Menu item title") action:@selector(toggleDisplayNoteBounds:) target:self];
     [menu addItemWithTitle:NSLocalizedString(@"Display page size", @"Menu item title") action:@selector(toggleDisplayPageBounds:) target:self];

@@ -204,8 +204,8 @@ static NSUInteger maxRecentDocumentsCount = 0;
     [self setWindowFrameAutosaveName:SKBookmarksWindowFrameAutosaveName];
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowBookmarkStatusBarKey] == NO)
-        [self toggleStatusBar:nil];
-    
+        [statusBar toggleBelowView:[outlineView enclosingScrollView] animate:NO];
+
     [outlineView setStronglyReferencesItems:YES];
     
     [outlineView setTypeSelectHelper:[SKTypeSelectHelper typeSelectHelper]];
@@ -515,7 +515,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (IBAction)toggleStatusBar:(id)sender {
     [[NSUserDefaults standardUserDefaults] setBool:(NO == [statusBar isVisible]) forKey:SKShowBookmarkStatusBarKey];
-    [statusBar toggleBelowView:[outlineView enclosingScrollView] animate:sender != nil];
+    [statusBar toggleBelowView:[outlineView enclosingScrollView] animate:YES];
 }
 
 - (NSArray *)clickedBookmarks {

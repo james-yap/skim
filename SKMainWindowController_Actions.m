@@ -778,7 +778,7 @@
 
 - (IBAction)toggleStatusBar:(id)sender {
     [[NSUserDefaults standardUserDefaults] setBool:(NO == [statusBar isVisible]) forKey:SKShowStatusBarKey];
-    [statusBar toggleBelowView:[splitViewController view] animate:sender != nil];
+    [statusBar toggleBelowView:[splitViewController view] animate:YES];
 }
 
 - (void)selectSearchFieldForSideViewController:(SKSideViewController *)sideViewController {

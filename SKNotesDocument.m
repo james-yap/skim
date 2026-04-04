@@ -154,8 +154,8 @@
     [aController setWindowFrameAutosaveNameOrCascade:SKNotesDocumentWindowFrameAutosaveName];
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowNotesStatusBarKey] == NO)
-        [self toggleStatusBar:nil];
-    
+        [statusBar toggleBelowView:[outlineView enclosingScrollView] animate:NO];
+
     if (NSEqualRects(windowRect, NSZeroRect) == NO)
         [[aController window] setFrame:windowRect display:NO];
     
@@ -511,7 +511,7 @@
 
 - (IBAction)toggleStatusBar:(id)sender {
     [[NSUserDefaults standardUserDefaults] setBool:(NO == [statusBar isVisible]) forKey:SKShowNotesStatusBarKey];
-    [statusBar toggleBelowView:[outlineView enclosingScrollView] animate:sender != nil];
+    [statusBar toggleBelowView:[outlineView enclosingScrollView] animate:YES];
 }
 
 - (void)copyNotes:(id)sender {
