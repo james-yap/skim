@@ -1714,8 +1714,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [oldView setHidden:YES];
     [NSLayoutConstraint activateConstraints:constraints];
     dispatch_async(dispatch_get_main_queue(), ^{ [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:[[pdfView currentPage] pageIndex]]]; });
-    if (isPresentation)
-        [NSCursor setHiddenUntilMouseMoves:NO];
     [[self window] makeFirstResponder:overviewView];
     [[self window] recalculateKeyViewLoop];
     
