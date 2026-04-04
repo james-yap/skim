@@ -1706,6 +1706,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if (animate) {
         CAAnimation *animation = [CATransition animation];
         [animation setDuration:0.5];
+        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
         [[contentView layer] addAnimation:animation forKey:@"transition"];
     }
     
@@ -1749,6 +1750,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         }
         CAAnimation *animation = [CATransition animation];
         [animation setDuration:0.5];
+        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
         [[contentView layer] addAnimation:animation forKey:@"transition"];
     }
     
