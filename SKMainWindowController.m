@@ -125,6 +125,8 @@
 #define MIN_PDF_PANE_WIDTH 100.0
 #define MIN_PDF_PANE_HEIGHT 50.0
 
+#define OVERVIEW_DURATION 0.5
+
 #define SEARCHRESULTS_KEY           @"searchResults"
 #define GROUPEDSEARCHRESULTS_KEY    @"groupedSearchResults"
 #define NOTES_KEY                   @"notes"
@@ -1705,7 +1707,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     if (animate) {
         CAAnimation *animation = [CATransition animation];
-        [animation setDuration:0.5];
+        [animation setDuration:OVERVIEW_DURATION];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
         [[contentView layer] addAnimation:animation forKey:@"animation"];
     }
@@ -1740,7 +1742,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             [CATransaction setCompletionBlock:handler];
         }
         CAAnimation *animation = [CATransition animation];
-        [animation setDuration:0.5];
+        [animation setDuration:OVERVIEW_DURATION];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
         [[contentView layer] addAnimation:animation forKey:@"animation"];
     }
