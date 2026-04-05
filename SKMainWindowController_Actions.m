@@ -1170,13 +1170,15 @@
         if (i != NSNotFound)
             [[self window] removeTitlebarAccessoryViewControllerAtIndex:i];
     } else {
+        BOOL needsFullScreenHeight = NO;
         if (noteToolbarController == nil) {
             noteToolbarController = [[SKNoteToolbarController alloc] init];
             [noteToolbarController setMainController:self];
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:SKShowToolbarInFullScreenKey] == 2)
-                [noteToolbarController setFullScreenMinHeight:28.0];
+            needsFullScreenHeight = [[NSUserDefaults standardUserDefaults] integerForKey:SKShowToolbarInFullScreenKey] > 1;
         }
         [[self window] addTitlebarAccessoryViewController:noteToolbarController];
+        if (needsFullScreenHeight)
+            [noteToolbarController setFullScreenMinHeight:NSHeight([[noteToolbarController view] frame])];
     }
     [toolbarController noteToolbarDidShowOrHide:[noteToolbarController isVisible]];
 }
