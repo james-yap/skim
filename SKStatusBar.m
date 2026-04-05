@@ -160,11 +160,11 @@
     NSView *contentView = [view superview];
     BOOL visible = (nil == [self superview]);
     CGFloat statusHeight = NSHeight([self frame]);
-    NSArray *constraints;
+    NSLayoutConstraint *newBottomConstraint = nil;
     
     if (visible) {
         [contentView addSubview:self];
-        constraints = @[
+        NSArray *constraints = @[
             [[self leadingAnchor] constraintEqualToAnchor:[contentView leadingAnchor]],
             [[contentView trailingAnchor]constraintEqualToAnchor:[self trailingAnchor]],
             [[self topAnchor] constraintEqualToAnchor:[view bottomAnchor]],
@@ -174,7 +174,7 @@
         [contentView layoutSubtreeIfNeeded];
         bottomConstraint = [constraints lastObject];
     } else {
-        constraints = @[[[contentView bottomAnchor] constraintEqualToAnchor:[view bottomAnchor]]];
+        newBottomConstraint = [[contentView bottomAnchor] constraintEqualToAnchor:[view bottomAnchor]];
     }
     
     if (animate) {
@@ -185,25 +185,25 @@
                 [[self animator] setWindowContentBorderThickness:visible ? statusHeight : 0.0];
             }
             completionHandler:^{
-                if (visible == NO) {
-                    [self removeFromSuperview];
-                    [NSLayoutConstraint activateConstraints:constraints];
-                    bottomConstraint = [constraints lastObject];
-                } else {
+                if (visible) {
                     // this fixes an AppKit bug, the window does not notice that its draggable areas change
                     [[self window] setMovableByWindowBackground:YES];
                     [[self window] setMovableByWindowBackground:NO];
+                } else {
+                    [self removeFromSuperview];
+                    [newBottomConstraint setActive:YES];
+                    bottomConstraint = newBottomConstraint;
                 }
                 animating = NO;
             }];
-    } else if (visible == NO) {
+    } else if (visible) {
+        [[self window] setContentBorderThickness:statusHeight forEdge:NSRectEdgeMinY];
+    } else {
         [[self window] setContentBorderThickness:0.0 forEdge:NSRectEdgeMinY];
         [self removeFromSuperview];
-        [NSLayoutConstraint activateConstraints:constraints];
+        [newBottomConstraint setActive:YES];
         [contentView layoutSubtreeIfNeeded];
-        bottomConstraint = [constraints lastObject];
-    } else {
-        [[self window] setContentBorderThickness:statusHeight forEdge:NSRectEdgeMinY];
+        bottomConstraint = newBottomConstraint;
     }
 }
 
