@@ -423,8 +423,10 @@ static CGFloat fullScreenToolbarOffset = 0.0;
             [[[[presentationNotesAuxiliary previewController] window] animator] setAlphaValue:0.0];
         }
         completionHandler:^{
-            if ([overviewContentView window] == presentationWindow)
+            if ([overviewContentView window] == presentationWindow) {
                 [overviewContentView removeFromSuperview];
+                [presentationView setHidden:NO];
+            }
             [presentationWindow orderOut:nil];
             [presentationView setPage:nil];
             [presentationView setAutoScales:NO];
