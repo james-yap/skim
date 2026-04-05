@@ -84,6 +84,9 @@
                             <constraint firstItem="96" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="112" secondAttribute="leading" constant="10" id="k14-AQ-ujw"/>
                             <constraint firstItem="96" firstAttribute="centerY" secondItem="112" secondAttribute="centerY" id="xdD-PG-634"/>
                         </constraints>
+                        <connections>
+                            <outlet property="bottomConstraint" destination="H0k-44-H9c" id="zIF-qv-F5H"/>
+                        </connections>
                     </customView>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="113">
                         <rect key="frame" x="0.0" y="186" width="340" height="84"/>

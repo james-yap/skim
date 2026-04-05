@@ -33,6 +33,9 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="X0T-9O-hZc"/>
                         </constraints>
+                        <connections>
+                            <outlet property="bottomConstraint" destination="SCp-TG-bIL" id="NUY-Rp-w30"/>
+                        </connections>
                     </customView>
                     <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="18" horizontalPageScroll="10" verticalLineScroll="18" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="56">
                         <rect key="frame" x="0.0" y="22" width="400" height="232"/>
@@ -243,13 +246,13 @@
                     </scrollView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="56" firstAttribute="bottom" secondItem="37" secondAttribute="top" id="4pJ-8D-BsO"/>
-                    <constraint firstItem="37" firstAttribute="trailing" secondItem="6" secondAttribute="trailing" id="4pf-mX-Qwj"/>
                     <constraint firstItem="56" firstAttribute="leading" secondItem="6" secondAttribute="leading" id="5j2-Sx-YK3"/>
                     <constraint firstItem="56" firstAttribute="top" secondItem="6" secondAttribute="top" constant="-1" id="7dI-iY-OEY"/>
-                    <constraint firstItem="37" firstAttribute="bottom" secondItem="6" secondAttribute="bottom" id="B9p-J8-Llf"/>
                     <constraint firstItem="37" firstAttribute="leading" secondItem="6" secondAttribute="leading" id="Bnb-ME-Bna"/>
-                    <constraint firstItem="56" firstAttribute="trailing" secondItem="6" secondAttribute="trailing" id="hUc-Wx-VsZ"/>
+                    <constraint firstAttribute="bottom" secondItem="37" secondAttribute="bottom" id="SCp-TG-bIL"/>
+                    <constraint firstAttribute="trailing" secondItem="56" secondAttribute="trailing" id="WFW-2T-eBD"/>
+                    <constraint firstAttribute="trailing" secondItem="37" secondAttribute="trailing" id="ieE-7V-lcF"/>
+                    <constraint firstItem="37" firstAttribute="top" secondItem="56" secondAttribute="bottom" id="jgU-hg-Zk2"/>
                 </constraints>
             </view>
             <contentBorderThickness minY="22"/>

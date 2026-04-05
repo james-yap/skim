@@ -48,8 +48,6 @@
 #define SEPARATION          4.0
 #define ICON_OFFSET         1.0
 
-static inline NSLayoutConstraint *bottomLayoutConstraint(NSView *view);
-
 @interface SKStatusTextField : NSTextField
 @end
 
@@ -63,7 +61,7 @@ static inline NSLayoutConstraint *bottomLayoutConstraint(NSView *view);
 
 @implementation SKStatusBar
 
-@synthesize animating, leftField, rightField, progressIndicator;
+@synthesize animating, leftField, rightField, progressIndicator, bottomConstraint;
 @dynamic visible, icon, progressIndicatorStyle;
 
 + (id)defaultAnimationForKey:(NSString *)key {
@@ -161,7 +159,7 @@ static inline NSLayoutConstraint *bottomLayoutConstraint(NSView *view);
     
     NSView *contentView = [view superview];
     BOOL visible = (nil == [self superview]);
-    NSLayoutConstraint *bottomConstraint = nil;
+    NSLayoutConstraint *bottomLayoutConstraint = nil;
     CGFloat statusHeight = NSHeight([self frame]);
     NSArray *constraints;
     
@@ -172,21 +170,22 @@ static inline NSLayoutConstraint *bottomLayoutConstraint(NSView *view);
             [[contentView trailingAnchor]constraintEqualToAnchor:[self trailingAnchor]],
             [[contentView bottomAnchor] constraintEqualToAnchor:[self bottomAnchor] constant:animate ? -statusHeight : 0.0],
             [[self topAnchor] constraintEqualToAnchor:[view bottomAnchor]]];
-        [bottomLayoutConstraint(view) setActive:NO];
+        [bottomConstraint setActive:NO];
         [NSLayoutConstraint activateConstraints:constraints];
         [contentView layoutSubtreeIfNeeded];
-        bottomConstraint = [constraints objectAtIndex:2];
+        bottomConstraint = bottomLayoutConstraint = [constraints objectAtIndex:2];
     } else {
         constraints = @[[[contentView bottomAnchor] constraintEqualToAnchor:[view bottomAnchor]]];
-        bottomConstraint = bottomLayoutConstraint(self);
+        bottomLayoutConstraint = bottomConstraint;
+        bottomConstraint = [constraints objectAtIndex:0];
     }
     
     if (animate) {
         animating = YES;
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [context setDuration:0.5 * [context duration]];
-                [[bottomConstraint animator] setConstant:visible ? 0.0 : -statusHeight];
-                [[self animator] setWindowContentBorderThickness:visible ? statusHeight : 0.0];
+                [[bottomLayoutConstraint animator] setConstant:visible ? 0.0 : -statusHeight];
+            [[self animator] setWindowContentBorderThickness:visible ? statusHeight : 0.0];
             }
             completionHandler:^{
                 if (visible == NO) {
@@ -367,11 +366,3 @@ static inline NSLayoutConstraint *bottomLayoutConstraint(NSView *view);
 }
 
 @end
-
-static inline NSLayoutConstraint *bottomLayoutConstraint(NSView *view) {
-    for (NSLayoutConstraint *constraint in [[view superview] constraints]) {
-        if ([constraint secondItem] == view && [constraint secondAttribute] == NSLayoutAttributeBottom)
-            return constraint;
-    }
-    return nil;
-}

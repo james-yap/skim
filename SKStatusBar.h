@@ -54,8 +54,11 @@ typedef NS_ENUM(NSInteger, SKProgressIndicatorStyle) {
 	NSProgressIndicator *progressIndicator;
     NSLayoutConstraint *leftLeadingConstraint;
     NSLayoutConstraint *rightTrailingConstraint;
+    NSLayoutConstraint *bottomConstraint;
     BOOL animating;
 }
+
+@property (nonatomic, nullable, strong) IBOutlet NSLayoutConstraint *bottomConstraint;
 
 @property (nonatomic, readonly, getter=isVisible) BOOL visible;
 @property (nonatomic, readonly, getter=isAnimating) BOOL animating;

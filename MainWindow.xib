@@ -30,6 +30,9 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="22" id="fGI-iF-w0D"/>
                         </constraints>
+                        <connections>
+                            <outlet property="bottomConstraint" destination="Lpk-GO-C0x" id="cUb-TH-u1a"/>
+                        </connections>
                     </customView>
                 </subviews>
                 <constraints>
