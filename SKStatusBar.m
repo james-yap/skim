@@ -186,7 +186,7 @@ static inline NSLayoutConstraint *bottomLayoutConstraint(NSView *view);
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [context setDuration:0.5 * [context duration]];
                 [[bottomConstraint animator] setConstant:visible ? 0.0 : -statusHeight];
-            [[self animator] setWindowContentBorderThickness:visible ? statusHeight : 0.0];
+                [[self animator] setWindowContentBorderThickness:visible ? statusHeight : 0.0];
             }
             completionHandler:^{
                 if (visible == NO) {
