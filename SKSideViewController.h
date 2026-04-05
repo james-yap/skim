@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)requiresAlternateButtonForView:(NSView *)aView;
 
-- (void)displayTableAtIndex:(NSUInteger)idx animate:(BOOL)animate;
+- (void)displayTableAtIndex:(NSUInteger)idx;
 
 @end
 

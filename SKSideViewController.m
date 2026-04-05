@@ -45,7 +45,6 @@
 #import "NSView_SKExtensions.h"
 #import "NSWindow_SKExtensions.h"
 
-#define DURATION 0.7
 #define BORDER_INSET 1.0
 
 @implementation SKSideViewController
@@ -92,13 +91,10 @@
     return NO;
 }
 
-- (void)displayTableAtIndex:(NSUInteger)idx animate:(BOOL)animate {
+- (void)displayTableAtIndex:(NSUInteger)idx {
     NSScrollView *newView = [[[self tableViews] objectAtIndex:idx] enclosingScrollView];
     if ([newView superview] != nil)
         return;
-    
-    if (animate && ([NSView shouldShowFadeAnimation] == NO || [currentView window] == nil))
-        animate = NO;
     
     NSView *oldView = currentView;
     self.currentView = newView;
@@ -126,30 +122,14 @@
         [[newView topAnchor] constraintEqualToAnchor:[contentView topAnchor] constant:inset],
         [[contentView bottomAnchor] constraintEqualToAnchor:[newView bottomAnchor] constant:inset]];
     
-    if (animate == NO) {
-        [contentView replaceSubview:oldView with:newView];
-        [NSLayoutConstraint activateConstraints:constraints];
-        if (changeButton) {
-            [newButton setHidden:NO];
-            [oldButton setHidden:YES];
-        }
-        [[firstResponder window] makeFirstResponder:firstResponder];
-        [[contentView window] recalculateKeyViewLoop];
-    } else {
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [context setDuration:DURATION]; 
-                [[contentView animator] replaceSubview:oldView with:newView];
-                [NSLayoutConstraint activateConstraints:constraints];
-                if (changeButton) {
-                    [[newButton animator] setHidden:NO];
-                    [[oldButton animator] setHidden:YES];
-                }
-            }
-            completionHandler:^{
-                [[firstResponder window] makeFirstResponder:firstResponder];
-                [[contentView window] recalculateKeyViewLoop];
-        }];
+    [contentView replaceSubview:oldView with:newView];
+    [NSLayoutConstraint activateConstraints:constraints];
+    if (changeButton) {
+        [newButton setHidden:NO];
+        [oldButton setHidden:YES];
     }
+    [[firstResponder window] makeFirstResponder:firstResponder];
+    [[contentView window] recalculateKeyViewLoop];
 }
 
 @end

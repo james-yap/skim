@@ -375,8 +375,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     [self updateTableFont];
     
-    [leftSideController displayTableAtIndex:mwcFlags.leftSidePaneState animate:NO];
-    [rightSideController displayTableAtIndex:mwcFlags.rightSidePaneState animate:NO];
+    [leftSideController displayTableAtIndex:mwcFlags.leftSidePaneState];
+    [rightSideController displayTableAtIndex:mwcFlags.rightSidePaneState];
 
     // we need to create the PDFView before setting the toolbar
     pdfView = [[SKPDFView alloc] initWithFrame:[centerContentView bounds]];
@@ -1335,7 +1335,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if (mwcFlags.leftSidePaneState != newLeftSidePaneState || [self displaysFindPane]) {
         mwcFlags.leftSidePaneState = newLeftSidePaneState;
         
-        [leftSideController displayTableAtIndex:mwcFlags.leftSidePaneState animate:NO];
+        [leftSideController displayTableAtIndex:mwcFlags.leftSidePaneState];
     }
 }
 
@@ -1353,7 +1353,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
         mwcFlags.rightSidePaneState = newRightSidePaneState;
         
-        [rightSideController displayTableAtIndex:mwcFlags.rightSidePaneState animate:NO];
+        [rightSideController displayTableAtIndex:mwcFlags.rightSidePaneState];
     }
 }
 
@@ -1365,12 +1365,12 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if (mwcFlags.findPaneState != newFindPaneState) {
         mwcFlags.findPaneState = newFindPaneState;
         
-        [leftSideController displayTableAtIndex:2 + mwcFlags.findPaneState animate:NO];
+        [leftSideController displayTableAtIndex:2 + mwcFlags.findPaneState];
         [self updateFindResultHighlightsForDirection:NSDirectSelection];
         
     } else if ([self displaysFindPane] == NO) {
         
-        [leftSideController displayTableAtIndex:2 + mwcFlags.findPaneState animate:NO];
+        [leftSideController displayTableAtIndex:2 + mwcFlags.findPaneState];
     }
 }
 
