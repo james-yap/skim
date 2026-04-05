@@ -65,11 +65,9 @@
 @dynamic visible, icon, progressIndicatorStyle;
 
 + (id)defaultAnimationForKey:(NSString *)key {
-    if ([key isEqualToString:@"windowContentBorderThickness"]) {
-        CABasicAnimation *anim = [CABasicAnimation animation];
-        [anim setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
-        return anim;
-    } else
+    if ([key isEqualToString:@"windowContentBorderThickness"])
+        return [CABasicAnimation animation];
+    else
         return [super defaultAnimationForKey:key];
 }
 
