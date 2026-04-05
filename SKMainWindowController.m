@@ -1743,7 +1743,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         }
         CAAnimation *animation = [CATransition animation];
         [animation setDuration:OVERVIEW_DURATION];
-        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+        [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
         [[contentView layer] addAnimation:animation forKey:@"animation"];
     }
     
