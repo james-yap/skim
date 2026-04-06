@@ -365,7 +365,7 @@ static NSUInteger maxRecentDocumentsCount = 0;
 
 - (void)replaceBookmarksAtIndexes:(NSIndexSet *)indexes ofBookmark:(SKBookmark *)bookmark withBookmarks:(NSArray *)newBookmarks animate:(BOOL)animate {
     NSIndexSet *removeIndexes = indexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [bookmark countOfChildren])];
-    if ([NSView shouldShowSlideAnimation] == NO)
+    if (animate && [NSView shouldShowSlideAnimation] == NO)
         animate = NO;
     if ([removeIndexes count] > 0)
         [self removeBookmarksAtIndexes:removeIndexes ofBookmark:bookmark animate:animate];

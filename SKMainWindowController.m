@@ -1638,7 +1638,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if ([overviewView window])
         return;
     
-    if ([NSView shouldShowFadeAnimation] == NO)
+    if (animate && [NSView shouldShowFadeAnimation] == NO)
         animate = NO;
     
     if (overviewView == nil) {
@@ -1727,7 +1727,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if (window == nil)
         return;
     
-    if ([NSView shouldShowFadeAnimation] == NO)
+    if (animate && [NSView shouldShowFadeAnimation] == NO)
         animate = NO;
     
     // don't check interactionMode as this can be called from enterPresentation/exitPresentation
