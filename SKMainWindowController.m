@@ -1723,7 +1723,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 }
 
 - (void)hideOverviewAnimating:(BOOL)animate completionHandler:(void (^)(void))handler {
-    if ([overviewView window] == nil) {
+    NSWindow *window = [overviewContentView window];
+    if (window == nil) {
         if (handler)
             handler();
         return;
@@ -1732,9 +1733,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if ([NSView shouldShowFadeAnimation] == NO)
         animate = NO;
     
-    // don't check interactionMode as this can be called from enterPresentation
-    BOOL isPresentation = 0 == ([[overviewContentView window] styleMask] & NSWindowStyleMaskTitled);
-    NSView *contentView = [overviewContentView superview];
+    // don't check interactionMode as this can be called from enterPresentation/exitPresentation
+    BOOL isPresentation = (window == [presentationView window]);
     
     if (animate) {
         if (handler) {
@@ -1744,13 +1744,13 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         CAAnimation *animation = [CATransition animation];
         [animation setDuration:OVERVIEW_DURATION];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
-        [[contentView layer] addAnimation:animation forKey:@"animation"];
+        [[[overviewContentView superview] layer] addAnimation:animation forKey:@"animation"];
     }
     
     [overviewContentView removeFromSuperview];
     [(isPresentation ? presentationView : [splitViewController view]) setHidden:NO];
-    [[contentView window] makeFirstResponder:isPresentation ? presentationView : pdfView];
-    [[contentView window] recalculateKeyViewLoop];
+    [window makeFirstResponder:isPresentation ? presentationView : pdfView];
+    [window recalculateKeyViewLoop];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SKMainWindowControllerDidShowOrHideOverviewNotification object:self];
     
