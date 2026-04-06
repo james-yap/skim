@@ -1296,7 +1296,7 @@
     }
     
     if ([self hasOverview]) {
-        [self hideOverviewAnimating:YES completionHandler:^{ [self performFindPanelAction:sender]; }];
+        [self hideOverviewAnimating:YES completionHandler:^{ [self centerSelectionInVisibleArea:sender]; }];
         return;
     }
     
