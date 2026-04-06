@@ -785,7 +785,7 @@
 
 - (void)selectSearchFieldForSideViewController:(SKSideViewController *)sideViewController {
     if ([self hasOverview]) {
-        [self hideOverviewAnimating:YES completionHandler:^{ [self selectSearchFieldForSideViewController:sideViewController]; }];
+        [self hideOverviewWithCompletionHandler:^{ [self selectSearchFieldForSideViewController:sideViewController]; }];
     } else {
         NSSplitViewItem *item = [splitViewController splitViewItemForViewController:sideViewController];
         if ([item isCollapsed] == NO) {
@@ -1032,7 +1032,7 @@
         else
             [self showSideWindow];
     } else if ([self hasOverview]) {
-        [self hideOverviewAnimating:YES completionHandler:^{ [self toggleLeftSidePane:sender]; }];
+        [self hideOverviewWithCompletionHandler:^{ [self toggleLeftSidePane:sender]; }];
     } else {
         NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
         BOOL collapse = [item isCollapsed] == NO;
@@ -1046,7 +1046,7 @@
 - (IBAction)toggleRightSidePane:(id)sender {
     if ([self interactionMode] == SKPresentationMode) {
     } else if ([self hasOverview]) {
-        [self hideOverviewAnimating:YES completionHandler:^{ [self toggleRightSidePane:sender]; }];
+        [self hideOverviewWithCompletionHandler:^{ [self toggleRightSidePane:sender]; }];
     } else {
         NSSplitViewItem *item = [[splitViewController splitViewItems] lastObject];
         BOOL collapse = [item isCollapsed] == NO;
@@ -1078,7 +1078,7 @@
 
 - (IBAction)toggleSplitPDF:(id)sender {
     if ([self hasOverview]) {
-        [self hideOverviewAnimating:YES completionHandler:^{ [self toggleSplitPDF:sender]; }];
+        [self hideOverviewWithCompletionHandler:^{ [self toggleSplitPDF:sender]; }];
         return;
     }
     
@@ -1243,7 +1243,7 @@
     }
     
     if ([self hasOverview]) {
-        [self hideOverviewAnimating:YES completionHandler:^{ [self performFindPanelAction:sender]; }];
+        [self hideOverviewWithCompletionHandler:^{ [self performFindPanelAction:sender]; }];
         return;
     }
 	
@@ -1296,7 +1296,7 @@
     }
     
     if ([self hasOverview]) {
-        [self hideOverviewAnimating:YES completionHandler:^{ [self centerSelectionInVisibleArea:sender]; }];
+        [self hideOverviewWithCompletionHandler:^{ [self centerSelectionInVisibleArea:sender]; }];
         return;
     }
     

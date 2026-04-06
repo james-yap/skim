@@ -1722,13 +1722,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [[NSNotificationCenter defaultCenter] postNotificationName:SKMainWindowControllerDidShowOrHideOverviewNotification object:self];
 }
 
-- (void)hideOverviewAnimating:(BOOL)animate completionHandler:(void (^)(void))handler {
+- (void)hideOverviewAnimating:(BOOL)animate {
     NSWindow *window = [overviewContentView window];
-    if (window == nil) {
-        if (handler)
-            handler();
+    if (window == nil)
         return;
-    }
     
     if ([NSView shouldShowFadeAnimation] == NO)
         animate = NO;
@@ -1737,10 +1734,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     BOOL isPresentation = (window == [presentationView window]);
     
     if (animate) {
-        if (handler) {
-            [CATransaction begin];
-            [CATransaction setCompletionBlock:handler];
-        }
         CAAnimation *animation = [CATransition animation];
         [animation setDuration:OVERVIEW_DURATION];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
@@ -1753,18 +1746,18 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [window recalculateKeyViewLoop];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SKMainWindowControllerDidShowOrHideOverviewNotification object:self];
-    
-    if (handler) {
-        if (animate)
-            [CATransaction commit];
-        else
-            handler();
-    }
 }
 
-    
-- (void)hideOverviewAnimating:(BOOL)animate {
-    [self hideOverviewAnimating:(BOOL)animate completionHandler:NULL];
+- (void)hideOverviewWithCompletionHandler:(void (^)(void))completionHandler {
+    if ([NSView shouldShowFadeAnimation]) {
+        [CATransaction begin];
+        [CATransaction setCompletionBlock:completionHandler];
+        [self hideOverviewAnimating:YES];
+        [CATransaction commit];
+    } else {
+        [self hideOverviewAnimating:NO];
+        completionHandler();
+    }
 }
 
 - (NSInteger)collectionView:(NSCollectionView *)collectionView
@@ -1812,7 +1805,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     }
     
     if ([self hasOverview]) {
-        [self hideOverviewAnimating:YES completionHandler:^{
+        [self hideOverviewWithCompletionHandler:^{
             [self findString:string forward:forward];
         }];
         return YES;

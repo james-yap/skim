@@ -267,7 +267,7 @@ extern NSNotificationName const SKMainWindowControllerDidShowOrHideOverviewNotif
 
 - (void)showOverviewAnimating:(BOOL)animate;
 - (void)hideOverviewAnimating:(BOOL)animate;
-- (void)hideOverviewAnimating:(BOOL)animate completionHandler:(nullable void (^)(void))handler;
+- (void)hideOverviewWithCompletionHandler:(void (^)(void))completionHandler;
 
 - (void)showFindBar;
 
