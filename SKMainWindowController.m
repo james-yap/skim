@@ -1638,9 +1638,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if ([overviewView window])
         return;
     
-    if (animate && [NSView shouldShowFadeAnimation] == NO)
-        animate = NO;
-    
     if (overviewView == nil) {
         overviewView  = [[SKOverviewView alloc] init];
         NSScrollView *scrollView = [[NSScrollView alloc] init];
@@ -1705,7 +1702,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         mwcFlags.thumbnailsUpdatedDuringPresentaton = 1;
     }
     
-    if (animate) {
+    if (animate && [NSView shouldShowFadeAnimation]) {
         CAAnimation *animation = [CATransition animation];
         [animation setDuration:OVERVIEW_DURATION];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
@@ -1727,18 +1724,15 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if (window == nil)
         return;
     
-    if (animate && [NSView shouldShowFadeAnimation] == NO)
-        animate = NO;
-    
-    // don't check interactionMode as this can be called from enterPresentation/exitPresentation
-    BOOL isPresentation = (window == [presentationView window]);
-    
-    if (animate) {
+    if (animate && [NSView shouldShowFadeAnimation]) {
         CAAnimation *animation = [CATransition animation];
         [animation setDuration:OVERVIEW_DURATION];
         [animation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault]];
         [[[overviewContentView superview] layer] addAnimation:animation forKey:@"animation"];
     }
+    
+    // don't check interactionMode as this can be called from enterPresentation/exitPresentation
+    BOOL isPresentation = (window == [presentationView window]);
     
     [overviewContentView removeFromSuperview];
     [(isPresentation ? presentationView : [splitViewController view]) setHidden:NO];
