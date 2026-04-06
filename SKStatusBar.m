@@ -152,7 +152,7 @@
 - (void)toggleBelowView:(NSView *)view animate:(BOOL)animate {
     if (animating)
         return;
-    if (animate && [NSView shouldShowSlideAnimation] == NO)
+    if ([NSView shouldShowSlideAnimation] == NO)
         animate = NO;
     
     NSView *contentView = [view superview];

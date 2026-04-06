@@ -46,6 +46,7 @@
 #import "NSWindow_SKExtensions.h"
 
 #define BORDER_INSET 1.0
+#define DURATION 0.7
 
 @implementation SKSideViewController
 
@@ -91,10 +92,13 @@
     return NO;
 }
 
-- (void)displayTableAtIndex:(NSUInteger)idx {
+- (void)displayTableAtIndex:(NSUInteger)idx animate:(BOOL)animate {
     NSScrollView *newView = [[[self tableViews] objectAtIndex:idx] enclosingScrollView];
     if ([newView superview] != nil)
         return;
+    
+    if (animate && ([NSView shouldShowFadeAnimation] == NO || [currentView window] == nil))
+        animate = NO;
     
     NSView *oldView = currentView;
     self.currentView = newView;
@@ -122,14 +126,30 @@
         [[newView topAnchor] constraintEqualToAnchor:[contentView topAnchor] constant:inset],
         [[contentView bottomAnchor] constraintEqualToAnchor:[newView bottomAnchor] constant:inset]];
     
-    [contentView replaceSubview:oldView with:newView];
-    [NSLayoutConstraint activateConstraints:constraints];
-    if (changeButton) {
-        [newButton setHidden:NO];
-        [oldButton setHidden:YES];
+    if (animate) {
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
+                [context setDuration:DURATION];
+                [[contentView animator] replaceSubview:oldView with:newView];
+                [NSLayoutConstraint activateConstraints:constraints];
+                if (changeButton) {
+                    [[newButton animator] setHidden:NO];
+                    [[oldButton animator] setHidden:YES];
+                }
+            }];
+    } else {
+        [contentView replaceSubview:oldView with:newView];
+        [NSLayoutConstraint activateConstraints:constraints];
+        if (changeButton) {
+            [newButton setHidden:NO];
+            [oldButton setHidden:YES];
+        }
     }
     [[firstResponder window] makeFirstResponder:firstResponder];
     [[contentView window] recalculateKeyViewLoop];
+}
+
+- (void)displayTableAtIndex:(NSUInteger)idx {
+    [self displayTableAtIndex:idx animate:NO];
 }
 
 @end

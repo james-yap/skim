@@ -87,8 +87,6 @@
 
 #define MIN_SPLIT_PANE_HEIGHT 50.0
 
-#define SIDEPANE_DURATION 0.7
-
 #define SKShowToolbarInFullScreenKey @"SKShowToolbarInFullScreen"
 
 @interface SKMainWindowController (SKPrivateUI)
@@ -824,14 +822,8 @@
     
     if ([searchString length] == 0) {
         
-        if ([self displaysFindPane]) {
-            if ([NSView shouldShowFadeAnimation]) {
-                CAAnimation *animation = [CATransition animation];
-                [animation setDuration:SIDEPANE_DURATION];
-                [[leftSideController.sideView layer] addAnimation:animation forKey:@"animation"];
-            }
-            [leftSideController displayTableAtIndex:mwcFlags.leftSidePaneState];
-        }
+        if ([self displaysFindPane])
+            [leftSideController displayTableAtIndex:mwcFlags.leftSidePaneState animate:YES];
         [self updateRightStatus];
         
         [self setSearchResults:nil];
@@ -859,14 +851,8 @@
         } else {
             [pdfDoc beginFindString:[sender stringValue] withOptions:options];
         }
-        if ([self displaysFindPane] == NO) {
-            if ([NSView shouldShowFadeAnimation]) {
-                CAAnimation *animation = [CATransition animation];
-                [animation setDuration:SIDEPANE_DURATION];
-                [[leftSideController.sideView layer] addAnimation:animation forKey:@"animation"];
-            }
-            [leftSideController displayTableAtIndex:2 + mwcFlags.findPaneState];
-        }
+        if ([self displaysFindPane] == NO)
+            [leftSideController displayTableAtIndex:2 + mwcFlags.findPaneState animate:YES];
         
         NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSPasteboardNameFind];
         [findPboard clearContents];
