@@ -137,7 +137,7 @@ static CGFloat WINDOW_OFFSET = 8.0;
             [self makeKeyAndOrderFront:nil];
         else
             [self orderFront:nil];
-    } else if ([NSView shouldShowSlideAnimation] == NO) {
+    } else if ([NSView shouldShowSlideAnimation]) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
                 [[self animator] setFrame:frame display:YES];
             }
