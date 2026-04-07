@@ -131,35 +131,21 @@ static CGFloat WINDOW_OFFSET = 8.0;
     [window addChildWindow:self ordered:NSWindowAbove];
     
     frame.size.width = NSWidth([mainContentView frame]) + CONTENT_INSET;
-    if ([NSView shouldShowFadeAnimation] == NO) {
-        [self setFrame:frame display:YES];
+    if ([NSView shouldShowSlideAnimation]) {
         if ([window isKeyWindow])
             [self makeKeyAndOrderFront:nil];
-        else
-            [self orderFront:nil];
-    } else if ([NSView shouldShowSlideAnimation]) {
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [[self animator] setFrame:frame display:YES];
-            }
-            completionHandler:^{
-                if ([window isKeyWindow])
-                    [self makeKeyAndOrderFront:nil];
-                else
-                    [self orderFront:nil];
-            }];
-    } else {
+        [[self animator] setFrame:frame display:YES];
+    } else if ([NSView shouldShowFadeAnimation]) {
         CGFloat alpha = [self alphaValue];
         [self setAlphaValue:0.0];
         [self setFrame:frame display:YES];
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-                [[self animator] setAlphaValue:alpha];
-            }
-            completionHandler:^{
-                if ([window isKeyWindow])
-                    [self makeKeyAndOrderFront:nil];
-                else
-                    [self orderFront:nil];
-            }];
+        if ([window isKeyWindow])
+            [self makeKeyAndOrderFront:nil];
+        [[self animator] setAlphaValue:alpha];
+    } else {
+        [self setFrame:frame display:YES];
+        if ([window isKeyWindow])
+            [self makeKeyAndOrderFront:nil];
     }
 }
 
