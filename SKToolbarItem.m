@@ -71,7 +71,7 @@
 }
 
 - (void)setView:(NSView *)view {
-    if (@available(macOS 11.0, *)) {
+    if (@available(macOS 11.0, *)) {} else {
         if ([view isKindOfClass:[NSSegmentedControl class]] || [view isKindOfClass:[NSStepper class]])
             [(NSControl *)view sizeToFit];
     }
