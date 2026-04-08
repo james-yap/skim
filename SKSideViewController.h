@@ -63,7 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, weak) SKMainWindowController *mainController;
 
 @property (nonatomic) CGFloat topInset;
-@property (weak, nonatomic, readonly) NSArray<NSTableView *> *tableViews;
+@property (nonatomic, readonly) NSArray<NSTableView *> *tableViews;
 
 - (BOOL)requiresAlternateButtonForView:(NSView *)aView;
 
