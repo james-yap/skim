@@ -1114,13 +1114,6 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
 
 - (void)didOpen {
     [self setAutoScales:YES];
-    if ([pageLayer opacity] < 1.0) {
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        [pageLayer setOpacity:1.0];
-        [CATransaction commit];
-    }
-    
     [self performSelectorOnce:@selector(setCursorForMouse:) afterDelay:0.0];
     [self performSelectorOnce:@selector(autoHide) afterDelay:AUTO_HIDE_DELAY];
 }
@@ -1210,29 +1203,18 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
     }
 }
 
-- (void)resetAutoHide {
+- (void)willCloseOrHide {
     if ([pageLayer opacity] < 1.0) {
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
         [pageLayer setOpacity:1.0];
         [CATransaction commit];
     }
-    pvFlags.cursorHidden = NO;
-    [NSCursor setHiddenUntilMouseMoves:NO];
+    [self willClose];
     [[NSCursor arrowCursor] set];
-    if (navWindow) {
-        [navWindow remove];
-        navWindow = nil;
-    }
-    if (cursorWindow) {
-        [cursorWindow remove];
-        cursorWindow = nil;
-    }
 }
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow {
-    [self cancelDelayedRequests];
-    
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     NSWindow *oldWindow = [self window];
     if (oldWindow) {
@@ -1243,7 +1225,7 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
         [nc addObserver:self selector:@selector(handleWindowDidBecomeKeyNotification:) name:NSWindowDidBecomeKeyNotification object:newWindow];
         [nc addObserver:self selector:@selector(handleWindowDidResignKeyNotification:) name:NSWindowDidResignKeyNotification object:newWindow];
     } else {
-        [self resetAutoHide];
+        [self willCloseOrHide];
     }
     
     [super viewWillMoveToWindow:newWindow];
@@ -1257,8 +1239,7 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
 }
 
 - (void)viewDidHide {
-    [self cancelDelayedRequests];
-    [self resetAutoHide];
+    [self willCloseOrHide];
     
     [super viewDidHide];
 }
