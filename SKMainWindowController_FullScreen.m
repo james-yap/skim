@@ -140,14 +140,18 @@ static CGFloat fullScreenToolbarOffset = 0.0;
 #pragma mark Presentation Support Methods
 
 - (void)showNotesForPresentationWindow:(NSWindow *)window {
-    PDFDocument *pdfDoc = [[self presentationNotesDocument] pdfDocument];
+    NSDocument *notesDocument = [self presentationNotesDocument];
+    if (notesDocument == nil)
+        return;
+    
+    PDFDocument *pdfDoc = [notesDocument pdfDocument];
     NSInteger offset = [self presentationNotesOffset];
     NSUInteger pageIndex = MAX(0, MIN((NSInteger)[pdfDoc pageCount], (NSInteger)[[pdfView currentPage] pageIndex] + offset));
     
     if (presentationNotesAuxiliary == nil)
         presentationNotesAuxiliary = [[SKPresentationNotesAuxiliary alloc] init];
     
-    if ([self presentationNotesDocument] == [self document]) {
+    if (notesDocument == [self document]) {
         SKSnapshotWindowController *preview = [[SKSnapshotWindowController alloc] init];
         
         [presentationNotesAuxiliary setPreviewController:preview];
@@ -161,7 +165,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     
         [[self document] addWindowController:preview];
     } else {
-        [[self presentationNotesDocument] setCurrentPage:[pdfDoc pageAtIndex:pageIndex]];
+        [notesDocument setCurrentPage:[pdfDoc pageAtIndex:pageIndex]];
     }
     [self addPresentationNotesNavigation];
 }
@@ -263,8 +267,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     
     [presentationWindow orderFront:nil];
     
-    if ([self presentationNotesDocument])
-        [self showNotesForPresentationWindow:presentationWindow];
+    [self showNotesForPresentationWindow:presentationWindow];
     
     BOOL shouldFadeOut = NO;
     if ([[normalWindow tabbedWindows] count] > 1) {
