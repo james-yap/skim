@@ -105,7 +105,7 @@
     
     BOOL wasAlternate = [self requiresAlternateButtonForView:oldView];
     BOOL isAlternate = [self requiresAlternateButtonForView:newView];
-    BOOL changeButton = wasAlternate != isAlternate;
+    BOOL changeButton = alternateButton && wasAlternate != isAlternate;
     NSSegmentedControl *oldButton = wasAlternate ? alternateButton : button;
     NSSegmentedControl *newButton = isAlternate ? alternateButton : button;
     NSView *contentView = [oldView superview];
