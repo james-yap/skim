@@ -113,7 +113,7 @@
     
     if ([[oldView window] firstResponderIsDescendantOf:oldView])
         firstResponder = newView;
-    else if (wasAlternate != isAlternate && [[[oldView window] firstResponder] isEqual:oldButton])
+    else if (changeButton && wasAlternate != isAlternate && [[[oldView window] firstResponder] isEqual:oldButton])
         firstResponder = newButton;
     
     [[SKImageToolTipWindow sharedToolTipWindow] orderOut:self];
