@@ -2005,13 +2005,17 @@
     undoGroupOldPropertiesPerNote = nil;
 }
 
-- (void)handleSplitViewDidResizeSubviewsNotification:(NSNotification *)notification {
+- (void)splitViewDidResizeSubviewsDelayed {
     NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
     CGFloat width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
     [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKLeftSidePaneWidthKey];
     item = [[splitViewController splitViewItems] lastObject];
     width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
     [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKRightSidePaneWidthKey];
+}
+
+- (void)handleSplitViewDidResizeSubviewsNotification:(NSNotification *)notification {
+    [self performSelectorOnce:@selector(splitViewDidResizeSubviewsDelayed) afterDelay:0.0];
 }
 
 #pragma mark Observer registration
