@@ -630,7 +630,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
         [menuItem setState:[self displaysPageBreaks] ? NSControlStateValueOn : NSControlStateValueOff];
         return YES;
     } else if ([menuItem action] == @selector(doActualSize:)) {
-        [menuItem setState:fabs([self scaleFactor] - 1.0) > 0.0 ? NSControlStateValueOff : NSControlStateValueOn];
+        [menuItem setState:[self autoScales] || [self synchronizeZoom] || fabs([self scaleFactor] - 1.0) > 0.0 ? NSControlStateValueOff : NSControlStateValueOn];
         return YES;
     } else if ([menuItem action] == @selector(doPhysicalSize:)) {
         [menuItem setState:([self autoScales] || fabs([self physicalScaleFactor] - 1.0) > 0.001) ? NSControlStateValueOff : NSControlStateValueOn];
@@ -764,7 +764,8 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
             return YES;
         }
     }
-    if ([[SKSecondaryPDFView superclass] instancesRespondToSelector:_cmd])            [super writeSelectionToPasteboard:pboard types:types];
+    if ([[SKSecondaryPDFView superclass] instancesRespondToSelector:_cmd])
+        [super writeSelectionToPasteboard:pboard types:types];
     return NO;
 }
 
@@ -803,7 +804,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
 }
 
 - (void)handlePDFViewScaleChangedNotification:(NSNotification *)notification {
-    if ([self autoScales] == NO && [self synchronizeZoom] == NO)
+    if ([self autoScales] == NO && [self synchronizeZoom] == NO && switching == NO)
         [self setScaleFactor:fmax([self scaleFactor], SKMinDefaultScaleMenuFactor) adjustPopup:YES];
 }
 

@@ -269,7 +269,7 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.1, 0.2, 0.25, 0.35, 0.5, 0.
 }
 
 - (void)handlePDFViewScaleChangedNotification:(NSNotification *)notification {
-    if ([self autoFits] == NO && [self autoScales] == NO)
+    if ([self autoFits] == NO && [self autoScales] == NO && switching == NO)
         [self setScaleFactor:fmax([self scaleFactor], SKMinDefaultScaleMenuFactor) adjustPopup:YES];
 }
 
