@@ -101,7 +101,6 @@
             [[leftField centerYAnchor]constraintEqualToAnchor:[self centerYAnchor]],
             [[self trailingAnchor]constraintEqualToAnchor:[rightField trailingAnchor] constant:RIGHT_MARGIN],
             [[rightField centerYAnchor] constraintEqualToAnchor:[self centerYAnchor]]];
-        [constraints setValue:@YES forKey:@"shouldBeArchived"];
         leftLeadingConstraint = [constraints objectAtIndex:0];
         rightTrailingConstraint = [constraints objectAtIndex:2];
         [NSLayoutConstraint activateConstraints:constraints];
@@ -120,8 +119,24 @@
         rightField = [decoder decodeObjectForKey:@"rightField"];
         iconView = [decoder decodeObjectForKey:@"iconView"];
         progressIndicator = [decoder decodeObjectForKey:@"progressIndicator"];
-        leftLeadingConstraint = [decoder decodeObjectForKey:@"leftLeadingConstraint"];
-        rightTrailingConstraint = [decoder decodeObjectForKey:@"rightTrailingConstraint"];
+        
+        NSArray *constraints = @[
+            [[leftField leadingAnchor] constraintEqualToAnchor:[self leadingAnchor] constant:LEFT_MARGIN],
+            [[leftField centerYAnchor]constraintEqualToAnchor:[self centerYAnchor]],
+            [[self trailingAnchor]constraintEqualToAnchor:[rightField trailingAnchor] constant:RIGHT_MARGIN],
+            [[rightField centerYAnchor] constraintEqualToAnchor:[self centerYAnchor]]];
+        leftLeadingConstraint = [constraints objectAtIndex:0];
+        rightTrailingConstraint = [constraints objectAtIndex:2];
+        [NSLayoutConstraint activateConstraints:constraints];
+        
+        if (iconView) {
+            [iconView removeFromSuperview];
+            iconView = nil;
+        }
+        if (progressIndicator) {
+            [progressIndicator removeFromSuperview];
+            progressIndicator = nil;
+        }
         animating = NO;
 	}
 	return self;
@@ -133,8 +148,6 @@
     [coder encodeConditionalObject:rightField forKey:@"rightField"];
     [coder encodeConditionalObject:iconView forKey:@"iconView"];
     [coder encodeConditionalObject:progressIndicator forKey:@"progressIndicator"];
-    [coder encodeConditionalObject:leftLeadingConstraint forKey:@"leftLeadingConstraint"];
-    [coder encodeConditionalObject:rightTrailingConstraint forKey:@"rightTrailingConstraint"];
 }
 
 - (BOOL)isVisible {
