@@ -1823,7 +1823,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         selection = [pdfDoc findString:string fromSelection:nil withOptions:options];
     if (selection) {
         PDFPage *page = [selection safeFirstPage];
-        [pdfView goToRect:[selection boundsForPage:page] onPage:page];
+        [pdfView goToRect:NSInsetRect([selection boundsForPage:page], 0.0, -20.0) onPage:page];
         [leftSideController.findTableView deselectAll:self];
         [leftSideController.groupedFindTableView deselectAll:self];
         [pdfView setCurrentSelection:selection animate:YES];
