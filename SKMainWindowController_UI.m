@@ -536,6 +536,7 @@
     if ([[[[aNotification userInfo] objectForKey:@"NSTableColumn"] identifier] isEqualToString:IMAGE_COLUMNID]) {
         NSTableView *tv = [aNotification object];
         if ([tv isEqual:leftSideController.thumbnailTableView] || [tv isEqual:rightSideController.snapshotTableView]) {
+            [self performSelectorOnce:@selector(invalidateRowHeightsForTableView:) withObject:tv afterDelay:0.0];
             [(SKTableView *)tv noteHeightOfRowsChangedAnimating:NO];
         }
     }

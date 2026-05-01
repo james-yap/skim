@@ -139,9 +139,6 @@
 
 #define LABEL_COLUMNID  @"label"
 
-#define RELEVANCE_COLUMNID  @"relevance"
-#define RESULTS_COLUMNID    @"results"
-
 #define PAGELABEL_KEY   @"pageLabel"
 
 #define MAINWINDOWFRAME_KEY         @"windowFrame"
