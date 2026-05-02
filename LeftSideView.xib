@@ -451,7 +451,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="127" height="17"/>
                                             </visualEffectView>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Fy-Cz-Uit">
-                                                <rect key="frame" x="1" y="1" width="125" height="15"/>
+                                                <rect key="frame" x="0.0" y="1" width="127" height="15"/>
                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" id="W4J-nI-eOk">
                                                     <font key="font" metaFont="cellTitle"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -467,9 +467,9 @@
                                             <constraint firstAttribute="trailing" secondItem="JPg-TA-CTy" secondAttribute="trailing" id="3ix-Qp-JTR"/>
                                             <constraint firstItem="JPg-TA-CTy" firstAttribute="leading" secondItem="J7W-Ii-xfs" secondAttribute="leading" id="7mF-oe-xcQ"/>
                                             <constraint firstItem="JPg-TA-CTy" firstAttribute="top" secondItem="J7W-Ii-xfs" secondAttribute="top" id="HXm-ID-lvc"/>
-                                            <constraint firstItem="6Fy-Cz-Uit" firstAttribute="leading" secondItem="J7W-Ii-xfs" secondAttribute="leading" constant="3" id="Ov9-R3-f5H"/>
+                                            <constraint firstItem="6Fy-Cz-Uit" firstAttribute="leading" secondItem="J7W-Ii-xfs" secondAttribute="leading" constant="2" id="Ov9-R3-f5H"/>
                                             <constraint firstAttribute="bottom" secondItem="JPg-TA-CTy" secondAttribute="bottom" id="P9C-56-Pl1"/>
-                                            <constraint firstAttribute="trailing" secondItem="6Fy-Cz-Uit" secondAttribute="trailing" priority="251" constant="3" id="awE-wD-FnJ"/>
+                                            <constraint firstAttribute="trailing" secondItem="6Fy-Cz-Uit" secondAttribute="trailing" priority="251" constant="2" id="awE-wD-FnJ"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="textField" destination="6Fy-Cz-Uit" id="dNo-ri-DUe"/>
