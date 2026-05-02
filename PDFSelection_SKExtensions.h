@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, readonly) NSString *cleanedString;
 @property (nonatomic, nullable, readonly) NSAttributedString *contextString;
 
+- (void)invalidateContextString;
+
 @property (nonatomic, nullable, readonly) PDFDestination *destination;
 
 - (NSUInteger)safeIndexOfFirstCharacterOnPage:(PDFPage *)page;

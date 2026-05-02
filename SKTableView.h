@@ -67,6 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)tableView:(NSTableView *)aTableView typeSelectHelperDidFailToFindMatchForSearchString:(NSString *)searchString;
 - (void)tableView:(NSTableView *)aTableView typeSelectHelperUpdateSearchString:(NSString *)searchString;
 
+- (void)tableViewDidEndLiveResize:(NSTableView *)aTableView;
+
 @end
 
 typedef NS_ENUM(NSInteger, SKTableImageToolTipLayout) {

@@ -194,6 +194,7 @@ extern NSNotificationName const SKMainWindowControllerDidShowOrHideOverviewNotif
         unsigned int needsCleanup:1;
         unsigned int thumbnailsNeedUpdateAfterPresentaton:1;
         unsigned int thumbnailsUpdatedDuringPresentaton:1;
+        unsigned int findRowHeightsNeedUpdate:1;
     } mwcFlags;
 }
 

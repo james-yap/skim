@@ -100,6 +100,7 @@
 #define AUTHOR_COLUMNID     @"author"
 #define DATE_COLUMNID       @"date"
 #define IMAGE_COLUMNID      @"image"
+#define RESULTS_COLUMNID    @"results"
 #define RELEVANCE_COLUMNID  @"relevance"
 
 #define HEADER_IDENTIFIER @"header"
@@ -115,8 +116,9 @@
 #define DEFAULT_TEXT_ROW_HEIGHT 85.0
 #define DEFAULT_MARKUP_ROW_HEIGHT 50.0
 
-#define EXTRA_FIND_ROW_WIDTH 4.0
+#define EXTRA_FIND_ROW_HEIGHT 6.0
 #define FIND_HEADER_ROW_HEIGHT 16.0
+#define MAX_FIND_LINES 5
 
 @interface SKMainWindowController (SKPrivateMain)
 
@@ -531,14 +533,30 @@
     }
     return NO;
 }
-
+   
 - (void)tableViewColumnDidResize:(NSNotification *)aNotification {
-    if ([[[[aNotification userInfo] objectForKey:@"NSTableColumn"] identifier] isEqualToString:IMAGE_COLUMNID]) {
-        NSTableView *tv = [aNotification object];
+    NSString *tcID = [[[aNotification userInfo] objectForKey:@"NSTableColumn"] identifier];
+    if ([tcID isEqualToString:IMAGE_COLUMNID]) {
+        SKTableView *tv = [aNotification object];
         if ([tv isEqual:leftSideController.thumbnailTableView] || [tv isEqual:rightSideController.snapshotTableView]) {
-            [self performSelectorOnce:@selector(invalidateRowHeightsForTableView:) withObject:tv afterDelay:0.0];
-            [(SKTableView *)tv noteHeightOfRowsChangedAnimating:NO];
+            [tv noteHeightOfRowsChangedAnimating:NO];
         }
+    } else if ([tcID isEqualToString:RESULTS_COLUMNID]) {
+        SKTableView *tv = [aNotification object];
+        if ([tv isEqual:leftSideController.findTableView]) {
+            if ([tv inLiveResize])
+                mwcFlags.findRowHeightsNeedUpdate = YES;
+            else
+                [tv noteHeightOfRowsChangedAnimating:NO];
+        }
+    }
+}
+
+- (void)tableViewDidEndLiveResize:(NSTableView *)tv {
+    if ([tv isEqual:leftSideController.findTableView] && mwcFlags.findRowHeightsNeedUpdate) {
+        if ([searchResults count] > 1)
+            [leftSideController.findTableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, [searchResults count] - 1)]];
+        mwcFlags.findRowHeightsNeedUpdate = NO;
     }
 }
 
@@ -552,7 +570,15 @@
         thumbSize = [[(SKSnapshotWindowController *)[[rightSideController.snapshotArrayController arrangedObjects] objectAtIndex:row] thumbnail] size];
         thumbHeight = snapshotThumbnailSize;
     } else if ([tv isEqual:leftSideController.findTableView]) {
-        return row == 0 ? FIND_HEADER_ROW_HEIGHT : rowHeight + EXTRA_FIND_ROW_WIDTH;
+        if (row == 0)
+            return FIND_HEADER_ROW_HEIGHT;
+        NSTableColumn *tc = [tv tableColumnWithIdentifier:RESULTS_COLUMNID];
+        NSTextFieldCell *cell = [tc dataCell];
+        [cell setObjectValue:[[[leftSideController.findArrayController arrangedObjects] objectAtIndex:row] contextString]];
+        CGFloat height = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, [tc width], CGFLOAT_MAX)].height;
+        if (height > MAX_FIND_LINES * (rowHeight - 3.0))
+            height = fmin(height, MAX_FIND_LINES * [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, CGFLOAT_MAX, CGFLOAT_MAX)].height);
+        return fmax(rowHeight, height + EXTRA_FIND_ROW_HEIGHT);
     } else if ([tv isEqual:leftSideController.groupedFindTableView]) {
         return row == 0 ? FIND_HEADER_ROW_HEIGHT : rowHeight;
     } else {

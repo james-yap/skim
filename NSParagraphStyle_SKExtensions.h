@@ -43,6 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSParagraphStyle (SKExtensions)
 @property (class, nonatomic, readonly) NSParagraphStyle *defaultClippingParagraphStyle;
 @property (class, nonatomic, readonly) NSParagraphStyle *defaultTruncatingTailParagraphStyle;
+@property (class, nonatomic, readonly) NSParagraphStyle *defaultWrappingParagraphStyle;
 @end
 
 NS_ASSUME_NONNULL_END

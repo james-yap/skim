@@ -61,4 +61,16 @@
     return defaultTruncatingTailParagraphStyle;
 }
 
++ (NSParagraphStyle *)defaultWrappingParagraphStyle {
+    static NSParagraphStyle *defaultWrappingParagraphStyle = nil;
+    if (defaultWrappingParagraphStyle == nil) {
+        NSMutableParagraphStyle *tmpParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        [tmpParagraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
+        if (@available(macOS 11.0, *))
+            [tmpParagraphStyle setLineBreakStrategy:NSLineBreakStrategyStandard];
+        defaultWrappingParagraphStyle = [tmpParagraphStyle copy];
+    }
+    return defaultWrappingParagraphStyle;
+}
+
 @end

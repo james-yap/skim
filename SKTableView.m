@@ -274,11 +274,18 @@
         [self enumerateAvailableRowViewsUsingBlock:^(NSTableRowView *rowView, NSInteger row){ [rowView setEmphasized:NO]; }];
 }
 
+- (void)viewDidEndLiveResize {
+    [super viewDidEndLiveResize];
+    if ([[self delegate] respondsToSelector:@selector(tableViewDidEndLiveResize:)])
+        [[self delegate] tableViewDidEndLiveResize:self];
+}
+
 - (void)draggingSession:(NSDraggingSession *)session endedAtPoint:(NSPoint)screenPoint operation:(NSDragOperation)operation {
     if ([[SKTableView superclass] instancesRespondToSelector:_cmd])
         [super draggingSession:session endedAtPoint:screenPoint operation:operation];
     [[session draggingPasteboard] clearContents];
 }
+
 #pragma mark Tracking
 
 - (BOOL)hasRowImageToolTips {

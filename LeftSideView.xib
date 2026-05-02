@@ -394,9 +394,10 @@
                                             </textField>
                                         </subviews>
                                         <constraints>
+                                            <constraint firstItem="5CV-AT-Wi3" firstAttribute="top" secondItem="rTN-Wm-aea" secondAttribute="top" priority="260" constant="3" id="17P-N4-VSY"/>
                                             <constraint firstItem="5CV-AT-Wi3" firstAttribute="leading" secondItem="rTN-Wm-aea" secondAttribute="leading" constant="2" id="1af-hZ-zDh"/>
                                             <constraint firstAttribute="trailing" secondItem="5CV-AT-Wi3" secondAttribute="trailing" constant="2" id="SHs-Ad-Ow7"/>
-                                            <constraint firstItem="5CV-AT-Wi3" firstAttribute="centerY" secondItem="rTN-Wm-aea" secondAttribute="centerY" id="vbK-eq-WEx"/>
+                                            <constraint firstItem="5CV-AT-Wi3" firstAttribute="centerY" relation="lessThanOrEqual" secondItem="rTN-Wm-aea" secondAttribute="centerY" id="vbK-eq-WEx"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="textField" destination="5CV-AT-Wi3" id="phD-a5-G8O"/>
@@ -409,7 +410,7 @@
                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" white="0.33333298560000002" alpha="1" colorSpace="calibratedWhite"/>
                                 </tableHeaderCell>
-                                <textFieldCell key="dataCell" lineBreakMode="truncatingTail" alignment="left" id="115">
+                                <textFieldCell key="dataCell" truncatesLastVisibleLine="YES" sendsActionOnEndEditing="YES" alignment="left" id="115">
                                     <font key="font" metaFont="cellTitle"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -420,9 +421,9 @@
                                         <rect key="frame" x="61" y="0.0" width="127" height="17"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EK0-Iy-KhJ">
-                                                <rect key="frame" x="0.0" y="1" width="127" height="15"/>
-                                                <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="left" id="t89-Nc-Fkj">
+                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EK0-Iy-KhJ">
+                                                <rect key="frame" x="0.0" y="3" width="127" height="11"/>
+                                                <textFieldCell key="cell" truncatesLastVisibleLine="YES" sendsActionOnEndEditing="YES" alignment="left" id="t89-Nc-Fkj">
                                                     <font key="font" metaFont="cellTitle"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -433,8 +434,9 @@
                                             </textField>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="EK0-Iy-KhJ" firstAttribute="centerY" secondItem="yHY-cQ-hrW" secondAttribute="centerY" id="I0A-CW-rEo"/>
-                                            <constraint firstAttribute="trailing" secondItem="EK0-Iy-KhJ" secondAttribute="trailing" priority="251" constant="2" id="Ihy-Fe-pIN"/>
+                                            <constraint firstAttribute="trailing" secondItem="EK0-Iy-KhJ" secondAttribute="trailing" constant="2" id="Ihy-Fe-pIN"/>
+                                            <constraint firstItem="EK0-Iy-KhJ" firstAttribute="top" secondItem="yHY-cQ-hrW" secondAttribute="top" constant="3" id="TmG-Ui-8dT"/>
+                                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="EK0-Iy-KhJ" secondAttribute="bottom" constant="3" id="Vqb-Ta-cSY"/>
                                             <constraint firstItem="EK0-Iy-KhJ" firstAttribute="leading" secondItem="yHY-cQ-hrW" secondAttribute="leading" constant="2" id="lWu-vh-s2s"/>
                                         </constraints>
                                         <connections>
@@ -449,7 +451,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="127" height="17"/>
                                             </visualEffectView>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Fy-Cz-Uit">
-                                                <rect key="frame" x="0.0" y="1" width="127" height="15"/>
+                                                <rect key="frame" x="1" y="1" width="125" height="15"/>
                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" id="W4J-nI-eOk">
                                                     <font key="font" metaFont="cellTitle"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -465,9 +467,9 @@
                                             <constraint firstAttribute="trailing" secondItem="JPg-TA-CTy" secondAttribute="trailing" id="3ix-Qp-JTR"/>
                                             <constraint firstItem="JPg-TA-CTy" firstAttribute="leading" secondItem="J7W-Ii-xfs" secondAttribute="leading" id="7mF-oe-xcQ"/>
                                             <constraint firstItem="JPg-TA-CTy" firstAttribute="top" secondItem="J7W-Ii-xfs" secondAttribute="top" id="HXm-ID-lvc"/>
-                                            <constraint firstItem="6Fy-Cz-Uit" firstAttribute="leading" secondItem="J7W-Ii-xfs" secondAttribute="leading" constant="2" id="Ov9-R3-f5H"/>
+                                            <constraint firstItem="6Fy-Cz-Uit" firstAttribute="leading" secondItem="J7W-Ii-xfs" secondAttribute="leading" constant="3" id="Ov9-R3-f5H"/>
                                             <constraint firstAttribute="bottom" secondItem="JPg-TA-CTy" secondAttribute="bottom" id="P9C-56-Pl1"/>
-                                            <constraint firstAttribute="trailing" secondItem="6Fy-Cz-Uit" secondAttribute="trailing" priority="251" constant="2" id="awE-wD-FnJ"/>
+                                            <constraint firstAttribute="trailing" secondItem="6Fy-Cz-Uit" secondAttribute="trailing" priority="251" constant="3" id="awE-wD-FnJ"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="textField" destination="6Fy-Cz-Uit" id="dNo-ri-DUe"/>

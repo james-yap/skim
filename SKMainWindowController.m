@@ -2673,10 +2673,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             [secondaryPdfView setNeedsDisplay:YES];
             [self allThumbnailsNeedUpdate];
         } else if ([keyPath isEqualToString:SKTableFontSizeKey]) {
+            if ([searchResults count] > 1)
+                [[searchResults subarrayWithRange:NSMakeRange(1, [searchResults count] - 1)] makeObjectsPerformSelector:@selector(invalidateContextString)];
             [self updateTableFont];
             [self updatePageColumnWidthForTableViews:[NSArray arrayWithObjects:leftSideController.tocOutlineView, rightSideController.noteOutlineView, leftSideController.findTableView, leftSideController.groupedFindTableView, nil]];
-            if ([searchResults count] > 1)
-                [leftSideController.findTableView reloadDataForRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, [searchResults count] - 1)] columnIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]];
         }
         
     } else if (context == &SKMainWindowAppObservationContext) {

@@ -45,12 +45,15 @@
 #import "NSPointerArray_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "NSCharacterSet_SKExtensions.h"
+#import <objc/objc-runtime.h>
 
 #define SKIncludeNewlinesFromEnclosedTextKey @"SKIncludeNewlinesFromEnclosedText"
 
 #define ELLIPSIS_CHARACTER (unichar)0x2026
 #define HYPHEN_CHARACTER (unichar)0x002D
 #define SOFT_HYPHEN_CHARACTER (unichar)0x00AD
+
+static char SKContextStringKey;
 
 @interface NSTextStorage (SKNSSubTextStoragePrivateDeclarations)
 - (NSRange)range;
@@ -115,7 +118,7 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
     return [self compactedCleanedString];
 }
 
-- (NSAttributedString *)contextString {
+- (NSAttributedString *)_contextString {
 	NSMutableAttributedString *attributedSample;
     NSString *searchString = [self compactedCleanedString] ?: @"";
     PDFSelection *extendedSelection;
@@ -124,7 +127,7 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
 	NSString *ellipse = [NSString stringWithFormat:@"%C", ELLIPSIS_CHARACTER];
 	NSRange foundRange;
     CGFloat fontSize = [[NSUserDefaults standardUserDefaults] doubleForKey:SKTableFontSizeKey] - 2.0;
-    NSDictionary *attributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont systemFontOfSize:fontSize], NSFontAttributeName, [NSParagraphStyle defaultTruncatingTailParagraphStyle], NSParagraphStyleAttributeName, nil];
+    NSDictionary *attributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont systemFontOfSize:fontSize], NSFontAttributeName, [NSParagraphStyle defaultWrappingParagraphStyle], NSParagraphStyleAttributeName, nil];
     PDFPage *page = [self safeFirstPage];
     NSString *pageString = [page string];
     NSUInteger length = [pageString length];
@@ -171,6 +174,21 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
         [attributedString appendString:ellipse];
     
 	return attributedSample;
+}
+
+- (NSAttributedString *)contextString {
+    NSAttributedString *contextString = objc_getAssociatedObject(self, &SKContextStringKey);
+    if (contextString == nil) {
+        contextString = [self _contextString];
+        objc_setAssociatedObject(self, &SKContextStringKey, contextString, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    return contextString;
+}
+
+- (void)invalidateContextString {
+    [self willChangeValueForKey:@"contextString"];
+    objc_setAssociatedObject(self, &SKContextStringKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    [self didChangeValueForKey:@"contextString"];
 }
 
 - (PDFDestination *)destination {
