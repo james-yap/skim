@@ -127,7 +127,7 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
 	NSString *ellipse = [NSString stringWithFormat:@"%C", ELLIPSIS_CHARACTER];
 	NSRange foundRange;
     CGFloat fontSize = [[NSUserDefaults standardUserDefaults] doubleForKey:SKTableFontSizeKey] - 2.0;
-    NSDictionary *attributes = [[NSDictionary alloc] initWithObjectsAndKeys:[NSFont systemFontOfSize:fontSize], NSFontAttributeName, [NSParagraphStyle defaultWrappingParagraphStyle], NSParagraphStyleAttributeName, nil];
+    NSDictionary *attributes = @{NSFontAttributeName: [NSFont systemFontOfSize:fontSize], NSParagraphStyleAttributeName: [NSParagraphStyle defaultWrappingParagraphStyle]};
     PDFPage *page = [self safeFirstPage];
     NSString *pageString = [page string];
     NSUInteger length = [pageString length];
