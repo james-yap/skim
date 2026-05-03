@@ -133,25 +133,23 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
     NSUInteger length = [pageString length];
     NSUInteger i = [self safeIndexOfFirstCharacterOnPage:page];
     NSUInteger j = [self safeIndexOfLastCharacterOnPage:page];
-    NSUInteger start = 0;
-    NSUInteger end = length;
-    
+    NSUInteger start = 0, end = length;
+    NSUInteger before = 20, after = 50;
+
     // Extend selection, try to break at space
-    if (i > 15) {
-        NSUInteger k = NSMaxRange([pageString rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] options:0 range:NSMakeRange(i - 15, 15)]);
-        if (k == NSNotFound)
-            start = i - 10;
-        else if (k + 5 <= i)
-            start = k;
-        else
-            start = i - 15;
+    if (i > before) {
+        start = NSMaxRange([pageString rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] options:0 range:NSMakeRange(i - before, 15)]);
+        if (start == NSNotFound)
+            start = i - before + 5;
+        else if (start + 5 > i)
+            start = i - before;
     }
-    if (j + 55 < length) {
-        NSUInteger k = [pageString rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] options:NSBackwardsSearch range:NSMakeRange(j + 40, 15)].location;
-        if (k == NSNotFound)
-            end = j + 50;
-        else
-            end = k;
+    if (j + after < length) {
+        end = [pageString rangeOfCharacterFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] options:NSBackwardsSearch range:NSMakeRange(j + after - 15, 15)].location;
+        if (end == NSNotFound)
+            end = j + after - 5;
+        else if (end < j + 5)
+            end = j + after;
     }
     extendedSelection = [page selectionForRange:NSMakeRange(start, end - start)];
     
