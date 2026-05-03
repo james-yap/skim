@@ -922,7 +922,7 @@
 }
 
 - (void)outlineViewColumnDidMove:(NSNotification *)notification {
-    if ([[notification object] isEqual:rightSideController.noteOutlineView] && mwcFlags.autoResizeNoteRows) {
+    if (mwcFlags.autoResizeNoteRows && [[notification object] isEqual:rightSideController.noteOutlineView]) {
         NSInteger oldColumn = [[[notification userInfo] objectForKey:@"NSOldColumn"] integerValue];
         NSInteger newColumn = [[[notification userInfo] objectForKey:@"NSNewColumn"] integerValue];
         if (oldColumn == 0 || newColumn == 0)
