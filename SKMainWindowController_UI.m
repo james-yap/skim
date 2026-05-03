@@ -2018,7 +2018,6 @@
 
 - (void)handleNoteViewFrameDidChangeNotification:(NSNotification *)notification {
     if (mwcFlags.autoResizeNoteRows) {
-        [self performSelectorOnce:@selector(resetNoteRowHeights) afterDelay:0.0];
         [rightSideController.noteOutlineView resetRowHeights];
         [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
     }
