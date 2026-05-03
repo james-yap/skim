@@ -1820,7 +1820,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         selection = [pdfDoc findString:string fromSelection:nil withOptions:options];
     if (selection) {
         PDFPage *page = [selection safeFirstPage];
-        [pdfView goToRect:NSInsetRect([selection boundsForPage:page], 0.0, -20.0) onPage:page];
+        NSRect rect = [selection boundsForPage:page];
+        rect = ([page rotation] & 180) ? NSInsetRect(rect, -20.0, -10.0) : NSInsetRect(rect, -10.0, -20.0);
+        [pdfView goToRect:rect onPage:page];
         [leftSideController.findTableView deselectAll:self];
         [leftSideController.groupedFindTableView deselectAll:self];
         [pdfView setCurrentSelection:selection animate:YES];
