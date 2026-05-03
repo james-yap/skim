@@ -553,7 +553,7 @@
 }
 
 - (void)tableViewDidEndLiveResize:(NSTableView *)tv {
-    if ([tv isEqual:leftSideController.findTableView] && mwcFlags.findRowHeightsNeedUpdate) {
+    if (mwcFlags.findRowHeightsNeedUpdate && [tv isEqual:leftSideController.findTableView]) {
         if ([searchResults count] > 1)
             [leftSideController.findTableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, [searchResults count] - 1)]];
         mwcFlags.findRowHeightsNeedUpdate = NO;
