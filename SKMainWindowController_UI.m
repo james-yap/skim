@@ -2024,14 +2024,18 @@
 }
 
 - (void)handleNoteViewFrameDidChangeNotification:(NSNotification *)notification {
-    if (mwcFlags.autoResizeNoteRows && [[notification object] inLiveResize] == NO) {
-        [rightSideController.noteOutlineView resetRowHeights];
-        [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
+    if (mwcFlags.autoResizeNoteRows) {
+        if ([[notification object] inLiveResize] == NO) {
+            mwcFlags.noteRowHeightsNeedUpdate = YES;
+        } else {
+            [rightSideController.noteOutlineView resetRowHeights];
+            [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
+        }
     }
 }
 
 - (void)handleNoteViewDidEndLiveResizeNotification:(NSNotification *)notification {
-    if (mwcFlags.autoResizeNoteRows) {
+    if (mwcFlags.noteRowHeightsNeedUpdate && mwcFlags.autoResizeNoteRows) {
         [self resetNoteRowHeights];
     }
 }

@@ -174,6 +174,8 @@ extern NSNotificationName const SKMainWindowControllerDidShowOrHideOverviewNotif
         unsigned int caseInsensitiveFilter:1;
         unsigned int highlightAllSearchResults:1;
         unsigned int autoResizeNoteRows:1;
+        unsigned int noteRowHeightsNeedUpdate:1;
+        unsigned int findRowHeightsNeedUpdate:1;
         unsigned int addOrRemoveNotesInBulk:1;
         unsigned int updatingOutlineSelection:1;
         unsigned int updatingThumbnailSelection:1;
@@ -194,7 +196,6 @@ extern NSNotificationName const SKMainWindowControllerDidShowOrHideOverviewNotif
         unsigned int needsCleanup:1;
         unsigned int thumbnailsNeedUpdateAfterPresentaton:1;
         unsigned int thumbnailsUpdatedDuringPresentaton:1;
-        unsigned int findRowHeightsNeedUpdate:1;
     } mwcFlags;
 }
 
