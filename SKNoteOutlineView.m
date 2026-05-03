@@ -153,9 +153,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     [tc setHidden:[tc isHidden] == NO];
     if ([self outlineTableColumn] == tc && [tc isHidden])
         [self collapseItem:nil collapseChildren:YES];
-    NSNotification *notification = [NSNotification notificationWithName:NSOutlineViewColumnDidResizeNotification object:self userInfo:@{@"TableColumn":tc}];
-    if ([[self delegate] respondsToSelector:@selector(outlineViewColumnDidResize:)])
-        [[self delegate] outlineViewColumnDidResize:notification];
+    NSNotification *notification = [NSNotification notificationWithName:NSOutlineViewColumnDidResizeNotification object:self userInfo:@{@"NSTableColumn":tc}];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
