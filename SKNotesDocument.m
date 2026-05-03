@@ -192,22 +192,6 @@
     [self saveRecentDocumentInfo];
 }
 
-- (void)resetRowHeights {
-    [outlineView resetRowHeights];
-    [outlineView noteHeightOfRowsChangedAnimating:YES];
-}
-
-- (void)windowDidResize:(NSNotification *)notification {
-    if (ndFlags.autoResizeRows) {
-        if ([[[notification object] contentView] inLiveResize]) {
-            [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
-        } else {
-            [outlineView resetRowHeights];
-            [outlineView noteHeightOfRowsChangedAnimating:NO];
-        }
-    }
-}
-
 - (NSArray *)writableTypesForSaveOperation:(NSSaveOperationType)saveOperation {
     NSArray *writableTypes = [super writableTypesForSaveOperation:saveOperation];
     if (saveOperation == NSSaveToOperation) {
@@ -568,10 +552,15 @@
     [outlineView noteHeightOfRowsWithIndexesChanged:rowIndexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfRows])]];
 }
 
+- (void)resetRowHeights {
+    [outlineView resetRowHeights];
+    [outlineView noteHeightOfRowsChangedAnimating:YES];
+}
+
 - (void)resetHeightOfNoteRows:(id)sender {
     NSArray *items = [sender representedObject];
     if (items == nil) {
-        [self  resetRowHeights];
+        [self resetRowHeights];
     } else {
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
         for (id item in items) {
@@ -584,12 +573,36 @@
     }
 }
 
+- (void)handleScrollViewFrameDidChangeNotification:(NSNotification *)notification {
+    if (ndFlags.autoResizeRows && [[notification object] inLiveResize] == NO) {
+        [outlineView resetRowHeights];
+        [outlineView noteHeightOfRowsChangedAnimating:NO];
+    }
+}
+
+- (void)handleScrollViewDidEndLiveResizeNotification:(NSNotification *)notification {
+    if (ndFlags.autoResizeRows) {
+        [self resetRowHeights];
+    }
+}
+
 - (void)toggleAutoResizeNoteRows:(id)sender {
     ndFlags.autoResizeRows = (0 == ndFlags.autoResizeRows);
-    if (ndFlags.autoResizeRows)
-        [self  resetRowHeights];
-    else
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    NSView *view = [outlineView enclosingScrollView];
+    if (ndFlags.autoResizeRows) {
+        [self resetRowHeights];
+        [nc addObserver:self selector:@selector(handleScrollViewFrameDidChangeNotification:)
+ name:NSViewFrameDidChangeNotification object:view];
+        [nc addObserver:self selector:@selector(handleScrollViewDidEndLiveResizeNotification:)
+ name:SKScrollViewDidEndLiveResizeNotification object:view];
+    } else {
         [self autoSizeNoteRows:nil];
+        [nc removeObserver:self
+ name:NSViewFrameDidChangeNotification object:view];
+        [nc removeObserver:self
+ name:SKScrollViewDidEndLiveResizeNotification object:view];
+    }
 }
 
 - (IBAction)toggleCaseInsensitiveSearch:(id)sender {
@@ -735,7 +748,7 @@
         NSInteger oldColumn = [[[notification userInfo] objectForKey:@"NSOldColumn"] integerValue];
         NSInteger newColumn = [[[notification userInfo] objectForKey:@"NSNewColumn"] integerValue];
         if (oldColumn == 0 || newColumn == 0)
-                [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
+            [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
     }
 }
 

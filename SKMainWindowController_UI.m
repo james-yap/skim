@@ -138,6 +138,7 @@
 @interface SKMainWindowController (UIPrivate)
 - (void)changeColorProperty:(id)sender;
 - (void)handleNoteViewFrameDidChangeNotification:(NSNotification *)notification;
+- (void)handleNoteViewDidEndLiveResizeNotification:(NSNotification *)notification;
 @end
 
 #pragma mark -
@@ -1274,14 +1275,20 @@
 
 - (void)toggleAutoResizeNoteRows:(id)sender {
     mwcFlags.autoResizeNoteRows = (0 == mwcFlags.autoResizeNoteRows);
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    NSView *view = [rightSideController.noteOutlineView enclosingScrollView];
     if (mwcFlags.autoResizeNoteRows) {
         [self resetNoteRowHeights];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNoteViewFrameDidChangeNotification:)
- name:NSViewFrameDidChangeNotification object:[rightSideController.noteOutlineView enclosingScrollView]];
+        [nc addObserver:self selector:@selector(handleNoteViewFrameDidChangeNotification:)
+ name:NSViewFrameDidChangeNotification object:view];
+        [nc addObserver:self selector:@selector(handleNoteViewDidEndLiveResizeNotification:)
+ name:SKScrollViewDidEndLiveResizeNotification object:view];
     } else {
         [self autoSizeNoteRows:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
- name:NSViewFrameDidChangeNotification object:[rightSideController.noteOutlineView enclosingScrollView]];
+        [nc removeObserver:self
+ name:NSViewFrameDidChangeNotification object:view];
+        [nc removeObserver:self
+ name:SKScrollViewDidEndLiveResizeNotification object:view];
     }
 }
 
@@ -2017,13 +2024,15 @@
 }
 
 - (void)handleNoteViewFrameDidChangeNotification:(NSNotification *)notification {
+    if (mwcFlags.autoResizeNoteRows && [[notification object] inLiveResize] == NO) {
+        [rightSideController.noteOutlineView resetRowHeights];
+        [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
+    }
+}
+
+- (void)handleNoteViewDidEndLiveResizeNotification:(NSNotification *)notification {
     if (mwcFlags.autoResizeNoteRows) {
-        if ([[notification object] inLiveResize]) {
-            [self performSelectorOnce:@selector(resetNoteRowHeights) afterDelay:0.0];
-        } else {
-            [rightSideController.noteOutlineView resetRowHeights];
-            [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
-        }
+        [self resetNoteRowHeights];
     }
 }
 

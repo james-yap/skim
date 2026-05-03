@@ -38,6 +38,7 @@
 
 #import "SKScrollView.h"
 
+NSNotificationName const SKScrollViewDidEndLiveResizeNotification = @"SKScrollViewDidEndLiveResizeNotification";
 
 @implementation SKScrollView
 
@@ -47,6 +48,11 @@
     resizingSubviews = YES;
     [super resizeSubviewsWithOldSize:oldSize];
     resizingSubviews = NO;
+}
+
+- (void)viewDidEndLiveResize {
+    [super viewDidEndLiveResize];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKScrollViewDidEndLiveResizeNotification object:self];
 }
 
 @end

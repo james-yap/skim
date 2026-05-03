@@ -40,6 +40,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSNotificationName const SKScrollViewDidEndLiveResizeNotification;
+
 @interface SKScrollView : NSScrollView {
     BOOL resizingSubviews;
 }
