@@ -192,10 +192,19 @@
     [self saveRecentDocumentInfo];
 }
 
+- (void)resetRowHeights {
+    [outlineView resetRowHeights];
+    [outlineView noteHeightOfRowsChangedAnimating:YES];
+}
+
 - (void)windowDidResize:(NSNotification *)notification {
     if (ndFlags.autoResizeRows) {
-        [outlineView resetRowHeights];
-        [outlineView noteHeightOfRowsChangedAnimating:NO];
+        if ([[[notification object] contentView] inLiveResize]) {
+            [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
+        } else {
+            [outlineView resetRowHeights];
+            [outlineView noteHeightOfRowsChangedAnimating:NO];
+        }
     }
 }
 
@@ -557,11 +566,6 @@
         }
     }
     [outlineView noteHeightOfRowsWithIndexesChanged:rowIndexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfRows])]];
-}
-
-- (void)resetRowHeights {
-    [outlineView resetRowHeights];
-    [outlineView noteHeightOfRowsChangedAnimating:YES];
 }
 
 - (void)resetHeightOfNoteRows:(id)sender {
