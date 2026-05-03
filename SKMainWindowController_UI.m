@@ -2025,7 +2025,7 @@
 
 - (void)handleNoteViewFrameDidChangeNotification:(NSNotification *)notification {
     if (mwcFlags.autoResizeNoteRows) {
-        if ([[notification object] inLiveResize] == NO) {
+        if ([[notification object] inLiveResize]) {
             mwcFlags.noteRowHeightsNeedUpdate = YES;
         } else {
             [rightSideController.noteOutlineView resetRowHeights];
