@@ -242,7 +242,8 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
 }
 
 - (CGFloat)boundsOrderForPage:(PDFPage *)page {
-    return [page sortOrderForBounds:[self boundsForPage:page]];
+    NSUInteger i = [self safeIndexOfFirstCharacterOnPage:page];
+    return [page sortOrderForBounds:[(i == NSNotFound ? self : [page selectionForRange:NSMakeRange(i, 1)]) boundsForPage:page]];
 }
 
 - (NSArray *)connectedSelectionsOnPage:(PDFPage *)page {
