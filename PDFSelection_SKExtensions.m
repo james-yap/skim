@@ -118,7 +118,7 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
     return [self compactedCleanedString];
 }
 
-- (NSAttributedString *)_contextString {
+- (NSAttributedString *)contextAttributedString {
 	NSMutableAttributedString *attributedSample;
     NSString *searchString = [self compactedCleanedString] ?: @"";
     PDFSelection *extendedSelection;
@@ -179,7 +179,7 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
 - (NSAttributedString *)contextString {
     NSAttributedString *contextString = objc_getAssociatedObject(self, &SKContextStringKey);
     if (contextString == nil) {
-        contextString = [self _contextString];
+        contextString = [self contextAttributedString];
         objc_setAssociatedObject(self, &SKContextStringKey, contextString, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return contextString;
