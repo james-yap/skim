@@ -206,7 +206,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     }
     if (outlineIsFirst == 1) {
         if (@available(macOS 11.0, *))
-            width -= [self style] == NSTableViewStylePlain ? 18.0 : 9.0;
+            width -= [self effectiveStyle] == NSTableViewStylePlain ? 18.0 : 9.0;
         else
             width -= 16.0;
     }
@@ -215,7 +215,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
 
 - (CGFloat)outlineIndentation {
     if (@available(macOS 11.0, *)) {
-        if ([self style] == NSTableViewStylePlain)
+        if ([self effectiveStyle] == NSTableViewStylePlain)
             return 18.0;
         else if ([self outlineColumnIsFirst])
             return 9.0;
