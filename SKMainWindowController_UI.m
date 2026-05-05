@@ -1412,7 +1412,7 @@
                 item = [menu addItemWithTitle:NSLocalizedString(@"Copy", @"Menu item title") action:@selector(copyNotes:) target:self];
                 [item setRepresentedObject:items];
             }
-            if ([pdfView hideNotes] == NO && [items count] == 1) {
+            if ([items count] == 1) {
                 PDFAnnotation *annotation = [[self noteItems:items] lastObject];
                 if ([annotation isEditable]) {
                     if ([(PDFAnnotation *)[items lastObject] type] == nil) {
@@ -1420,19 +1420,21 @@
                             item = [menu addItemWithTitle:[NSLocalizedString(@"Edit", @"Menu item title") stringByAppendingEllipsis] action:@selector(editNoteTextFromTable:) target:self];
                             [item setRepresentedObject:annotation];
                         }
-                    } else if ([[rightSideController.noteOutlineView tableColumnWithIdentifier:NOTE_COLUMNID] isHidden]) {
-                        item = [menu addItemWithTitle:[NSLocalizedString(@"Edit", @"Menu item title") stringByAppendingEllipsis] action:@selector(editThisAnnotation:) target:pdfView];
-                        [item setRepresentedObject:annotation];
-                    } else {
+                    } else if ([[rightSideController.noteOutlineView tableColumnWithIdentifier:NOTE_COLUMNID] isHidden] == NO) {
                         item = [menu addItemWithTitle:NSLocalizedString(@"Edit", @"Menu item title") action:@selector(editNoteFromTable:) target:self];
                         [item setRepresentedObject:annotation];
+                        if ([annotation isText] == NO || ([pdfView canSelectNote] && [self hasOverview] == NO)) {
+                            item = [menu addItemWithTitle:[NSLocalizedString(@"Edit", @"Menu item title") stringByAppendingEllipsis] action:@selector(editThisAnnotation:) target:pdfView];
+                            [item setRepresentedObject:annotation];
+                            [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
+                            [item setAlternate:YES];
+                        }
+                    } else if ([annotation isText] == NO || ([pdfView canSelectNote] && [self hasOverview] == NO)) {
                         item = [menu addItemWithTitle:[NSLocalizedString(@"Edit", @"Menu item title") stringByAppendingEllipsis] action:@selector(editThisAnnotation:) target:pdfView];
                         [item setRepresentedObject:annotation];
-                        [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
-                        [item setAlternate:YES];
                     }
                 }
-                if ([pdfView canAddNotes]) {
+                if ([pdfView canAddNotes] && [self hasOverview] == NO) {
                     if ([pdfView currentAnnotation] == annotation) {
                         item = [menu addItemWithTitle:NSLocalizedString(@"Deselect", @"Menu item title") action:@selector(deselectNote:) target:self];
                         [item setRepresentedObject:annotation];

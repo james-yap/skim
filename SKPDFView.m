@@ -1145,7 +1145,7 @@ enum {
 }
 
 - (void)pasteNote:(BOOL)preferNote plainText:(BOOL)isPlainText {
-    if ([self hideNotes]) {
+    if ([self canAddNotes] == NO) {
         NSBeep();
         return;
     }
@@ -1301,7 +1301,7 @@ enum {
 
 - (IBAction)cut:(id)sender
 {
-	if ([self hideNotes] == NO && [currentAnnotation isSkimNote]) {
+	if ([self canAddNotes] && [currentAnnotation isSkimNote]) {
         [self copy:sender];
         [self delete:sender];
     } else
@@ -2128,7 +2128,7 @@ enum {
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender {
     NSDragOperation dragOp = NSDragOperationNone;
     NSPasteboard *pboard = [sender draggingPasteboard];
-    if ([self hideNotes] == NO && ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]] || [pboard canReadObjectForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey:@YES, NSPasteboardURLReadingContentsConformToTypesKey:[NSImage imageTypes]}])) {
+    if ([self canAddNotes]&& ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]] || [pboard canReadObjectForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey:@YES, NSPasteboardURLReadingContentsConformToTypesKey:[NSImage imageTypes]}])) {
         return [self draggingUpdated:sender];
     } else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd]) {
         dragOp = [super draggingEntered:sender];
@@ -2139,7 +2139,7 @@ enum {
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender {
     NSDragOperation dragOp = NSDragOperationNone;
     NSPasteboard *pboard = [sender draggingPasteboard];
-    if ([self hideNotes] == NO && [pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]]) {
+    if ([self canAddNotes] && [pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]]) {
         NSPoint location = [self convertPoint:[sender draggingLocation] fromView:nil];
         PDFPage *page = [self pageForPoint:location nearest:NO];
         if (page) {
@@ -2160,7 +2160,7 @@ enum {
         }
         if (dragOp == NSDragOperationNone)
             [self removeHighlightLayer];
-    } else if ([self hideNotes] == NO && [pboard canReadObjectForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey:@YES, NSPasteboardURLReadingContentsConformToTypesKey:[NSImage imageTypes]}]) {
+    } else if ([self canAddNotes] && [pboard canReadObjectForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey:@YES, NSPasteboardURLReadingContentsConformToTypesKey:[NSImage imageTypes]}]) {
         if (([[sender draggingSource] respondsToSelector:@selector(window)] == NO || [[sender draggingSource] window] != [self window]) && [self pageForPoint:[self convertPoint:[sender draggingLocation] fromView:nil] nearest:NO])
             dragOp = NSDragOperationGeneric;
     } else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd]) {
@@ -2171,7 +2171,7 @@ enum {
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender {
     NSPasteboard *pboard = [sender draggingPasteboard];
-    if ([self hideNotes] == NO && ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]] || [pboard canReadObjectForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey:@YES, NSPasteboardURLReadingContentsConformToTypesKey:[NSImage imageTypes]}])) {
+    if ([self canAddNotes] && ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]] || [pboard canReadObjectForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey:@YES, NSPasteboardURLReadingContentsConformToTypesKey:[NSImage imageTypes]}])) {
         [self removeHighlightLayer];
     } else if ([[SKPDFView superclass] instancesRespondToSelector:_cmd]) {
         [super draggingExited:sender];
@@ -2181,7 +2181,7 @@ enum {
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender {
     BOOL performedDrag = NO;
     NSPasteboard *pboard = [sender draggingPasteboard];
-    if ([self hideNotes] == NO && [pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]]) {
+    if ([self canAddNotes] && [pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle]]) {
         PDFAnnotation *annotation = [highlightLayerController annotation];
         if (annotation) {
             if ([pboard canReadItemWithDataConformingToTypes:@[NSPasteboardTypeColor]]) {
@@ -2208,7 +2208,7 @@ enum {
             }
             [self removeHighlightLayer];
         }
-    } else if ([self hideNotes] == NO && [pboard canReadObjectForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey:@YES, NSPasteboardURLReadingContentsConformToTypesKey:[NSImage imageTypes]}]) {
+    } else if ([self canAddNotes] && [pboard canReadObjectForClasses:@[[NSURL class]] options:@{NSPasteboardURLReadingFileURLsOnlyKey:@YES, NSPasteboardURLReadingContentsConformToTypesKey:[NSImage imageTypes]}]) {
         NSPoint location = [self convertPoint:[sender draggingLocation] fromView:nil];
         PDFPage *page = [self pageForPoint:location nearest:NO];
         if (page) {

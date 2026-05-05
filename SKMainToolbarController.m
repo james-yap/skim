@@ -1063,7 +1063,7 @@ static char SKDefaultsObservationContext;
         return [mainController.pdfView.document isLocked] == NO && [mainController hasOverview] == NO;
     } else if (action == @selector(createNewTextNote:)) {
         [menuItem setState:[textNoteButton tagForSegment:0] == [menuItem tag] ? NSControlStateValueOn : NSControlStateValueOff];
-        return [mainController interactionMode] != SKPresentationMode && [mainController hasOverview] == NO && [mainController.pdfView canAddNotes] && ([mainController.pdfView toolMode] == SKToolModeText || [mainController.pdfView toolMode] == SKToolModeNote);
+        return [mainController interactionMode] != SKPresentationMode && [mainController hasOverview] == NO && [mainController.pdfView canSelectNote];
     } else if (action == @selector(createNewShapeNote:)) {
         [menuItem setState:[circleNoteButton tagForSegment:0] == [menuItem tag] ? NSControlStateValueOn : NSControlStateValueOff];
         return [mainController hasOverview] == NO && [mainController.pdfView canSelectNote];
