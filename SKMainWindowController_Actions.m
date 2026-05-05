@@ -210,18 +210,20 @@
 }
 
 - (void)selectSelectedNote:(id)sender{
-    if ([pdfView hideNotes] == NO) {
+    if ([pdfView hideNotes] == NO && [self hasOverview] == NO) {
         NSIndexSet *rowIndexes = [sender selectedRowIndexes];
         if ([rowIndexes count] == 1) {
             id item = [sender itemAtRow:[rowIndexes firstIndex]];
             PDFAnnotation *annotation = nil;
             if ([(PDFAnnotation *)item type]) {
                 annotation = item;
-                NSInteger column = [sender clickedColumn];
-                if (column != -1) {
-                    NSString *colID = [[[sender tableColumns] objectAtIndex:column] identifier];
-                    if ([colID isEqualToString:@"color"])
-                        [[NSColorPanel sharedColorPanel] orderFront:nil];
+                if ([pdfView canSelectNote]) {
+                    NSInteger column = [sender clickedColumn];
+                    if (column != -1) {
+                        NSString *colID = [[[sender tableColumns] objectAtIndex:column] identifier];
+                        if ([colID isEqualToString:@"color"])
+                            [[NSColorPanel sharedColorPanel] orderFront:nil];
+                    }
                 }
             } else {
                 annotation = [(SKNoteText *)item note];
@@ -233,7 +235,8 @@
                 }
             }
             [pdfView scrollAnnotationToVisible:annotation];
-            [pdfView setCurrentAnnotation:annotation];
+            if ([pdfView canSelectNote])
+                [pdfView setCurrentAnnotation:annotation];
         }
     } else NSBeep();
 }
