@@ -118,6 +118,11 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     [rowHeights removeAllObjects];
 }
 
+- (void)resetRowHeightsAnimating {
+    [self resetRowHeights];
+    [self noteHeightOfRowsChangedAnimating:YES];
+}
+
 - (void)mouseDown:(NSEvent *)theEvent {
     if ([theEvent clickCount] == 1 && [[self delegate] respondsToSelector:@selector(outlineView:heightOfRowByItem:)]) {
         NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];

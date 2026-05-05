@@ -552,15 +552,10 @@
     [outlineView noteHeightOfRowsWithIndexesChanged:rowIndexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfRows])]];
 }
 
-- (void)resetRowHeights {
-    [outlineView resetRowHeights];
-    [outlineView noteHeightOfRowsChangedAnimating:YES];
-}
-
 - (void)resetHeightOfNoteRows:(id)sender {
     NSArray *items = [sender representedObject];
     if (items == nil) {
-        [self resetRowHeights];
+        [outlineView resetRowHeightsAnimating];
     } else {
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
         for (id item in items) {
@@ -582,7 +577,7 @@
 
 - (void)handleScrollViewDidEndLiveResizeNotification:(NSNotification *)notification {
     if (ndFlags.autoResizeRows) {
-        [self resetRowHeights];
+        [outlineView resetRowHeightsAnimating];
     }
 }
 
@@ -591,7 +586,7 @@
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     NSView *view = [outlineView enclosingScrollView];
     if (ndFlags.autoResizeRows) {
-        [self resetRowHeights];
+        [outlineView resetRowHeightsAnimating];
         [nc addObserver:self selector:@selector(handleScrollViewFrameDidChangeNotification:)
  name:NSViewFrameDidChangeNotification object:view];
         [nc addObserver:self selector:@selector(handleScrollViewDidEndLiveResizeNotification:)
@@ -740,7 +735,7 @@
 
 - (void)outlineViewColumnDidResize:(NSNotification *)notification{
     if (ndFlags.autoResizeRows && [(SKScrollView *)[[notification object] enclosingScrollView] isResizingSubviews] == NO)
-        [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
+        [outlineView performSelectorOnce:@selector(resetRowHeightsAnimating) afterDelay:0.0];
 }
 
 - (void)outlineViewColumnDidMove:(NSNotification *)notification {
@@ -755,7 +750,7 @@
                 break;
         }
         if (oldColumn == firstColumn || newColumn == firstColumn)
-            [self performSelectorOnce:@selector(resetRowHeights) afterDelay:0.0];
+            [outlineView performSelectorOnce:@selector(resetRowHeightsAnimating) afterDelay:0.0];
     }
 }
 

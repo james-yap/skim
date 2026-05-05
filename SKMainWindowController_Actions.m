@@ -93,7 +93,6 @@
 - (void)updateLineInspector;
 - (void)updateNoteFilterPredicate;
 - (void)updateSnapshotFilterPredicate;
-- (void)resetNoteRowHeights;
 @end
 
 @implementation SKMainWindowController (Actions)
