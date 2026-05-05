@@ -189,6 +189,7 @@ enum {
 @property (nonatomic, nullable, strong) PDFPage *selectToolPage;
 @property (nonatomic, readonly) CGFloat magnifyToolMagnification;
 @property (nonatomic) BOOL hideNotes;
+@property (nonatomic, readonly) BOOL canAddNotes;
 @property (nonatomic, readonly) BOOL canSelectNote;
 @property (nonatomic, readonly) BOOL hasReadingBar;
 @property (nullable, readonly) SKReadingBar *readingBar;

@@ -1321,7 +1321,7 @@
                 item = [menu addItemWithTitle:NSLocalizedString(@"Select", @"Menu item title") action:@selector(selectSelections:) target:self];
                 [item setRepresentedObject:selections];
             }
-            if ([pdfView hideNotes] == NO && [[pdfView document] allowsNotes]) {
+            if ([pdfView canAddNotes]) {
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Circle", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeCircle];
                 [item setRepresentedObject:selections];
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Box", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeSquare];
@@ -1353,7 +1353,7 @@
                 item = [menu addItemWithTitle:NSLocalizedString(@"Select", @"Menu item title") action:@selector(selectSelections:) target:self];
                 [item setRepresentedObject:selections];
             }
-            if ([pdfView hideNotes] == NO && [[pdfView document] allowsNotes]) {
+            if ([pdfView canAddNotes]) {
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Circle", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeCircle];
                 [item setRepresentedObject:selections];
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Box", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeSquare];
@@ -1434,7 +1434,7 @@
                         [item setAlternate:YES];
                     }
                 }
-                if ([pdfView hideNotes] == NO && [[self pdfDocument] allowsNotes]) {
+                if ([pdfView canAddNotes]) {
                     if ([pdfView currentAnnotation] == annotation) {
                         item = [menu addItemWithTitle:NSLocalizedString(@"Deselect", @"Menu item title") action:@selector(deselectNote:) target:self];
                         [item setRepresentedObject:annotation];

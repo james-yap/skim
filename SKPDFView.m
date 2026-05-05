@@ -245,7 +245,7 @@ enum {
 @implementation SKPDFView
 
 @synthesize toolMode, annotationMode, temporaryToolMode, currentAnnotation, readingBar, pacerSpeed, typeSelectHelper, syncDot, hideNotes, zooming;
-@dynamic extendedDisplayMode, displaySettings, canSelectNote, hasReadingBar, hasPacer, selectToolPage, selectToolRect, magnifyToolMagnification, needsRewind, editing, delegate;
+@dynamic extendedDisplayMode, displaySettings, canAddNotes, canSelectNote, hasReadingBar, hasPacer, selectToolPage, selectToolRect, magnifyToolMagnification, needsRewind, editing, delegate;
 
 + (void)initialize {
     SKINITIALIZE;
