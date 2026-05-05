@@ -1753,7 +1753,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 - (NSInteger)collectionView:(NSCollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section {
-    return [[self thumbnails] count];
+    return section == 0 ? [[self thumbnails] count] : 0;
 }
 
 - (NSCollectionViewItem *)collectionView:(NSCollectionView *)collectionView
