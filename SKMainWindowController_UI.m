@@ -587,7 +587,7 @@
     }
     if (thumbSize.height <= rowHeight)
         return rowHeight;
-    return fmax(rowHeight, fmin(thumbHeight, fmin(thumbSize.height, [[tv tableColumnWithIdentifier:IMAGE_COLUMNID] width] * thumbSize.height / thumbSize.width)));
+    return fmax(rowHeight, fmin(thumbHeight, fmin(thumbSize.height, ceil([[tv tableColumnWithIdentifier:IMAGE_COLUMNID] width] * thumbSize.height / thumbSize.width))));
 }
 
 - (NSArray *)tableView:(NSTableView *)tv rowActionsForRow:(NSInteger)row edge:(NSTableRowActionEdge)edge {
