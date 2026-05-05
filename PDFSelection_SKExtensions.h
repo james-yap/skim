@@ -47,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // the search table columns bind to these methods for display
 @property (nonatomic, nullable, readonly) NSString *cleanedString;
-@property (nonatomic, nullable, readonly) NSAttributedString *contextString;
+@property (nonatomic, readonly) NSAttributedString *contextString;
 
 - (void)invalidateContextString;
 
