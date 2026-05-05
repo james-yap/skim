@@ -1312,7 +1312,7 @@
         }
     } else if ([menu isEqual:[leftSideController.findTableView menu]]) {
         NSInteger row = [leftSideController.findTableView clickedRow];
-        if (row > 0) {
+        if (row > 0 && ([pdfView toolMode] == SKToolModeText || [pdfView canAddNotes])) {
             NSIndexSet *rowIndexes = [leftSideController.findTableView selectedRowIndexes];
             if ([rowIndexes containsIndex:row] == NO)
                 rowIndexes = [NSIndexSet indexSetWithIndex:row];
@@ -1333,9 +1333,8 @@
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Strike Out", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeStrikeOut];
                 [item setRepresentedObject:selections];
             }
-        }
-        if ([menu numberOfItems] > 0)
             [menu addItem:[NSMenuItem separatorItem]];
+        }
         item = [menu addItemWithTitle:NSLocalizedString(@"Highlight Selected", @"Menu item title") action:@selector(changeSearchResultsHighlighting:) target:self tag:0];
         if (mwcFlags.highlightAllSearchResults == 0)
             [item setState:NSControlStateValueOn];
@@ -1344,7 +1343,7 @@
             [item setState:NSControlStateValueOn];
     } else if ([menu isEqual:[leftSideController.groupedFindTableView menu]]) {
         NSInteger row = [leftSideController.groupedFindTableView clickedRow];
-        if (row > 0) {
+        if (row > 0 && ([pdfView toolMode] == SKToolModeText || [pdfView canAddNotes])) {
             NSIndexSet *rowIndexes = [leftSideController.groupedFindTableView selectedRowIndexes];
             if ([rowIndexes containsIndex:row] == NO)
                 rowIndexes = [NSIndexSet indexSetWithIndex:row];
@@ -1365,9 +1364,8 @@
                 item = [menu addItemWithTitle:NSLocalizedString(@"New Strike Out", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeStrikeOut];
                 [item setRepresentedObject:selections];
             }
-        }
-        if ([menu numberOfItems] > 0)
             [menu addItem:[NSMenuItem separatorItem]];
+        }
         item = [menu addItemWithTitle:NSLocalizedString(@"Highlight Selected", @"Menu item title") action:@selector(changeSearchResultsHighlighting:) target:self tag:0];
         if (mwcFlags.highlightAllSearchResults == 0)
             [item setState:NSControlStateValueOn];
