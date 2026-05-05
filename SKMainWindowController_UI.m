@@ -1423,18 +1423,18 @@
                     } else if ([[rightSideController.noteOutlineView tableColumnWithIdentifier:NOTE_COLUMNID] isHidden] == NO) {
                         item = [menu addItemWithTitle:NSLocalizedString(@"Edit", @"Menu item title") action:@selector(editNoteFromTable:) target:self];
                         [item setRepresentedObject:annotation];
-                        if ([annotation isText] == NO || ([pdfView canSelectNote] && [self hasOverview] == NO)) {
+                        if ([annotation isText] == NO || [pdfView canSelectNote]) {
                             item = [menu addItemWithTitle:[NSLocalizedString(@"Edit", @"Menu item title") stringByAppendingEllipsis] action:@selector(editThisAnnotation:) target:pdfView];
                             [item setRepresentedObject:annotation];
                             [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
                             [item setAlternate:YES];
                         }
-                    } else if ([annotation isText] == NO || ([pdfView canSelectNote] && [self hasOverview] == NO)) {
+                    } else if ([annotation isText] == NO || [pdfView canSelectNote]) {
                         item = [menu addItemWithTitle:[NSLocalizedString(@"Edit", @"Menu item title") stringByAppendingEllipsis] action:@selector(editThisAnnotation:) target:pdfView];
                         [item setRepresentedObject:annotation];
                     }
                 }
-                if ([pdfView canAddNotes] && [self hasOverview] == NO) {
+                if ([pdfView canAddNotes]) {
                     if ([pdfView currentAnnotation] == annotation) {
                         item = [menu addItemWithTitle:NSLocalizedString(@"Deselect", @"Menu item title") action:@selector(deselectNote:) target:self];
                         [item setRepresentedObject:annotation];
