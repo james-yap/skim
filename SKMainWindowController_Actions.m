@@ -454,7 +454,6 @@
     [pdfView setAutoScales:NO];
 }
 
-// @@ Horizontal layout
 - (IBAction)alternateZoomToFit:(id)sender {
     PDFDisplayMode displayMode = [pdfView extendedDisplayMode];
     NSRect frame = [pdfView frame];
@@ -875,8 +874,6 @@
         [findPboard writeObjects:@[searchString]];
     }
 }
-
-// @@ Horizontal layout
 
 - (IBAction)performFit:(id)sender {
     if ([self interactionMode] != SKNormalMode) {

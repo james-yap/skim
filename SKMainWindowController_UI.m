@@ -1775,7 +1775,6 @@
     } else if (action == @selector(doZoomToFit:)) {
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [[self pdfDocument] isLocked] == NO && [pdfView autoScales] == NO;
     } else if (action == @selector(alternateZoomToFit:)) {
-// @@ Horizontal layout
         PDFDisplayMode displayMode = [pdfView extendedDisplayMode];
         if ((displayMode & kPDFDisplaySinglePageContinuous) != 0) {
             [menuItem setTitle:NSLocalizedString(@"Zoom To Height", @"Menu item title")];

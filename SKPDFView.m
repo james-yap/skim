@@ -2921,7 +2921,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 #pragma mark Sync
 
-// @@ Horizontal layout
 - (void)displayLineAtPoint:(NSPoint)point inPageAtIndex:(NSUInteger)pageIndex select:(BOOL)select showReadingBar:(BOOL)showBar {
     if (pageIndex < [[self document] pageCount]) {
         PDFPage *page = [[self document] pageAtIndex:pageIndex];
