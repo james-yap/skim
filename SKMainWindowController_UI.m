@@ -392,7 +392,7 @@
     if ([[pdfView document] outlineRoot] == nil)
         return;
     
-    if (mwcFlags.updatingOutlineSelection) {
+    if (mwcFlags.updatingOutlineSelection == 0) {
         // Get index of current page.
         NSUInteger pageIndex = [[pdfView currentPage] pageIndex];
         
