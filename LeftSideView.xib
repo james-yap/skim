@@ -53,9 +53,6 @@
                                             <segment image="FindViewAdorn" imageScaling="none" width="25"/>
                                             <segment image="GroupedFindViewAdorn" imageScaling="none" width="25" tag="1"/>
                                         </segments>
-                                        <connections>
-                                            <binding destination="90" name="selectedTag" keyPath="selection.findPaneState" id="187"/>
-                                        </connections>
                                     </segmentedCell>
                                     <connections>
                                         <binding destination="90" name="selectedTag" keyPath="selection.findPaneState" id="144"/>
