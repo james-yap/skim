@@ -54,6 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSInteger)thumbnailHighlightLevelForRow:(NSInteger)row;
 
+- (void)updateTocSelectionHighlights;
+
 @end
 
 NS_ASSUME_NONNULL_END

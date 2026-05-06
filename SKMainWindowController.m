@@ -883,7 +883,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [self expandOutline:outlineRoot forExpansionState:info level:level];
     }
     mwcFlags.updatingOutlineSelection = 0;
-    [self updateOutlineSelection];
+    [self updateTocSelectionHighlights];
     
     // handle the case as above where the outline has disappeared in a reload situation
     if (nil == outlineRoot)
@@ -2882,42 +2882,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 #pragma mark Outline
 
-- (void)updateOutlineSelection{
-
-	// Skip out if this PDF has no outline.
-	if ([[pdfView document] outlineRoot] == nil || mwcFlags.updatingOutlineSelection)
-		return;
-	
-	// Get index of current page.
-	NSUInteger pageIndex = [[pdfView currentPage] pageIndex];
-    
-	// Test that the current selection is still valid.
-	NSInteger row = [leftSideController.tocOutlineView selectedRow];
-    if (row == -1 || [[[leftSideController.tocOutlineView itemAtRow:row] page] pageIndex] != pageIndex) {
-        // Get the outline row that contains the current page
-        NSInteger numRows = [leftSideController.tocOutlineView numberOfRows];
-        for (row = 0; row < numRows; row++) {
-            // Get the page for the given row....
-            PDFPage *page = [[leftSideController.tocOutlineView itemAtRow:row] page];
-            if (page == nil) {
-                continue;
-            } else if ([page pageIndex] == pageIndex) {
-                break;
-            } else if ([page pageIndex] > pageIndex) {
-                if (row > 0) --row;
-                break;	
-            }
-        }
-        if (row == numRows)
-            row--;
-        if (row != -1) {
-            mwcFlags.updatingOutlineSelection = 1;
-            [leftSideController.tocOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-            mwcFlags.updatingOutlineSelection = 0;
-        }
-    }
-}
-
 - (BOOL)isOutlineExpanded:(PDFOutline *)outline {
     if (-1 == [leftSideController.tocOutlineView rowForItem:outline])
         return NO;
@@ -2999,15 +2963,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     });
     
     return YES;
-}
-
-- (void)updateThumbnailSelection {
-	// Get index of current page.
-	NSUInteger pageIndex = [[pdfView currentPage] pageIndex];
-    mwcFlags.updatingThumbnailSelection = 1;
-    [leftSideController.thumbnailTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:pageIndex] byExtendingSelection:NO];
-    [leftSideController.thumbnailTableView scrollRowToVisible:pageIndex];
-    mwcFlags.updatingThumbnailSelection = 0;
 }
 
 - (NSImage *)placeholderThumbnailImage {
@@ -3093,48 +3048,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 }
 
 #pragma mark Notes
-
-- (void)updateNoteSelection {
-    NSSortDescriptor *sortDesc = [[rightSideController.noteArrayController sortDescriptors] firstObject];
-    
-    if ([[sortDesc key] isEqualToString:SKNPDFAnnotationPageIndexKey] == NO)
-        return;
-    
-    NSArray *orderedNotes = [rightSideController.noteArrayController arrangedObjects];
-    __block PDFAnnotation *selAnnotation = nil;
-    NSUInteger pageIndex = [[pdfView currentPage] pageIndex];
-    NSMutableIndexSet *selPageIndexes = [NSMutableIndexSet indexSet];
-    NSEnumerationOptions options = [sortDesc ascending] ? 0 : NSEnumerationReverse;
-    
-    for (PDFAnnotation *annotation in [self selectedNotes]) {
-        if ([annotation pageIndex] != NSNotFound)
-            [selPageIndexes addIndex:[annotation pageIndex]];
-    }
-    
-    if ([orderedNotes count] == 0 || [selPageIndexes containsIndex:pageIndex])
-		return;
-	
-	// Walk outline view looking for best firstpage number match.
-    [orderedNotes enumerateObjectsWithOptions:options usingBlock:^(PDFAnnotation *annotation, NSUInteger i, BOOL *stop) {
-		if ([annotation pageIndex] == pageIndex) {
-            selAnnotation = annotation;
-			*stop = YES;
-		} else if ([annotation pageIndex] > pageIndex) {
-			if (i == 0)
-				selAnnotation = [orderedNotes objectAtIndex:0];
-			else if ([selPageIndexes containsIndex:[[orderedNotes objectAtIndex:i - 1] pageIndex]])
-                selAnnotation = [orderedNotes objectAtIndex:i - 1];
-			*stop = YES;
-		}
-    }];
-    if (selAnnotation) {
-        mwcFlags.updatingNoteSelection = 1;
-        NSInteger row = [rightSideController.noteOutlineView rowForItem:selAnnotation];
-        [rightSideController.noteOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-        [rightSideController.noteOutlineView scrollRowToVisible:row];
-        mwcFlags.updatingNoteSelection = 0;
-    }
-}
 
 - (void)updateNoteFilterPredicate {
     [rightSideController.noteArrayController setFilterPredicate:[noteTypeSheetController filterPredicateForSearchString:[rightSideController.searchField stringValue] caseInsensitive:mwcFlags.caseInsensitiveFilter]];

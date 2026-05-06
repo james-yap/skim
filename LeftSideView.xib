@@ -635,9 +635,15 @@
             </scroller>
             <point key="canvasLocation" x="267" y="154"/>
         </scrollView>
-        <menu id="89"/>
-        <menu id="198"/>
-        <menu id="197"/>
+        <menu id="89">
+            <point key="canvasLocation" x="-210" y="-145"/>
+        </menu>
+        <menu id="198">
+            <point key="canvasLocation" x="-310" y="-245"/>
+        </menu>
+        <menu id="197">
+            <point key="canvasLocation" x="-469" y="-245"/>
+        </menu>
         <objectController id="90" userLabel="OwnerController">
             <declaredKeys>
                 <string>leftSidePaneState</string>

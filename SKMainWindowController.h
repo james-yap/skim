@@ -275,14 +275,9 @@ extern NSNotificationName const SKMainWindowControllerDidShowOrHideOverviewNotif
 
 - (void)selectFindResultHighlight:(NSSelectionDirection)direction;
 
-- (void)updateOutlineSelection;
-
-- (void)updateNoteSelection;
-
 - (BOOL)isOutlineExpanded:(PDFOutline *)outline;
 - (void)setExpanded:(BOOL)flag forOutline:(PDFOutline *)outline;
 
-- (void)updateThumbnailSelection;
 - (void)resetThumbnails;
 - (void)resetThumbnailSizeIfNeeded;
 - (void)updateThumbnailAtPageIndex:(NSUInteger)index;
