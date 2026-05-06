@@ -125,6 +125,8 @@
 #define MIN_PDF_PANE_WIDTH 100.0
 #define MIN_PDF_PANE_HEIGHT 50.0
 
+#define FIND_RESULT_MARGIN 50.0
+
 #define OVERVIEW_DURATION 0.5
 
 #define SEARCHRESULTS_KEY           @"searchResults"
@@ -1821,7 +1823,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if (selection) {
         PDFPage *page = [selection safeFirstPage];
         NSRect rect = [selection boundsForPage:page];
-        rect = ([page rotation] & 180) ? NSInsetRect(rect, -20.0, -10.0) : NSInsetRect(rect, -10.0, -20.0);
+        rect = NSIntersectionRect(NSInsetRect(rect, -FIND_RESULT_MARGIN, -FIND_RESULT_MARGIN), [page boundsForBox:kPDFDisplayBoxCropBox]);
         [pdfView goToRect:rect onPage:page];
         [leftSideController.findTableView deselectAll:self];
         [leftSideController.groupedFindTableView deselectAll:self];
@@ -1944,8 +1946,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         }
     }
 }
-
-#define FIND_RESULT_MARGIN 50.0
 
 - (void)selectFindResultHighlight:(NSSelectionDirection)direction {
     [self updateFindResultHighlightsForDirection:direction];
