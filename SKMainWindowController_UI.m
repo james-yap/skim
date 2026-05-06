@@ -344,10 +344,10 @@
 
 - (NSInteger)thumbnailHighlightLevelForRow:(NSInteger)row {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableHistoryHighlightsKey] == NO) {
-        NSInteger i, iMax = [lastViewedPages count];
+        NSInteger i, iMax = MIN([lastViewedPages count], MAX_HIGHLIGHTS);
         for (i = 0; i < iMax; i++) {
             if (row == (NSInteger)[lastViewedPages pointerAtIndex:i])
-                return MAX(0, MAX_HIGHLIGHTS - i);
+                return MAX_HIGHLIGHTS - i;
         }
     }
     return 0;
@@ -360,10 +360,10 @@
         NSInteger firstPage = [[[ov itemAtRow:row] page] pageIndex];
         NSInteger lastPage = row + 1 < numRows ? [[[ov itemAtRow:row + 1] page] pageIndex] : [[self pdfDocument] pageCount];
         NSRange range = NSMakeRange(firstPage, MAX(1L, lastPage - firstPage));
-        NSInteger i, iMax = [lastViewedPages count];
+        NSInteger i, iMax = MIN([lastViewedPages count], MAX_HIGHLIGHTS);
         for (i = 0; i < iMax; i++) {
             if (NSLocationInRange((NSUInteger)[lastViewedPages pointerAtIndex:i], range))
-                return MAX(0, MAX_HIGHLIGHTS - i);
+                return MAX_HIGHLIGHTS - i;
         }
     }
     return 0;
