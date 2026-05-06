@@ -833,7 +833,8 @@
 - (NSTableRowView *)outlineView:(NSOutlineView *)ov rowViewForItem:(id)item {
     if ([ov isEqual:leftSideController.tocOutlineView]) {
         SKHighlightingTableRowView *rowView = [ov makeViewWithIdentifier:ROWVIEW_IDENTIFIER owner:self];
-        [rowView setHighlightLevel:[self tocHighlightLevelForRow:[ov rowForItem:item]]];
+        if (@available(macOS 11.0, *))
+            [rowView setHighlightLevel:[self tocHighlightLevelForRow:[ov rowForItem:item]]];
         return rowView;
     } else if ([ov isEqual:rightSideController.noteOutlineView]) {
         return [ov makeViewWithIdentifier:ROWVIEW_IDENTIFIER owner:self];
