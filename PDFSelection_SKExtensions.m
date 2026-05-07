@@ -196,7 +196,25 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
     PDFPage *page = [self safeFirstPage];
     if (page) {
         NSRect bounds = [self boundsForPage:page];
-        destination = [[PDFDestination alloc] initWithPage:page atPoint:NSMakePoint(NSMinX(bounds), NSMaxY(bounds))];
+        NSPoint point;
+        switch ([page rotation]) {
+            case 0:
+                point = NSMakePoint(NSMinX(bounds), NSMaxY(bounds));
+                break;
+            case 90:
+                point = NSMakePoint(NSMinX(bounds), NSMinY(bounds));
+                break;
+            case 180:
+                point = NSMakePoint(NSMaxX(bounds), NSMinY(bounds));
+                break;
+            case 270:
+                point = NSMakePoint(NSMaxX(bounds), NSMaxY(bounds));
+                break;
+            default:
+                point = NSMakePoint(NSMinX(bounds), NSMaxY(bounds));
+                break;
+        }
+        destination = [[PDFDestination alloc] initWithPage:page atPoint:point];
     }
     return destination;
 }
