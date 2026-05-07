@@ -43,8 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDFSelection (SKExtensions)
 
-+ (PDFSelection *)selectionByAddingSelections:(NSArray<PDFSelection *> *)selections;
-
 // the search table columns bind to these methods for display
 @property (nonatomic, nullable, readonly) NSString *cleanedString;
 @property (nonatomic, readonly) NSAttributedString *contextString;

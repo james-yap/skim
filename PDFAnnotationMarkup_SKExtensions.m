@@ -49,7 +49,6 @@
 #import "NSCharacterSet_SKExtensions.h"
 #import "NSPointerArray_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
-#import "PDFSelection_SKExtensions.h"
 #import "PDFPage_SKExtensions.h"
 #import "NSView_SKExtensions.h"
 #import "SKNoteText.h"
@@ -199,17 +198,21 @@ static void replacement_setColor(id self, SEL _cmd, NSColor *color) {
 }
 
 - (PDFSelection *)selectionWithPage:(PDFPage *)page {
-    NSMutableArray *selections = [NSMutableArray array];
+    PDFSelection *selection = nil;
     NSPointerArray *lines = [self lineRects];
     NSUInteger i, iMax = [lines count];
     
     for (i = 0; i < iMax; i++) {
         // slightly outset the rect to avoid rounding errors, as selectionForRect is pretty strict in some OS versions, but unfortunately not in others
-        PDFSelection *selection = [page selectionForRect:NSInsetRect([lines rectAtIndex:i], -1.0, -1.0)];
-        if ([selection hasCharacters])
-            [selections addObject:selection];
+        PDFSelection *sel = [page selectionForRect:NSInsetRect([lines rectAtIndex:i], -1.0, -1.0)];
+        if ([sel hasCharacters]) {
+            if (selection)
+                [selection addSelection:sel];
+            else
+                selection = sel;
+        }
     }
-    return [PDFSelection selectionByAddingSelections:selections];
+    return selection;
 }
 
 - (PDFSelection *)selection {

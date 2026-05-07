@@ -1180,7 +1180,12 @@
 }
 
 - (void)selectSelections:(id)sender {
-    [pdfView setCurrentSelection:[PDFSelection selectionByAddingSelections:[sender representedObject]]];
+    NSArray *selections = [sender representedObject];
+    PDFSelection *selection = [[selections firstObject] copy];
+    NSUInteger count = [selections count];
+    if (count > 1)
+        [selection addSelections:[selections subarrayWithRange:NSMakeRange(1, count - 1)]];
+    [pdfView setCurrentSelection:selection];
 }
 
 - (void)changeSearchResultsHighlighting:(id)sender {
