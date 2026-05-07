@@ -199,6 +199,7 @@ static void replacement_setColor(id self, SEL _cmd, NSColor *color) {
 
 - (PDFSelection *)selectionWithPage:(PDFPage *)page {
     PDFSelection *selection = nil;
+    NSMutableArray *selections = nil;
     NSPointerArray *lines = [self lineRects];
     NSUInteger i, iMax = [lines count];
     
@@ -206,12 +207,16 @@ static void replacement_setColor(id self, SEL _cmd, NSColor *color) {
         // slightly outset the rect to avoid rounding errors, as selectionForRect is pretty strict in some OS versions, but unfortunately not in others
         PDFSelection *sel = [page selectionForRect:NSInsetRect([lines rectAtIndex:i], -1.0, -1.0)];
         if ([sel hasCharacters]) {
-            if (selection)
-                [selection addSelection:sel];
-            else
+            if (selection == nil)
                 selection = sel;
+            else if (selections)
+                [selections addObject:sel];
+            else
+                selections = [NSMutableArray arrayWithObject:sel];
         }
     }
+    if (selections)
+        [selection addSelections:selections];
     return selection;
 }
 
