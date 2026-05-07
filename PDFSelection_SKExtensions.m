@@ -170,11 +170,11 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
         // Use bold font for the text range where the search term was found.
         [attributedSample addAttribute:NSFontAttributeName value:[NSFont boldSystemFontOfSize:fontSize] range:foundRange];
     
-    attributedString = [attributedSample mutableString];
     if (start > 0)
-        [attributedString insertString:ellipse atIndex:0];
+        [attributedSample insertAttributedString:[[NSAttributedString alloc] initWithString:ellipse attributes:attributes] atIndex:0];
     if (end < length)
-        [attributedString appendString:ellipse];
+        [attributedSample appendAttributedString:[[NSAttributedString alloc] initWithString:ellipse attributes:attributes]];
+    [attributedSample fixAttributesInRange:NSMakeRange(0, [attributedSample length])];
     
 	return attributedSample;
 }
