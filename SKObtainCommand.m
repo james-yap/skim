@@ -74,7 +74,7 @@
     
     if ([data isKindOfClass:[NSData class]] == NO) {
         data = nil;
-        selection = [PDFSelection selectionWithSpecifier:[[self arguments] objectForKey:@"Object"] onPage:page];
+        selection = [PDFSelection selectionWithSpecifiers:[[self arguments] objectForKey:@"Object"] onPage:page];
     } else if (type == typeSInt32 || type == typeQDRectangle || type == typeNSRectangle || type == typePage) {
         [self setScriptErrorNumber:NSOperationNotSupportedForKeyScriptError];
         return nil;

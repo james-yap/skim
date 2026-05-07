@@ -47,8 +47,8 @@
     id dP = [self directParameter];
     id other = [[self arguments] objectForKey:@"To"];
     BOOL continuous = [[[self evaluatedArguments] objectForKey:@"Continuous"] boolValue];
-    PDFSelection *selection = [PDFSelection selectionWithSpecifier:dP];
-    PDFSelection *otherSelection = other ? [PDFSelection selectionWithSpecifier:other] : nil;
+    PDFSelection *selection = [PDFSelection selectionWithSpecifiers:dP];
+    PDFSelection *otherSelection = other ? [PDFSelection selectionWithSpecifiers:other] : nil;
     
     if (selection == nil)
         selection = otherSelection;

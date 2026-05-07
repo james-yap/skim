@@ -709,7 +709,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
             [[NSScriptCommand currentCommand] setScriptErrorString:@"PDF does not support notes."];
         } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNUnderlineString ]) {
             id selSpec = contentsValue ?: [[[[NSScriptCommand currentCommand] arguments] objectForKey:@"KeyDictionary"] objectForKey:SKPDFAnnotationSelectionSpecifierKey];
-            PDFSelection *selection = [selSpec isKindOfClass:[PDFSelection class]] ? selSpec : selSpec ? [PDFSelection selectionWithSpecifier:selSpec] : nil;
+            PDFSelection *selection = [selSpec isKindOfClass:[PDFSelection class]] ? selSpec : selSpec ? [PDFSelection selectionWithSpecifiers:selSpec] : nil;
             [props removeObjectForKey:SKPDFAnnotationSelectionSpecifierKey];
             if (selSpec == nil) {
                 [[NSScriptCommand currentCommand] setScriptErrorNumber:NSRequiredArgumentsMissingScriptError]; 

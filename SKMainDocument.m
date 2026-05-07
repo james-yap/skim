@@ -1816,7 +1816,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 }
 
 - (void)setSelectionSpecifier:(id)specifier {
-    PDFSelection *selection = [PDFSelection selectionWithSpecifier:specifier];
+    PDFSelection *selection = [PDFSelection selectionWithSpecifiers:specifier];
     [[self pdfView] setCurrentSelection:selection];
 }
 
@@ -1913,7 +1913,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
     if ([key isEqualToString:@"notes"]) {
         PDFAnnotation *annotation = nil;
         id selSpec = contentsValue ?: [[[[NSScriptCommand currentCommand] arguments] objectForKey:@"KeyDictionary"] objectForKey:SKPDFAnnotationSelectionSpecifierKey];
-        PDFSelection *sel = selSpec ? [PDFSelection selectionWithSpecifier:selSpec] : nil;
+        PDFSelection *sel = selSpec ? [PDFSelection selectionWithSpecifiers:selSpec] : nil;
         PDFPage *page = [sel safeFirstPage];
         if (page == nil || [page document] != [self pdfDocument]) {
             [[NSScriptCommand currentCommand] setScriptErrorNumber:NSReceiversCantHandleCommandScriptError]; 
@@ -2078,7 +2078,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
             source = nil;
         [[self synchronizer] findPageAndLocationForLine:[location integerValue] inFile:[source path] fromPageIndex:[[[self pdfView] currentPage] pageIndex] options:options];
     } else {
-        PDFSelection *selection = [PDFSelection selectionWithSpecifier:[[command arguments] objectForKey:@"To"]];
+        PDFSelection *selection = [PDFSelection selectionWithSpecifiers:[[command arguments] objectForKey:@"To"]];
         if ([selection hasCharacters]) {
             PDFPage *page = [selection safeFirstPage];
             NSRect bounds = [selection boundsForPage:page];
@@ -2104,7 +2104,7 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
         NSInteger options = 0;
         
         if (from)
-            selection = [PDFSelection selectionWithSpecifier:from];
+            selection = [PDFSelection selectionWithSpecifiers:from];
         
         if ([backward isKindOfClass:[NSNumber class]] && [backward boolValue])
             options |= NSBackwardsSearch;

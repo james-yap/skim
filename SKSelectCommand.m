@@ -64,7 +64,7 @@
     } else if ([dP isEqual:@[]]) {
         doc = [self evaluatedSubjects];
     } else {
-        selection = [PDFSelection selectionWithSpecifier:dP];
+        selection = [PDFSelection selectionWithSpecifiers:dP];
         doc = [[[selection pages] firstObject] containingDocument];
     }
     

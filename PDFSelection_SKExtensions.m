@@ -528,11 +528,11 @@ static NSArray *characterRangesAndContainersForSpecifier(NSScriptObjectSpecifier
     return rangeDicts;
 }
 
-+ (instancetype)selectionWithSpecifier:(id)specifier {
-    return [self selectionWithSpecifier:specifier onPage:nil];
++ (instancetype)selectionWithSpecifiers:(id)specifier {
+    return [self selectionWithSpecifiers:specifier onPage:nil];
 }
 
-+ (instancetype)selectionWithSpecifier:(id)specifier onPage:(PDFPage *)aPage {
++ (instancetype)selectionWithSpecifiers:(id)specifier onPage:(PDFPage *)aPage {
     if (specifier == nil || [specifier isEqual:[NSNull null]])
         return nil;
     if ([specifier isKindOfClass:[NSPropertySpecifier class]] &&

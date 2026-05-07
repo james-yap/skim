@@ -323,7 +323,7 @@
         [[(SKMainDocument *)[page containingDocument] synchronizer] findPageAndLocationForLine:[location integerValue] inFile:[source path] fromPageIndex:[page pageIndex] options:options];
         return;
     } else {
-        PDFSelection *selection = [[[PDFSelection selectionWithSpecifier:[[command arguments] objectForKey:@"To"]] selectionsByLine] firstObject];
+        PDFSelection *selection = [[[PDFSelection selectionWithSpecifiers:[[command arguments] objectForKey:@"To"]] selectionsByLine] firstObject];
         if ([selection hasCharacters]) {
             aPage = [selection safeFirstPage];
             NSRect rect = [selection boundsForPage:aPage];

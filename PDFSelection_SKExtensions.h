@@ -64,8 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<PDFSelection *> *)connectedSelectionsOnPage:(nullable PDFPage *)page;
 
-+ (nullable instancetype)selectionWithSpecifier:(nullable id)specifier;
-+ (nullable instancetype)selectionWithSpecifier:(nullable id)specifier onPage:(nullable PDFPage *)aPage;
++ (nullable instancetype)selectionWithSpecifiers:(nullable id)specifier;
++ (nullable instancetype)selectionWithSpecifiers:(nullable id)specifier onPage:(nullable PDFPage *)aPage;
 @property (nonatomic, nullable, readonly) id objectSpecifiers;
 
 @end
