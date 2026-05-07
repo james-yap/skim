@@ -301,7 +301,10 @@ NSString *SKSizeString(NSSize size, NSSize altSize) {
 }
    
 - (void)handleViewFrameDidChangeNotification:(NSNotification *)notification {
+    [NSAnimationContext beginGrouping];
+    [[NSAnimationContext currentContext] setDuration:0.0];
     [attributesTableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:[attributesKeys count] - 1]];
+    [NSAnimationContext endGrouping];
 }
 
 - (void)handleWindowDidBecomeMainNotification:(NSNotification *)notification {
