@@ -604,7 +604,7 @@
     } else if ([tv isEqual:leftSideController.findTableView] ||
                [tv isEqual:leftSideController.groupedFindTableView]) {
         if (mwcFlags.updatingFindResults == 0)
-            [self selectFindResultHighlight:NSDirectSelection];
+            [self selectSearchResultHighlight:NSDirectSelection];
     }
 }
 
@@ -767,13 +767,13 @@
 
 - (void)tableViewMoveLeft:(NSTableView *)tv {
     if (([tv isEqual:leftSideController.findTableView] || [tv isEqual:leftSideController.groupedFindTableView])) {
-        [self selectFindResultHighlight:NSSelectingPrevious];
+        [self selectSearchResultHighlight:NSSelectingPrevious];
     }
 }
 
 - (void)tableViewMoveRight:(NSTableView *)tv {
     if (([tv isEqual:leftSideController.findTableView] || [tv isEqual:leftSideController.groupedFindTableView])) {
-        [self selectFindResultHighlight:NSSelectingNext];
+        [self selectSearchResultHighlight:NSSelectingNext];
     }
 }
 

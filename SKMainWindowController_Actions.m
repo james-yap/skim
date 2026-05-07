@@ -250,7 +250,7 @@
 
 - (void)goToSelectedFindResults:(id)sender {
     if ([sender clickedRow] != -1)
-        [self selectFindResultHighlight:NSDirectSelection];
+        [self selectSearchResultHighlight:NSDirectSelection];
 }
 
 - (void)toggleSelectedSnapshots:(id)sender {

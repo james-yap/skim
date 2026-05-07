@@ -209,7 +209,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 - (void)updatePageLabel;
 
-- (void)updateFindResultHighlightsForDirection:(NSSelectionDirection)direction;
+- (void)updateSearchResultHighlightsForDirection:(NSSelectionDirection)direction;
 
 - (void)registerForDocumentNotifications;
 - (void)unregisterForDocumentNotifications;
@@ -1365,7 +1365,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         mwcFlags.findPaneState = newFindPaneState;
         
         [leftSideController displayTableAtIndex:2 + mwcFlags.findPaneState];
-        [self updateFindResultHighlightsForDirection:NSDirectSelection];
+        [self updateSearchResultHighlightsForDirection:NSDirectSelection];
         
     } else if ([self displaysFindPane] == NO) {
         
@@ -1947,13 +1947,13 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     }
 }
 
-- (void)selectFindResultHighlight:(NSSelectionDirection)direction {
-    [self updateFindResultHighlightsForDirection:direction];
+- (void)selectSearchResultHighlight:(NSSelectionDirection)direction {
+    [self updateSearchResultHighlightsForDirection:direction];
     if (direction == NSDirectSelection && [self interactionMode] == SKPresentationMode && [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHidePresentationContentsKey])
         [self hideSideWindow];
 }
 
-- (void)updateFindResultHighlightsForDirection:(NSSelectionDirection)direction {
+- (void)updateSearchResultHighlightsForDirection:(NSSelectionDirection)direction {
     NSArray *findResults = nil;
     
     if (mwcFlags.findPaneState == SKFindPaneStateSingular && [leftSideController.findTableView window])

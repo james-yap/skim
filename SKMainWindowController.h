@@ -273,7 +273,7 @@ extern NSNotificationName const SKMainWindowControllerDidShowOrHideOverviewNotif
 
 - (void)showFindBar;
 
-- (void)selectFindResultHighlight:(NSSelectionDirection)direction;
+- (void)selectSearchResultHighlight:(NSSelectionDirection)direction;
 
 - (BOOL)isOutlineExpanded:(PDFOutline *)outline;
 - (void)setExpanded:(BOOL)flag forOutline:(PDFOutline *)outline;
