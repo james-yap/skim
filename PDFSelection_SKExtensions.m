@@ -160,9 +160,12 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
     attributedSample = [[NSMutableAttributedString alloc] initWithString:sample attributes:attributes];
     
 	// Find instances of search string and "bold" them.
-    foundRange = [sample rangeOfString:searchString options:NSBackwardsSearch range:NSMakeRange(0, MIN([searchString length] + i - start, [sample length]))];
-    if (foundRange.location == NSNotFound)
-        foundRange = [sample rangeOfString:searchString];
+    foundRange = NSMakeRange(i - start, [searchString length]);
+    if ([[sample substringWithRange:foundRange] isEqualToString:searchString] == NO) {
+        foundRange = [sample rangeOfString:searchString options:NSBackwardsSearch range:NSMakeRange(0, MIN([searchString length] + i - start, [sample length]))];
+        if (foundRange.location == NSNotFound)
+            foundRange = [sample rangeOfString:searchString];
+    }
     if (foundRange.location != NSNotFound)
         // Use bold font for the text range where the search term was found.
         [attributedSample addAttribute:NSFontAttributeName value:[NSFont boldSystemFontOfSize:fontSize] range:foundRange];
