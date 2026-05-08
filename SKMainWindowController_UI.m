@@ -1202,8 +1202,12 @@
     } else if (mwcFlags.findPaneState == SKFindPaneStateGrouped && [leftSideController.groupedFindTableView window]) {
         results = [[leftSideController.groupedFindArrayController selectedObjects] valueForKeyPath:@"@unionOfArrays.matches"];
     }
-    results = [[NSArray alloc] initWithArray:results copyItems:YES];
-    [results setValue:[NSColor findHighlightColor] forKey:@"color"];
+    if ([results count]) {
+        results = [[NSArray alloc] initWithArray:results copyItems:YES];
+        [results setValue:[NSColor findHighlightColor] forKey:@"color"];
+    } else {
+        results = nil;
+    }
     [pdfView setHighlightedSelections:results];
 }
 
