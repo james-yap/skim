@@ -1947,12 +1947,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     }
 }
 
-- (void)selectSearchResultHighlight:(NSSelectionDirection)direction {
-    [self updateSearchResultHighlightsForDirection:direction];
-    if (direction == NSDirectSelection && [self interactionMode] == SKPresentationMode && [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHidePresentationContentsKey])
-        [self hideSideWindow];
-}
-
 - (void)updateSearchResultHighlightsForDirection:(NSSelectionDirection)direction {
     NSArray *findResults = nil;
     

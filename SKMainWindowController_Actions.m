@@ -249,8 +249,12 @@
 }
 
 - (void)goToSelectedFindResults:(id)sender {
-    if ([sender numberOfSelectedRows] > 0)
-        [self selectSearchResultHighlight:NSDirectSelection];
+    if ([sender numberOfSelectedRows] > 0) {
+        [self updateSearchResultHighlightsForDirection:NSDirectSelection];
+        
+        if ([self interactionMode] == SKPresentationMode && [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHidePresentationContentsKey])
+            [self hideSideWindow];
+    }
 }
 
 - (void)toggleSelectedSnapshots:(id)sender {
