@@ -1773,23 +1773,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 #pragma mark Searching
 
-- (NSString *)searchString {
-    return [leftSideController.searchField stringValue];
-}
-
-- (void)setSearchString:(NSString *)searchString {
-    if ([searchString length] > 0) {
-        if ([self hasOverview])
-            [self hideOverviewAnimating:NO];
-        [[[splitViewController splitViewItems] firstObject] setCollapsed:NO];
-        [leftSideController.searchField setStringValue:searchString];
-        [self performSelector:@selector(search:) withObject:leftSideController.searchField afterDelay:0.0];
-    } else {
-        [leftSideController.searchField setStringValue:@""];
-        [self search:leftSideController.searchField];
-    }
-}
-
 - (BOOL)findString:(NSString *)string forward:(BOOL)forward {
     PDFDocument *pdfDoc = [pdfView document];
     if ([pdfDoc isFinding]) {
@@ -1944,6 +1927,23 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             [[self window] recalculateKeyViewLoop];
             [findField selectText:nil];
         }
+    }
+}
+
+- (NSString *)searchString {
+    return [leftSideController.searchField stringValue];
+}
+
+- (void)setSearchString:(NSString *)searchString {
+    if ([searchString length] > 0) {
+        if ([self hasOverview])
+            [self hideOverviewAnimating:NO];
+        [[[splitViewController splitViewItems] firstObject] setCollapsed:NO];
+        [leftSideController.searchField setStringValue:searchString];
+        [self performSelector:@selector(search:) withObject:leftSideController.searchField afterDelay:0.0];
+    } else {
+        [leftSideController.searchField setStringValue:@""];
+        [self search:leftSideController.searchField];
     }
 }
 
