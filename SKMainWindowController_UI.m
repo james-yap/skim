@@ -997,6 +997,7 @@
 }
 
 - (void)outlineViewColumnDidResize:(NSNotification *)notification{
+    
     if (mwcFlags.autoResizeNoteRows && [[notification object] isEqual:rightSideController.noteOutlineView] &&
         [(SKScrollView *)[rightSideController.noteOutlineView enclosingScrollView] isResizingSubviews] == NO)
         [rightSideController.noteOutlineView performSelectorOnce:@selector(resetRowHeightsAnimating) afterDelay:0.0];

@@ -249,7 +249,7 @@
 }
 
 - (void)goToSelectedFindResults:(id)sender {
-    if ([sender clickedRow] != -1)
+    if ([sender numberOfSelectedRows] > 0)
         [self selectSearchResultHighlight:NSDirectSelection];
 }
 
