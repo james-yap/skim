@@ -1816,6 +1816,9 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 }
 
 - (void)setSelectionSpecifier:(id)specifier {
+    SKToolMode toolMode = [[self pdfView] toolMode];
+    if (toolMode != SKToolModeText && toolMode != SKToolModeNote)
+        return;
     PDFSelection *selection = [PDFSelection selectionWithSpecifiers:specifier];
     [[self pdfView] setCurrentSelection:selection];
 }

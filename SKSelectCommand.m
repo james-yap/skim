@@ -79,6 +79,8 @@
         } else if (selection) {
             [pdfView goToSelection:selection];
             [pdfView setCurrentSelection:selection animate:animate];
+            if ([pdfView toolMode] != SKToolModeText && [pdfView toolMode] != SKToolModeNote)
+                [pdfView setCurrentSelection:nil];
         } else if (pdfView) {
             [pdfView setCurrentSelection:nil];
         } else {
