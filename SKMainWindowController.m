@@ -1999,12 +1999,12 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
         if ([currentSel hasCharacters]) {
             [pdfView setCurrentSelection:currentSel animate:YES];
+            if ([pdfView toolMode] != SKToolModeText && [pdfView toolMode] != SKToolModeNote)
+                [pdfView setCurrentSelection:nil];
             [[statusBar rightField] setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Match %lu of %lu", @"Status message"), (unsigned long)[searchResults indexOfObject:currentSel], (unsigned long)[searchResults count] - 1]];
         } else {
             [self updateRightStatus];
         }
-        if ([pdfView toolMode] != SKToolModeText && [pdfView toolMode] != SKToolModeNote)
-            [pdfView setCurrentSelection:nil];
     }
 }
 
