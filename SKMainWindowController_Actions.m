@@ -82,6 +82,7 @@
 #import "NSUserDefaults_SKExtensions.h"
 #import "SKNoteToolbarController.h"
 #import "NSView_SKExtensions.h"
+#import "PDFOutline_SKExtensions.h"
 
 #define STATUSBAR_HEIGHT 22.0
 
@@ -246,6 +247,14 @@
         [pdfView performAction:[outlineItem action]];
     else if ([outlineItem destination])
         [pdfView goToDestination:[outlineItem destination]];
+    if ([self interactionMode] == SKPresentationMode) {
+        PDFPage *page = [outlineItem page];
+        if (page) {
+            [presentationView setPage:page];
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHidePresentationContentsKey])
+                [self hideSideWindow];
+        }
+    }
 }
 
 - (void)goToSelectedFindResults:(id)sender {

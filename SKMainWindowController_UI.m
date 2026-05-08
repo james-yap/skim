@@ -124,8 +124,6 @@
 
 - (void)cleanup;
 
-- (void)goToSelectedOutlineItem:(id)sender;
-
 - (void)updatePageLabels;
 - (void)updatePageLabel;
 
@@ -976,8 +974,6 @@
         mwcFlags.updatingOutlineSelection = 1;
         [self goToSelectedOutlineItem:nil];
         mwcFlags.updatingOutlineSelection = 0;
-        if ([self interactionMode] == SKPresentationMode && [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHidePresentationContentsKey])
-            [self hideSideWindow];
     }
 }
 
