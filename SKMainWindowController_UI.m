@@ -2094,7 +2094,7 @@
     PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFViewAnnotationKey];
     SKNoteOutlineView *ov = rightSideController.noteOutlineView;
     
-    if (0&[annotation isSkimNote])
+    if ([annotation isSkimNote])
         [self setHasOutline:NO forAnnotation:annotation];
     
     annotation = [pdfView currentAnnotation];
