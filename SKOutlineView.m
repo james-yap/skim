@@ -108,8 +108,8 @@
     unichar eventChar = [theEvent firstCharacter];
     NSEventModifierFlags modifierFlags = [theEvent deviceIndependentModifierFlags];
     
-    if ((eventChar == NSNewlineCharacter || eventChar == NSEnterCharacter || eventChar == NSCarriageReturnCharacter) && modifierFlags == 0) {
-        if ([self doubleAction] == NULL || [self sendAction:[self doubleAction] to:[self target]] == NO)
+    if ((eventChar == NSNewlineCharacter || eventChar == NSEnterCharacter || eventChar == NSCarriageReturnCharacter) && modifierFlags == 0 && [self doubleAction]) {
+        if ([self sendAction:[self doubleAction] to:[self target]] == NO)
             NSBeep();
     } else if ((eventChar == SKSpaceCharacter) && modifierFlags == 0 && [typeSelectHelper isProcessing] == NO) {
         if (supportsQuickLook == NO)
