@@ -769,13 +769,15 @@
 
 - (void)tableViewMoveLeft:(NSTableView *)tv {
     if (([tv isEqual:leftSideController.findTableView] || [tv isEqual:leftSideController.groupedFindTableView])) {
-        [self updateSearchResultHighlightsForDirection:NSSelectingPrevious];
+        if ([tv numberOfSelectedRows])
+            [self updateSearchResultHighlightsForDirection:NSSelectingPrevious];
     }
 }
 
 - (void)tableViewMoveRight:(NSTableView *)tv {
     if (([tv isEqual:leftSideController.findTableView] || [tv isEqual:leftSideController.groupedFindTableView])) {
-        [self updateSearchResultHighlightsForDirection:NSSelectingNext];
+        if ([tv numberOfSelectedRows])
+            [self updateSearchResultHighlightsForDirection:NSSelectingNext];
     }
 }
 
