@@ -134,22 +134,23 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
                 CGFloat startHeight = [self rowHeightForItem:item] ?: NSHeight([self rectOfRow:row]) - [self intercellSpacing].height;
                 BOOL didDrag = NO;
                 
-                [[NSCursor resizeUpDownCursor] push];
-                
                 while (YES) {
                     theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
                     if ([theEvent type] == NSEventTypeLeftMouseUp)
                         break;
-                    didDrag = YES;
+                    if (didDrag == NO) {
+                        [[NSCursor resizeUpDownCursor] push];
+                        didDrag = YES;
+                    }
                     CGFloat currentHeight = fmax([self rowHeight], round(startHeight + [self convertPoint:[theEvent locationInWindow] fromView:nil].y - mouseLoc.y));
                     [self setRowHeight:currentHeight forItem:item];
                     [self noteHeightOfRowChanged:row animating:NO];
                 }
                 
-                [NSCursor pop];
-                
-                if (didDrag)
+                if (didDrag) {
+                    [NSCursor pop];
                     return;
+                }
             }
         }
     }
