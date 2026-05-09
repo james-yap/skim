@@ -157,6 +157,16 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     [super mouseDown:theEvent];
 }
 
+- (BOOL)validateProposedFirstResponder:(NSResponder *)responder forEvent:(NSEvent *)event {
+    if ([responder isKindOfClass:[NSTextField class]]) {
+        NSPoint mouseLoc = [self convertPoint:[event locationInWindow] fromView:nil];
+        NSInteger row = [self rowAtPoint:mouseLoc];
+        if (row != -1 && NSMouseInRect(mouseLoc, SKSliceRect([self rectOfRow:row], RESIZE_EDGE_HEIGHT, [self isFlipped] ? NSRectEdgeMaxY : NSRectEdgeMinY), [self isFlipped]))
+            return NO;
+    }
+    return [super validateProposedFirstResponder:responder forEvent:event];
+}
+
 - (void)toggleTableColumn:(id)sender {
     NSTableColumn *tc = [self tableColumnWithIdentifier:[sender representedObject]];
     [tc setHidden:[tc isHidden] == NO];
