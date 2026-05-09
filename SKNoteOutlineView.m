@@ -52,7 +52,7 @@
 
 #define SMALL_COLUMN_WIDTH 32.0
 
-#define RESIZE_EDGE_HEIGHT 5.0
+#define RESIZE_EDGE_HEIGHT 4.0
 
 @interface SKNoteOutlineView ()
 @end
@@ -158,7 +158,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
 }
 
 - (BOOL)validateProposedFirstResponder:(NSResponder *)responder forEvent:(NSEvent *)event {
-    if ([responder isKindOfClass:[NSTextField class]]) {
+    if ([responder isKindOfClass:[NSTextField class]] && [(NSTextField *)responder isEditable]) {
         NSPoint mouseLoc = [self convertPoint:[event locationInWindow] fromView:nil];
         NSInteger row = [self rowAtPoint:mouseLoc];
         if (row != -1 && NSMouseInRect(mouseLoc, SKSliceRect([self rectOfRow:row], RESIZE_EDGE_HEIGHT, [self isFlipped] ? NSRectEdgeMaxY : NSRectEdgeMinY), [self isFlipped]))

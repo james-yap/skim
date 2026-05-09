@@ -42,7 +42,7 @@
 #import "SKNoteOutlineView.h"
 #import "NSImage_SKExtensions.h"
 
-#define RESIZE_EDGE_HEIGHT 5.0
+#define RESIZE_EDGE_HEIGHT 4.0
 
 @implementation SKNoteTableRowView
 
@@ -50,7 +50,7 @@
     [super drawRect:dirtyRect];
     
     if (resizeIndicatorCell == nil) {
-        NSImage *image = [NSImage imageWithSize:NSMakeSize(7.0, 5.0) drawingHandler:^(NSRect r){
+        NSImage *image = [NSImage imageWithSize:NSMakeSize(7.0, 4.0) drawingHandler:^(NSRect r){
             [[NSColor colorWithGenericGamma22White:0.0 alpha:0.7] setStroke];
             [NSBezierPath strokeLineFromPoint:NSMakePoint(1.0, 3.5) toPoint:NSMakePoint(7.0, 3.5)];
             [NSBezierPath strokeLineFromPoint:NSMakePoint(3.0, 1.5) toPoint:NSMakePoint(5.0, 1.5)];
