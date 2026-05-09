@@ -259,7 +259,8 @@
 
 - (void)goToSelectedFindResults:(id)sender {
     if ([sender numberOfSelectedRows] > 0) {
-        [self updateSearchResultHighlightsForDirection:NSDirectSelection];
+        searchResultIndex = 0;
+        [self updateSearchResultHighlights];
         
         if ([self interactionMode] == SKPresentationMode && [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHidePresentationContentsKey])
             [self hideSideWindow];

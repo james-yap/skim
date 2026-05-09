@@ -209,8 +209,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 - (void)updatePageLabel;
 
-- (void)updateSearchResultHighlightsForDirection:(NSSelectionDirection)direction;
-
 - (void)registerForDocumentNotifications;
 - (void)unregisterForDocumentNotifications;
 
@@ -1365,7 +1363,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         mwcFlags.findPaneState = newFindPaneState;
         
         [leftSideController displayTableAtIndex:2 + mwcFlags.findPaneState];
-        [self updateSearchResultHighlightsForDirection:NSDirectSelection];
+        searchResultIndex = 0;
+        [self updateSearchResultHighlights];
         
     } else if ([self displaysFindPane] == NO) {
         
@@ -1947,7 +1946,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     }
 }
 
-- (void)updateSearchResultHighlightsForDirection:(NSSelectionDirection)direction {
+- (void)updateSearchResultHighlights {
     NSArray *findResults = nil;
     
     if (mwcFlags.findPaneState == SKFindPaneStateSingular && [leftSideController.findTableView window])
@@ -1963,15 +1962,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
     } else {
         
-        if (direction == NSDirectSelection) {
+        if (searchResultIndex >= (NSInteger)[findResults count])
             searchResultIndex = 0;
-        } else if (direction == NSSelectingNext) {
-            if (++searchResultIndex >= (NSInteger)[findResults count])
-                searchResultIndex = 0;
-        } else if (direction == NSSelectingPrevious) {
-            if (--searchResultIndex < 0)
-                searchResultIndex = [findResults count] - 1;
-        }
+        else if (searchResultIndex < 0)
+            searchResultIndex = [findResults count] - 1;
     
         PDFSelection *currentSel = [findResults objectAtIndex:searchResultIndex];
         

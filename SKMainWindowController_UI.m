@@ -602,7 +602,8 @@
     } else if ([tv isEqual:leftSideController.findTableView] ||
                [tv isEqual:leftSideController.groupedFindTableView]) {
         if (mwcFlags.updatingFindResults == 0) {
-            [self updateSearchResultHighlightsForDirection:NSDirectSelection];
+            searchResultIndex = 0;
+            [self updateSearchResultHighlights];
             
             if ([self interactionMode] == SKPresentationMode && [[NSUserDefaults standardUserDefaults] boolForKey:SKAutoHidePresentationContentsKey])
                 [self hideSideWindow];
@@ -769,15 +770,19 @@
 
 - (void)tableViewMoveLeft:(NSTableView *)tv {
     if (([tv isEqual:leftSideController.findTableView] || [tv isEqual:leftSideController.groupedFindTableView])) {
-        if ([tv numberOfSelectedRows])
-            [self updateSearchResultHighlightsForDirection:NSSelectingPrevious];
+        if ([tv numberOfSelectedRows]) {
+            ++searchResultIndex;
+            [self updateSearchResultHighlights];
+        }
     }
 }
 
 - (void)tableViewMoveRight:(NSTableView *)tv {
     if (([tv isEqual:leftSideController.findTableView] || [tv isEqual:leftSideController.groupedFindTableView])) {
-        if ([tv numberOfSelectedRows])
-            [self updateSearchResultHighlightsForDirection:NSSelectingNext];
+        if ([tv numberOfSelectedRows]) {
+            --searchResultIndex;
+            [self updateSearchResultHighlights];
+        }
     }
 }
 
