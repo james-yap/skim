@@ -38,7 +38,6 @@
 
 #import "SKNoteOutlineView.h"
 #import "SKTypeSelectHelper.h"
-#import "SKApplication.h"
 #import "NSGeometry_SKExtensions.h"
 #import "NSMenu_SKExtensions.h"
 
@@ -131,22 +130,26 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
         
         if (item) {
             NSRect rect = SKSliceRect([self rectOfRow:row], RESIZE_EDGE_HEIGHT, [self isFlipped] ? NSRectEdgeMaxY : NSRectEdgeMinY);
-            if (NSMouseInRect(mouseLoc, rect, [self isFlipped]) && [NSApp willDragMouse]) {
+            if (NSMouseInRect(mouseLoc, rect, [self isFlipped])) {
                 CGFloat startHeight = [self rowHeightForItem:item] ?: NSHeight([self rectOfRow:row]) - [self intercellSpacing].height;
+                BOOL didDrag = NO;
                 
                 [[NSCursor resizeUpDownCursor] push];
                 
-                while ([theEvent type] != NSEventTypeLeftMouseUp) {
+                while (YES) {
                     theEvent = [[self window] nextEventMatchingMask: NSEventMaskLeftMouseUp | NSEventMaskLeftMouseDragged];
-                    if ([theEvent type] == NSEventTypeLeftMouseDragged) {
-                        CGFloat currentHeight = fmax([self rowHeight], round(startHeight + [self convertPoint:[theEvent locationInWindow] fromView:nil].y - mouseLoc.y));
-                        [self setRowHeight:currentHeight forItem:item];
-                        [self noteHeightOfRowChanged:row animating:NO];
-                    }
+                    if ([theEvent type] == NSEventTypeLeftMouseUp)
+                        break;
+                    didDrag = YES;
+                    CGFloat currentHeight = fmax([self rowHeight], round(startHeight + [self convertPoint:[theEvent locationInWindow] fromView:nil].y - mouseLoc.y));
+                    [self setRowHeight:currentHeight forItem:item];
+                    [self noteHeightOfRowChanged:row animating:NO];
                 }
                 
                 [NSCursor pop];
-                return;
+                
+                if (didDrag)
+                    return;
             }
         }
     }
