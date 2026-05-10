@@ -1968,9 +1968,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             searchResultIndex = [findResults count] - 1;
     
         PDFSelection *currentSel = [findResults objectAtIndex:searchResultIndex];
+        PDFPage *page = [currentSel safeFirstPage];
         
-        if ([currentSel hasCharacters]) {
-            PDFPage *page = [currentSel safeFirstPage];
+        if (page) {
             if ([self interactionMode] == SKPresentationMode) {
                 [presentationView setPage:page];
             } else {

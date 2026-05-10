@@ -771,7 +771,7 @@
 - (void)tableViewMoveLeft:(NSTableView *)tv {
     if (([tv isEqual:leftSideController.findTableView] || [tv isEqual:leftSideController.groupedFindTableView])) {
         if ([tv numberOfSelectedRows]) {
-            ++searchResultIndex;
+            --searchResultIndex;
             [self updateSearchResultHighlights];
         }
     }
@@ -780,7 +780,7 @@
 - (void)tableViewMoveRight:(NSTableView *)tv {
     if (([tv isEqual:leftSideController.findTableView] || [tv isEqual:leftSideController.groupedFindTableView])) {
         if ([tv numberOfSelectedRows]) {
-            --searchResultIndex;
+            ++searchResultIndex;
             [self updateSearchResultHighlights];
         }
     }
