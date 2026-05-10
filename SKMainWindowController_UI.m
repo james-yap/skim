@@ -978,9 +978,7 @@
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification{
 	// Get the destination associated with the search result list. Tell the PDFView to go there.
 	if ([[notification object] isEqual:leftSideController.tocOutlineView] && (mwcFlags.updatingOutlineSelection == 0)){
-        mwcFlags.updatingOutlineSelection = 1;
         [self goToSelectedOutlineItem:nil];
-        mwcFlags.updatingOutlineSelection = 0;
     }
 }
 

@@ -243,10 +243,12 @@
 
 - (void)goToSelectedOutlineItem:(id)sender {
     PDFOutline *outlineItem = [leftSideController.tocOutlineView itemAtRow:[leftSideController.tocOutlineView selectedRow]];
+    mwcFlags.updatingOutlineSelection = 1;
     if ([outlineItem action])
         [pdfView performAction:[outlineItem action]];
     else if ([outlineItem destination])
         [pdfView goToDestination:[outlineItem destination]];
+    mwcFlags.updatingOutlineSelection = 0;
     if ([self interactionMode] == SKPresentationMode) {
         PDFPage *page = [outlineItem page];
         if (page) {
