@@ -91,7 +91,6 @@
 #define SKShowToolbarInFullScreenKey @"SKShowToolbarInFullScreen"
 
 @interface SKMainWindowController (SKPrivateUI)
-- (void)updateLineInspector;
 - (void)updateNoteFilterPredicate;
 - (void)updateSnapshotFilterPredicate;
 @end
@@ -189,9 +188,9 @@
             case SKNoLineChangeAction:
                 break;
         }
-        mwcFlags.updatingLine = 0;
         // in case one property changes another, e.g. when adding a dashPattern the borderStyle can change
-        [self updateLineInspector];
+        [[SKLineInspector sharedLineInspector] setAnnotationStyle:annotation];
+        mwcFlags.updatingLine = 0;
     }
 }
 
