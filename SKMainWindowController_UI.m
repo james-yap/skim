@@ -373,6 +373,12 @@
     mwcFlags.updatingThumbnailSelection = 1;
     [leftSideController.thumbnailTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:pageIndex] byExtendingSelection:NO];
     [leftSideController.thumbnailTableView scrollRowToVisible:pageIndex];
+    
+    if (overviewView) {
+        [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:pageIndex]];
+        if ([self hasOverview])
+            [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:pageIndex]];
+    }
     mwcFlags.updatingThumbnailSelection = 0;
     
     [leftSideController.thumbnailTableView enumerateAvailableRowViewsUsingBlock:^(SKHighlightingTableRowView *rowView, NSInteger row){
@@ -2058,10 +2064,6 @@
     [self updateThumbnailSelectionHighlights];
     [self updateTocSelectionHighlights];
     [self updateNoteSelection];
-    
-    [overviewView setSelectionIndexes:[NSIndexSet indexSetWithIndex:pageIndex]];
-    if ([self hasOverview])
-        [overviewView scrollRectToVisible:[overviewView frameForItemAtIndex:pageIndex]];
     
     if (beforeMarkedPage.pageIndex != NSNotFound && [[pdfView currentPage] pageIndex] != markedPage.pageIndex)
         beforeMarkedPage.pageIndex = NSNotFound;
