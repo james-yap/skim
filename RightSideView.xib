@@ -148,7 +148,7 @@
                                             <outlet property="textField" destination="T6H-tX-biW" id="2xe-tZ-MEc"/>
                                         </connections>
                                     </tableCellView>
-                                    <customView identifier="row" translatesAutoresizingMaskIntoConstraints="NO" id="84k-Om-OZ4" customClass="SKNoteTableRowView">
+                                    <customView identifier="NSTableViewRowViewKey" translatesAutoresizingMaskIntoConstraints="NO" id="84k-Om-OZ4" customClass="SKNoteTableRowView">
                                         <rect key="frame" x="1" y="18" width="93" height="17"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     </customView>

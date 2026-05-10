@@ -162,7 +162,7 @@
                                             <outlet property="imageView" destination="HAk-jf-rsO" id="XZB-YV-uN3"/>
                                         </connections>
                                     </tableCellView>
-                                    <customView identifier="row" translatesAutoresizingMaskIntoConstraints="NO" id="3fH-4A-dgM" customClass="SKHighlightingTableRowView">
+                                    <customView identifier="NSTableViewRowViewKey" translatesAutoresizingMaskIntoConstraints="NO" id="3fH-4A-dgM" customClass="SKHighlightingTableRowView">
                                         <rect key="frame" x="11" y="35" width="132" height="32"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </customView>
@@ -286,7 +286,7 @@
                                             <outlet property="textField" destination="9Hp-6e-4aM" id="UjA-VO-WkQ"/>
                                         </connections>
                                     </tableCellView>
-                                    <customView identifier="row" translatesAutoresizingMaskIntoConstraints="NO" id="6hb-e2-9aK" customClass="SKHighlightingTableRowView">
+                                    <customView identifier="NSTableViewRowViewKey" translatesAutoresizingMaskIntoConstraints="NO" id="6hb-e2-9aK" customClass="SKHighlightingTableRowView">
                                         <rect key="frame" x="11" y="20" width="134" height="32"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </customView>

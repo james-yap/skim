@@ -105,8 +105,6 @@
 
 #define HEADER_IDENTIFIER @"header"
 
-#define ROWVIEW_IDENTIFIER @"row"
-
 #define SKLeftSidePaneWidthKey  @"SKLeftSidePaneWidth"
 #define SKRightSidePaneWidthKey @"SKRightSidePaneWidth"
 
@@ -495,7 +493,7 @@
 
 - (NSView *)tableView:(NSTableView *)tv rowViewForRow:(NSInteger)row {
     if ([tv isEqual:leftSideController.thumbnailTableView]) {
-        SKHighlightingTableRowView *rowView = [tv makeViewWithIdentifier:ROWVIEW_IDENTIFIER owner:self];
+        SKHighlightingTableRowView *rowView = [tv makeViewWithIdentifier:NSTableViewRowViewKey owner:self];
         [rowView setHighlightLevel:[self thumbnailHighlightLevelForRow:row]];
         return rowView;
     }
@@ -871,12 +869,10 @@
 - (NSTableRowView *)outlineView:(NSOutlineView *)ov rowViewForItem:(id)item {
     if ([ov isEqual:leftSideController.tocOutlineView]) {
         if (@available(macOS 11.0, *)) {
-            SKHighlightingTableRowView *rowView = [ov makeViewWithIdentifier:ROWVIEW_IDENTIFIER owner:self];
+            SKHighlightingTableRowView *rowView = [ov makeViewWithIdentifier:NSTableViewRowViewKey owner:self];
             [rowView setHighlightLevel:[self tocHighlightLevelForRow:[ov rowForItem:item]]];
             return rowView;
         }
-    } else if ([ov isEqual:rightSideController.noteOutlineView]) {
-        return [ov makeViewWithIdentifier:ROWVIEW_IDENTIFIER owner:self];
     }
     return nil;
 }
