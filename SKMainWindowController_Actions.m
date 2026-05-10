@@ -248,7 +248,6 @@
         [pdfView performAction:[outlineItem action]];
     else if ([outlineItem destination])
         [pdfView goToDestination:[outlineItem destination]];
-    mwcFlags.updatingOutlineSelection = 0;
     if ([self interactionMode] == SKPresentationMode) {
         PDFPage *page = [outlineItem page];
         if (page) {
@@ -257,6 +256,7 @@
                 [self hideSideWindow];
         }
     }
+    mwcFlags.updatingOutlineSelection = 0;
 }
 
 - (void)goToSelectedFindResults:(id)sender {
