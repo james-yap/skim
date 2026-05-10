@@ -2258,9 +2258,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             if ([annotation isSkimNote]) {
                 [annotation setShouldDisplay:[pdfView hideNotes] == NO];
                 [annotation setShouldPrint:[pdfView hideNotes] == NO];
-                mwcFlags.updatingNoteSelection = 1;
                 [self insertObject:annotation inNotesAtIndex:[notes count]];
-                mwcFlags.updatingNoteSelection = 0;
                 [rightSideController.noteOutlineView reloadData];
             }
             
@@ -2301,11 +2299,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 if ([[self selectedNotes] containsObject:annotation])
                     [rightSideController.noteOutlineView deselectAll:self];
                 
-                mwcFlags.updatingNoteSelection = 1;
                 NSUInteger i = [notes indexOfObject:annotation];
                 if (i != NSNotFound)
                     [self removeObjectFromNotesAtIndex:i];
-                mwcFlags.updatingNoteSelection = 0;
                 [rightSideController.noteOutlineView reloadData];
             }
             

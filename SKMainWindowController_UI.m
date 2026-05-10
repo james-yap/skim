@@ -468,11 +468,9 @@
         }
     }];
     if (selAnnotation) {
-        mwcFlags.updatingNoteSelection = 1;
         NSInteger row = [rightSideController.noteOutlineView rowForItem:selAnnotation];
         [rightSideController.noteOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
         [rightSideController.noteOutlineView scrollRowToVisible:row];
-        mwcFlags.updatingNoteSelection = 0;
     }
 }
 
