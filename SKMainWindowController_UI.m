@@ -157,11 +157,11 @@
 }
 
 - (void)updateColorPanel {
-    PDFAnnotation *annotation = [pdfView currentAnnotation];
-    NSColor *color = nil;
-    NSView *accessoryView = nil;
-    
     if ([[self window] isMainWindow]) {
+        PDFAnnotation *annotation = [pdfView currentAnnotation];
+        NSColor *color = nil;
+        NSView *accessoryView = nil;
+        
         if ([annotation isSkimNote]) {
             if ([annotation hasInteriorColor]) {
                 if (colorAccessoryView == nil)
@@ -184,12 +184,12 @@
             [[NSColorPanel sharedColorPanel] setAccessoryView:nil];
             [[NSColorPanel sharedColorPanel] setAccessoryView:accessoryView];
         }
-    }
-    
-    if (color) {
-        mwcFlags.updatingColor = 1;
-        [[NSColorPanel sharedColorPanel] setColor:color];
-        mwcFlags.updatingColor = 0;
+        
+        if (color) {
+            mwcFlags.updatingColor = 1;
+            [[NSColorPanel sharedColorPanel] setColor:color];
+            mwcFlags.updatingColor = 0;
+        }
     }
 }
 
@@ -200,7 +200,7 @@
 - (void)updateLineInspector {
     PDFAnnotation *annotation = [pdfView currentAnnotation];
     
-    if ([[self window] isMainWindow] &&[annotation hasBorder]) {
+    if ([[self window] isMainWindow] && [annotation hasBorder]) {
         mwcFlags.updatingLine = 1;
         [[SKLineInspector sharedLineInspector] setAnnotationStyle:annotation];
         mwcFlags.updatingLine = 0;
