@@ -487,17 +487,8 @@
         return view;
     } else if ([tv isEqual:rightSideController.snapshotTableView]) {
         return [tv makeViewWithIdentifier:[tableColumn identifier] owner:self];
-    } else if ([tv isEqual:leftSideController.findTableView]) {
+    } else if ([tv isEqual:leftSideController.findTableView] || [tv isEqual:leftSideController.groupedFindTableView]) {
         return [tv makeViewWithIdentifier:([tableColumn identifier] ?: HEADER_IDENTIFIER) owner:self];
-    } else if ([tv isEqual:leftSideController.groupedFindTableView]) {
-        NSTableCellView *view = [tv makeViewWithIdentifier:([tableColumn identifier] ?: HEADER_IDENTIFIER) owner:self];
-        if ([[tableColumn identifier] isEqualToString:RELEVANCE_COLUMNID]) {
-            // IB does not allow setting te height and height sizable mask of a NSLeveleIndicator
-            NSControl *levelIndicator = [(SKControlTableCellView *)view control];
-            [levelIndicator setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-            [levelIndicator setFrame:[view bounds]];
-        }
-        return view;
     }
     return nil;
 }
