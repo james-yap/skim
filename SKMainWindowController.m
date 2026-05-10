@@ -879,9 +879,11 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if (outlineRoot) {
         NSInteger level = [[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseTOCSublevelsKey] ? ([outlineRoot numberOfChildren] > 1) : -1;
         [self expandOutline:outlineRoot forExpansionState:info level:level];
+        mwcFlags.updatingOutlineSelection = 0;
+        [self updateTocSelectionHighlights];
+    } else {
+        mwcFlags.updatingOutlineSelection = 0;
     }
-    mwcFlags.updatingOutlineSelection = 0;
-    [self updateTocSelectionHighlights];
     
     // handle the case as above where the outline has disappeared in a reload situation
     if (nil == outlineRoot)
