@@ -434,46 +434,6 @@
     }
 }
 
-- (void)updateNoteSelection {
-    NSSortDescriptor *sortDesc = [[rightSideController.noteArrayController sortDescriptors] firstObject];
-    
-    if ([[sortDesc key] isEqualToString:SKNPDFAnnotationPageIndexKey] == NO)
-        return;
-    
-    NSArray *orderedNotes = [rightSideController.noteArrayController arrangedObjects];
-    __block PDFAnnotation *selAnnotation = nil;
-    NSUInteger pageIndex = [[pdfView currentPage] pageIndex];
-    NSMutableIndexSet *selPageIndexes = [NSMutableIndexSet indexSet];
-    NSEnumerationOptions options = [sortDesc ascending] ? 0 : NSEnumerationReverse;
-    
-    for (PDFAnnotation *annotation in [self selectedNotes]) {
-        if ([annotation pageIndex] != NSNotFound)
-            [selPageIndexes addIndex:[annotation pageIndex]];
-    }
-    
-    if ([orderedNotes count] == 0 || [selPageIndexes containsIndex:pageIndex])
-        return;
-    
-    // Walk outline view looking for best firstpage number match.
-    [orderedNotes enumerateObjectsWithOptions:options usingBlock:^(PDFAnnotation *annotation, NSUInteger i, BOOL *stop) {
-        if ([annotation pageIndex] == pageIndex) {
-            selAnnotation = annotation;
-            *stop = YES;
-        } else if ([annotation pageIndex] > pageIndex) {
-            if (i == 0)
-                selAnnotation = [orderedNotes objectAtIndex:0];
-            else if ([selPageIndexes containsIndex:[[orderedNotes objectAtIndex:i - 1] pageIndex]])
-                selAnnotation = [orderedNotes objectAtIndex:i - 1];
-            *stop = YES;
-        }
-    }];
-    if (selAnnotation) {
-        NSInteger row = [rightSideController.noteOutlineView rowForItem:selAnnotation];
-        [rightSideController.noteOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-        [rightSideController.noteOutlineView scrollRowToVisible:row];
-    }
-}
-
 #pragma mark NSTableView datasource protocol
 
 // AppKit bug: need a dummy NSTableDataSource implementation, otherwise some NSTableView delegate methods are ignored
@@ -2061,7 +2021,6 @@
     
     [self updateThumbnailSelectionHighlights];
     [self updateTocSelectionHighlights];
-    [self updateNoteSelection];
     
     if (beforeMarkedPage.pageIndex != NSNotFound && [[pdfView currentPage] pageIndex] != markedPage.pageIndex)
         beforeMarkedPage.pageIndex = NSNotFound;
