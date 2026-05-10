@@ -207,10 +207,9 @@
     }
 }
 
-- (void)updateUtilityPanel {
-    PDFAnnotation *annotation = [pdfView currentAnnotation];
-    
+- (void)updateUtilityPanels {
     if ([[self window] isMainWindow]) {
+        PDFAnnotation *annotation = [pdfView currentAnnotation];
         if ([annotation isSkimNote]) {
             if ([annotation isText]) {
                 mwcFlags.updatingFont = 1;
@@ -231,7 +230,7 @@
 
 - (void)windowDidBecomeMain:(NSNotification *)notification {
     if ([self interactionMode] != SKPresentationMode) {
-        [self updateUtilityPanel];
+        [self updateUtilityPanels];
     } else if ([NSApp isActive] && [[NSUserDefaults standardUserDefaults] boolForKey:SKUseNormalLevelForPresentationKey] == NO) {
         [[self window] setLevel:NSPopUpMenuWindowLevel];
     }
@@ -2063,7 +2062,7 @@
     
     annotation = [pdfView currentAnnotation];
     if ([[self window] isMainWindow])
-        [self updateUtilityPanel];
+        [self updateUtilityPanels];
     if ([annotation isSkimNote]) {
         if ([[self selectedNotes] containsObject:annotation] == NO) {
             [ov selectRowIndexes:[NSIndexSet indexSetWithIndex:[ov rowForItem:annotation]] byExtendingSelection:NO];
