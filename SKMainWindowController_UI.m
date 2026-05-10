@@ -2069,8 +2069,6 @@
             [ov selectRowIndexes:[NSIndexSet indexSetWithIndex:[ov rowForItem:annotation]] byExtendingSelection:NO];
         }
         [self setHasOutline:YES forAnnotation:annotation];
-    } else {
-        [ov deselectAll:self];
     }
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisplayNoteBoundsKey])
         [self updateRightStatus];
