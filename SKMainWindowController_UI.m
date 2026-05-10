@@ -157,39 +157,36 @@
 }
 
 - (void)updateColorPanel {
-    if ([[self window] isMainWindow]) {
-        PDFAnnotation *annotation = [pdfView currentAnnotation];
-        NSColor *color = nil;
-        NSView *accessoryView = nil;
-        
-        if ([annotation isSkimNote]) {
-            if ([annotation hasInteriorColor]) {
-                if (colorAccessoryView == nil)
-                    colorAccessoryView = [self newColorAccessoryButtonWithTitle:NSLocalizedString(@"Fill color", @"Check button title")];
-                accessoryView = colorAccessoryView;
-            } else if ([annotation isText]) {
-                if (textColorAccessoryView == nil)
-                    textColorAccessoryView = [self newColorAccessoryButtonWithTitle:NSLocalizedString(@"Text color", @"Check button title")];
-                accessoryView = textColorAccessoryView;
-            }
-            if ([annotation hasInteriorColor] && [colorAccessoryView state] == NSControlStateValueOn) {
-                color = [(id)annotation interiorColor] ?: [NSColor clearColor];
-            } else if ([annotation isText] && [textColorAccessoryView state] == NSControlStateValueOn) {
-                color = [(id)annotation fontColor] ?: [NSColor blackColor];
-            } else {
-                color = [annotation color];
-            }
+    PDFAnnotation *annotation = [pdfView currentAnnotation];
+    NSColor *color = nil;
+    NSView *accessoryView = nil;
+    
+    if ([annotation isSkimNote]) {
+        if ([annotation hasInteriorColor]) {
+            if (colorAccessoryView == nil)
+                colorAccessoryView = [self newColorAccessoryButtonWithTitle:NSLocalizedString(@"Fill color", @"Check button title")];
+            accessoryView = colorAccessoryView;
+        } else if ([annotation isText]) {
+            if (textColorAccessoryView == nil)
+                textColorAccessoryView = [self newColorAccessoryButtonWithTitle:NSLocalizedString(@"Text color", @"Check button title")];
+            accessoryView = textColorAccessoryView;
         }
-        if ([[NSColorPanel sharedColorPanel] accessoryView] != accessoryView) {
-            [[NSColorPanel sharedColorPanel] setAccessoryView:nil];
-            [[NSColorPanel sharedColorPanel] setAccessoryView:accessoryView];
+        if ([annotation hasInteriorColor] && [colorAccessoryView state] == NSControlStateValueOn) {
+            color = [(id)annotation interiorColor] ?: [NSColor clearColor];
+        } else if ([annotation isText] && [textColorAccessoryView state] == NSControlStateValueOn) {
+            color = [(id)annotation fontColor] ?: [NSColor blackColor];
+        } else {
+            color = [annotation color];
         }
-        
         if (color) {
             mwcFlags.updatingColor = 1;
             [[NSColorPanel sharedColorPanel] setColor:color];
             mwcFlags.updatingColor = 0;
         }
+    }
+    if ([[NSColorPanel sharedColorPanel] accessoryView] != accessoryView) {
+        [[NSColorPanel sharedColorPanel] setAccessoryView:nil];
+        [[NSColorPanel sharedColorPanel] setAccessoryView:accessoryView];
     }
 }
 
@@ -200,7 +197,7 @@
 - (void)updateLineInspector {
     PDFAnnotation *annotation = [pdfView currentAnnotation];
     
-    if ([[self window] isMainWindow] && [annotation hasBorder]) {
+    if ([annotation hasBorder]) {
         mwcFlags.updatingLine = 1;
         [[SKLineInspector sharedLineInspector] setAnnotationStyle:annotation];
         mwcFlags.updatingLine = 0;
@@ -220,10 +217,10 @@
                 mwcFlags.updatingFontAttributes = 0;
             }
         }
+        
+        [self updateColorPanel];
+        [self updateLineInspector];
     }
-    
-    [self updateColorPanel];
-    [self updateLineInspector];
 }
 
 #pragma mark NSWindow delegate protocol
