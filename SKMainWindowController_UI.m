@@ -161,29 +161,28 @@
     NSColor *color = nil;
     NSView *accessoryView = nil;
     
-    if ([annotation isSkimNote]) {
-        if ([annotation hasInteriorColor]) {
-            if (colorAccessoryView == nil)
-                colorAccessoryView = [self newColorAccessoryButtonWithTitle:NSLocalizedString(@"Fill color", @"Check button title")];
-            accessoryView = colorAccessoryView;
-        } else if ([annotation isText]) {
-            if (textColorAccessoryView == nil)
-                textColorAccessoryView = [self newColorAccessoryButtonWithTitle:NSLocalizedString(@"Text color", @"Check button title")];
-            accessoryView = textColorAccessoryView;
-        }
-        if ([annotation hasInteriorColor] && [colorAccessoryView state] == NSControlStateValueOn) {
-            color = [(id)annotation interiorColor] ?: [NSColor clearColor];
-        } else if ([annotation isText] && [textColorAccessoryView state] == NSControlStateValueOn) {
-            color = [(id)annotation fontColor] ?: [NSColor blackColor];
-        } else {
-            color = [annotation color];
-        }
-        if (color) {
-            mwcFlags.updatingColor = 1;
-            [[NSColorPanel sharedColorPanel] setColor:color];
-            mwcFlags.updatingColor = 0;
-        }
+    if ([annotation hasInteriorColor]) {
+        if (colorAccessoryView == nil)
+            colorAccessoryView = [self newColorAccessoryButtonWithTitle:NSLocalizedString(@"Fill color", @"Check button title")];
+        accessoryView = colorAccessoryView;
+    } else if ([annotation isText]) {
+        if (textColorAccessoryView == nil)
+            textColorAccessoryView = [self newColorAccessoryButtonWithTitle:NSLocalizedString(@"Text color", @"Check button title")];
+        accessoryView = textColorAccessoryView;
     }
+    if ([annotation hasInteriorColor] && [colorAccessoryView state] == NSControlStateValueOn) {
+        color = [(id)annotation interiorColor] ?: [NSColor clearColor];
+    } else if ([annotation isText] && [textColorAccessoryView state] == NSControlStateValueOn) {
+        color = [(id)annotation fontColor] ?: [NSColor blackColor];
+    } else {
+        color = [annotation color];
+    }
+    if (color) {
+        mwcFlags.updatingColor = 1;
+        [[NSColorPanel sharedColorPanel] setColor:color];
+        mwcFlags.updatingColor = 0;
+    }
+    
     if ([[NSColorPanel sharedColorPanel] accessoryView] != accessoryView) {
         [[NSColorPanel sharedColorPanel] setAccessoryView:nil];
         [[NSColorPanel sharedColorPanel] setAccessoryView:accessoryView];
@@ -216,10 +215,13 @@
                 [[NSFontManager sharedFontManager] setSelectedAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[annotation fontColor], NSForegroundColorAttributeName, nil] isMultiple:NO];
                 mwcFlags.updatingFontAttributes = 0;
             }
+            
+            [self updateColorPanel];
+            [self updateLineInspector];
+            
+        } else if ([[NSColorPanel sharedColorPanel] accessoryView]) {
+            [[NSColorPanel sharedColorPanel] setAccessoryView:nil];
         }
-        
-        [self updateColorPanel];
-        [self updateLineInspector];
     }
 }
 
