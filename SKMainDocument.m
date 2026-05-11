@@ -1639,14 +1639,16 @@ static void replaceInShellCommand(NSMutableString *cmdString, NSString *find, NS
 
 - (void)setPresentationOptions:(NSDictionary *)dictionary {
     SKTransitionController *transitions = [[self primaryWindowController] transitionControllerCreating:dictionary != nil];
-    if (dictionary == nil) {
+    if (dictionary) {
+        [transitions setTransition:[[SKTransitionInfo alloc] initWithProperties:dictionary]];
+        [transitions setPageTransitions:[dictionary objectForKey:PAGETRANSITIONS_KEY]];
+    } else if (transitions) {
         NSUInteger count = [[transitions pageTransitions] count];
-        if (count == 0 || count + 1 == [[self pdfDocument] pageCount])
-            return;
+        if (count > 0 && count + 1 != [[self pdfDocument] pageCount]) {
+            [transitions setTransition:[[SKTransitionInfo alloc] init]];
+            [transitions setPageTransitions:nil];
+        }
     }
-    SKTransitionInfo *transition = [[SKTransitionInfo alloc] initWithProperties:dictionary];
-    [transitions setTransition:transition];
-    [transitions setPageTransitions:[dictionary objectForKey:PAGETRANSITIONS_KEY]];
 }
 
 - (NSArray *)snapshots {
