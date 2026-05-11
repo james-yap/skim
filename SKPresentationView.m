@@ -329,44 +329,38 @@ static inline BOOL equalStrings(NSString *s1, NSString *s2) {
 }
 
 - (void)displayCurrentPage:(void (^)(void))completionHandler {
-    if (page == nil) {
-        if (completionHandler)
-            completionHandler();
-        return;
+    if (page) {
+        NSUInteger pageIndex = [page pageIndex];
+        NSImage *predrawnImage = [self predrawnImageAtIndex:pageIndex];
+        
+        if (predrawnImage) {
+            [pageLayer setContents:predrawnImage];
+            [self removePredrawnImageAtIndex:pageIndex];
+        } else {
+            
+            dispatch_block_t imageGenerator = [self imageGeneratorForPage:page handler:^(NSImage *image){
+                if (page && pageIndex == [page pageIndex])
+                    [pageLayer setContents:image];
+                if (completionHandler)
+                    completionHandler();
+            }];
+            
+            if (imageGenerator) {
+                
+                static dispatch_queue_t drawingQueue = nil;
+                if (drawingQueue == nil) {
+                    dispatch_queue_attr_t queuePriority = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_CONCURRENT, QOS_CLASS_UTILITY, 0);
+                    drawingQueue = dispatch_queue_create("net.sourceforge.skim-app.skim.pageview.drawing", queuePriority);
+                }
+                
+                dispatch_async(drawingQueue, imageGenerator);
+                return;
+            }
+        }
     }
     
-    NSUInteger pageIndex = [page pageIndex];
-    NSImage *predrawnImage = [self predrawnImageAtIndex:pageIndex];
-    
-    if (predrawnImage) {
-        [pageLayer setContents:predrawnImage];
-        [self removePredrawnImageAtIndex:pageIndex];
-        if (completionHandler)
-            completionHandler();
-        return;
-    }
-    
-    dispatch_block_t imageGenerator = [self imageGeneratorForPage:page handler:^(NSImage *image){
-        if (page && pageIndex == [page pageIndex])
-            [pageLayer setContents:image];
-        if (completionHandler)
-            completionHandler();
-    }];
-    
-    if (imageGenerator == nil) {
-        if (completionHandler)
-            completionHandler();
-        return;
-    }
-    
-    static dispatch_queue_t drawingQueue = nil;
-    if (drawingQueue == nil) {
-        dispatch_queue_attr_t queuePriority = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_CONCURRENT, QOS_CLASS_UTILITY, 0);
-        drawingQueue = dispatch_queue_create("net.sourceforge.skim-app.skim.pageview.drawing", queuePriority);
-    }
-    
-    dispatch_async(drawingQueue, imageGenerator);
-    
+    if (completionHandler)
+        completionHandler();
 }
 
 - (void)redisplayAtCurrentScaleFactorIfNeeded {
