@@ -945,7 +945,7 @@
     
     if (mwcFlags.autoResizeNoteRows && [[notification object] isEqual:rightSideController.noteOutlineView] &&
         [(SKScrollView *)[rightSideController.noteOutlineView enclosingScrollView] isResizingSubviews] == NO)
-        [rightSideController.noteOutlineView performSelectorOnce:@selector(resetRowHeightsAnimating) afterDelay:0.0];
+        [rightSideController.noteOutlineView performSelectorOnce:@selector(updateRowHeights) afterDelay:0.0];
 }
 
 - (void)outlineViewColumnDidMove:(NSNotification *)notification {
@@ -960,7 +960,7 @@
                 break;
         }
         if (oldColumn == firstColumn || newColumn == firstColumn)
-            [rightSideController.noteOutlineView performSelectorOnce:@selector(resetRowHeightsAnimating) afterDelay:0.0];
+            [rightSideController.noteOutlineView performSelectorOnce:@selector(updateRowHeights) afterDelay:0.0];
     }
 }
 
@@ -1259,7 +1259,7 @@
 - (void)resetHeightOfNoteRows:(id)sender {
     NSArray *items = [sender representedObject];
     if (items == nil) {
-        [rightSideController.noteOutlineView resetRowHeightsAnimating];
+        [rightSideController.noteOutlineView updateRowHeights];
     } else {
         SKNoteOutlineView *ov = rightSideController.noteOutlineView;
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
@@ -1325,7 +1325,7 @@
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     NSView *view = [rightSideController.noteOutlineView enclosingScrollView];
     if (mwcFlags.autoResizeNoteRows) {
-        [rightSideController.noteOutlineView resetRowHeightsAnimating];
+        [rightSideController.noteOutlineView updateRowHeights];
         [nc addObserver:self selector:@selector(handleNoteViewFrameDidChangeNotification:)
  name:NSViewFrameDidChangeNotification object:view];
         [nc addObserver:self selector:@selector(handleNoteViewDidEndLiveResizeNotification:)
@@ -2067,15 +2067,17 @@
         if ([[notification object] inLiveResize]) {
             mwcFlags.noteRowHeightsNeedUpdate = YES;
         } else {
-            [rightSideController.noteOutlineView resetRowHeights];
-            [rightSideController.noteOutlineView noteHeightOfRowsChangedAnimating:NO];
+            [NSAnimationContext beginGrouping];
+            [[NSAnimationContext currentContext] setDuration:0.0];
+            [rightSideController.noteOutlineView updateRowHeights];
+            [NSAnimationContext beginGrouping];
         }
     }
 }
 
 - (void)handleNoteViewDidEndLiveResizeNotification:(NSNotification *)notification {
     if (mwcFlags.noteRowHeightsNeedUpdate && mwcFlags.autoResizeNoteRows) {
-        [rightSideController.noteOutlineView resetRowHeightsAnimating];
+        [rightSideController.noteOutlineView updateRowHeights];
     }
 }
 

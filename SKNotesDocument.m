@@ -555,7 +555,7 @@
 - (void)resetHeightOfNoteRows:(id)sender {
     NSArray *items = [sender representedObject];
     if (items == nil) {
-        [outlineView resetRowHeightsAnimating];
+        [outlineView updateRowHeights];
     } else {
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
         for (id item in items) {
@@ -570,14 +570,16 @@
 
 - (void)handleScrollViewFrameDidChangeNotification:(NSNotification *)notification {
     if (ndFlags.autoResizeRows && [[notification object] inLiveResize] == NO) {
-        [outlineView resetRowHeights];
-        [outlineView noteHeightOfRowsChangedAnimating:NO];
+        [NSAnimationContext beginGrouping];
+        [[NSAnimationContext currentContext] setDuration:0.0];
+        [outlineView updateRowHeights];
+        [NSAnimationContext endGrouping];
     }
 }
 
 - (void)handleScrollViewDidEndLiveResizeNotification:(NSNotification *)notification {
     if (ndFlags.autoResizeRows) {
-        [outlineView resetRowHeightsAnimating];
+        [outlineView updateRowHeights];
     }
 }
 
@@ -586,7 +588,7 @@
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     NSView *view = [outlineView enclosingScrollView];
     if (ndFlags.autoResizeRows) {
-        [outlineView resetRowHeightsAnimating];
+        [outlineView updateRowHeights];
         [nc addObserver:self selector:@selector(handleScrollViewFrameDidChangeNotification:)
  name:NSViewFrameDidChangeNotification object:view];
         [nc addObserver:self selector:@selector(handleScrollViewDidEndLiveResizeNotification:)
@@ -735,7 +737,7 @@
 
 - (void)outlineViewColumnDidResize:(NSNotification *)notification{
     if (ndFlags.autoResizeRows && [(SKScrollView *)[[notification object] enclosingScrollView] isResizingSubviews] == NO)
-        [outlineView performSelectorOnce:@selector(resetRowHeightsAnimating) afterDelay:0.0];
+        [outlineView performSelectorOnce:@selector(updateRowHeights) afterDelay:0.0];
 }
 
 - (void)outlineViewColumnDidMove:(NSNotification *)notification {
@@ -750,7 +752,7 @@
                 break;
         }
         if (oldColumn == firstColumn || newColumn == firstColumn)
-            [outlineView performSelectorOnce:@selector(resetRowHeightsAnimating) afterDelay:0.0];
+            [outlineView performSelectorOnce:@selector(updateRowHeights) afterDelay:0.0];
     }
 }
 

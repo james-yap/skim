@@ -53,12 +53,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly, getter=isDropping) BOOL dropping;
 
-- (void)noteHeightOfRowsChangedAnimating:(BOOL)animate;
-
 - (CGFloat)rowHeightForItem:(id)item;
 - (void)setRowHeight:(CGFloat)rowHeight forItem:(id)item;
 - (void)resetRowHeights;
-- (void)resetRowHeightsAnimating;
+- (void)updateRowHeights;
 
 @end
 

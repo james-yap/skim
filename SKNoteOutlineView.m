@@ -103,17 +103,6 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     return self;
 }
 
-- (void)noteHeightOfRowsChangedAnimating:(BOOL)animate {
-    if (animate == NO) {
-        [NSAnimationContext beginGrouping];
-        [[NSAnimationContext currentContext] setDuration:0.0];
-    }
-    [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
-    if (animate == NO) {
-        [NSAnimationContext endGrouping];
-    }
-}
-
 - (CGFloat)rowHeightForItem:(id)item {
     return (NSInteger)NSMapGet(rowHeights, (__bridge void *)item);
 }
@@ -129,9 +118,9 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     [rowHeights removeAllObjects];
 }
 
-- (void)resetRowHeightsAnimating {
-    [self resetRowHeights];
-    [self noteHeightOfRowsChangedAnimating:YES];
+- (void)updateRowHeights {
+    [rowHeights removeAllObjects];
+    [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
