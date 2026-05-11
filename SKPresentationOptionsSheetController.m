@@ -108,9 +108,10 @@ static char *SKTransitionPropertiesObservationContext;
         
         SKTransitionController *transitionController = [controller transitionControllerCreating:NO];
         
-        transition = [[SKLabeledTransitionInfo alloc] init];
         if ([transitionController transition])
-            [transition setInfo:[transitionController transition]];
+            transition = [[SKLabeledTransitionInfo alloc] initWithTransitionInfo:[transitionController transition]];
+        else
+            transition = [[SKLabeledTransitionInfo alloc] init];
         if ([transitionController pageTransitions]) {
             transitions = [self makeTransitions:[transitionController pageTransitions]];
             separate = YES;
