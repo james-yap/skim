@@ -2826,7 +2826,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 if (mwcFlags.autoResizeNoteRows) {
                     NSInteger row = [rightSideController.noteOutlineView rowForItem:[keyPath isEqualToString:SKNPDFAnnotationStringKey] ? note : [note noteText]];
                     if (row != -1)
-                        [rightSideController.noteOutlineView noteHeightOfRowChanged:row animating:YES];
+                        [rightSideController.noteOutlineView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
                 }
             }
             
@@ -2945,7 +2945,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             [thumbnail setImage:image];
             
             if (sameSize == NO) {
-                [leftSideController.thumbnailTableView noteHeightOfRowChanged:[thumbnail pageIndex] animating:YES];
+                [leftSideController.thumbnailTableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:[thumbnail pageIndex]]];
                 [self updateOverviewItemSize];
             }
         });
@@ -3091,7 +3091,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             if (fabs(newSize.width - oldSize.width) > 1.0 || fabs(newSize.height - oldSize.height) > 1.0) {
                 NSUInteger idx = [[rightSideController.snapshotArrayController arrangedObjects] indexOfObject:controller];
                 if (idx != NSNotFound)
-                    [rightSideController.snapshotTableView noteHeightOfRowChanged:idx animating:YES];
+                    [rightSideController.snapshotTableView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:idx]];
             }
         });
     });

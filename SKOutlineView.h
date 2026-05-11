@@ -82,9 +82,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)reloadTypeSelectStrings;
 
-- (void)noteHeightOfRowsChangedAnimating:(BOOL)animate;
-- (void)noteHeightOfRowChanged:(NSInteger)row animating:(BOOL)animate;
-
 @property (nullable, weak) id<SKOutlineViewDelegate> delegate;
 
 @end

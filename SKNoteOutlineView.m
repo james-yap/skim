@@ -103,6 +103,17 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     return self;
 }
 
+- (void)noteHeightOfRowsChangedAnimating:(BOOL)animate {
+    if (animate == NO) {
+        [NSAnimationContext beginGrouping];
+        [[NSAnimationContext currentContext] setDuration:0.0];
+    }
+    [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
+    if (animate == NO) {
+        [NSAnimationContext endGrouping];
+    }
+}
+
 - (CGFloat)rowHeightForItem:(id)item {
     return (NSInteger)NSMapGet(rowHeights, (__bridge void *)item);
 }
@@ -142,7 +153,10 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
                         break;
                     CGFloat currentHeight = fmax([self rowHeight], round(startHeight + [self convertPoint:[theEvent locationInWindow] fromView:nil].y - mouseLoc.y));
                     [self setRowHeight:currentHeight forItem:item];
-                    [self noteHeightOfRowChanged:row animating:NO];
+                    [NSAnimationContext beginGrouping];
+                    [[NSAnimationContext currentContext] setDuration:0.0];
+                    [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:row]];
+                    [NSAnimationContext endGrouping];
                 }
                 
                 [NSCursor pop];
