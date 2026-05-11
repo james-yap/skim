@@ -466,48 +466,46 @@ static inline void cancelIfBlock(id imageOrBlock) {
 }
 
 - (void)predrawNextPage {
-    if (page == nil)
-        return;
-    
-    // generate an image for the next page in the background, which is usually needed next for a presentation
-    
-    NSUInteger pageIndex = [page pageIndex] + 1;
-    
-    if (pageIndex >= [[page document] pageCount])
-        return;
-    
-    if (predrawnImages == nil)
-        predrawnImages = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:2];
-    else if (NSMapGet(predrawnImages, (void *)pageIndex))
-        return;
-    
-    __block void *block = NULL;
-    dispatch_block_t imageGenerator = [self imageGeneratorForPage:[[page document] pageAtIndex:pageIndex] handler:^(NSImage *image){
-        if (predrawnImages && block == NSMapGet(predrawnImages, (void *)pageIndex)) {
-            NSMapRemove(predrawnImages, (void *)pageIndex);
-            NSUInteger currentIndex = [page pageIndex];
-            if (pageIndex > currentIndex)
-                NSMapInsert(predrawnImages, (void *)pageIndex, (__bridge void *)image);
-            else if (pageIndex == currentIndex)
-                [pageLayer setContents:image];
+    if (page) {
+        // generate an image for the next page in the background, which is usually needed next for a presentation
+        
+        NSUInteger pageIndex = [page pageIndex] + 1;
+        
+        if (pageIndex < [[page document] pageCount]) {
+            
+            if (predrawnImages == nil)
+                predrawnImages = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality valueOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality capacity:2];
+            else if (NSMapGet(predrawnImages, (void *)pageIndex))
+                return;
+            
+            __block void *block = NULL;
+            dispatch_block_t imageGenerator = [self imageGeneratorForPage:[[page document] pageAtIndex:pageIndex] handler:^(NSImage *image){
+                if (predrawnImages && block == NSMapGet(predrawnImages, (void *)pageIndex)) {
+                    NSMapRemove(predrawnImages, (void *)pageIndex);
+                    NSUInteger currentIndex = [page pageIndex];
+                    if (pageIndex > currentIndex)
+                        NSMapInsert(predrawnImages, (void *)pageIndex, (__bridge void *)image);
+                    else if (pageIndex == currentIndex)
+                        [pageLayer setContents:image];
+                }
+            }];
+            
+            if (imageGenerator) {
+                
+                // set this block so we can cancel it
+                block = (__bridge void *)imageGenerator;
+                NSMapInsert(predrawnImages, (void *)pageIndex, block);
+                
+                static dispatch_queue_t predrawingQueue = nil;
+                if (predrawingQueue == nil) {
+                    dispatch_queue_attr_t queuePriority = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0);
+                    predrawingQueue = dispatch_queue_create("net.sourceforge.skim-app.skim.pageview.predrawing", queuePriority);
+                }
+                
+                dispatch_async(predrawingQueue, imageGenerator);
+            }
         }
-    }];
-    
-    if (imageGenerator == nil)
-        return;
-    
-    // set this block so we can cancel it
-    block = (__bridge void *)imageGenerator;
-    NSMapInsert(predrawnImages, (void *)pageIndex, block);
-    
-    static dispatch_queue_t predrawingQueue = nil;
-    if (predrawingQueue == nil) {
-        dispatch_queue_attr_t queuePriority = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0);
-        predrawingQueue = dispatch_queue_create("net.sourceforge.skim-app.skim.pageview.predrawing", queuePriority);
     }
-    
-    dispatch_async(predrawingQueue, imageGenerator);
-    
 }
 
 - (void)displayCurrentPage:(void (^)(void))completionHandler {
