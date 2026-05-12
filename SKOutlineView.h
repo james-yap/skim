@@ -82,6 +82,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)reloadTypeSelectStrings;
 
+- (void)noteHeightOfRowsChanged;
+
 @property (nullable, weak) id<SKOutlineViewDelegate> delegate;
 
 @end

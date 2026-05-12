@@ -235,7 +235,7 @@
                     [[view textField] setFont:newFont];
             }
         }];
-        [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
+        [self noteHeightOfRowsChanged];
     }
 }
 
@@ -248,6 +248,10 @@
             [[view textField] setFont:font];
     }
     return view;
+}
+
+- (void)noteHeightOfRowsChanged {
+    [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
 }
 
 - (void)viewDidMoveToWindow {

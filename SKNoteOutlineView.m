@@ -120,7 +120,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
 
 - (void)noteHeightOfRowsChanged {
     [rowHeights removeAllObjects];
-    [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
+    [super noteHeightOfRowsChanged];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
