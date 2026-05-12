@@ -97,21 +97,22 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
         }
         
         [[self headerView] setMenu:menu];
-        
-        rowHeights = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality capacity:0];
     }
     return self;
 }
 
 - (CGFloat)rowHeightForItem:(id)item {
-    return (NSInteger)NSMapGet(rowHeights, (__bridge void *)item);
+    return rowHeights ? (NSInteger)NSMapGet(rowHeights, (__bridge void *)item) : 0.0;
 }
 
 - (void)setRowHeight:(CGFloat)rowHeight forItem:(id)item {
-    if (rowHeight > 0.0)
+    if (rowHeight > 0.0) {
+        if (rowHeights == nil)
+            rowHeights = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory | NSPointerFunctionsObjectPersonality valueOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsIntegerPersonality capacity:0];
         NSMapInsert(rowHeights, (__bridge void *)item, (void *)(NSInteger)rowHeight);
-    else
+    } else if (rowHeights) {
         NSMapRemove(rowHeights, (__bridge void *)item);
+    }
 }
 
 - (void)resetRowHeights {
