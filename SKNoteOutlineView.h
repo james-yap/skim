@@ -56,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (CGFloat)rowHeightForItem:(id)item;
 - (void)setRowHeight:(CGFloat)rowHeight forItem:(id)item;
 - (void)resetRowHeights;
-- (void)updateRowHeights;
+- (void)noteHeightOfRowsChanged;
 
 @end
 

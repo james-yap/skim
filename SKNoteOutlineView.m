@@ -118,7 +118,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     [rowHeights removeAllObjects];
 }
 
-- (void)updateRowHeights {
+- (void)noteHeightOfRowsChanged {
     [rowHeights removeAllObjects];
     [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
 }

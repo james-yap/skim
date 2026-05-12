@@ -839,6 +839,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 - (void)updateTableFont {
     NSFont *font = [NSFont systemFontOfSize:[[NSUserDefaults standardUserDefaults] floatForKey:SKTableFontSizeKey]];
+    if (mwcFlags.autoResizeNoteRows)
+        [rightSideController.noteOutlineView resetRowHeights];
     [leftSideController.tocOutlineView setFont:font];
     [rightSideController.noteOutlineView setFont:font];
     [leftSideController.findTableView setFont:font];

@@ -952,7 +952,7 @@
     
     if (mwcFlags.autoResizeNoteRows && [[notification object] isEqual:rightSideController.noteOutlineView] &&
         [(SKScrollView *)[rightSideController.noteOutlineView enclosingScrollView] isResizingSubviews] == NO)
-        [rightSideController.noteOutlineView performSelectorOnce:@selector(updateRowHeights) afterDelay:0.0];
+        [rightSideController.noteOutlineView performSelectorOnce:@selector(noteHeightOfRowsChanged) afterDelay:0.0];
 }
 
 - (void)outlineViewColumnDidMove:(NSNotification *)notification {
@@ -967,7 +967,7 @@
                 break;
         }
         if (oldColumn == firstColumn || newColumn == firstColumn)
-            [rightSideController.noteOutlineView performSelectorOnce:@selector(updateRowHeights) afterDelay:0.0];
+            [rightSideController.noteOutlineView performSelectorOnce:@selector(noteHeightOfRowsChanged) afterDelay:0.0];
     }
 }
 
@@ -1266,7 +1266,7 @@
 - (void)resetHeightOfNoteRows:(id)sender {
     NSArray *items = [sender representedObject];
     if (items == nil) {
-        [rightSideController.noteOutlineView updateRowHeights];
+        [rightSideController.noteOutlineView noteHeightOfRowsChanged];
     } else {
         SKNoteOutlineView *ov = rightSideController.noteOutlineView;
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
@@ -1332,7 +1332,7 @@
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     NSView *view = [rightSideController.noteOutlineView enclosingScrollView];
     if (mwcFlags.autoResizeNoteRows) {
-        [rightSideController.noteOutlineView updateRowHeights];
+        [rightSideController.noteOutlineView noteHeightOfRowsChanged];
         [nc addObserver:self selector:@selector(handleNoteViewFrameDidChangeNotification:)
  name:NSViewFrameDidChangeNotification object:view];
         [nc addObserver:self selector:@selector(handleNoteViewDidEndLiveResizeNotification:)
@@ -2076,7 +2076,7 @@
         } else {
             [NSAnimationContext beginGrouping];
             [[NSAnimationContext currentContext] setDuration:0.0];
-            [rightSideController.noteOutlineView updateRowHeights];
+            [rightSideController.noteOutlineView noteHeightOfRowsChanged];
             [NSAnimationContext beginGrouping];
         }
     }
@@ -2084,7 +2084,7 @@
 
 - (void)handleNoteViewDidEndLiveResizeNotification:(NSNotification *)notification {
     if (mwcFlags.noteRowHeightsNeedUpdate && mwcFlags.autoResizeNoteRows) {
-        [rightSideController.noteOutlineView updateRowHeights];
+        [rightSideController.noteOutlineView noteHeightOfRowsChanged];
     }
 }
 

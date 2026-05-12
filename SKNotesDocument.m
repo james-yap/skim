@@ -555,7 +555,7 @@
 - (void)resetHeightOfNoteRows:(id)sender {
     NSArray *items = [sender representedObject];
     if (items == nil) {
-        [outlineView updateRowHeights];
+        [outlineView noteHeightOfRowsChanged];
     } else {
         NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
         for (id item in items) {
@@ -572,14 +572,14 @@
     if (ndFlags.autoResizeRows && [[notification object] inLiveResize] == NO) {
         [NSAnimationContext beginGrouping];
         [[NSAnimationContext currentContext] setDuration:0.0];
-        [outlineView updateRowHeights];
+        [outlineView noteHeightOfRowsChanged];
         [NSAnimationContext endGrouping];
     }
 }
 
 - (void)handleScrollViewDidEndLiveResizeNotification:(NSNotification *)notification {
     if (ndFlags.autoResizeRows) {
-        [outlineView updateRowHeights];
+        [outlineView noteHeightOfRowsChanged];
     }
 }
 
@@ -588,7 +588,7 @@
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     NSView *view = [outlineView enclosingScrollView];
     if (ndFlags.autoResizeRows) {
-        [outlineView updateRowHeights];
+        [outlineView noteHeightOfRowsChanged];
         [nc addObserver:self selector:@selector(handleScrollViewFrameDidChangeNotification:)
  name:NSViewFrameDidChangeNotification object:view];
         [nc addObserver:self selector:@selector(handleScrollViewDidEndLiveResizeNotification:)
@@ -737,7 +737,7 @@
 
 - (void)outlineViewColumnDidResize:(NSNotification *)notification{
     if (ndFlags.autoResizeRows && [(SKScrollView *)[[notification object] enclosingScrollView] isResizingSubviews] == NO)
-        [outlineView performSelectorOnce:@selector(updateRowHeights) afterDelay:0.0];
+        [outlineView performSelectorOnce:@selector(noteHeightOfRowsChanged) afterDelay:0.0];
 }
 
 - (void)outlineViewColumnDidMove:(NSNotification *)notification {
@@ -752,7 +752,7 @@
                 break;
         }
         if (oldColumn == firstColumn || newColumn == firstColumn)
-            [outlineView performSelectorOnce:@selector(updateRowHeights) afterDelay:0.0];
+            [outlineView performSelectorOnce:@selector(noteHeightOfRowsChanged) afterDelay:0.0];
     }
 }
 

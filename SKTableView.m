@@ -231,7 +231,7 @@
                     [[view textField] setFont:newFont];
             }
         }];
-        [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
+        [self noteHeightOfRowsChanged];
     }
 }
 
