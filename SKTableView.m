@@ -246,15 +246,8 @@
     return view;
 }
 
-- (void)noteHeightOfRowsChangedAnimating:(BOOL)animate {
-    if (animate == NO) {
-        [NSAnimationContext beginGrouping];
-        [[NSAnimationContext currentContext] setDuration:0.0];
-    }
+- (void)noteHeightOfRowsChanged {
     [self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
-    if (animate == NO) {
-        [NSAnimationContext endGrouping];
-    }
 }
 
 - (void)viewDidMoveToWindow {

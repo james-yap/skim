@@ -98,7 +98,7 @@ typedef NS_ENUM(NSInteger, SKTableImageToolTipLayout) {
 
 - (void)reloadTypeSelectStrings;
 
-- (void)noteHeightOfRowsChangedAnimating:(BOOL)animate;
+- (void)noteHeightOfRowsChanged;
 
 @property (nullable, weak) id<SKTableViewDelegate> delegate;
 

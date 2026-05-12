@@ -570,15 +570,22 @@
     if ([tcID isEqualToString:IMAGE_COLUMNID]) {
         SKTableView *tv = [aNotification object];
         if ([tv isEqual:leftSideController.thumbnailTableView] || [tv isEqual:rightSideController.snapshotTableView]) {
-            [tv noteHeightOfRowsChangedAnimating:NO];
+            [NSAnimationContext beginGrouping];
+            [[NSAnimationContext currentContext] setDuration:0.0];
+            [tv noteHeightOfRowsChanged];
+            [NSAnimationContext endGrouping];
         }
     } else if ([tcID isEqualToString:RESULTS_COLUMNID]) {
         SKTableView *tv = [aNotification object];
-        if ([tv isEqual:leftSideController.findTableView]) {
-            if ([tv inLiveResize])
+        if ([tv isEqual:leftSideController.findTableView] && [tv numberOfRows] > 1) {
+            if ([tv inLiveResize]) {
                 mwcFlags.findRowHeightsNeedUpdate = YES;
-            else
-                [tv noteHeightOfRowsChangedAnimating:NO];
+            } else {
+                [NSAnimationContext beginGrouping];
+                [[NSAnimationContext currentContext] setDuration:0.0];
+                [tv noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, [tv numberOfRows] - 1)]];
+                [NSAnimationContext endGrouping];
+            }
         }
     }
 }

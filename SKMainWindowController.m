@@ -2653,10 +2653,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             }
         } else if ([keyPath isEqualToString:SKThumbnailSizeKey]) {
             [self resetThumbnailSizeIfNeeded];
-            [leftSideController.thumbnailTableView noteHeightOfRowsChangedAnimating:YES];
+            [leftSideController.thumbnailTableView noteHeightOfRowsChanged];
         } else if ([keyPath isEqualToString:SKSnapshotThumbnailSizeKey]) {
             [self resetSnapshotSizeIfNeeded];
-            [rightSideController.snapshotTableView noteHeightOfRowsChangedAnimating:YES];
+            [rightSideController.snapshotTableView noteHeightOfRowsChanged];
         } else if ([keyPath isEqualToString:SKInterpolationQualityKey]) {
             [pdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
             [secondaryPdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
