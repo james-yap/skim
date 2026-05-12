@@ -614,7 +614,7 @@
         NSTextFieldCell *cell = [tc dataCell];
         [cell setObjectValue:[[[leftSideController.findArrayController arrangedObjects] objectAtIndex:row] contextString]];
         CGFloat height = [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, [tc width], CGFLOAT_MAX)].height;
-        if (height > MAX_FIND_LINES * (rowHeight - 3.0))
+        if (height > MAX_FIND_LINES * (rowHeight - 5.0))
             height = fmin(height, MAX_FIND_LINES * [cell cellSizeForBounds:NSMakeRect(0.0, 0.0, CGFLOAT_MAX, CGFLOAT_MAX)].height);
         return fmax(rowHeight, height + EXTRA_FIND_ROW_HEIGHT);
     } else if ([tv isEqual:leftSideController.groupedFindTableView]) {
