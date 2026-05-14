@@ -187,10 +187,10 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     }
 }
 
-- (BOOL)outlineColumnIsFirst {
-    for (NSTableColumn *tc in [self tableColumns]) {
+static inline BOOL isFirstTableColumn(NSTableColumn *tableColumn, NSArray *tableColumns) {
+    for (NSTableColumn *tc in tableColumns) {
         if ([tc isHidden] == NO)
-            return tc == [self outlineTableColumn];
+            return tc == tableColumn;
     }
     return NO;
 }
@@ -205,7 +205,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
                 frame = NSUnionRect(frame, [super frameOfCellAtColumn:column row:row]);
         }
         NSInteger level = [self levelForRow:row];
-        if (level > 0 && [self outlineColumnIsFirst])
+        if (level > 0 && isFirstTableColumn([self outlineTableColumn], tcs))
             frame = SKShrinkRect(frame, -[self indentationPerLevel] * level, NSRectEdgeMinX);
         return frame;
     }
@@ -236,7 +236,7 @@ static inline NSString *titleForTableColumnIdentifier(NSString *identifier) {
     if (@available(macOS 11.0, *)) {
         if ([self effectiveStyle] == NSTableViewStylePlain)
             return 18.0;
-        else if ([self outlineColumnIsFirst])
+        else if (isFirstTableColumn([self outlineTableColumn], [self tableColumns]))
             return 9.0;
         else
             return 15.0 - floor(0.5 * [self intercellSpacing].width);
