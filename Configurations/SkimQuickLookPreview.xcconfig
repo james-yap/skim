@@ -9,7 +9,7 @@ INFOPLIST_FILE = SkimQuickLookPreview/Info.plist
 PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.skim-app.skim.quicklook-preview
 PRODUCT_NAME = $(TARGET_NAME)
 
-//CODE_SIGN_ENTITLEMENTS = SkimQuickLookPreview/SkimQuickLookPreview.entitlements
+CODE_SIGN_ENTITLEMENTS = SkimQuickLookPreview/SkimQuickLookPreview.entitlements
 ENABLE_HARDENED_RUNTIME = YES
 
 CLANG_ENABLE_MODULES = YES
