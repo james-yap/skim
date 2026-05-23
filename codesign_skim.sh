@@ -17,6 +17,8 @@ else
 fi
 
 SKIM_ENTITLEMENTS=$(dirname "$0")/Skim.entitlements
+QLTHUMBNAILS_ENTITLEMENTS=$(dirname "$0")/SkimQuickLookThumbnails/SkimQuickLookThumbnails.entitlements
+QLPREVIEW_ENTITLEMENTS=$(dirname "$0")/SkimQuickLookPreview/SkimQuickLookPreview.entitlements
 
 # see https://mjtsai.com/blog/2021/02/18/code-signing-when-building-on-apple-silicon/
 # and https://developer.apple.com/forums/thread/130855
@@ -40,6 +42,8 @@ codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" "${LOCATION}/Qui
 
 LOCATION="${CONTENTS_DIR}/Plugins"
 codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" "${LOCATION}/SkimTransitions.plugin/Contents/MacOS/SkimTransitions"
+codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" ${CODESIGN_OPTIONS:+--entitlements "${QLTHUMBNAILS_ENTITLEMENTS}"} "${LOCATION}/SkimQuickLookThumbnails.appex/Contents/MacOS/SkimQuickLookThumbnails"
+codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" ${CODESIGN_OPTIONS:+--entitlements "${QLPREVIEW_ENTITLEMENTS}"} "${LOCATION}/SkimQuickLookPreview.appex/Contents/MacOS/SkimQuickLookPreview"
 
 LOCATION="${CONTENTS_DIR}/SharedSupport"
 codesign ${CODESIGN_FLAGS} ${CODESIGN_OPTIONS} -s "${IDENTITY}" -i "net.sourceforge.skim-app.tool.skimnotes" "${LOCATION}/skimnotes"
