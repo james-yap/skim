@@ -62,13 +62,13 @@ NSURL *SKQLPDFURLForPDFBundleURL(NSURL *url)
     return pdfFile ? [url URLByAppendingPathComponent:pdfFile] : nil;
 }
 
-static NSAttributedString *imageAttachmentForType(NSString *type, NSBundle *bundle)
+static NSAttributedString *imageAttachmentForType(NSString *type)
 {
     static NSMutableDictionary *imageWrappers = nil;
     NSFileWrapper *wrapper = [imageWrappers objectForKey:type];
     
     if (wrapper == nil) {
-        NSURL *imgURL = [bundle URLForImageResource:type];
+        NSURL *imgURL = [[NSBundle mainBundle] URLForImageResource:type];
         if (imageWrappers == nil)
             imageWrappers = [[NSMutableDictionary alloc] init];
         wrapper = [[NSFileWrapper alloc] initWithURL:imgURL options:0 error:NULL];
@@ -180,7 +180,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
     return [notes isKindOfClass:[NSArray class]] ? notes : nil;
 }
 
-+ (NSAttributedString *)attributedStringWithNotes:(NSArray *)notes bundle:(NSBundle *)bundle;
++ (NSAttributedString *)attributedStringWithNotes:(NSArray *)notes;
 {
     NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] init];
     NSFont *font = [NSFont userFontOfSize:_fontSize];
@@ -211,7 +211,7 @@ static NSString *HTMLEscapeString(NSString *htmlString)
             if ([color isKindOfClass:[NSArray class]])
                 color = colorFromArray((NSArray *)color);
             
-            [attrString appendAttributedString:imageAttachmentForType(type, bundle)];
+            [attrString appendAttributedString:imageAttachmentForType(type)];
             [attrString addAttribute:NSBackgroundColorAttributeName value:color range:NSMakeRange([attrString length] - 1, 1)];
             [attrString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (page %ld)\n", type, (long)(pageIndex+1)] attributes:attrs]];
             start = [attrString length];

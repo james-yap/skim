@@ -42,6 +42,6 @@ extern NSURL *SKQLPDFURLForPDFBundleURL(NSURL *url);
 
 @interface SKQLConverter : NSObject
 + (NSArray *)notesWithData:(NSData *)data;
-+ (NSAttributedString *)attributedStringWithNotes:(NSArray *)notes bundle:(NSBundle *)bundle;
++ (NSAttributedString *)attributedStringWithNotes:(NSArray *)notes;
 + (NSString *)htmlStringWithNotes:(NSArray *)notes;
 @end

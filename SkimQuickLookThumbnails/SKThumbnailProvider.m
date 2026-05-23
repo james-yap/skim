@@ -51,14 +51,14 @@ static const NSSize _containerSize = (NSSize) { 572, 752 };
 static const NSRect _iconRect = (NSRect) { { 50, 140 }, { 512, 512 } };
 
 // wash the app icon over a white page background
-static void drawBackgroundAndApplicationIconInCurrentContext(NSBundle *bundle)
+static void drawBackgroundAndApplicationIconInCurrentContext()
 {
     [[NSColor whiteColor] setFill];
     NSRect pageRect = { NSZeroPoint, _paperSize };
     NSRectFillUsingOperation(pageRect, NSCompositingOperationSourceOver);
     BOOL isHR = CGContextGetUserSpaceToDeviceSpaceTransform([[NSGraphicsContext currentContext] CGContext]).a > 1.0;
     
-    NSURL *iconURL = [bundle URLForImageResource:isHR ? @"Skim_2x" : @"Skim"];
+    NSURL *iconURL = [[NSBundle mainBundle] URLForImageResource:isHR ? @"Skim_2x" : @"Skim"];
     NSImage *appIcon = [[NSImage alloc] initWithContentsOfURL:iconURL];
     
     [appIcon drawInRect:_iconRect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:0.3];
@@ -170,16 +170,15 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
             NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL options:NSDataReadingUncached error:NULL];
             
             if (data) {
-                NSBundle *bundle = [NSBundle bundleForClass:[SKThumbnailProvider class]];
                 NSArray *notes = [SKQLConverter notesWithData:data];
-                NSAttributedString *attrString = [SKQLConverter attributedStringWithNotes:notes bundle:bundle];
+                NSAttributedString *attrString = [SKQLConverter attributedStringWithNotes:notes];
                 
                 if (attrString) {
                     NSGraphicsContext *nsContext = [NSGraphicsContext graphicsContextWithCGContext:context flipped:YES];
                     [NSGraphicsContext saveGraphicsState];
                     [NSGraphicsContext setCurrentContext:nsContext];
                     
-                    drawBackgroundAndApplicationIconInCurrentContext(bundle);
+                    drawBackgroundAndApplicationIconInCurrentContext();
                     drawAttributedStringInCurrentContext(attrString);
                     
                     [NSGraphicsContext restoreGraphicsState];

@@ -86,7 +86,7 @@
                 if ((data = [htmlString dataUsingEncoding:NSUTF8StringEncoding])) {
                     NSSet *types = [NSSet setWithArray:[notes valueForKey:@"type"]];
                     NSMutableDictionary *attachments = [NSMutableDictionary dictionary];
-                    NSBundle *bundle = [NSBundle bundleForClass:[SKPreviewProvider class]];
+                    NSBundle *bundle = [NSBundle mainBundle];
                     for (NSString *type in types) {
                         NSURL *imageURL = [bundle URLForImageResource:type];
                         if (imageURL) {
