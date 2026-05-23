@@ -95,46 +95,50 @@ BUILT_APP = os.path.join(BUILD_DIR, "Skim.app")
 DERIVED_DATA_DIR = os.path.join(BUILD_ROOT, "DerivedData")
 SOURCE_PLIST_PATH = os.path.join(SOURCE_DIR, "Info.plist")
 PLIST_PATH = os.path.join(BUILT_APP, "Contents", "Info.plist")
+VERSION_CONFIG_PATH = os.path.join(SOURCE_DIR, "Configurations", "Skim-Common.xcconfig")
 RELNOTES_PATH = os.path.join(BUILT_APP, "Contents", "Resources", "ReleaseNotes.rtf")
 
 def bump_versions(newVersion):
     
-    # bump the version number
-    bumpCmd = ["/usr/bin/agvtool", "bump"]
-    print(" ".join(bumpCmd))
-    x = Popen(bumpCmd, cwd=SOURCE_DIR)
-    rc = x.wait()
-    assert rc == 0, "agvtool bump failed"
-    
-    # change CFBundleVersion and rewrite the Info.plist
-    with open(SOURCE_PLIST_PATH, "rb") as plistFile:
-        infoPlist = plistlib.load(plistFile)
-    assert infoPlist is not None, "unable to read Info.plist"
-    if newVersion == "+":
-        oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
-        if len(oldVersion) > 2:
-            oldVersion[-1] = str(int(oldVersion[-1]) + 1)
-        elif len(oldVersion) == 2:
-            oldVersion.append("1")
-        else:
-            oldVersion = oldVersion + ["0", "1"]
-        newVersion = ".".join(oldVersion)
-    elif newVersion == "++":
-        oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
-        if len(oldVersion) > 2:
-            oldVersion = oldVersion[:-2] + [str(int(oldVersion[-2]) + 1)]
-        elif len(oldVersion) == 2:
-            oldVersion[-1] = str(int(oldVersion[-1]) + 1)
-        else:
-            oldVersion.append("1")
-        newVersion = ".".join(oldVersion)
-    elif newVersion == "+++":
-        oldVersion = infoPlist["CFBundleShortVersionString"].split(".")
-        oldVersion = [str(int(oldVersion[0]) + 1), "0"]
-        newVersion = ".".join(oldVersion)
-    infoPlist["CFBundleShortVersionString"] = newVersion
-    with open(SOURCE_PLIST_PATH, "wb") as plistFile:
-        plistlib.dump(infoPlist, plistFile)
+    # change the project version (CFBundleVersion) and marketing version (CFBundleShortVersionString) in the configuration file
+    lines = []
+    newProjectVersion = ""
+    with open(VERSION_CONFIG_PATH, "r", encoding="utf-8") as configFile:
+        for line in configFile.readlines():
+            if "=" in line and not line.startswith("//") and not line.startswith("#"):
+                key, value = line.strip().split("=", 1)
+                key = key.strip()
+                if key == "CURRENT_PROJECT_VERSION":
+                    newProjectVersion = str(int(value.strip()) + 1)
+                    line = f"{key} = {newProjectVersion}\n"
+                elif key == "MARKETING_VERSION":
+                    if newVersion == "+":
+                        oldVersion = value.strip().split(".")
+                        if len(oldVersion) > 2:
+                            oldVersion[-1] = str(int(oldVersion[-1]) + 1)
+                        elif len(oldVersion) == 2:
+                            oldVersion.append("1")
+                        else:
+                            oldVersion = oldVersion + ["0", "1"]
+                        newVersion = ".".join(oldVersion)
+                    elif newVersion == "++":
+                        oldVersion = value.strip().split(".")
+                        if len(oldVersion) > 2:
+                            oldVersion = oldVersion[:-2] + [str(int(oldVersion[-2]) + 1)]
+                        elif len(oldVersion) == 2:
+                            oldVersion[-1] = str(int(oldVersion[-1]) + 1)
+                        else:
+                            oldVersion.append("1")
+                        newVersion = ".".join(oldVersion)
+                    elif newVersion == "+++":
+                        oldVersion = value.strip().split(".")
+                        oldVersion = [str(int(oldVersion[0]) + 1), "0"]
+                        newVersion = ".".join(oldVersion)
+                    line = f"{key} = {newVersion}\n"
+            lines.append(line)
+    with open(VERSION_CONFIG_PATH, "w", encoding="utf-8") as configFile:
+        configFile.writelines(lines)
+    print(f"version updated to {newProjectVersion}")
     print(f"version string updated to {newVersion}")
 
 def read_versions():
