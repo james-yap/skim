@@ -20,7 +20,7 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.quicklook.preview</string>
 		<key>NSExtensionPrincipalClass</key>
-		<string>SKPreviewViewController</string>
+		<string>SKPreviewProvider</string>
 	</dict>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
