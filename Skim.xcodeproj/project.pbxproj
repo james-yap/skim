@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -243,6 +243,37 @@
 		CECDC4FF0C5966A80026AAEC /* NSImage_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CECDC4FD0C5966A80026AAEC /* NSImage_SKExtensions.m */; };
 		CECE6C3F2188AE9A00F6179D /* SKSelectionCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = CECE6C3E2188AE9A00F6179D /* SKSelectionCommand.m */; };
 		CECF61FF0DB258D600587D96 /* SKFontWell.m in Sources */ = {isa = PBXBuildFile; fileRef = CECF61FE0DB258D600587D96 /* SKFontWell.m */; };
+		CED2D2FA2FC0FDF70044A3DC /* QuickLookThumbnailing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED2D2F92FC0FDF70044A3DC /* QuickLookThumbnailing.framework */; platformFilter = maccatalyst; };
+		CED2D2FC2FC0FDF70044A3DC /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED2D2FB2FC0FDF70044A3DC /* Quartz.framework */; };
+		CED2D3002FC0FDF70044A3DC /* SKThumbnailProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = CED2D2FF2FC0FDF70044A3DC /* SKThumbnailProvider.m */; };
+		CED2D3052FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex in CopyFiles */ = {isa = PBXBuildFile; fileRef = CED2D2F82FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CED2D3252FC103860044A3DC /* SKQLConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = CED2D3242FC103860044A3DC /* SKQLConverter.m */; };
+		CED2D3332FC108210044A3DC /* Underline.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3272FC108200044A3DC /* Underline.png */; };
+		CED2D3342FC108210044A3DC /* FreeText.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3282FC108200044A3DC /* FreeText.png */; };
+		CED2D3352FC108210044A3DC /* Ink.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3292FC108200044A3DC /* Ink.png */; };
+		CED2D3362FC108210044A3DC /* Circle.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D32A2FC108200044A3DC /* Circle.png */; };
+		CED2D3372FC108210044A3DC /* Line.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D32B2FC108200044A3DC /* Line.png */; };
+		CED2D3382FC108210044A3DC /* Square.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D32C2FC108200044A3DC /* Square.png */; };
+		CED2D3392FC108210044A3DC /* Widget.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D32D2FC108200044A3DC /* Widget.png */; };
+		CED2D33A2FC108210044A3DC /* Highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D32E2FC108200044A3DC /* Highlight.png */; };
+		CED2D33B2FC108210044A3DC /* Note.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D32F2FC108200044A3DC /* Note.png */; };
+		CED2D33C2FC108210044A3DC /* StrikeOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3302FC108200044A3DC /* StrikeOut.png */; };
+		CED2D33D2FC108210044A3DC /* Skim_2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3312FC108210044A3DC /* Skim_2x.png */; };
+		CED2D33E2FC108210044A3DC /* Skim.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3322FC108210044A3DC /* Skim.png */; };
+		CED2D3462FC10BA80044A3DC /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED2D2FB2FC0FDF70044A3DC /* Quartz.framework */; };
+		CED2D34D2FC10BA80044A3DC /* SKPreviewProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = CED2D34C2FC10BA80044A3DC /* SKPreviewProvider.m */; };
+		CED2D3552FC10BA80044A3DC /* SkimQuickLookPreview.appex in CopyFiles */ = {isa = PBXBuildFile; fileRef = CED2D3452FC10BA80044A3DC /* SkimQuickLookPreview.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CED2D35E2FC10EA80044A3DC /* SKQLConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = CED2D35D2FC10EA80044A3DC /* SKQLConverter.m */; };
+		CED2D3692FC113B60044A3DC /* Widget.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D35F2FC113B50044A3DC /* Widget.png */; };
+		CED2D36A2FC113B60044A3DC /* StrikeOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3602FC113B60044A3DC /* StrikeOut.png */; };
+		CED2D36B2FC113B60044A3DC /* Line.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3612FC113B60044A3DC /* Line.png */; };
+		CED2D36C2FC113B60044A3DC /* Note.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3622FC113B60044A3DC /* Note.png */; };
+		CED2D36D2FC113B60044A3DC /* Square.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3632FC113B60044A3DC /* Square.png */; };
+		CED2D36E2FC113B60044A3DC /* Underline.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3642FC113B60044A3DC /* Underline.png */; };
+		CED2D36F2FC113B60044A3DC /* Ink.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3652FC113B60044A3DC /* Ink.png */; };
+		CED2D3702FC113B60044A3DC /* Highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3662FC113B60044A3DC /* Highlight.png */; };
+		CED2D3712FC113B60044A3DC /* Circle.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3672FC113B60044A3DC /* Circle.png */; };
+		CED2D3722FC113B60044A3DC /* FreeText.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3682FC113B60044A3DC /* FreeText.png */; };
 		CED4DA252707B330001E09A8 /* SKThumbnailImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CED4DA242707B330001E09A8 /* SKThumbnailImageView.m */; };
 		CED76F011A1825DE00D1ACA4 /* SKScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = CED76F001A1825DE00D1ACA4 /* SKScrollView.m */; };
 		CEDA057B2295BEBA00881DE1 /* SkimTransitions.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = CEDA056B2295BE8300881DE1 /* SkimTransitions.plugin */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -524,6 +555,20 @@
 			remoteGlobalIDString = 8D576316048677EA00EA77CD;
 			remoteInfo = Skim;
 		};
+		CED2D3032FC0FDF70044A3DC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED2D2F72FC0FDF70044A3DC;
+			remoteInfo = SkimQuickLookThumbnails;
+		};
+		CED2D3532FC10BA80044A3DC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED2D3442FC10BA80044A3DC;
+			remoteInfo = SkimQuickLookPreview;
+		};
 		CEDA056A2295BE8300881DE1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CEDA05622295BE8300881DE1 /* SkimTransitions.xcodeproj */;
@@ -586,6 +631,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				CED2D3052FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex in CopyFiles */,
+				CED2D3552FC10BA80044A3DC /* SkimQuickLookPreview.appex in CopyFiles */,
 				CEDA057B2295BEBA00881DE1 /* SkimTransitions.plugin in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1172,6 +1219,46 @@
 		CECE6C3E2188AE9A00F6179D /* SKSelectionCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKSelectionCommand.m; sourceTree = "<group>"; };
 		CECF61FD0DB258D600587D96 /* SKFontWell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKFontWell.h; sourceTree = "<group>"; };
 		CECF61FE0DB258D600587D96 /* SKFontWell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKFontWell.m; sourceTree = "<group>"; };
+		CED2D2F82FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SkimQuickLookThumbnails.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CED2D2F92FC0FDF70044A3DC /* QuickLookThumbnailing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLookThumbnailing.framework; path = System/Library/Frameworks/QuickLookThumbnailing.framework; sourceTree = SDKROOT; };
+		CED2D2FB2FC0FDF70044A3DC /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		CED2D2FE2FC0FDF70044A3DC /* SKThumbnailProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKThumbnailProvider.h; sourceTree = "<group>"; };
+		CED2D2FF2FC0FDF70044A3DC /* SKThumbnailProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKThumbnailProvider.m; sourceTree = "<group>"; };
+		CED2D3012FC0FDF70044A3DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CED2D3022FC0FDF70044A3DC /* SkimQuickLookThumbnails.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SkimQuickLookThumbnails.entitlements; sourceTree = "<group>"; };
+		CED2D3232FC103860044A3DC /* SKQLConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKQLConverter.h; sourceTree = "<group>"; };
+		CED2D3242FC103860044A3DC /* SKQLConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKQLConverter.m; sourceTree = "<group>"; };
+		CED2D3272FC108200044A3DC /* Underline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Underline.png; sourceTree = "<group>"; };
+		CED2D3282FC108200044A3DC /* FreeText.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FreeText.png; sourceTree = "<group>"; };
+		CED2D3292FC108200044A3DC /* Ink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ink.png; sourceTree = "<group>"; };
+		CED2D32A2FC108200044A3DC /* Circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Circle.png; sourceTree = "<group>"; };
+		CED2D32B2FC108200044A3DC /* Line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Line.png; sourceTree = "<group>"; };
+		CED2D32C2FC108200044A3DC /* Square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Square.png; sourceTree = "<group>"; };
+		CED2D32D2FC108200044A3DC /* Widget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Widget.png; sourceTree = "<group>"; };
+		CED2D32E2FC108200044A3DC /* Highlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Highlight.png; sourceTree = "<group>"; };
+		CED2D32F2FC108200044A3DC /* Note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Note.png; sourceTree = "<group>"; };
+		CED2D3302FC108200044A3DC /* StrikeOut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StrikeOut.png; sourceTree = "<group>"; };
+		CED2D3312FC108210044A3DC /* Skim_2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Skim_2x.png; sourceTree = "<group>"; };
+		CED2D3322FC108210044A3DC /* Skim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Skim.png; sourceTree = "<group>"; };
+		CED2D3402FC1092D0044A3DC /* SkimQuickLookThumbnails.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SkimQuickLookThumbnails.xcconfig; sourceTree = "<group>"; };
+		CED2D3452FC10BA80044A3DC /* SkimQuickLookPreview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SkimQuickLookPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CED2D34B2FC10BA80044A3DC /* SKPreviewProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKPreviewProvider.h; sourceTree = "<group>"; };
+		CED2D34C2FC10BA80044A3DC /* SKPreviewProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKPreviewProvider.m; sourceTree = "<group>"; };
+		CED2D3512FC10BA80044A3DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CED2D3522FC10BA80044A3DC /* SkimQuickLookPreview.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SkimQuickLookPreview.entitlements; sourceTree = "<group>"; };
+		CED2D35B2FC10C860044A3DC /* SkimQuickLookPreview.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SkimQuickLookPreview.xcconfig; sourceTree = "<group>"; };
+		CED2D35C2FC10EA80044A3DC /* SKQLConverter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKQLConverter.h; sourceTree = "<group>"; };
+		CED2D35D2FC10EA80044A3DC /* SKQLConverter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKQLConverter.m; sourceTree = "<group>"; };
+		CED2D35F2FC113B50044A3DC /* Widget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Widget.png; sourceTree = "<group>"; };
+		CED2D3602FC113B60044A3DC /* StrikeOut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StrikeOut.png; sourceTree = "<group>"; };
+		CED2D3612FC113B60044A3DC /* Line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Line.png; sourceTree = "<group>"; };
+		CED2D3622FC113B60044A3DC /* Note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Note.png; sourceTree = "<group>"; };
+		CED2D3632FC113B60044A3DC /* Square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Square.png; sourceTree = "<group>"; };
+		CED2D3642FC113B60044A3DC /* Underline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Underline.png; sourceTree = "<group>"; };
+		CED2D3652FC113B60044A3DC /* Ink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ink.png; sourceTree = "<group>"; };
+		CED2D3662FC113B60044A3DC /* Highlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Highlight.png; sourceTree = "<group>"; };
+		CED2D3672FC113B60044A3DC /* Circle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Circle.png; sourceTree = "<group>"; };
+		CED2D3682FC113B60044A3DC /* FreeText.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FreeText.png; sourceTree = "<group>"; };
 		CED4DA232707B330001E09A8 /* SKThumbnailImageView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKThumbnailImageView.h; sourceTree = "<group>"; };
 		CED4DA242707B330001E09A8 /* SKThumbnailImageView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKThumbnailImageView.m; sourceTree = "<group>"; };
 		CED76EFF1A1825DE00D1ACA4 /* SKScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKScrollView.h; sourceTree = "<group>"; };
@@ -1449,6 +1536,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CED2D2F52FC0FDF70044A3DC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED2D2FA2FC0FDF70044A3DC /* QuickLookThumbnailing.framework in Frameworks */,
+				CED2D2FC2FC0FDF70044A3DC /* Quartz.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CED2D3422FC10BA80044A3DC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED2D3462FC10BA80044A3DC /* Quartz.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -1478,6 +1582,8 @@
 			isa = PBXGroup;
 			children = (
 				8D15AC370486D014006FF6A4 /* Skim.app */,
+				CED2D2F82FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex */,
+				CED2D3452FC10BA80044A3DC /* SkimQuickLookPreview.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1493,6 +1599,8 @@
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
 				CEE22EA20BFB8631002B746B /* Shared Support */,
 				CE2BD8160BD4123D00A5F4DB /* Subprojects */,
+				CED2D2FD2FC0FDF70044A3DC /* SkimQuickLookThumbnails */,
+				CED2D3472FC10BA80044A3DC /* SkimQuickLookPreview */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
 				19C28FB0FE9D524F11CA2CBB /* Products */,
 				CED8D4050D744D520028E3E2 /* Configurations */,
@@ -1560,6 +1668,8 @@
 				CE0998CA0EC8EC2A006CD0F7 /* Linked Libraries */,
 				1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */,
 				CE2BB81B0E0DB4FA0090E848 /* Embedded Frameworks */,
+				CED2D2F92FC0FDF70044A3DC /* QuickLookThumbnailing.framework */,
+				CED2D2FB2FC0FDF70044A3DC /* Quartz.framework */,
 				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -2109,6 +2219,86 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		CED2D2FD2FC0FDF70044A3DC /* SkimQuickLookThumbnails */ = {
+			isa = PBXGroup;
+			children = (
+				CED2D33F2FC1085B0044A3DC /* Source */,
+				CED2D3262FC107C80044A3DC /* Resources */,
+				CED2D3022FC0FDF70044A3DC /* SkimQuickLookThumbnails.entitlements */,
+			);
+			path = SkimQuickLookThumbnails;
+			sourceTree = "<group>";
+		};
+		CED2D3262FC107C80044A3DC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CED2D3322FC108210044A3DC /* Skim.png */,
+				CED2D3312FC108210044A3DC /* Skim_2x.png */,
+				CED2D3302FC108200044A3DC /* StrikeOut.png */,
+				CED2D32F2FC108200044A3DC /* Note.png */,
+				CED2D32B2FC108200044A3DC /* Line.png */,
+				CED2D32C2FC108200044A3DC /* Square.png */,
+				CED2D3282FC108200044A3DC /* FreeText.png */,
+				CED2D32A2FC108200044A3DC /* Circle.png */,
+				CED2D3272FC108200044A3DC /* Underline.png */,
+				CED2D32E2FC108200044A3DC /* Highlight.png */,
+				CED2D3292FC108200044A3DC /* Ink.png */,
+				CED2D32D2FC108200044A3DC /* Widget.png */,
+				CED2D3012FC0FDF70044A3DC /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		CED2D33F2FC1085B0044A3DC /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				CED2D2FE2FC0FDF70044A3DC /* SKThumbnailProvider.h */,
+				CED2D2FF2FC0FDF70044A3DC /* SKThumbnailProvider.m */,
+				CED2D3232FC103860044A3DC /* SKQLConverter.h */,
+				CED2D3242FC103860044A3DC /* SKQLConverter.m */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		CED2D3472FC10BA80044A3DC /* SkimQuickLookPreview */ = {
+			isa = PBXGroup;
+			children = (
+				CED2D3592FC10C330044A3DC /* Source */,
+				CED2D35A2FC10C4F0044A3DC /* Resources */,
+				CED2D3522FC10BA80044A3DC /* SkimQuickLookPreview.entitlements */,
+			);
+			path = SkimQuickLookPreview;
+			sourceTree = "<group>";
+		};
+		CED2D3592FC10C330044A3DC /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				CED2D34B2FC10BA80044A3DC /* SKPreviewProvider.h */,
+				CED2D34C2FC10BA80044A3DC /* SKPreviewProvider.m */,
+				CED2D35C2FC10EA80044A3DC /* SKQLConverter.h */,
+				CED2D35D2FC10EA80044A3DC /* SKQLConverter.m */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		CED2D35A2FC10C4F0044A3DC /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CED2D3602FC113B60044A3DC /* StrikeOut.png */,
+				CED2D3622FC113B60044A3DC /* Note.png */,
+				CED2D3612FC113B60044A3DC /* Line.png */,
+				CED2D3632FC113B60044A3DC /* Square.png */,
+				CED2D3682FC113B60044A3DC /* FreeText.png */,
+				CED2D3672FC113B60044A3DC /* Circle.png */,
+				CED2D3642FC113B60044A3DC /* Underline.png */,
+				CED2D3662FC113B60044A3DC /* Highlight.png */,
+				CED2D3652FC113B60044A3DC /* Ink.png */,
+				CED2D35F2FC113B50044A3DC /* Widget.png */,
+				CED2D3512FC10BA80044A3DC /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		CED8D4050D744D520028E3E2 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
@@ -2116,6 +2306,8 @@
 				CED8D40C0D744D940028E3E2 /* Skim-Debug.xcconfig */,
 				CED8D40D0D744D940028E3E2 /* Skim-Release.xcconfig */,
 				CE17EE460E24ED7C00DE06EA /* Skim-App.xcconfig */,
+				CED2D3402FC1092D0044A3DC /* SkimQuickLookThumbnails.xcconfig */,
+				CED2D35B2FC10C860044A3DC /* SkimQuickLookPreview.xcconfig */,
 			);
 			path = Configurations;
 			sourceTree = "<group>";
@@ -2306,12 +2498,48 @@
 				CE816A030D70F8F7008D807D /* PBXTargetDependency */,
 				CE7DC7E20E093C1A00D6D76D /* PBXTargetDependency */,
 				CEFF6B9C122B1478008CDE73 /* PBXTargetDependency */,
+				CED2D3042FC0FDF70044A3DC /* PBXTargetDependency */,
+				CED2D3542FC10BA80044A3DC /* PBXTargetDependency */,
 			);
 			name = Skim;
 			productInstallPath = "$(HOME)/Applications";
 			productName = Skim;
 			productReference = 8D15AC370486D014006FF6A4 /* Skim.app */;
 			productType = "com.apple.product-type.application";
+		};
+		CED2D2F72FC0FDF70044A3DC /* SkimQuickLookThumbnails */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CED2D3222FC0FDF70044A3DC /* Build configuration list for PBXNativeTarget "SkimQuickLookThumbnails" */;
+			buildPhases = (
+				CED2D2F42FC0FDF70044A3DC /* Sources */,
+				CED2D2F52FC0FDF70044A3DC /* Frameworks */,
+				CED2D2F62FC0FDF70044A3DC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SkimQuickLookThumbnails;
+			productName = SkimQuickLookThumbnails;
+			productReference = CED2D2F82FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		CED2D3442FC10BA80044A3DC /* SkimQuickLookPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CED2D3562FC10BA80044A3DC /* Build configuration list for PBXNativeTarget "SkimQuickLookPreview" */;
+			buildPhases = (
+				CED2D3412FC10BA80044A3DC /* Sources */,
+				CED2D3422FC10BA80044A3DC /* Frameworks */,
+				CED2D3432FC10BA80044A3DC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SkimQuickLookPreview;
+			productName = SkimQuickLookPreview;
+			productReference = CED2D3452FC10BA80044A3DC /* SkimQuickLookPreview.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -2320,6 +2548,14 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					CED2D2F72FC0FDF70044A3DC = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+					CED2D3442FC10BA80044A3DC = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+				};
 			};
 			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "Skim" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2370,6 +2606,8 @@
 			targets = (
 				8D15AC270486D014006FF6A4 /* Skim */,
 				CE592C5D0B9239C500C113DF /* DiskImage */,
+				CED2D2F72FC0FDF70044A3DC /* SkimQuickLookThumbnails */,
+				CED2D3442FC10BA80044A3DC /* SkimQuickLookPreview */,
 			);
 		};
 /* End PBXProject section */
@@ -2656,6 +2894,42 @@
 				CE1098F11613CFC800C4FA18 /* ExportAccessoryView.strings in Resources */,
 				CE0D371924323E2100451593 /* SpeedSheet.strings in Resources */,
 				CE25BB6B163FFB770046A348 /* Skim.help in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CED2D2F62FC0FDF70044A3DC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED2D33B2FC108210044A3DC /* Note.png in Resources */,
+				CED2D33A2FC108210044A3DC /* Highlight.png in Resources */,
+				CED2D3352FC108210044A3DC /* Ink.png in Resources */,
+				CED2D33E2FC108210044A3DC /* Skim.png in Resources */,
+				CED2D3342FC108210044A3DC /* FreeText.png in Resources */,
+				CED2D33C2FC108210044A3DC /* StrikeOut.png in Resources */,
+				CED2D3372FC108210044A3DC /* Line.png in Resources */,
+				CED2D3332FC108210044A3DC /* Underline.png in Resources */,
+				CED2D3382FC108210044A3DC /* Square.png in Resources */,
+				CED2D3362FC108210044A3DC /* Circle.png in Resources */,
+				CED2D3392FC108210044A3DC /* Widget.png in Resources */,
+				CED2D33D2FC108210044A3DC /* Skim_2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CED2D3432FC10BA80044A3DC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED2D3702FC113B60044A3DC /* Highlight.png in Resources */,
+				CED2D3712FC113B60044A3DC /* Circle.png in Resources */,
+				CED2D36D2FC113B60044A3DC /* Square.png in Resources */,
+				CED2D36B2FC113B60044A3DC /* Line.png in Resources */,
+				CED2D36E2FC113B60044A3DC /* Underline.png in Resources */,
+				CED2D36C2FC113B60044A3DC /* Note.png in Resources */,
+				CED2D36F2FC113B60044A3DC /* Ink.png in Resources */,
+				CED2D36A2FC113B60044A3DC /* StrikeOut.png in Resources */,
+				CED2D3722FC113B60044A3DC /* FreeText.png in Resources */,
+				CED2D3692FC113B60044A3DC /* Widget.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2978,6 +3252,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CED2D2F42FC0FDF70044A3DC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED2D3002FC0FDF70044A3DC /* SKThumbnailProvider.m in Sources */,
+				CED2D3252FC103860044A3DC /* SKQLConverter.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CED2D3412FC10BA80044A3DC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED2D34D2FC10BA80044A3DC /* SKPreviewProvider.m in Sources */,
+				CED2D35E2FC10EA80044A3DC /* SKQLConverter.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -3005,6 +3297,16 @@
 			isa = PBXTargetDependency;
 			name = Skim;
 			targetProxy = CE816A020D70F8F7008D807D /* PBXContainerItemProxy */;
+		};
+		CED2D3042FC0FDF70044A3DC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CED2D2F72FC0FDF70044A3DC /* SkimQuickLookThumbnails */;
+			targetProxy = CED2D3032FC0FDF70044A3DC /* PBXContainerItemProxy */;
+		};
+		CED2D3542FC10BA80044A3DC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CED2D3442FC10BA80044A3DC /* SkimQuickLookPreview */;
+			targetProxy = CED2D3532FC10BA80044A3DC /* PBXContainerItemProxy */;
 		};
 		CEDA05792295BE8B00881DE1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3779,7 +4081,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE17EE460E24ED7C00DE06EA /* Skim-App.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 166;
 			};
 			name = Debug;
 		};
@@ -3787,7 +4088,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE17EE460E24ED7C00DE06EA /* Skim-App.xcconfig */;
 			buildSettings = {
-				CURRENT_PROJECT_VERSION = 166;
 			};
 			name = Release;
 		};
@@ -3819,6 +4119,217 @@
 			};
 			name = Release;
 		};
+		CED2D3062FC0FDF70044A3DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CED2D3402FC1092D0044A3DC /* SkimQuickLookThumbnails.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = SkimQuickLookThumbnails;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		CED2D3072FC0FDF70044A3DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CED2D3402FC1092D0044A3DC /* SkimQuickLookThumbnails.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = SkimQuickLookThumbnails;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
+		CED2D3572FC10BA80044A3DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CED2D35B2FC10C860044A3DC /* SkimQuickLookPreview.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = SkimQuickLookPreview;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		CED2D3582FC10BA80044A3DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CED2D35B2FC10C860044A3DC /* SkimQuickLookPreview.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = SkimQuickLookPreview;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -3845,6 +4356,24 @@
 			buildConfigurations = (
 				CE592C5F0B9239C600C113DF /* Debug */,
 				CE592C600B9239C600C113DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CED2D3222FC0FDF70044A3DC /* Build configuration list for PBXNativeTarget "SkimQuickLookThumbnails" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CED2D3062FC0FDF70044A3DC /* Debug */,
+				CED2D3072FC0FDF70044A3DC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CED2D3562FC10BA80044A3DC /* Build configuration list for PBXNativeTarget "SkimQuickLookPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CED2D3572FC10BA80044A3DC /* Debug */,
+				CED2D3582FC10BA80044A3DC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,0 +1,15 @@
+MACOSX_DEPLOYMENT_TARGET = 12.0
+INFOPLIST_KEY_CFBundleDisplayName = SkimQuickLookPreview
+
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks
+
+GENERATE_INFOPLIST_FILE = YES
+INFOPLIST_FILE = SkimQuickLookPreview/Info.plist
+
+PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.skim-app.skim.quicklook-preview
+PRODUCT_NAME = $(TARGET_NAME)
+
+//CODE_SIGN_ENTITLEMENTS = SkimQuickLookPreview/SkimQuickLookPreview.entitlements
+ENABLE_HARDENED_RUNTIME = YES
+
+CLANG_ENABLE_MODULES = YES
