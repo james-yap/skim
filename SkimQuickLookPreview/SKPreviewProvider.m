@@ -93,7 +93,7 @@
                             NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
                             if (imageData) {
                                 QLPreviewReplyAttachment *attachment = [[QLPreviewReplyAttachment alloc] initWithData:imageData contentType:UTTypePNG];
-                                [attachments setObject:attachment forKey:type];
+                                [attachments setObject:attachment forKey:[type stringByAppendingPathExtension:@"png"]];
                             }
                         }
                     }
