@@ -78,10 +78,7 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     CGContextSaveGState(context);
     
     CGFloat scale = CGContextGetClipBoundingBox(context).size.height / _paperSize.height;
-    CGAffineTransform s1 = CGAffineTransformMakeScale(scale, scale);
-    CGAffineTransform t = CGAffineTransformMakeTranslation(_horizontalMargin, _paperSize.height - _verticalMargin);
-    CGAffineTransform s2 = CGAffineTransformMakeScale(1, -1);
-    CGAffineTransform pageTransform = CGAffineTransformConcat(s2, CGAffineTransformConcat(t, s1));
+    CGAffineTransform pageTransform = CGAffineTransformScale(CGAffineTransformTranslate(CGAffineTransformMakeScale(scale, scale), _horizontalMargin, _paperSize.height - _verticalMargin), 1, -1);
     CGContextConcatCTM(context, pageTransform);
     
     // objectAtIndex:0 is safe, since we added these to the text storage (so there's at least one)
