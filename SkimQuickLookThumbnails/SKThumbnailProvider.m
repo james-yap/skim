@@ -47,21 +47,6 @@ static const NSSize _paperSize = (NSSize) { 612, 792 };
 // page margins 20 pt on all edges
 static const CGFloat _horizontalMargin = 20;
 static const CGFloat _verticalMargin = 20;
-static const NSSize _containerSize = (NSSize) { 572, 752 };
-static const NSRect _iconRect = (NSRect) { { 50, 140 }, { 512, 512 } };
-
-// wash the app icon over a white page background
-static void drawBackgroundAndApplicationIconInCurrentContext()
-{
-    [[NSColor whiteColor] setFill];
-    NSRect pageRect = { NSZeroPoint, _paperSize };
-    NSRectFillUsingOperation(pageRect, NSCompositingOperationSourceOver);
-    BOOL isHR = CGContextGetUserSpaceToDeviceSpaceTransform([[NSGraphicsContext currentContext] CGContext]).a > 1.0;
-    
-    NSURL *iconURL = [[NSBundle mainBundle] URLForImageResource:isHR ? @"Skim_2x" : @"Skim"];
-    NSImage *appIcon = [[NSImage alloc] initWithContentsOfURL:iconURL];
-    [appIcon drawInRect:_iconRect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:0.3];
-}
 
 // creates a new NSTextStorage/NSLayoutManager/NSTextContainer system suitable for drawing in a thread
 static NSTextStorage *createTextStorage()
@@ -69,7 +54,7 @@ static NSTextStorage *createTextStorage()
     NSTextStorage *textStorage = [[NSTextStorage alloc] init];
     NSLayoutManager *lm = [[NSLayoutManager alloc] init];
     NSTextContainer *tc = [[NSTextContainer alloc] init];
-    [tc setContainerSize:NSMakeSize(_containerSize.width, _containerSize.height)];
+    [tc setContainerSize:NSMakeSize(_paperSize.width - 2 * _horizontalMargin, _paperSize.height - 2 * _verticalMargin)];
     [lm addTextContainer:tc];
     // don't let the layout manager use its threaded layout (see header)
     [lm setBackgroundLayoutEnabled:NO];
@@ -80,11 +65,8 @@ static NSTextStorage *createTextStorage()
     return textStorage;
 }
 
-// assumes that the current NSGraphicsContext is the destination
-static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
+static void drawAttributedStringInContext(CGContextRef context, NSAttributedString *attrString)
 {
-    CGContextRef ctxt = [[NSGraphicsContext currentContext] CGContext];
-    
     NSTextStorage *textStorage = createTextStorage();
     [textStorage beginEditing];
     [textStorage setAttributedString:attrString];
@@ -93,12 +75,14 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
     NSRect stringRect = NSZeroRect;
     stringRect.size = _paperSize;
     
-    CGContextSaveGState(ctxt);
+    CGContextSaveGState(context);
     
-    CGAffineTransform t1 = CGAffineTransformMakeTranslation(_horizontalMargin, _paperSize.height - _verticalMargin);
-    CGAffineTransform t2 = CGAffineTransformMakeScale(1, -1);
-    CGAffineTransform pageTransform = CGAffineTransformConcat(t2, t1);
-    CGContextConcatCTM(ctxt, pageTransform);
+    CGFloat scale = CGContextGetClipBoundingBox(context).size.height / _paperSize.height;
+    CGAffineTransform s1 = CGAffineTransformMakeScale(scale, scale);
+    CGAffineTransform t = CGAffineTransformMakeTranslation(_horizontalMargin, _paperSize.height - _verticalMargin);
+    CGAffineTransform s2 = CGAffineTransformMakeScale(1, -1);
+    CGAffineTransform pageTransform = CGAffineTransformConcat(s2, CGAffineTransformConcat(t, s1));
+    CGContextConcatCTM(context, pageTransform);
     
     // objectAtIndex:0 is safe, since we added these to the text storage (so there's at least one)
     NSLayoutManager *lm = [[textStorage layoutManagers] objectAtIndex:0];
@@ -112,10 +96,16 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
     
     // NSRunStorage raises if we try drawing a zero length range (happens if you have an empty text file)
     if (glyphRange.length > 0) {
+        NSGraphicsContext *nsContext = [NSGraphicsContext graphicsContextWithCGContext:context flipped:YES];
+        [NSGraphicsContext saveGraphicsState];
+        [NSGraphicsContext setCurrentContext:nsContext];
+        
         [lm drawBackgroundForGlyphRange:glyphRange atPoint:usedRect.origin];
         [lm drawGlyphsForGlyphRange:glyphRange atPoint:usedRect.origin];
+        
+        [NSGraphicsContext restoreGraphicsState];
     }
-    CGContextRestoreGState(ctxt);
+    CGContextRestoreGState(context);
 }
 
 @implementation SKThumbnailProvider
@@ -188,18 +178,7 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
                 NSAttributedString *attrString = [SKQLConverter attributedStringWithNotes:notes];
                 
                 if (attrString) {
-                    CGFloat scale = CGContextGetClipBoundingBox(context).size.height / _paperSize.height;
-                    CGContextScaleCTM(context, scale, scale);
-                    
-                    NSGraphicsContext *nsContext = [NSGraphicsContext graphicsContextWithCGContext:context flipped:YES];
-                    [NSGraphicsContext saveGraphicsState];
-                    [NSGraphicsContext setCurrentContext:nsContext];
-                    
-                    drawBackgroundAndApplicationIconInCurrentContext();
-                    drawAttributedStringInCurrentContext(attrString);
-                    
-                    [NSGraphicsContext restoreGraphicsState];
-                    
+                    drawAttributedStringInContext(context, attrString);
                     didGenerate = YES;
                 }
             }

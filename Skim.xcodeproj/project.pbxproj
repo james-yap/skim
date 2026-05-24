@@ -258,8 +258,6 @@
 		CED2D33A2FC108210044A3DC /* Highlight.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D32E2FC108200044A3DC /* Highlight.png */; };
 		CED2D33B2FC108210044A3DC /* Note.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D32F2FC108200044A3DC /* Note.png */; };
 		CED2D33C2FC108210044A3DC /* StrikeOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3302FC108200044A3DC /* StrikeOut.png */; };
-		CED2D33D2FC108210044A3DC /* Skim_2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3312FC108210044A3DC /* Skim_2x.png */; };
-		CED2D33E2FC108210044A3DC /* Skim.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3322FC108210044A3DC /* Skim.png */; };
 		CED2D3462FC10BA80044A3DC /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED2D2FB2FC0FDF70044A3DC /* Quartz.framework */; };
 		CED2D34D2FC10BA80044A3DC /* SKPreviewProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = CED2D34C2FC10BA80044A3DC /* SKPreviewProvider.m */; };
 		CED2D3552FC10BA80044A3DC /* SkimQuickLookPreview.appex in CopyFiles */ = {isa = PBXBuildFile; fileRef = CED2D3452FC10BA80044A3DC /* SkimQuickLookPreview.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -1238,8 +1236,6 @@
 		CED2D32E2FC108200044A3DC /* Highlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Highlight.png; sourceTree = "<group>"; };
 		CED2D32F2FC108200044A3DC /* Note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Note.png; sourceTree = "<group>"; };
 		CED2D3302FC108200044A3DC /* StrikeOut.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = StrikeOut.png; sourceTree = "<group>"; };
-		CED2D3312FC108210044A3DC /* Skim_2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Skim_2x.png; sourceTree = "<group>"; };
-		CED2D3322FC108210044A3DC /* Skim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Skim.png; sourceTree = "<group>"; };
 		CED2D3402FC1092D0044A3DC /* SkimQuickLookThumbnails.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = SkimQuickLookThumbnails.xcconfig; sourceTree = "<group>"; };
 		CED2D3452FC10BA80044A3DC /* SkimQuickLookPreview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SkimQuickLookPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		CED2D34B2FC10BA80044A3DC /* SKPreviewProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKPreviewProvider.h; sourceTree = "<group>"; };
@@ -2232,8 +2228,6 @@
 		CED2D3262FC107C80044A3DC /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				CED2D3322FC108210044A3DC /* Skim.png */,
-				CED2D3312FC108210044A3DC /* Skim_2x.png */,
 				CED2D3302FC108200044A3DC /* StrikeOut.png */,
 				CED2D32F2FC108200044A3DC /* Note.png */,
 				CED2D32B2FC108200044A3DC /* Line.png */,
@@ -2904,7 +2898,6 @@
 				CED2D33B2FC108210044A3DC /* Note.png in Resources */,
 				CED2D33A2FC108210044A3DC /* Highlight.png in Resources */,
 				CED2D3352FC108210044A3DC /* Ink.png in Resources */,
-				CED2D33E2FC108210044A3DC /* Skim.png in Resources */,
 				CED2D3342FC108210044A3DC /* FreeText.png in Resources */,
 				CED2D33C2FC108210044A3DC /* StrikeOut.png in Resources */,
 				CED2D3372FC108210044A3DC /* Line.png in Resources */,
@@ -2912,7 +2905,6 @@
 				CED2D3382FC108210044A3DC /* Square.png in Resources */,
 				CED2D3362FC108210044A3DC /* Circle.png in Resources */,
 				CED2D3392FC108210044A3DC /* Widget.png in Resources */,
-				CED2D33D2FC108210044A3DC /* Skim_2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
