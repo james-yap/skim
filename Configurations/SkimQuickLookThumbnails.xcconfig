@@ -1,5 +1,4 @@
 MACOSX_DEPLOYMENT_TARGET = 10.15
-INFOPLIST_KEY_CFBundleDisplayName = SkimQuickLookThumbnails
 
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks
 
