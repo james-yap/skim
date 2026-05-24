@@ -124,32 +124,31 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
     
     NSURL *fileURL = [request fileURL];
     NSString *type = [[NSWorkspace sharedWorkspace] typeOfFile:[fileURL path] error:NULL];
-    QLThumbnailReply *reply = nil;
-    CGSize size = [request maximumSize];;
-    
-    if (_paperSize.height <= size.height)
-        size = NSSizeToCGSize(_paperSize);
-    else
-        size.width = round(size.height * _paperSize.width / _paperSize.height);
     
     // Second way: Draw the thumbnail into a context passed to your block, set up with Core Graphics's coordinate system.
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
         
     if ([ws type:type conformsToType:@"net.sourceforge.skim-app.pdfd"]) {
             
-        reply = [QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
-            BOOL didGenerate = NO;
-            NSURL *pdfURL = SKQLPDFURLForPDFBundleURL(fileURL);
+        NSURL *pdfURL = SKQLPDFURLForPDFBundleURL(fileURL);
+        
+        if (pdfURL) {
+            // sadly, we can't use the system's QL generator from inside quicklookd, so we don't get the fancy binder on the left edge
+            CGPDFDocumentRef pdfDoc = CGPDFDocumentCreateWithURL((__bridge CFURLRef)pdfURL);
+            CGPDFPageRef pdfPage = NULL;
+            if (pdfDoc && CGPDFDocumentGetNumberOfPages(pdfDoc) > 0)
+                pdfPage = CGPDFDocumentGetPage(pdfDoc, 1);
             
-            if (pdfURL) {
-                // sadly, we can't use the system's QL generator from inside quicklookd, so we don't get the fancy binder on the left edge
-                CGPDFDocumentRef pdfDoc = CGPDFDocumentCreateWithURL((__bridge CFURLRef)pdfURL);
-                CGPDFPageRef pdfPage = NULL;
-                if (pdfDoc && CGPDFDocumentGetNumberOfPages(pdfDoc) > 0)
-                    pdfPage = CGPDFDocumentGetPage(pdfDoc, 1);
+            if (pdfPage) {
+                CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
+                CGSize size = [request maximumSize];
+                if (pageRect.size.height <= size.height)
+                    size = pageRect.size;
+                else
+                    size.width = round(size.height * pageRect.size.width / pageRect.size.height);
                 
-                if (pdfPage) {
-                    CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
+                handler([QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
+            
                     CGRect thumbRect = CGContextGetClipBoundingBox(context);
                     CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
                     CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
@@ -159,18 +158,28 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
                     CGContextFillRect(context, pageRect);
                     CGContextDrawPDFPage(context, pdfPage);
                     
-                    didGenerate = YES;
-                }
+                    CGPDFDocumentRelease(pdfDoc);
+                    
+                    // Return YES if the thumbnail was successfully drawn inside this block.
+                    return YES;
+                }], nil);
+            } else {
                 CGPDFDocumentRelease(pdfDoc);
+                handler(nil, nil);
             }
-            
-            // Return YES if the thumbnail was successfully drawn inside this block.
-            return didGenerate;
-        }];
+        } else {
+            handler(nil, nil);
+        }
         
     } else if ([ws type:type conformsToType:@"net.sourceforge.skim-app.skimnotes"]) {
         
-        reply = [QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
+        CGSize size = [request maximumSize];;
+        if (_paperSize.height <= size.height)
+            size = NSSizeToCGSize(_paperSize);
+        else
+            size.width = round(size.height * _paperSize.width / _paperSize.height);
+        
+        handler([QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
             BOOL didGenerate = NO;
             NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL options:NSDataReadingUncached error:NULL];
             
@@ -197,13 +206,14 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
             
             // Return YES if the thumbnail was successfully drawn inside this block.
             return didGenerate;
-        }];
+        }], nil);
         
     } else if ([ws type:type conformsToType:@"com.adobe.postscript"]) {
-            
-        if (@available(macOS 14.0, *)) {} else {
-            reply = [QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
-                BOOL didGenerate = NO;
+        
+        if (@available(macOS 14.0, *)) {
+            handler(nil, nil);
+        } else {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 bool converted = false;
                 CGPSConverterCallbacks converterCallbacks = { 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
                 CGPSConverterRef converter = CGPSConverterCreate(NULL, &converterCallbacks, NULL);
@@ -219,36 +229,49 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
                     // sadly, we can't use the system's QL generator from inside quicklookd, so we don't get the fancy binder on the left edge
                     provider = CGDataProviderCreateWithCFData(pdfData);
                     CGPDFDocumentRef pdfDoc = CGPDFDocumentCreateWithProvider(provider);
+                    CGDataProviderRelease(provider);
                     CGPDFPageRef pdfPage = NULL;
                     if (pdfDoc && CGPDFDocumentGetNumberOfPages(pdfDoc) > 0)
                         pdfPage = CGPDFDocumentGetPage(pdfDoc, 1);
                     
                     if (pdfPage) {
                         CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
-                        CGRect thumbRect = CGContextGetClipBoundingBox(context);
-                        CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
-                        CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
-                        CGContextConcatCTM(context, t);
-                        CGContextClipToRect(context, pageRect);
-                        CGContextSetFillColor(context, color);
-                        CGContextFillRect(context, pageRect);
-                        CGContextDrawPDFPage(context, pdfPage);
+                        CGSize size = [request maximumSize];
+                        if (pageRect.size.height <= size.height)
+                            size = pageRect.size;
+                        else
+                            size.width = round(size.height * pageRect.size.width / pageRect.size.height);
                         
-                        didGenerate = YES;
+                        handler([QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
+                            
+                            CGRect thumbRect = CGContextGetClipBoundingBox(context);
+                            CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
+                            CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
+                            CGContextConcatCTM(context, t);
+                            CGContextClipToRect(context, pageRect);
+                            CGContextSetFillColor(context, color);
+                            CGContextFillRect(context, pageRect);
+                            CGContextDrawPDFPage(context, pdfPage);
+                            
+                            CGPDFDocumentRelease(pdfDoc);
+                            
+                            // Return YES if the thumbnail was successfully drawn inside this block.
+                            return YES;
+                        }], nil);
+                    } else {
+                        CGPDFDocumentRelease(pdfDoc);
+                        handler(nil, nil);
                     }
-                    CGPDFDocumentRelease(pdfDoc);
-                    CGDataProviderRelease(provider);
+                } else {
+                    handler(nil, nil);
                 }
                 if (pdfData) CFRelease(pdfData);
-                
-                // Return YES if the thumbnail was successfully drawn inside this block.
-                return didGenerate;
-            }];
+            });
         }
-
+        
+    } else {
+        handler(nil, nil);
     }
-    
-    handler(reply, nil);
 }
 
 @end
