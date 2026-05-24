@@ -60,7 +60,6 @@ static void drawBackgroundAndApplicationIconInCurrentContext()
     
     NSURL *iconURL = [[NSBundle mainBundle] URLForImageResource:isHR ? @"Skim_2x" : @"Skim"];
     NSImage *appIcon = [[NSImage alloc] initWithContentsOfURL:iconURL];
-    
     [appIcon drawInRect:_iconRect fromRect:NSZeroRect operation:NSCompositingOperationSourceOver fraction:0.3];
 }
 
@@ -70,7 +69,7 @@ static NSTextStorage *createTextStorage()
     NSTextStorage *textStorage = [[NSTextStorage alloc] init];
     NSLayoutManager *lm = [[NSLayoutManager alloc] init];
     NSTextContainer *tc = [[NSTextContainer alloc] init];
-    [tc setContainerSize:_containerSize];
+    [tc setContainerSize:NSMakeSize(_containerSize.width, _containerSize.height)];
     [lm addTextContainer:tc];
     // don't let the layout manager use its threaded layout (see header)
     [lm setBackgroundLayoutEnabled:NO];
@@ -126,13 +125,19 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
     NSURL *fileURL = [request fileURL];
     NSString *type = [[NSWorkspace sharedWorkspace] typeOfFile:[fileURL path] error:NULL];
     QLThumbnailReply *reply = nil;
+    CGSize size = [request maximumSize];;
+    
+    if (_paperSize.height <= size.height)
+        size = NSSizeToCGSize(_paperSize);
+    else
+        size.width = round(size.height * _paperSize.width / _paperSize.height);
     
     // Second way: Draw the thumbnail into a context passed to your block, set up with Core Graphics's coordinate system.
     NSWorkspace *ws = [NSWorkspace sharedWorkspace];
         
     if ([ws type:type conformsToType:@"net.sourceforge.skim-app.pdfd"]) {
             
-        reply = [QLThumbnailReply replyWithContextSize:_paperSize drawingBlock:^BOOL(CGContextRef context) {
+        reply = [QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
             BOOL didGenerate = NO;
             NSURL *pdfURL = SKQLPDFURLForPDFBundleURL(fileURL);
             
@@ -145,7 +150,7 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
                 
                 if (pdfPage) {
                     CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
-                    CGRect thumbRect = {CGPointZero, _paperSize};
+                    CGRect thumbRect = CGContextGetClipBoundingBox(context);
                     CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
                     CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
                     CGContextConcatCTM(context, t);
@@ -165,7 +170,7 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
         
     } else if ([ws type:type conformsToType:@"net.sourceforge.skim-app.skimnotes"]) {
         
-        reply = [QLThumbnailReply replyWithContextSize:_paperSize drawingBlock:^BOOL(CGContextRef context) {
+        reply = [QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
             BOOL didGenerate = NO;
             NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL options:NSDataReadingUncached error:NULL];
             
@@ -174,6 +179,9 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
                 NSAttributedString *attrString = [SKQLConverter attributedStringWithNotes:notes];
                 
                 if (attrString) {
+                    CGFloat scale = CGContextGetClipBoundingBox(context).size.height / _paperSize.height;
+                    CGContextScaleCTM(context, scale, scale);
+                    
                     NSGraphicsContext *nsContext = [NSGraphicsContext graphicsContextWithCGContext:context flipped:YES];
                     [NSGraphicsContext saveGraphicsState];
                     [NSGraphicsContext setCurrentContext:nsContext];
@@ -194,7 +202,7 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
     } else if ([ws type:type conformsToType:@"com.adobe.postscript"]) {
             
         if (@available(macOS 14.0, *)) {} else {
-            reply = [QLThumbnailReply replyWithContextSize:_paperSize drawingBlock:^BOOL(CGContextRef context) {
+            reply = [QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
                 BOOL didGenerate = NO;
                 bool converted = false;
                 CGPSConverterCallbacks converterCallbacks = { 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
@@ -217,7 +225,7 @@ static void drawAttributedStringInCurrentContext(NSAttributedString *attrString)
                     
                     if (pdfPage) {
                         CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
-                        CGRect thumbRect = {CGPointZero, _paperSize};
+                        CGRect thumbRect = CGContextGetClipBoundingBox(context);
                         CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
                         CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
                         CGContextConcatCTM(context, t);
