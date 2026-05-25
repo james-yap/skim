@@ -137,14 +137,15 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
             
                     CGRect thumbRect = CGContextGetClipBoundingBox(context);
                     CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
+                    CGContextSaveGState(context);
                     CGContextConcatCTM(context, t);
                     CGContextClipToRect(context, pageRect);
                     CGContextDrawPDFPage(context, pdfPage);
+                    CGContextRestoreGState(context);
                     
                     CGRect binderRect, ignored;
-                    CGRectDivide(thumbRect, &binderRect, &ignored, 14, CGRectMinXEdge);
-                    binderRect = CGRectApplyAffineTransform(binderRect, CGAffineTransformInvert(t));
-                    CGContextSetGrayFillColor(context, 0, 0.7);
+                    CGRectDivide(thumbRect, &binderRect, &ignored, 0.07 * fmax(CGRectGetWidth(thumbRect), CGRectGetHeight(thumbRect)), CGRectMinXEdge);
+                    CGContextSetGrayFillColor(context, 0.25, 1);
                     CGContextFillRect(context, binderRect);
                     
                     CGPDFDocumentRelease(pdfDoc);
@@ -226,14 +227,15 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
                             
                             CGRect thumbRect = CGContextGetClipBoundingBox(context);
                             CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
+                            CGContextSaveGState(context);
                             CGContextConcatCTM(context, t);
                             CGContextClipToRect(context, pageRect);
                             CGContextDrawPDFPage(context, pdfPage);
+                            CGContextRestoreGState(context);
                             
                             CGRect binderRect, ignored;
-                            CGRectDivide(thumbRect, &binderRect, &ignored, 14, CGRectMinXEdge);
-                            binderRect = CGRectApplyAffineTransform(binderRect, CGAffineTransformInvert(t));
-                            CGContextSetGrayFillColor(context, 0, 0.7);
+                            CGRectDivide(thumbRect, &binderRect, &ignored, 0.07 * fmax(CGRectGetWidth(thumbRect), CGRectGetHeight(thumbRect)), CGRectMinXEdge);
+                            CGContextSetGrayFillColor(context, 0.3, 1);
                             CGContextFillRect(context, binderRect);
                             
                             CGPDFDocumentRelease(pdfDoc);
