@@ -79,10 +79,6 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     CGAffineTransform pageTransform = CGAffineTransformConcat(t2, t1);
     CGContextConcatCTM(context, pageTransform);
     
-    CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
-    CGContextSetFillColor(context, color);
-    CGContextFillRect(context, CGRectMake(-_horizontalMargin, -_verticalMargin, _paperSize.width, _paperSize.height));
-    
     // objectAtIndex:0 is safe, since we added these to the text storage (so there's at least one)
     NSLayoutManager *lm = [[textStorage layoutManagers] objectAtIndex:0];
     NSTextContainer *tc = [[lm textContainers] objectAtIndex:0];
@@ -130,13 +126,10 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
                 if (pdfPage) {
                     CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
                     CGRect thumbRect = {{0.0, 0.0}, {CGRectGetWidth(pageRect), CGRectGetHeight(pageRect)}};
-                    CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
                     CGContextRef ctxt = QLThumbnailRequestCreateContext(thumbnail, thumbRect.size, FALSE, NULL);
                     CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
                     CGContextConcatCTM(ctxt, t);
                     CGContextClipToRect(ctxt, pageRect);
-                    CGContextSetFillColor(ctxt, color);
-                    CGContextFillRect(ctxt, pageRect);
                     CGContextDrawPDFPage(ctxt, pdfPage);
                     QLThumbnailRequestFlushContext(thumbnail, ctxt);
                     CGContextRelease(ctxt);
@@ -170,13 +163,10 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
                     if (pdfPage) {
                         CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
                         CGRect thumbRect = {{0.0, 0.0}, {CGRectGetWidth(pageRect), CGRectGetHeight(pageRect)}};
-                        CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
                         CGContextRef ctxt = QLThumbnailRequestCreateContext(thumbnail, thumbRect.size, FALSE, NULL);
                         CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
                         CGContextConcatCTM(ctxt, t);
                         CGContextClipToRect(ctxt, pageRect);
-                        CGContextSetFillColor(ctxt, color);
-                        CGContextFillRect(ctxt, pageRect);
                         CGContextDrawPDFPage(ctxt, pdfPage);
                         QLThumbnailRequestFlushContext(thumbnail, ctxt);
                         CGContextRelease(ctxt);

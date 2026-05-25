@@ -80,10 +80,6 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     CGAffineTransform pageTransform = CGAffineTransformScale(CGAffineTransformTranslate(CGAffineTransformMakeScale(scale, scale), _horizontalMargin, _paperSize.height - _verticalMargin), 1, -1);
     CGContextConcatCTM(context, pageTransform);
     
-    CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
-    CGContextSetFillColor(context, color);
-    CGContextFillRect(context, CGRectMake(-_horizontalMargin, -_verticalMargin, _paperSize.width, _paperSize.height));
-    
     // objectAtIndex:0 is safe, since we added these to the text storage (so there's at least one)
     NSLayoutManager *lm = [[textStorage layoutManagers] objectAtIndex:0];
     NSTextContainer *tc = [[lm textContainers] objectAtIndex:0];
@@ -138,12 +134,9 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
                 handler([QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
             
                     CGRect thumbRect = CGContextGetClipBoundingBox(context);
-                    CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
                     CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
                     CGContextConcatCTM(context, t);
                     CGContextClipToRect(context, pageRect);
-                    CGContextSetFillColor(context, color);
-                    CGContextFillRect(context, pageRect);
                     CGContextDrawPDFPage(context, pdfPage);
                     
                     CGPDFDocumentRelease(pdfDoc);
@@ -222,12 +215,9 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
                         handler([QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
                             
                             CGRect thumbRect = CGContextGetClipBoundingBox(context);
-                            CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
                             CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
                             CGContextConcatCTM(context, t);
                             CGContextClipToRect(context, pageRect);
-                            CGContextSetFillColor(context, color);
-                            CGContextFillRect(context, pageRect);
                             CGContextDrawPDFPage(context, pdfPage);
                             
                             CGPDFDocumentRelease(pdfDoc);
