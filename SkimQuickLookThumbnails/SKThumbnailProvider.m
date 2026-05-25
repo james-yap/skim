@@ -80,6 +80,10 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     CGAffineTransform pageTransform = CGAffineTransformScale(CGAffineTransformTranslate(CGAffineTransformMakeScale(scale, scale), _horizontalMargin, _paperSize.height - _verticalMargin), 1, -1);
     CGContextConcatCTM(context, pageTransform);
     
+    CGFloat color[4] = {1.0, 1.0, 1.0, 1.0};
+    CGContextSetFillColor(context, color);
+    CGContextFillRect(context, CGRectMake(-_horizontalMargin, -_verticalMargin, _paperSize.width, _paperSize.height));
+    
     // objectAtIndex:0 is safe, since we added these to the text storage (so there's at least one)
     NSLayoutManager *lm = [[textStorage layoutManagers] objectAtIndex:0];
     NSTextContainer *tc = [[lm textContainers] objectAtIndex:0];
