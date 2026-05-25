@@ -84,7 +84,7 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     NSTextContainer *tc = [[lm textContainers] objectAtIndex:0];
     
     // we now have a properly flipped graphics context, so force layout and then draw the text
-    NSRect stringRect = NSMakeRect(_horizontalMargin, _verticalMargin, _paperSize.width - 2 * _horizontalMargin, _paperSize.height - 2 * _verticalMargin);
+    NSRect stringRect = NSMakeRect(0, 0, _paperSize.width - 2 * _horizontalMargin, _paperSize.height - 2 * _verticalMargin);
     NSRange glyphRange = [lm glyphRangeForBoundingRect:stringRect inTextContainer:tc];
     stringRect = [lm usedRectForTextContainer:tc];
     
