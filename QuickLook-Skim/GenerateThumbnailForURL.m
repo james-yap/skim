@@ -70,8 +70,6 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     [textStorage setAttributedString:attrString];
     
     [textStorage endEditing];
-    NSRect stringRect = NSZeroRect;
-    stringRect.size = _paperSize;
     
     CGContextSaveGState(context);
     
@@ -88,11 +86,10 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     NSLayoutManager *lm = [[textStorage layoutManagers] objectAtIndex:0];
     NSTextContainer *tc = [[lm textContainers] objectAtIndex:0];
     
-    NSRange glyphRange;
-    
     // we now have a properly flipped graphics context, so force layout and then draw the text
-    glyphRange = [lm glyphRangeForBoundingRect:stringRect inTextContainer:tc];
-    NSRect usedRect = [lm usedRectForTextContainer:tc];
+    NSRect stringRect = NSMakeRect(_horizontalMargin, _verticalMargin, _paperSize.width - 2 * _horizontalMargin, _paperSize.height - 2 * _verticalMargin);
+    NSRange glyphRange = [lm glyphRangeForBoundingRect:stringRect inTextContainer:tc];
+    stringRect = [lm usedRectForTextContainer:tc];
     
     // NSRunStorage raises if we try drawing a zero length range (happens if you have an empty text file)
     if (glyphRange.length > 0) {
@@ -100,8 +97,8 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
         [NSGraphicsContext saveGraphicsState];
         [NSGraphicsContext setCurrentContext:nsContext];
         
-        [lm drawBackgroundForGlyphRange:glyphRange atPoint:usedRect.origin];
-        [lm drawGlyphsForGlyphRange:glyphRange atPoint:usedRect.origin];
+        [lm drawBackgroundForGlyphRange:glyphRange atPoint:stringRect.origin];
+        [lm drawGlyphsForGlyphRange:glyphRange atPoint:stringRect.origin];
         
         [NSGraphicsContext restoreGraphicsState];
     }
