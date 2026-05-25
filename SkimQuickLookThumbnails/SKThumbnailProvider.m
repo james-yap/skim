@@ -126,10 +126,12 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
             if (pdfPage) {
                 CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
                 CGSize size = [request maximumSize];
-                if (pageRect.size.height <= size.height)
-                    size = pageRect.size;
-                else
+                if (pageRect.size.height > pageRect.size.width)
                     size.width = round(size.height * pageRect.size.width / pageRect.size.height);
+                else if (pageRect.size.height < pageRect.size.width)
+                    size.height = round(size.width * pageRect.size.height / pageRect.size.width);
+                if ((CGPDFPageGetRotationAngle(pdfPage) % 180))
+                    size = CGSizeMake(size.height, size.width);
                 
                 handler([QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
             
@@ -138,6 +140,12 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
                     CGContextConcatCTM(context, t);
                     CGContextClipToRect(context, pageRect);
                     CGContextDrawPDFPage(context, pdfPage);
+                    
+                    CGRect binderRect, ignored;
+                    CGRectDivide(thumbRect, &binderRect, &ignored, 14, CGRectMinXEdge);
+                    binderRect = CGRectApplyAffineTransform(binderRect, CGAffineTransformInvert(t));
+                    CGContextSetGrayFillColor(context, 0, 0.7);
+                    CGContextFillRect(context, binderRect);
                     
                     CGPDFDocumentRelease(pdfDoc);
                     
@@ -207,10 +215,12 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
                     if (pdfPage) {
                         CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
                         CGSize size = [request maximumSize];
-                        if (pageRect.size.height <= size.height)
-                            size = pageRect.size;
-                        else
+                        if (pageRect.size.height > pageRect.size.width)
                             size.width = round(size.height * pageRect.size.width / pageRect.size.height);
+                        else if (pageRect.size.height < pageRect.size.width)
+                            size.height = round(size.width * pageRect.size.height / pageRect.size.width);
+                        if ((CGPDFPageGetRotationAngle(pdfPage) % 180))
+                            size = CGSizeMake(size.height, size.width);
                         
                         handler([QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
                             
@@ -219,6 +229,12 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
                             CGContextConcatCTM(context, t);
                             CGContextClipToRect(context, pageRect);
                             CGContextDrawPDFPage(context, pdfPage);
+                            
+                            CGRect binderRect, ignored;
+                            CGRectDivide(thumbRect, &binderRect, &ignored, 14, CGRectMinXEdge);
+                            binderRect = CGRectApplyAffineTransform(binderRect, CGAffineTransformInvert(t));
+                            CGContextSetGrayFillColor(context, 0, 0.7);
+                            CGContextFillRect(context, binderRect);
                             
                             CGPDFDocumentRelease(pdfDoc);
                             

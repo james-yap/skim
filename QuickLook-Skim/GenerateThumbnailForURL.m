@@ -126,6 +126,8 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
                 if (pdfPage) {
                     CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
                     CGRect thumbRect = {{0.0, 0.0}, {CGRectGetWidth(pageRect), CGRectGetHeight(pageRect)}};
+                    if ((CGPDFPageGetRotationAngle(pdfPage) % 180))
+                        thumbRect.size = CGSizeMake(CGRectGetHeight(pageRect), CGRectGetWidth(pageRect));
                     CGContextRef ctxt = QLThumbnailRequestCreateContext(thumbnail, thumbRect.size, FALSE, NULL);
                     CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
                     CGContextConcatCTM(ctxt, t);
@@ -163,6 +165,8 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
                     if (pdfPage) {
                         CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
                         CGRect thumbRect = {{0.0, 0.0}, {CGRectGetWidth(pageRect), CGRectGetHeight(pageRect)}};
+                        if ((CGPDFPageGetRotationAngle(pdfPage) % 180))
+                            thumbRect.size = CGSizeMake(CGRectGetHeight(pageRect), CGRectGetWidth(pageRect));
                         CGContextRef ctxt = QLThumbnailRequestCreateContext(thumbnail, thumbRect.size, FALSE, NULL);
                         CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
                         CGContextConcatCTM(ctxt, t);
