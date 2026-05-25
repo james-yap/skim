@@ -49,12 +49,12 @@ static const CGFloat _horizontalMargin = 20;
 static const CGFloat _verticalMargin = 20;
 
 // creates a new NSTextStorage/NSLayoutManager/NSTextContainer system suitable for drawing in a thread
-static NSTextStorage *createTextStorage()
+static NSTextStorage *createTextStorage(NSSize size)
 {
     NSTextStorage *textStorage = [[NSTextStorage alloc] init];
     NSLayoutManager *lm = [[NSLayoutManager alloc] init];
     NSTextContainer *tc = [[NSTextContainer alloc] init];
-    [tc setContainerSize:NSMakeSize(_paperSize.width - 2 * _horizontalMargin, _paperSize.height - 2 * _verticalMargin)];
+    [tc setContainerSize:size];
     [lm addTextContainer:tc];
     // don't let the layout manager use its threaded layout (see header)
     [lm setBackgroundLayoutEnabled:NO];
@@ -67,7 +67,8 @@ static NSTextStorage *createTextStorage()
 
 static void drawAttributedStringInContext(CGContextRef context, NSAttributedString *attrString)
 {
-    NSTextStorage *textStorage = createTextStorage();
+    NSRect stringRect = NSMakeRect(0, 0, _paperSize.width - 2 * _horizontalMargin, _paperSize.height - 2 * _verticalMargin);
+    NSTextStorage *textStorage = createTextStorage(stringRect.size);
     [textStorage beginEditing];
     [textStorage setAttributedString:attrString];
     
@@ -84,7 +85,6 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     NSTextContainer *tc = [[lm textContainers] objectAtIndex:0];
     
     // we now have a properly flipped graphics context, so force layout and then draw the text
-    NSRect stringRect = NSMakeRect(0, 0, _paperSize.width - 2 * _horizontalMargin, _paperSize.height - 2 * _verticalMargin);
     NSRange glyphRange = [lm glyphRangeForBoundingRect:stringRect inTextContainer:tc];
     stringRect = [lm usedRectForTextContainer:tc];
     
