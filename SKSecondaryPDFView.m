@@ -507,8 +507,6 @@ static CGFloat SKDefaultScaleMenuFactors[] = {0.0, 0.0, 0.1, 0.2, 0.25, 0.35, 0.
     return i > 2;
 }
 
-- (BOOL)performKeyEquivalent:(NSEvent *)theEvent { return NO; }
-
 - (IBAction)toggleDisplaysAsBookFromMenu:(id)sender {
     [self setDisplaysAsBook:[self displaysAsBook] == NO];
 }
