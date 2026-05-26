@@ -74,6 +74,9 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     
     CGContextSaveGState(context);
     
+    CGContextSetGrayFillColor(ctxt, 1, 1);
+    CGContextFillRect(ctxt, (CGRect){CGPointZero, _paperSize});
+    
     CGAffineTransform t1 = CGAffineTransformMakeTranslation(_horizontalMargin, _paperSize.height - _verticalMargin);
     CGAffineTransform t2 = CGAffineTransformMakeScale(1, -1);
     CGAffineTransform pageTransform = CGAffineTransformConcat(t2, t1);
@@ -132,6 +135,8 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
                     CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
                     CGContextConcatCTM(ctxt, t);
                     CGContextClipToRect(ctxt, pageRect);
+                    CGContextSetGrayFillColor(ctxt, 1, 1);
+                    CGContextFillRect(ctxt, pageRect);
                     CGContextDrawPDFPage(ctxt, pdfPage);
                     QLThumbnailRequestFlushContext(thumbnail, ctxt);
                     CGContextRelease(ctxt);
@@ -171,6 +176,8 @@ OSStatus GenerateThumbnailForURL(void *thisInterface, QLThumbnailRequestRef thum
                         CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
                         CGContextConcatCTM(ctxt, t);
                         CGContextClipToRect(ctxt, pageRect);
+                        CGContextSetGrayFillColor(ctxt, 1, 1);
+                        CGContextFillRect(ctxt, pageRect);
                         CGContextDrawPDFPage(ctxt, pdfPage);
                         QLThumbnailRequestFlushContext(thumbnail, ctxt);
                         CGContextRelease(ctxt);
