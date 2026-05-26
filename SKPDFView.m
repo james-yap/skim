@@ -1589,6 +1589,11 @@ enum {
 #define IS_ARROW(eventChar) (eventChar == NSRightArrowFunctionKey || eventChar == NSLeftArrowFunctionKey || eventChar == NSUpArrowFunctionKey || eventChar == NSDownArrowFunctionKey)
 #define IS_ENTER(eventChar) (eventChar == NSEnterCharacter || eventChar == NSFormFeedCharacter || eventChar == NSNewlineCharacter || eventChar == NSCarriageReturnCharacter)
 
+static inline NSInteger indexOfCharInString(char ch, char *str) {
+    char *c = strchr(str, ch);
+    return c == NULL ? -1 : (NSInteger)(c - str);
+}
+
 - (void)keyDown:(NSEvent *)theEvent
 {
     unichar eventChar = [theEvent firstCharacter];
@@ -1627,24 +1632,8 @@ enum {
     // with some keyboard layouts, e.g. Japanese, the '=' character requires Shift
     } else if ([currentAnnotation isResizable] && [currentAnnotation isLine] == NO && [currentAnnotation isInk] == NO && (eventChar == '=') && ((modifiers & ~(NSEventModifierFlagOption | NSEventModifierFlagShift)) == NSEventModifierFlagControl)) {
         [self doAutoSizeActiveNoteIgnoringWidth:(modifiers & NSEventModifierFlagOption) != 0];
-    } else if ([self toolMode] == SKToolModeNote && (eventChar == 't') && (modifiers == 0)) {
-        [self setAnnotationMode:SKNoteTypeFreeText];
-    } else if ([self toolMode] == SKToolModeNote && (eventChar == 'n') && (modifiers == 0)) {
-        [self setAnnotationMode:SKNoteTypeAnchored];
-    } else if ([self toolMode] == SKToolModeNote && (eventChar == 'c') && (modifiers == 0)) {
-        [self setAnnotationMode:SKNoteTypeCircle];
-    } else if ([self toolMode] == SKToolModeNote && (eventChar == 'b') && (modifiers == 0)) {
-        [self setAnnotationMode:SKNoteTypeSquare];
-    } else if ([self toolMode] == SKToolModeNote && (eventChar == 'h') && (modifiers == 0)) {
-        [self setAnnotationMode:SKNoteTypeHighlight];
-    } else if ([self toolMode] == SKToolModeNote && (eventChar == 'u') && (modifiers == 0)) {
-        [self setAnnotationMode:SKNoteTypeUnderline];
-    } else if ([self toolMode] == SKToolModeNote && (eventChar == 's') && (modifiers == 0)) {
-        [self setAnnotationMode:SKNoteTypeStrikeOut];
-    } else if ([self toolMode] == SKToolModeNote && (eventChar == 'l') && (modifiers == 0)) {
-        [self setAnnotationMode:SKNoteTypeLine];
-    } else if ([self toolMode] == SKToolModeNote && (eventChar == 'f') && (modifiers == 0)) {
-        [self setAnnotationMode:SKNoteTypeInk];
+    } else if ([self toolMode] == SKToolModeNote && (modifiers == 0) && (eventChar >= 'b' && eventChar <= 'u' && indexOfCharInString(eventChar, "tncbhuslf") != -1)) {
+        [self setAnnotationMode:indexOfCharInString(eventChar, "tncbhuslf")];
     } else if ((eventChar == '?') && ((modifiers & ~NSEventModifierFlagShift) == 0)) {
         [self showHelpMenu];
     } else if ((eventChar == NSLeftArrowFunctionKey) && (standardModifiers == NSEventModifierFlagOption) && [self canGoToFirstPage]) {
