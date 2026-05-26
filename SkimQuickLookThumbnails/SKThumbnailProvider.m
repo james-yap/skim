@@ -76,7 +76,12 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     
     CGContextSaveGState(context);
     
-    CGFloat scale = CGContextGetClipBoundingBox(context).size.height / _paperSize.height;
+    CGRect thumbnailRect = CGContextGetClipBoundingBox(context);
+    
+    CGContextSetGrayFillColor(context, 1, 1);
+    CGContextFillRect(context, thumbnailRect);
+    
+    CGFloat scale = thumbnailRect.size.height / _paperSize.height;
     CGAffineTransform pageTransform = CGAffineTransformScale(CGAffineTransformTranslate(CGAffineTransformMakeScale(scale, scale), _horizontalMargin, _paperSize.height - _verticalMargin), 1, -1);
     CGContextConcatCTM(context, pageTransform);
     
@@ -140,6 +145,8 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
                     CGContextSaveGState(context);
                     CGContextConcatCTM(context, t);
                     CGContextClipToRect(context, pageRect);
+                    CGContextSetGrayFillColor(context, 1, 1);
+                    CGContextFillRect(context, pageRect);
                     CGContextDrawPDFPage(context, pdfPage);
                     CGContextRestoreGState(context);
                     
@@ -230,6 +237,8 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
                             CGContextSaveGState(context);
                             CGContextConcatCTM(context, t);
                             CGContextClipToRect(context, pageRect);
+                            CGContextSetGrayFillColor(context, 1, 1);
+                            CGContextFillRect(context, pageRect);
                             CGContextDrawPDFPage(context, pdfPage);
                             CGContextRestoreGState(context);
                             
