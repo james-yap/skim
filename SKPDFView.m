@@ -4883,6 +4883,11 @@ static inline NSCursor *resizeCursor(NSInteger angle, BOOL single) {
     NSMenu *menu = nil;
     NSMenuItem *item;
     menu = [NSMenu menu];
+    item = [menu addItemWithTitle:NSLocalizedString(@"First", @"Menu item title") action:@selector(goToFirstPage:) keyEquivalent:@"\uF700"];
+    [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
+    item = [menu addItemWithTitle:NSLocalizedString(@"Last", @"Menu item title") action:@selector(goToLastPage:) keyEquivalent:@"\uF701"];
+    [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
+    [menu addItem:[NSMenuItem separatorItem]];
     item = [menu addItemWithTitle:NSLocalizedString(@"Move Current Note", @"Menu item title") action:@selector(moveCurrentAnnotation:) keyEquivalent:@"\uF703"];
     [item setKeyEquivalentModifierMask:0];
     item = [menu addItemWithTitle:NSLocalizedString(@"Move Current Note", @"Menu item title") action:@selector(moveCurrentAnnotation:) keyEquivalent:@"\uF703"];
