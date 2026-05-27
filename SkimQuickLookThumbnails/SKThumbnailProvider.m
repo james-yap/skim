@@ -107,6 +107,42 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     CGContextRestoreGState(context);
 }
 
+static void drawPDFPageInContext(CGContextRef context, CGPDFPageRef pdfPage)
+{
+    CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
+    CGRect thumbRect = CGContextGetClipBoundingBox(context);
+    CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
+    CGContextSaveGState(context);
+    CGContextSetGrayFillColor(context, 1, 1);
+    CGContextFillRect(context, pageRect);
+    CGContextConcatCTM(context, t);
+    CGContextClipToRect(context, pageRect);
+    CGContextSetGrayFillColor(context, 1, 1);
+    CGContextFillRect(context, pageRect);
+    CGContextDrawPDFPage(context, pdfPage);
+    CGContextRestoreGState(context);
+    
+    CGRect binderRect, ignored;
+    CGRectDivide(thumbRect, &binderRect, &ignored, 0.07 * fmax(CGRectGetWidth(thumbRect), CGRectGetHeight(thumbRect)), CGRectMinXEdge);
+    CGFloat components1[8] = {0.5, 1.0, 0.0, 1.0};
+    CGFloat components2[8] = {0.8, 0.2, 0.1, 1.0};
+    CGFloat locations[2] = {0.0, 1.0};
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceGray();
+    CGGradientRef gradient = CGGradientCreateWithColorComponents(colorspace, components1, locations, 2);
+    CGPoint startPoint = CGPointMake(CGRectGetMinX(binderRect), CGRectGetMaxY(binderRect));
+    CGPoint endPoint = CGPointMake(CGRectGetMinX(binderRect), CGRectGetMinY(binderRect));
+    CGContextSaveGState(context);
+    CGContextClipToRect(context, binderRect);
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
+    CGGradientRelease(gradient);
+    gradient = CGGradientCreateWithColorComponents(colorspace, components2, locations, 2);
+    CGColorSpaceRelease(colorspace);
+    endPoint = CGPointMake(CGRectGetMaxX(binderRect), CGRectGetMaxY(binderRect));
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
+    CGGradientRelease(gradient);
+    CGContextRestoreGState(context);
+}
+
 @implementation SKThumbnailProvider
 
 - (void)provideThumbnailForFileRequest:(QLFileThumbnailRequest *)request completionHandler:(void (^)(QLThumbnailReply *, NSError *))handler {
@@ -140,20 +176,7 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
                 
                 handler([QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
             
-                    CGRect thumbRect = CGContextGetClipBoundingBox(context);
-                    CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
-                    CGContextSaveGState(context);
-                    CGContextConcatCTM(context, t);
-                    CGContextClipToRect(context, pageRect);
-                    CGContextSetGrayFillColor(context, 1, 1);
-                    CGContextFillRect(context, pageRect);
-                    CGContextDrawPDFPage(context, pdfPage);
-                    CGContextRestoreGState(context);
-                    
-                    CGRect binderRect, ignored;
-                    CGRectDivide(thumbRect, &binderRect, &ignored, 0.07 * fmax(CGRectGetWidth(thumbRect), CGRectGetHeight(thumbRect)), CGRectMinXEdge);
-                    CGContextSetGrayFillColor(context, 0.25, 1);
-                    CGContextFillRect(context, binderRect);
+                    drawPDFPageInContext(context, pdfPage);
                     
                     CGPDFDocumentRelease(pdfDoc);
                     
@@ -232,20 +255,7 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
                         
                         handler([QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
                             
-                            CGRect thumbRect = CGContextGetClipBoundingBox(context);
-                            CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
-                            CGContextSaveGState(context);
-                            CGContextConcatCTM(context, t);
-                            CGContextClipToRect(context, pageRect);
-                            CGContextSetGrayFillColor(context, 1, 1);
-                            CGContextFillRect(context, pageRect);
-                            CGContextDrawPDFPage(context, pdfPage);
-                            CGContextRestoreGState(context);
-                            
-                            CGRect binderRect, ignored;
-                            CGRectDivide(thumbRect, &binderRect, &ignored, 0.07 * fmax(CGRectGetWidth(thumbRect), CGRectGetHeight(thumbRect)), CGRectMinXEdge);
-                            CGContextSetGrayFillColor(context, 0.3, 1);
-                            CGContextFillRect(context, binderRect);
+                            drawPDFPageInContext(context, pdfPage);
                             
                             CGPDFDocumentRelease(pdfDoc);
                             
