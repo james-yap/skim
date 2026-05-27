@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# fail when any codesign command fails
+set -e
+
 IDENTITY="Skim Signing Certificate"
 
 if [ "$#" -gt 2 ]; then 
