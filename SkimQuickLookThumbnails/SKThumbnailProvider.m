@@ -48,9 +48,10 @@ static const NSSize _paperSize = (NSSize) { 612, 792 };
 static const CGFloat _horizontalMargin = 20;
 static const CGFloat _verticalMargin = 20;
 
+@implementation SKThumbnailProvider
+
 // creates a new NSTextStorage/NSLayoutManager/NSTextContainer system suitable for drawing in a thread
-static NSTextStorage *createTextStorage(NSSize size)
-{
++ (NSTextStorage *)textStorageWithSize:(NSSize)size {
     NSTextStorage *textStorage = [[NSTextStorage alloc] init];
     NSLayoutManager *lm = [[NSLayoutManager alloc] init];
     NSTextContainer *tc = [[NSTextContainer alloc] init];
@@ -65,10 +66,9 @@ static NSTextStorage *createTextStorage(NSSize size)
     return textStorage;
 }
 
-static void drawAttributedStringInContext(CGContextRef context, NSAttributedString *attrString)
-{
++ (void)drawAttributedString:(NSAttributedString *)attrString inContext:(CGContextRef)context {
     NSRect stringRect = NSMakeRect(0, 0, _paperSize.width - 2 * _horizontalMargin, _paperSize.height - 2 * _verticalMargin);
-    NSTextStorage *textStorage = createTextStorage(stringRect.size);
+    NSTextStorage *textStorage = [self textStorageWithSize:stringRect.size];
     [textStorage beginEditing];
     [textStorage setAttributedString:attrString];
     
@@ -107,8 +107,7 @@ static void drawAttributedStringInContext(CGContextRef context, NSAttributedStri
     CGContextRestoreGState(context);
 }
 
-static void drawPDFPageInContext(CGContextRef context, CGPDFPageRef pdfPage)
-{
++ (void)drawPDFPage:(CGPDFPageRef)pdfPage inContext:(CGContextRef)context {
     CGRect pageRect = CGPDFPageGetBoxRect(pdfPage, kCGPDFCropBox);
     CGRect thumbRect = CGContextGetClipBoundingBox(context);
     CGAffineTransform t = CGPDFPageGetDrawingTransform(pdfPage, kCGPDFCropBox, thumbRect, 0, true);
@@ -143,8 +142,6 @@ static void drawPDFPageInContext(CGContextRef context, CGPDFPageRef pdfPage)
     CGContextRestoreGState(context);
 }
 
-@implementation SKThumbnailProvider
-
 - (void)provideThumbnailForFileRequest:(QLFileThumbnailRequest *)request completionHandler:(void (^)(QLThumbnailReply *, NSError *))handler {
     
     NSURL *fileURL = [request fileURL];
@@ -176,7 +173,7 @@ static void drawPDFPageInContext(CGContextRef context, CGPDFPageRef pdfPage)
                 
                 handler([QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
             
-                    drawPDFPageInContext(context, pdfPage);
+                    [SKThumbnailProvider drawPDFPage:pdfPage inContext:context];
                     
                     CGPDFDocumentRelease(pdfDoc);
                     
@@ -208,7 +205,7 @@ static void drawPDFPageInContext(CGContextRef context, CGPDFPageRef pdfPage)
                 NSAttributedString *attrString = [SKQLConverter attributedStringWithNotes:notes];
                 
                 if (attrString) {
-                    drawAttributedStringInContext(context, attrString);
+                    [SKThumbnailProvider drawAttributedString:attrString inContext:context];
                     didGenerate = YES;
                 }
             }
@@ -255,7 +252,7 @@ static void drawPDFPageInContext(CGContextRef context, CGPDFPageRef pdfPage)
                         
                         handler([QLThumbnailReply replyWithContextSize:size drawingBlock:^BOOL(CGContextRef context) {
                             
-                            drawPDFPageInContext(context, pdfPage);
+                            [SKThumbnailProvider drawPDFPage:pdfPage inContext:context];
                             
                             CGPDFDocumentRelease(pdfDoc);
                             
