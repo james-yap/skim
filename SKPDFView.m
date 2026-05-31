@@ -2509,9 +2509,11 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             if (h < w) {
                 dw = primaryOutset(h / w);
                 dh = secondaryOutset(dw);
-            } else {
+            } else if (w < h) {
                 dh = primaryOutset(w / h);
                 dw = secondaryOutset(dh);
+            } else {
+                dw = dh = M_SQRT2 - 1.0;
             }
             CGFloat lw = [[NSUserDefaults standardUserDefaults] doubleForKey:SKCircleNoteLineWidthKey];
             bounds = NSInsetRect(bounds, -0.5 * w * dw - lw, -0.5 * h * dh - lw);
