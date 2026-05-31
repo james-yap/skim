@@ -1371,15 +1371,15 @@
                 [item setRepresentedObject:selections];
             }
             if ([pdfView canAddNotes]) {
-                item = [menu addItemWithTitle:NSLocalizedString(@"New Circle", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeCircle];
+                item = [menu addItemWithTitle:NSLocalizedString(@"New Circle", @"Menu item title") action:@selector(addAnnotationsForSelections:) target:pdfView tag:SKNoteTypeCircle];
                 [item setRepresentedObject:selections];
-                item = [menu addItemWithTitle:NSLocalizedString(@"New Box", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeSquare];
+                item = [menu addItemWithTitle:NSLocalizedString(@"New Box", @"Menu item title") action:@selector(addAnnotationsForSelections:) target:pdfView tag:SKNoteTypeSquare];
                 [item setRepresentedObject:selections];
-                item = [menu addItemWithTitle:NSLocalizedString(@"New Highlight", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeHighlight];
+                item = [menu addItemWithTitle:NSLocalizedString(@"New Highlight", @"Menu item title") action:@selector(addAnnotationsForSelections:) target:pdfView tag:SKNoteTypeHighlight];
                 [item setRepresentedObject:selections];
-                item = [menu addItemWithTitle:NSLocalizedString(@"New Underline", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeUnderline];
+                item = [menu addItemWithTitle:NSLocalizedString(@"New Underline", @"Menu item title") action:@selector(addAnnotationsForSelections:) target:pdfView tag:SKNoteTypeUnderline];
                 [item setRepresentedObject:selections];
-                item = [menu addItemWithTitle:NSLocalizedString(@"New Strike Out", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeStrikeOut];
+                item = [menu addItemWithTitle:NSLocalizedString(@"New Strike Out", @"Menu item title") action:@selector(addAnnotationsForSelections:) target:pdfView tag:SKNoteTypeStrikeOut];
                 [item setRepresentedObject:selections];
             }
             [menu addItem:[NSMenuItem separatorItem]];
@@ -1402,15 +1402,15 @@
                 [item setRepresentedObject:selections];
             }
             if ([pdfView canAddNotes]) {
-                item = [menu addItemWithTitle:NSLocalizedString(@"New Circle", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeCircle];
+                item = [menu addItemWithTitle:NSLocalizedString(@"New Circle", @"Menu item title") action:@selector(addAnnotationsForSelections:) target:pdfView tag:SKNoteTypeCircle];
                 [item setRepresentedObject:selections];
-                item = [menu addItemWithTitle:NSLocalizedString(@"New Box", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeSquare];
+                item = [menu addItemWithTitle:NSLocalizedString(@"New Box", @"Menu item title") action:@selector(addAnnotationsForSelections:) target:pdfView tag:SKNoteTypeSquare];
                 [item setRepresentedObject:selections];
-                item = [menu addItemWithTitle:NSLocalizedString(@"New Highlight", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeHighlight];
+                item = [menu addItemWithTitle:NSLocalizedString(@"New Highlight", @"Menu item title") action:@selector(addAnnotationsForSelections:) target:pdfView tag:SKNoteTypeHighlight];
                 [item setRepresentedObject:selections];
-                item = [menu addItemWithTitle:NSLocalizedString(@"New Underline", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeUnderline];
+                item = [menu addItemWithTitle:NSLocalizedString(@"New Underline", @"Menu item title") action:@selector(addAnnotationsForSelections:) target:pdfView tag:SKNoteTypeUnderline];
                 [item setRepresentedObject:selections];
-                item = [menu addItemWithTitle:NSLocalizedString(@"New Strike Out", @"Menu item title") action:@selector(addAnnotationForContext:) target:pdfView tag:SKNoteTypeStrikeOut];
+                item = [menu addItemWithTitle:NSLocalizedString(@"New Strike Out", @"Menu item title") action:@selector(addAnnotationsForSelections:) target:pdfView tag:SKNoteTypeStrikeOut];
                 [item setRepresentedObject:selections];
             }
             [menu addItem:[NSMenuItem separatorItem]];

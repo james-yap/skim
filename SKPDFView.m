@@ -204,6 +204,8 @@ enum {
 - (void)addAnnotations:(NSArray *)annotationsAndPages;
 - (void)removeAnnotation:(PDFAnnotation *)annotation;
 
+- (void)addAnnotationForPoint:(id)sender;
+
 - (void)stopPacer;
 - (void)updatePacer;
 
@@ -1930,30 +1932,30 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
         item = [menu insertItemWithSubmenuAndTitle:NSLocalizedString(@"New Note or Highlight", @"Menu item title") atIndex:0];
         submenu = [item submenu];
         
-        item = [submenu addItemWithTitle:NSLocalizedString(@"Text Note", @"Menu item title") action:@selector(addAnnotationForContext:) target:self tag:SKNoteTypeFreeText];
+        item = [submenu addItemWithTitle:NSLocalizedString(@"Text Note", @"Menu item title") action:@selector(addAnnotationForPoint:) target:self tag:SKNoteTypeFreeText];
         [item setRepresentedObject:pointValue];
         
-        item = [submenu addItemWithTitle:NSLocalizedString(@"Anchored Note", @"Menu item title") action:@selector(addAnnotationForContext:) target:self tag:SKNoteTypeAnchored];
+        item = [submenu addItemWithTitle:NSLocalizedString(@"Anchored Note", @"Menu item title") action:@selector(addAnnotationForPoint:) target:self tag:SKNoteTypeAnchored];
         [item setRepresentedObject:pointValue];
         
-        item = [submenu addItemWithTitle:NSLocalizedString(@"Circle", @"Menu item title") action:@selector(addAnnotationForContext:) target:self tag:SKNoteTypeCircle];
+        item = [submenu addItemWithTitle:NSLocalizedString(@"Circle", @"Menu item title") action:@selector(addAnnotationForPoint:) target:self tag:SKNoteTypeCircle];
         [item setRepresentedObject:pointValue];
         
-        item = [submenu addItemWithTitle:NSLocalizedString(@"Box", @"Menu item title") action:@selector(addAnnotationForContext:) target:self tag:SKNoteTypeSquare];
+        item = [submenu addItemWithTitle:NSLocalizedString(@"Box", @"Menu item title") action:@selector(addAnnotationForPoint:) target:self tag:SKNoteTypeSquare];
         [item setRepresentedObject:pointValue];
         
         if ([[self currentSelection] hasCharacters]) {
-            item = [submenu addItemWithTitle:NSLocalizedString(@"Highlight", @"Menu item title") action:@selector(addAnnotationForContext:) target:self tag:SKNoteTypeHighlight];
+            item = [submenu addItemWithTitle:NSLocalizedString(@"Highlight", @"Menu item title") action:@selector(addAnnotationForPoint:) target:self tag:SKNoteTypeHighlight];
             [item setRepresentedObject:pointValue];
             
-            item = [submenu addItemWithTitle:NSLocalizedString(@"Underline", @"Menu item title") action:@selector(addAnnotationForContext:) target:self tag:SKNoteTypeUnderline];
+            item = [submenu addItemWithTitle:NSLocalizedString(@"Underline", @"Menu item title") action:@selector(addAnnotationForPoint:) target:self tag:SKNoteTypeUnderline];
             [item setRepresentedObject:pointValue];
             
-            item = [submenu addItemWithTitle:NSLocalizedString(@"Strike Out", @"Menu item title") action:@selector(addAnnotationForContext:) target:self tag:SKNoteTypeStrikeOut];
+            item = [submenu addItemWithTitle:NSLocalizedString(@"Strike Out", @"Menu item title") action:@selector(addAnnotationForPoint:) target:self tag:SKNoteTypeStrikeOut];
             [item setRepresentedObject:pointValue];
         }
         
-        item = [submenu addItemWithTitle:NSLocalizedString(@"Line", @"Menu item title") action:@selector(addAnnotationForContext:) target:self tag:SKNoteTypeLine];
+        item = [submenu addItemWithTitle:NSLocalizedString(@"Line", @"Menu item title") action:@selector(addAnnotationForPoint:) target:self tag:SKNoteTypeLine];
         [item setRepresentedObject:pointValue];
         
         [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
@@ -2478,17 +2480,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     return (x + 1.0) / sqrt(x * (x + 2.0)) - 1.0;
 }
 
-// context should be nil or (an array of) PDFSelection or NSValue objects wrapping a NSPoint
-- (void)addAnnotationWithType:(SKNoteType)annotationType context:(id)context {
-    if ([context isKindOfClass:[NSArray class]]) {
-        for (id item in context)
-            [self addAnnotationWithType:annotationType context:item];
-        return;
-    }
-    
+- (void)addAnnotationWithType:(SKNoteType)annotationType selection:(id)selection point:(NSPoint)point {
 	PDFPage *page = nil;
 	NSRect bounds = NSZeroRect;
-    PDFSelection *selection = [context isKindOfClass:[PDFSelection class]] ? context : nil;
     BOOL noSelection = selection == nil;
     BOOL isMarkup = IS_MARKUP(annotationType);
     
@@ -2597,20 +2591,22 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 	} else {
         
 		// First try the current mouse position
-        NSPoint center = [context isKindOfClass:[NSValue class]] ? [context pointValue] : [self convertPoint:[[self window] mouseLocationOutsideOfEventStream] fromView:nil];
+        if (NSEqualPoints(point, SKUnspecifiedPoint))
+            point = [self convertPoint:[[self window] mouseLocationOutsideOfEventStream] fromView:nil];
         
         // if the mouse was in the toolbar and there is a page below the toolbar, we get a point outside of the visible rect
-        page = NSMouseInRect(center, [self unobscuredContentRect], [self isFlipped]) ? [self pageForPoint:center nearest:NO] : nil;
+        if (NSMouseInRect(point, [self unobscuredContentRect], [self isFlipped]))
+            page = [self pageForPoint:point nearest:NO];
         
         if (page == nil) {
             // Get center of the PDFView.
             NSRect viewFrame = [self frame];
-            center = SKCenterPoint(viewFrame);
-            page = [self pageForPoint: center nearest: YES];
+            point = SKCenterPoint(viewFrame);
+            page = [self pageForPoint:point nearest:YES];
             if (page == nil) {
                 // Get center of the current page
                 page = [self currentPage];
-                center = [self convertPoint:SKCenterPoint([page boundsForBox:[self displayBox]]) fromPage:page];
+                point = [self convertPoint:SKCenterPoint([page boundsForBox:[self displayBox]]) fromPage:page];
             }
         }
         
@@ -2619,8 +2615,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         NSSize defaultSize = (annotationType == SKNoteTypeAnchored) ? SKNPDFAnnotationNoteSize : ([page rotation] % 180 == 0) ? NSMakeSize(defaultWidth, defaultHeight) : NSMakeSize(defaultHeight, defaultWidth);
 		
 		// Convert to "page space".
-		center = SKIntegralPoint([self convertPoint: center toPage: page]);
-        bounds = SKRectFromCenterAndSize(center, defaultSize);
+		point = SKIntegralPoint([self convertPoint:point toPage:page]);
+        bounds = SKRectFromCenterAndSize(point, defaultSize);
         
         // Make sure it fits in the page
         bounds = SKConstrainRect(bounds, [page boundsForBox:[self displayBox]]);
@@ -2639,12 +2635,19 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (IS_TEXT_OR_NOTE_TOOL && (annotationType == SKNoteTypeInk || (([[NSUserDefaults standardUserDefaults] boolForKey:SKNewNoteRequiresSelectionKey] || IS_MARKUP(annotationType)) && [[self currentSelection] hasCharacters] == NO))) {
         [self setTemporaryToolMode:TEMP_TOOL_MODE_FROM_NOTE_TYPE(annotationType)];
     } else {
-        [self addAnnotationWithType:annotationType context:nil];
+        [self addAnnotationWithType:annotationType selection:nil point:SKUnspecifiedPoint];
     }
 }
 
-- (void)addAnnotationForContext:(id)sender {
-    [self addAnnotationWithType:[sender tag] context:[sender representedObject]];
+- (void)addAnnotationsForSelections:(id)sender {
+    SKNoteType type = [sender tag];
+    NSArray *selections = [sender representedObject];
+    for (PDFSelection *selection in selections)
+        [self addAnnotationWithType:type selection:selection point:SKUnspecifiedPoint];
+}
+
+- (void)addAnnotationForPoint:(id)sender {
+    [self addAnnotationWithType:[sender tag] selection:nil point:[[sender representedObject] pointValue]];
 }
 
 - (void)removeCurrentAnnotation:(id)sender{

@@ -223,7 +223,7 @@ enum {
 @property (nonatomic, copy) NSDictionary<NSString *, id> *displaySettings;
 - (void)setDisplaySettingsAndRewind:(NSDictionary<NSString *, id> *)settings;
 
-- (void)addAnnotationForContext:(nullable id)sender;
+- (void)addAnnotationsForSelections:(nullable id)sender;
 - (void)addAnnotationWithType:(SKNoteType)annotationType;
 - (void)removeCurrentAnnotation:(nullable id)sender;
 - (void)removeThisAnnotation:(nullable id)sender;
