@@ -2480,7 +2480,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     return (x + 1.0) / sqrt(x * (x + 2.0)) - 1.0;
 }
 
-- (void)addAnnotationWithType:(SKNoteType)annotationType selection:(id)selection point:(NSPoint)point {
+- (void)addAnnotationWithType:(SKNoteType)annotationType selection:(PDFSelection *)selection point:(NSPoint)point {
 	PDFPage *page = nil;
 	NSRect bounds = NSZeroRect;
     BOOL noSelection = selection == nil;
