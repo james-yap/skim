@@ -2469,10 +2469,10 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
 
 // y=primaryOutset(x) approximately solves x*secondaryOutset(y)=y
 // y=cubrt(1/2x^2)+..., x->0; y=sqrt(2)-1+1/2(sqrt(2)-1)(x-1)+..., x->1
-// 0.436947024419157 = 4/3cubrt(1/2)-3/2(sqrt(2)-1)
-// 0.057460060808152 = 1/3cubrt(1/2)-1/2(sqrt(2)-1)
+// 0.436947024419157 = 4/3cbrt(1/2)-3/2(sqrt(2)-1)
+// 0.057460060808152 = 1/3cbrt(1/2)-1/2(sqrt(2)-1)
 static inline CGFloat primaryOutset(CGFloat x) {
-    return pow(M_SQRT1_2 * x, 2.0/3.0) - 0.436947024419157 * x + 0.057460060808152 * x * x;
+    return cbrt(0.5 * x * x) - 0.436947024419157 * x + 0.057460060808152 * x * x;
 }
 
 // an ellipse outset by 1/2*w*x and 1/2*h*secondaryOutset(x) circumscribes a rect with size {w,h} for any x
