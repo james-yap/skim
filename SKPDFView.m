@@ -1649,6 +1649,20 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
     }
 }
 
+- (BOOL)performKeyEquivalent:(NSEvent *)theEvent {
+    if ([self hasReadingBar] == NO)
+        return NO;
+    unichar eventChar = [theEvent firstCharacter];
+    if (IS_UP_DOWN_ARROW(eventChar) == NO)
+        return NO;
+    NSEventModifierFlags modifiers = [theEvent deviceIndependentModifierFlags] & ~NSEventModifierFlagNumericPad & ~NSEventModifierFlagFunction;
+    if (modifiers == moveReadingBarModifiers) {
+        [self doMoveReadingBarForKey:eventChar];
+        return YES;
+    }
+    return NO;
+}
+
 #define IS_TABLET_EVENT(theEvent, deviceType) (([theEvent subtype] == NSEventSubtypeTabletProximity || [theEvent subtype] == NSEventSubtypeTabletPoint) && [NSEvent currentPointingDeviceType] == deviceType)
 
 - (void)mouseDown:(NSEvent *)theEvent{
