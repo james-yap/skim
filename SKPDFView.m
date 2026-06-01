@@ -2445,16 +2445,16 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
             if (rotation != 0) {
                 switch (rotation) {
                     case 90:
-                        [newAnnotation setStartPoint:NSMakePoint(NSMinY(bounds), NSMaxX(bounds))];
-                        [newAnnotation setEndPoint:NSMakePoint(NSMaxY(bounds), NSMinX(bounds))];
+                        [newAnnotation setStartPoint:NSMakePoint(0.0, NSWidth(bounds))];
+                        [newAnnotation setEndPoint:NSMakePoint(NSHeight(bounds), 0.0)];
                         break;
                     case 180:
-                        [newAnnotation setStartPoint:NSMakePoint(NSMaxX(bounds), NSMaxY(bounds))];
-                        [newAnnotation setEndPoint:NSMakePoint(NSMinX(bounds), NSMinY(bounds))];
+                        [newAnnotation setStartPoint:NSMakePoint(NSWidth(bounds), NSHeight(bounds))];
+                        [newAnnotation setEndPoint:NSZeroPoint];
                         break;
                     case 270:
-                        [newAnnotation setStartPoint:NSMakePoint(NSMaxY(bounds), NSMinX(bounds))];
-                        [newAnnotation setEndPoint:NSMakePoint(NSMinY(bounds), NSMaxX(bounds))];
+                        [newAnnotation setStartPoint:NSMakePoint(NSHeight(bounds), 0.0)];
+                        [newAnnotation setEndPoint:NSMakePoint(0.0, NSWidth(bounds))];
                         break;
                     default:
                         break;
