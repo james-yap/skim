@@ -2621,12 +2621,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
 	}
     
-    if (page != nil && [self addAnnotationWithType:annotationType selection:selection page:page bounds:bounds]) {
+    if (page == nil || NO == [self addAnnotationWithType:annotationType selection:selection page:page bounds:bounds]) {
+        NSBeep();
+    } else if (noSelection) {
         if (annotationType == SKNoteTypeAnchored || annotationType == SKNoteTypeFreeText)
             [self editCurrentAnnotation:self];
         else if (isMarkup && noSelection)
             [self setCurrentSelection:nil];
-    } else NSBeep();
+    }
 }
 
 - (void)addAnnotationWithType:(SKNoteType)annotationType {
