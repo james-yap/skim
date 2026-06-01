@@ -246,7 +246,7 @@
 		CED2D2FA2FC0FDF70044A3DC /* QuickLookThumbnailing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED2D2F92FC0FDF70044A3DC /* QuickLookThumbnailing.framework */; platformFilter = maccatalyst; };
 		CED2D2FC2FC0FDF70044A3DC /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED2D2FB2FC0FDF70044A3DC /* Quartz.framework */; };
 		CED2D3002FC0FDF70044A3DC /* SKThumbnailProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = CED2D2FF2FC0FDF70044A3DC /* SKThumbnailProvider.m */; };
-		CED2D3052FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex in CopyFiles */ = {isa = PBXBuildFile; fileRef = CED2D2F82FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CED2D3052FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex in Copy Files: PlugIns */ = {isa = PBXBuildFile; fileRef = CED2D2F82FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CED2D3252FC103860044A3DC /* SKQLConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = CED2D3242FC103860044A3DC /* SKQLConverter.m */; };
 		CED2D3332FC108210044A3DC /* Underline.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3272FC108200044A3DC /* Underline.png */; };
 		CED2D3342FC108210044A3DC /* FreeText.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3282FC108200044A3DC /* FreeText.png */; };
@@ -260,7 +260,7 @@
 		CED2D33C2FC108210044A3DC /* StrikeOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3302FC108200044A3DC /* StrikeOut.png */; };
 		CED2D3462FC10BA80044A3DC /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED2D2FB2FC0FDF70044A3DC /* Quartz.framework */; };
 		CED2D34D2FC10BA80044A3DC /* SKPreviewProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = CED2D34C2FC10BA80044A3DC /* SKPreviewProvider.m */; };
-		CED2D3552FC10BA80044A3DC /* SkimQuickLookPreview.appex in CopyFiles */ = {isa = PBXBuildFile; fileRef = CED2D3452FC10BA80044A3DC /* SkimQuickLookPreview.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CED2D3552FC10BA80044A3DC /* SkimQuickLookPreview.appex in Copy Files: PlugIns */ = {isa = PBXBuildFile; fileRef = CED2D3452FC10BA80044A3DC /* SkimQuickLookPreview.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CED2D35E2FC10EA80044A3DC /* SKQLConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = CED2D35D2FC10EA80044A3DC /* SKQLConverter.m */; };
 		CED2D3692FC113B60044A3DC /* Widget.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D35F2FC113B50044A3DC /* Widget.png */; };
 		CED2D36A2FC113B60044A3DC /* StrikeOut.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3602FC113B60044A3DC /* StrikeOut.png */; };
@@ -274,7 +274,7 @@
 		CED2D3722FC113B60044A3DC /* FreeText.png in Resources */ = {isa = PBXBuildFile; fileRef = CED2D3682FC113B60044A3DC /* FreeText.png */; };
 		CED4DA252707B330001E09A8 /* SKThumbnailImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = CED4DA242707B330001E09A8 /* SKThumbnailImageView.m */; };
 		CED76F011A1825DE00D1ACA4 /* SKScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = CED76F001A1825DE00D1ACA4 /* SKScrollView.m */; };
-		CEDA057B2295BEBA00881DE1 /* SkimTransitions.plugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = CEDA056B2295BE8300881DE1 /* SkimTransitions.plugin */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CEDA057B2295BEBA00881DE1 /* SkimTransitions.plugin in Copy Files: PlugIns */ = {isa = PBXBuildFile; fileRef = CEDA056B2295BE8300881DE1 /* SkimTransitions.plugin */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CEDB6A7A228F596000F93C87 /* SKColorPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDB6A78228F596000F93C87 /* SKColorPicker.m */; };
 		CEDC7B1A2913CD2500032269 /* SKLoupeController.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDC7B192913CD2500032269 /* SKLoupeController.m */; };
 		CEDE68E5201FDCB5000D881A /* SKKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDE68E3201FDCB4000D881A /* SKKeychain.m */; };
@@ -623,16 +623,17 @@
 			name = "Copy Files: QuickLook";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CEDA057A2295BEA200881DE1 /* CopyFiles */ = {
+		CEDA057A2295BEA200881DE1 /* Copy Files: PlugIns */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				CED2D3052FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex in CopyFiles */,
-				CED2D3552FC10BA80044A3DC /* SkimQuickLookPreview.appex in CopyFiles */,
-				CEDA057B2295BEBA00881DE1 /* SkimTransitions.plugin in CopyFiles */,
+				CED2D3052FC0FDF70044A3DC /* SkimQuickLookThumbnails.appex in Copy Files: PlugIns */,
+				CED2D3552FC10BA80044A3DC /* SkimQuickLookPreview.appex in Copy Files: PlugIns */,
+				CEDA057B2295BEBA00881DE1 /* SkimTransitions.plugin in Copy Files: PlugIns */,
 			);
+			name = "Copy Files: PlugIns";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CEE112760BCBF52500BF2D3E /* Copy Files: Frameworks */ = {
@@ -2476,7 +2477,7 @@
 				8D15AC300486D014006FF6A4 /* Sources */,
 				8D15AC330486D014006FF6A4 /* Frameworks */,
 				CEE112760BCBF52500BF2D3E /* Copy Files: Frameworks */,
-				CEDA057A2295BEA200881DE1 /* CopyFiles */,
+				CEDA057A2295BEA200881DE1 /* Copy Files: PlugIns */,
 				CEE22EA00BFB8614002B746B /* Copy Files: Shared Support */,
 				CEFD68720C01D3FE0027B933 /* Copy Files: Spotlight */,
 				CE816A0A0D70F9B6008D807D /* Copy Files: QuickLook */,
