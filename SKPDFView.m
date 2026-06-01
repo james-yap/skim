@@ -2384,6 +2384,13 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
     return newAnnotation;
 }
 
+static NSString *typeForNoteType(SKNoteType annotationType) {
+    static NSArray *types = nil;
+    if (types == nil)
+        types = @[SKNFreeTextString, SKNNoteString, SKNCircleString, SKNSquareString, SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNLineString, SKNInkString];
+    return [types objectAtIndex:annotationType];
+}
+
 - (BOOL)addAnnotationWithType:(SKNoteType)annotationType selection:(PDFSelection *)selection page:(PDFPage *)page bounds:(NSRect)bounds {
     PDFAnnotation *newAnnotation = nil;
     NSArray *newAnnotations = nil;
@@ -2396,49 +2403,17 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
         bounds = annotationType == SKNoteTypeAnchored ? SKRectFromCenterAndSize(bounds.origin, SKNPDFAnnotationNoteSize) : SKRectFromCenterAndSquareSize(bounds.origin, MIN_NOTE_SIZE);
     
     // Create annotation and add to page.
-    NSString *type = nil;
-    BOOL isMarkup = NO;
-    switch (annotationType) {
-        case SKNoteTypeFreeText:
-            type = SKNFreeTextString;
-            break;
-        case SKNoteTypeAnchored:
-            type = SKNNoteString;
-            break;
-        case SKNoteTypeCircle:
-            type = SKNCircleString;
-            break;
-        case SKNoteTypeSquare:
-            type = SKNSquareString;
-            break;
-        case SKNoteTypeHighlight:
-            type = SKNHighlightString;
-            isMarkup = YES;
-            break;
-        case SKNoteTypeUnderline:
-            type = SKNUnderlineString;
-            isMarkup = YES;
-            break;
-        case SKNoteTypeStrikeOut:
-            type = SKNStrikeOutString;
-            isMarkup = YES;
-            break;
-        case SKNoteTypeLine:
-            type = SKNLineString;
-            break;
-        case SKNoteTypeInk:
-            // we need a drawn path to add an ink note
-            break;
-    }
+    NSString *type = typeForNoteType(annotationType);
     
-    if (isMarkup) {
+    if (IS_MARKUP(annotationType)) {
         newAnnotations = [PDFAnnotation SkimNotesAndPagesWithSelection:selection forType:type];
         if ([newAnnotations count] == 1) {
             newAnnotation = [[newAnnotations firstObject] firstObject];
             page = [[newAnnotations firstObject] lastObject];
             newAnnotations = nil;
         }
-    } else if (type) {
+    } else if (annotationType != SKNoteTypeInk) {
+        // we need a drawn path to add an ink note
         newAnnotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:type];
         if (annotationType == SKNoteTypeLine && isInitial == NO) {
             NSInteger rotation = [page intrinsicRotation];
@@ -2515,7 +2490,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
         // add new markup to the active markup if it's the same type on the same page, unless we add a specific selection
         if (noSelection && page && [[currentAnnotation page] isEqual:page] &&
-            [[currentAnnotation type] isEqualToString:(annotationType == SKNoteTypeHighlight ? SKNHighlightString : annotationType == SKNoteTypeUnderline ? SKNUnderlineString : annotationType == SKNoteTypeStrikeOut ? SKNStrikeOutString : nil)]) {
+            [[currentAnnotation type] isEqualToString:typeForNoteType(annotationType)]) {
             selection = [selection copy];
             [selection addSelection:[currentAnnotation selection]];
             [self removeCurrentAnnotation:nil];
