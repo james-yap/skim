@@ -145,11 +145,6 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 }
 
 + (PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type {
-    if (page == nil) {
-        page = [selection safeFirstPage];
-        if (page == nil)
-            return nil;
-    }
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     return [[PDFAnnotationMarkup alloc] initSkimNoteWithSelection:selection forPage:page forType:type];

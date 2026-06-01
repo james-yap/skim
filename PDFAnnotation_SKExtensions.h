@@ -63,7 +63,7 @@ extern NSPasteboardType const SKPasteboardTypeSkimNote;
 
 + (nullable PDFAnnotation *)newSkimNoteWithPaths:(NSArray<NSBezierPath *> *)paths;
 
-+ (nullable PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forPage:(nullable PDFPage *)page forType:(NSString *)type;
++ (nullable PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type;
 
 + (NSDictionary<NSString *, id> *)normalizedSkimNoteProperties:(NSDictionary<NSString *, id> *)properties;
 
