@@ -2360,7 +2360,7 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
                 string = string2;
         }
         
-        newAnnotation = [PDFAnnotation newSkimNoteWithSelection:sel forType:type];
+        newAnnotation = [PDFAnnotation newSkimNoteWithSelection:sel forPage:page forType:type];
         if ([string length] > 0)
             [newAnnotation setString:string];
     } else if ([currentAnnotation isInk]) {
@@ -2404,15 +2404,18 @@ static NSString *typeForNoteType(SKNoteType annotationType) {
     NSString *type = typeForNoteType(annotationType);
     
     if (IS_MARKUP(annotationType)) {
-        NSArray *newAnnotations = [PDFAnnotation SkimNotesAndPagesWithSelection:selection forType:type];
-        if ([newAnnotations count] == 0)
-            return NO;
-        
-        for (NSArray *annotationAndPage in newAnnotations)
-            [[annotationAndPage firstObject] setString:text ?: @""];
-        [self addAnnotations:newAnnotations];
-        
-        return YES;
+        NSMutableArray *newAnnotations = [NSMutableArray array];
+        for (PDFPage *page in [selection pages]) {
+            PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithSelection:selection forPage:page forType:type];
+            if (newAnnotation) {
+                [newAnnotation setString:text ?: @""];
+                [newAnnotations addObject:@[newAnnotation, page]];
+            }
+        }
+        if ([newAnnotations count] > 0) {
+            [self addAnnotations:newAnnotations];
+            return YES;
+        }
     } else if (annotationType != SKNoteTypeInk) {
         // we need a drawn path to add an ink note
         PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:type];

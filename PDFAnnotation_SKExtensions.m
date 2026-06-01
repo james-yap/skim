@@ -144,28 +144,15 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     return annotation;
 }
 
-+ (PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forType:(NSString *)type {
-    PDFPage *page = [selection safeFirstPage];
++ (PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type {
+    if (page == nil)
+        page = [selection safeFirstPage];
     if (page == nil)
         return nil;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     return [[PDFAnnotationMarkup alloc] initSkimNoteWithSelection:selection forPage:page forType:type];
 #pragma clang diagnostic pop
-}
-
-+ (NSArray *)SkimNotesAndPagesWithSelection:(PDFSelection *)selection forType:(NSString *)type {
-    NSMutableArray *annotations = [NSMutableArray array];
-    for (PDFPage *page in [selection pages]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        PDFAnnotation *annotation = [[PDFAnnotationMarkup alloc] initSkimNoteWithSelection:selection forPage:page forType:type];
-#pragma clang diagnostic pop
-        if (annotation) {
-            [annotations addObject:@[annotation, page]];
-        }
-    }
-    return [annotations count] > 0 ? annotations : nil;
 }
 
 + (PDFAnnotation *)newSkimNoteWithPaths:(NSArray *)paths {
