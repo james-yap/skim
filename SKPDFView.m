@@ -2422,29 +2422,29 @@ static NSString *typeForNoteType(SKNoteType annotationType) {
         if (newAnnotation == nil)
             return NO;
         
-        if (annotationType == SKNoteTypeLine && isInitial == NO) {
-            NSInteger rotation = [page intrinsicRotation];
-            if (rotation != 0) {
-                switch (rotation) {
-                    case 90:
-                        [newAnnotation setStartPoint:NSMakePoint(0.0, NSWidth(bounds))];
-                        [newAnnotation setEndPoint:NSMakePoint(NSHeight(bounds), 0.0)];
-                        break;
-                    case 180:
-                        [newAnnotation setStartPoint:NSMakePoint(NSWidth(bounds), NSHeight(bounds))];
-                        [newAnnotation setEndPoint:NSZeroPoint];
-                        break;
-                    case 270:
-                        [newAnnotation setStartPoint:NSMakePoint(NSHeight(bounds), 0.0)];
-                        [newAnnotation setEndPoint:NSMakePoint(0.0, NSWidth(bounds))];
-                        break;
-                    default:
-                        break;
+        if (annotationType == SKNoteTypeLine) {
+            if (isInitial == NO) {
+                NSInteger rotation = [page intrinsicRotation];
+                if (rotation != 0) {
+                    switch (rotation) {
+                        case 90:
+                            [newAnnotation setStartPoint:NSMakePoint(0.0, NSWidth(bounds))];
+                            [newAnnotation setEndPoint:NSMakePoint(NSHeight(bounds), 0.0)];
+                            break;
+                        case 180:
+                            [newAnnotation setStartPoint:NSMakePoint(NSWidth(bounds), NSHeight(bounds))];
+                            [newAnnotation setEndPoint:NSZeroPoint];
+                            break;
+                        case 270:
+                            [newAnnotation setStartPoint:NSMakePoint(NSHeight(bounds), 0.0)];
+                            [newAnnotation setEndPoint:NSMakePoint(0.0, NSWidth(bounds))];
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
-        }
-        
-        if (annotationType != SKNoteTypeLine && annotationType != SKNoteTypeInk) {
+        } else if (annotationType != SKNoteTypeInk) {
             if ([text length] > 0)
                 [newAnnotation setString:text];
             else if (isInitial == NO && disableUpdateString == 0)
