@@ -2624,10 +2624,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (page == nil || NO == [self addAnnotationWithType:annotationType selection:selection page:page bounds:bounds]) {
         NSBeep();
     } else if (noSelection) {
-        if (annotationType == SKNoteTypeAnchored || annotationType == SKNoteTypeFreeText)
-            [self editCurrentAnnotation:self];
-        else if (isMarkup && noSelection)
+        if (isMarkup)
             [self setCurrentSelection:nil];
+        else if (annotationType == SKNoteTypeAnchored || annotationType == SKNoteTypeFreeText)
+            [self editCurrentAnnotation:self];
     }
 }
 
