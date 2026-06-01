@@ -2440,6 +2440,27 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
         }
     } else if (type) {
         newAnnotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:type];
+        if (annotationType == SKNoteTypeLine && isInitial == NO) {
+            NSInteger rotation = [page intrinsicRotation];
+            if (rotation != 0) {
+                switch (rotation) {
+                    case 90:
+                        [newAnnotation setStartPoint:NSMakePoint(NSMinY(bounds), NSMaxX(bounds))];
+                        [newAnnotation setEndPoint:NSMakePoint(NSMaxY(bounds), NSMinX(bounds))];
+                        break;
+                    case 180:
+                        [newAnnotation setStartPoint:NSMakePoint(NSMaxX(bounds), NSMaxY(bounds))];
+                        [newAnnotation setEndPoint:NSMakePoint(NSMinX(bounds), NSMinY(bounds))];
+                        break;
+                    case 270:
+                        [newAnnotation setStartPoint:NSMakePoint(NSMaxY(bounds), NSMinX(bounds))];
+                        [newAnnotation setEndPoint:NSMakePoint(NSMinY(bounds), NSMaxX(bounds))];
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
     
     if ([newAnnotations count] > 0) {
