@@ -2392,8 +2392,6 @@ static NSString *typeForNoteType(SKNoteType annotationType) {
 }
 
 - (BOOL)addAnnotationWithType:(SKNoteType)annotationType selection:(PDFSelection *)selection page:(PDFPage *)page bounds:(NSRect)bounds {
-    PDFAnnotation *newAnnotation = nil;
-    NSArray *newAnnotations = nil;
     NSInteger disableUpdateString = [[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey];
     NSString *text = disableUpdateString < 2 ? [selection cleanedString] : nil;
     BOOL isInitial = NSEqualSizes(bounds.size, NSZeroSize) && selection == nil;
@@ -2406,15 +2404,21 @@ static NSString *typeForNoteType(SKNoteType annotationType) {
     NSString *type = typeForNoteType(annotationType);
     
     if (IS_MARKUP(annotationType)) {
-        newAnnotations = [PDFAnnotation SkimNotesAndPagesWithSelection:selection forType:type];
-        if ([newAnnotations count] == 1) {
-            newAnnotation = [[newAnnotations firstObject] firstObject];
-            page = [[newAnnotations firstObject] lastObject];
-            newAnnotations = nil;
-        }
+        NSArray *newAnnotations = [PDFAnnotation SkimNotesAndPagesWithSelection:selection forType:type];
+        if ([newAnnotations count] == 0)
+            return NO;
+        
+        for (NSArray *annotationAndPage in newAnnotations)
+            [[annotationAndPage firstObject] setString:text ?: @""];
+        [self addAnnotations:newAnnotations];
+        
+        return YES;
     } else if (annotationType != SKNoteTypeInk) {
         // we need a drawn path to add an ink note
-        newAnnotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:type];
+        PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:type];
+        if (newAnnotation == nil)
+            return NO;
+        
         if (annotationType == SKNoteTypeLine && isInitial == NO) {
             NSInteger rotation = [page intrinsicRotation];
             if (rotation != 0) {
@@ -2436,16 +2440,6 @@ static NSString *typeForNoteType(SKNoteType annotationType) {
                 }
             }
         }
-    }
-    
-    if ([newAnnotations count] > 0) {
-        
-        for (NSArray *annotationAndPage in newAnnotations)
-            [[annotationAndPage firstObject] setString:text ?: @""];
-        [self addAnnotations:newAnnotations];
-        
-        return YES;
-    } else if (newAnnotation) {
         
         if (annotationType != SKNoteTypeLine && annotationType != SKNoteTypeInk) {
             if ([text length] > 0)
@@ -2458,9 +2452,9 @@ static NSString *typeForNoteType(SKNoteType annotationType) {
         [self addAnnotation:newAnnotation toPage:page select:YES];
         
         return YES;
-    } else {
-        return NO;
     }
+    
+    return NO;
 }
 
 // y=primaryOutset(x) approximately solves x*secondaryOutset(y)=y
