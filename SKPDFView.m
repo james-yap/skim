@@ -1730,12 +1730,10 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
             [self setCurrentAnnotation:nil];
             BOOL mayMultiClick = [theEvent clickCount] < 3 && [NSApp willDragMouse] == NO;
             [super mouseDown:theEvent];
-            if ([[self currentSelection] hasCharacters]) {
+            if ([[self currentSelection] hasCharacters])
                 [self addAnnotationWithType:NOTE_TYPE_FROM_TEMP_TOOL_MODE(temporaryToolMode)];
-                [self setCurrentSelection:nil];
-            } else if (mayMultiClick) {
+            else if (mayMultiClick)
                 delayTempToolMode = YES;
-            }
         }
         if (delayTempToolMode)
             [self performSelectorOnce:@selector(resetTemporaryToolMode) afterDelay:[NSEvent doubleClickInterval]];
@@ -1785,10 +1783,8 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
     } else if ([self doDragSelectedTextWithEvent:theEvent] == NO) {
         [self setCurrentAnnotation:nil];
         [super mouseDown:theEvent];
-        if (toolMode == SKToolModeNote && [self canAddNotes] && IS_MARKUP(annotationMode) && [[self currentSelection] hasCharacters]) {
+        if (toolMode == SKToolModeNote && [self canAddNotes] && IS_MARKUP(annotationMode) && [[self currentSelection] hasCharacters])
             [self addAnnotationWithType:annotationMode];
-            [self setCurrentSelection:nil];
-        }
     }
 }
 
