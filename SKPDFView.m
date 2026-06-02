@@ -2391,7 +2391,7 @@ static NSString *typeForNoteType(SKNoteType annotationType) {
     return [types objectAtIndex:annotationType];
 }
 
-- (BOOL)addAnnotationWithType:(SKNoteType)annotationType selection:(PDFSelection *)selection page:(PDFPage *)page bounds:(NSRect)bounds {
+- (BOOL)addAnnotationWithType:(SKNoteType)annotationType selection:(PDFSelection *)selection page:(PDFPage *)page bounds:(NSRect)bounds color:(NSColor*)color {
     NSInteger disableUpdateString = [[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey];
     NSString *text = disableUpdateString < 2 ? [selection cleanedString] : nil;
     BOOL isInitial = NSEqualSizes(bounds.size, NSZeroSize) && selection == nil;
@@ -2409,6 +2409,8 @@ static NSString *typeForNoteType(SKNoteType annotationType) {
             PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithSelection:selection forPage:page forType:type];
             if (newAnnotation) {
                 [newAnnotation setString:text ?: @""];
+                if (color)
+                    [newAnnotation setColor:color];
                 [newAnnotations addObject:@[newAnnotation, page]];
             }
         }
@@ -2478,6 +2480,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 	NSRect bounds = NSZeroRect;
     BOOL noSelection = selection == nil;
     BOOL isMarkup = IS_MARKUP(annotationType);
+    NSColor *color = nil;
     
     if (noSelection)
         selection = [self currentSelection];
@@ -2490,6 +2493,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             [[currentAnnotation type] isEqualToString:typeForNoteType(annotationType)]) {
             selection = [selection copy];
             [selection addSelection:[currentAnnotation selection]];
+            color = [currentAnnotation color];
             [self removeCurrentAnnotation:nil];
         }
         
@@ -2618,7 +2622,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
 	}
     
-    if (page == nil || NO == [self addAnnotationWithType:annotationType selection:selection page:page bounds:bounds]) {
+    if (page == nil || NO == [self addAnnotationWithType:annotationType selection:selection page:page bounds:bounds color:color]) {
         NSBeep();
     } else if (noSelection) {
         if (isMarkup)
@@ -4010,7 +4014,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             noteType = NOTE_TYPE_FROM_TEMP_TOOL_MODE(temporaryToolMode);
         originalBounds = SKRectFromCenterAndSquareSize(SKIntegralPoint(initialPoint), 0.0);
         if (noteType == SKNoteTypeAnchored) {
-            [self addAnnotationWithType:SKNoteTypeAnchored selection:nil page:page bounds:originalBounds];
+            [self addAnnotationWithType:SKNoteTypeAnchored selection:nil page:page bounds:originalBounds color:nil];
             resizeHandle = SKRectEdgesNone;
             originalBounds = [[self currentAnnotation] bounds];
         } else if (noteType == SKNoteTypeLine) {
@@ -4050,7 +4054,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         } else if ([theEvent type] == NSEventTypeLeftMouseDragged) {
             if (draggedAnnotation == NO) {
                 if (currentAnnotation == nil)
-                    [self addAnnotationWithType:noteType selection:nil page:page bounds:originalBounds];
+                    [self addAnnotationWithType:noteType selection:nil page:page bounds:originalBounds color:nil];
                 else if (shouldAddAnnotation == NO)
                     [self beginNewUndoGroupIfNeeded];
                 draggedAnnotation = YES;
