@@ -2443,9 +2443,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)addOtherAnnotationWithType:(SKNoteType)annotationType selection:(PDFSelection *)selection point:(NSPoint)point {
     BOOL noSelection = selection == nil;
-    NSInteger disableUpdateString = [[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey];
-    NSString *text = nil;
-    
     if (noSelection)
         selection = [self currentSelection];
     
@@ -2577,8 +2574,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
     }
     
-    text = disableUpdateString < 2 ? [selection cleanedString] : nil;
-    
     PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:SKTypeForNoteType(annotationType)];
     // should never happen
     if (newAnnotation == nil) {
@@ -2606,10 +2601,13 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                     break;
             }
         }
-    } else if ([text length] > 0) {
-        [newAnnotation setString:text];
-    } else if (disableUpdateString == 0) {
-        [newAnnotation autoUpdateStringWithPage:page];
+    } else {
+        NSInteger disableUpdateString = [[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey];
+        NSString *text = disableUpdateString < 2 ? [selection cleanedString] : nil;
+        if ([text length] > 0)
+            [newAnnotation setString:text];
+        else if (disableUpdateString == 0)
+            [newAnnotation autoUpdateStringWithPage:page];
     }
     if ([newAnnotation string] == nil)
         [newAnnotation setString:@""];
