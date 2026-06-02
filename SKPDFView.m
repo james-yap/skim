@@ -151,6 +151,8 @@ static inline PDFAreaOfInterest SKAreaOfInterestForResizeHandle(SKRectEdges mask
 
 static inline NSSize SKFitTextNoteSize(NSString *string, NSFont *font, CGFloat width);
 
+static NSString *SKTypeForNoteType(SKNoteType annotationType);
+
 enum {
     SKLayerNone,
     SKLayerUse,
@@ -2384,84 +2386,6 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
     return newAnnotation;
 }
 
-static NSString *typeForNoteType(SKNoteType annotationType) {
-    static NSArray *types = nil;
-    if (types == nil)
-        types = @[SKNFreeTextString, SKNNoteString, SKNCircleString, SKNSquareString, SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNLineString, SKNInkString];
-    return [types objectAtIndex:annotationType];
-}
-
-- (BOOL)addAnnotationWithType:(SKNoteType)annotationType selection:(PDFSelection *)selection page:(PDFPage *)page bounds:(NSRect)bounds color:(NSColor*)color {
-    NSInteger disableUpdateString = [[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey];
-    NSString *text = disableUpdateString < 2 ? [selection cleanedString] : nil;
-    BOOL isInitial = NSEqualSizes(bounds.size, NSZeroSize) && selection == nil;
-    
-    // new note added by note tool mode, don't add actual zero sized notes
-    if (isInitial)
-        bounds = annotationType == SKNoteTypeAnchored ? SKRectFromCenterAndSize(bounds.origin, SKNPDFAnnotationNoteSize) : SKRectFromCenterAndSquareSize(bounds.origin, MIN_NOTE_SIZE);
-    
-    // Create annotation and add to page.
-    NSString *type = typeForNoteType(annotationType);
-    
-    if (IS_MARKUP(annotationType)) {
-        NSMutableArray *newAnnotations = [NSMutableArray array];
-        for (PDFPage *page in [selection pages]) {
-            PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithSelection:selection forPage:page forType:type];
-            if (newAnnotation) {
-                [newAnnotation setString:text ?: @""];
-                if (color)
-                    [newAnnotation setColor:color];
-                [newAnnotations addObject:@[newAnnotation, page]];
-            }
-        }
-        if ([newAnnotations count] > 0) {
-            [self addAnnotations:newAnnotations];
-            return YES;
-        }
-    } else if (annotationType != SKNoteTypeInk) {
-        // we need a drawn path to add an ink note
-        PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:type];
-        if (newAnnotation == nil)
-            return NO;
-        
-        if (annotationType == SKNoteTypeLine) {
-            if (isInitial == NO) {
-                NSInteger rotation = [page intrinsicRotation];
-                if (rotation != 0) {
-                    switch (rotation) {
-                        case 90:
-                            [newAnnotation setStartPoint:NSMakePoint(0.0, NSWidth(bounds))];
-                            [newAnnotation setEndPoint:NSMakePoint(NSHeight(bounds), 0.0)];
-                            break;
-                        case 180:
-                            [newAnnotation setStartPoint:NSMakePoint(NSWidth(bounds), NSHeight(bounds))];
-                            [newAnnotation setEndPoint:NSZeroPoint];
-                            break;
-                        case 270:
-                            [newAnnotation setStartPoint:NSMakePoint(NSHeight(bounds), 0.0)];
-                            [newAnnotation setEndPoint:NSMakePoint(0.0, NSWidth(bounds))];
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        } else if (annotationType != SKNoteTypeInk) {
-            if ([text length] > 0)
-                [newAnnotation setString:text];
-            else if (isInitial == NO && disableUpdateString == 0)
-                [newAnnotation autoUpdateStringWithPage:page];
-        }
-        if ([newAnnotation string] == nil)
-            [newAnnotation setString:@""];
-        [self addAnnotation:newAnnotation toPage:page select:YES];
-        
-        return YES;
-    }
-    
-    return NO;
-}
-
 // y=primaryOutset(x) approximately solves x*secondaryOutset(y)=y
 // y=cubrt(1/2x^2)+..., x->0; y=sqrt(2)-1+1/2(sqrt(2)-1)(x-1)+..., x->1
 // 0.436947024419157 = 4/3cbrt(1/2)-3/2(sqrt(2)-1)
@@ -2476,158 +2400,227 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)addAnnotationWithType:(SKNoteType)annotationType selection:(PDFSelection *)selection point:(NSPoint)point {
-	PDFPage *page = nil;
-	NSRect bounds = NSZeroRect;
     BOOL noSelection = selection == nil;
-    BOOL isMarkup = IS_MARKUP(annotationType);
-    NSColor *color = nil;
+    NSString *type = SKTypeForNoteType(annotationType);
+    NSInteger disableUpdateString = [[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey];
+    NSString *text = nil;
     
     if (noSelection)
         selection = [self currentSelection];
-	page = [selection safeFirstPage];
+    PDFPage *page = [selection safeFirstPage];
     
-	if (isMarkup) {
+    if (annotationType == SKNoteTypeInk) {
+        // should never happen
+        NSBeep();
+        return;
+    } else if (IS_MARKUP(annotationType)) {
+        
+        if (page == nil) {
+            NSBeep();
+            return;
+        }
+        
+        NSColor *color = nil;
         
         // add new markup to the active markup if it's the same type on the same page, unless we add a specific selection
-        if (noSelection && page && [[currentAnnotation page] isEqual:page] &&
-            [[currentAnnotation type] isEqualToString:typeForNoteType(annotationType)]) {
+        if (noSelection && [[currentAnnotation page] isEqual:page] &&
+            [[currentAnnotation type] isEqualToString:type]) {
             selection = [selection copy];
             [selection addSelection:[currentAnnotation selection]];
             color = [currentAnnotation color];
             [self removeCurrentAnnotation:nil];
         }
         
-    } else if (page) {
+        text = disableUpdateString < 2 ? ([selection cleanedString] ?: @"") : @"";
         
-		// Get bounds (page space) for selection (first page in case selection spans multiple pages)
-		bounds = [selection boundsForPage:page];
-        if (annotationType == SKNoteTypeCircle) {
-            CGFloat dw, dh, w = NSWidth(bounds), h = NSHeight(bounds);
-            if (h < w) {
-                dw = primaryOutset(h / w);
-                dh = secondaryOutset(dw);
-            } else if (w < h) {
-                dh = primaryOutset(w / h);
-                dw = secondaryOutset(dh);
-            } else {
-                dw = dh = M_SQRT2 - 1.0;
+        NSMutableArray *newAnnotations = [NSMutableArray array];
+        for (PDFPage *page in [selection pages]) {
+            PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithSelection:selection forPage:page forType:type];
+            if (newAnnotation) {
+                [newAnnotation setString:text];
+                if (color)
+                    [newAnnotation setColor:color];
+                [newAnnotations addObject:@[newAnnotation, page]];
             }
-            CGFloat lw = [[NSUserDefaults standardUserDefaults] doubleForKey:SKCircleNoteLineWidthKey];
-            bounds = NSInsetRect(bounds, -0.5 * w * dw - lw, -0.5 * h * dh - lw);
-        } else if (annotationType == SKNoteTypeSquare) {
-            CGFloat lw = [[NSUserDefaults standardUserDefaults] doubleForKey:SKSquareNoteLineWidthKey];
-            bounds = NSInsetRect(bounds, -lw, -lw);
-        } else if (annotationType == SKNoteTypeLine) {
+        }
+        if ([newAnnotations count] == 0) {
+            NSBeep();
+            return;
+        }
+        [self addAnnotations:newAnnotations];
+        if (noSelection)
+            [self setCurrentSelection:nil];
+        
+    } else {
+        
+        NSRect bounds = NSZeroRect;
+        
+        if (page) {
+            
+            // Get bounds (page space) for selection (first page in case selection spans multiple pages)
+            bounds = [selection boundsForPage:page];
+            if (annotationType == SKNoteTypeCircle) {
+                CGFloat dw, dh, w = NSWidth(bounds), h = NSHeight(bounds);
+                if (h < w) {
+                    dw = primaryOutset(h / w);
+                    dh = secondaryOutset(dw);
+                } else if (w < h) {
+                    dh = primaryOutset(w / h);
+                    dw = secondaryOutset(dh);
+                } else {
+                    dw = dh = M_SQRT2 - 1.0;
+                }
+                CGFloat lw = [[NSUserDefaults standardUserDefaults] doubleForKey:SKCircleNoteLineWidthKey];
+                bounds = NSInsetRect(bounds, -0.5 * w * dw - lw, -0.5 * h * dh - lw);
+            } else if (annotationType == SKNoteTypeSquare) {
+                CGFloat lw = [[NSUserDefaults standardUserDefaults] doubleForKey:SKSquareNoteLineWidthKey];
+                bounds = NSInsetRect(bounds, -lw, -lw);
+            } else if (annotationType == SKNoteTypeLine) {
+                CGFloat defaultWidth = [[NSUserDefaults standardUserDefaults] floatForKey:SKDefaultNoteWidthKey];
+                CGFloat defaultHeight = [[NSUserDefaults standardUserDefaults] floatForKey:SKDefaultNoteHeightKey];
+                NSRect pageBounds = [page boundsForBox:[self displayBox]];
+                NSPoint p1, p2;
+                switch ([page intrinsicRotation]) {
+                    case 0:
+                        p2.x = floor(NSMinX(bounds));
+                        p2.y = ceil(NSMidY(bounds));
+                        p1.x = fmax(NSMinX(pageBounds), p2.x - defaultWidth);
+                        p1.y = fmax(NSMinY(pageBounds), p2.y - defaultHeight);
+                        break;
+                    case 90:
+                        p2.x = floor(NSMidX(bounds));
+                        p2.y = floor(NSMinY(bounds));
+                        p1.x = fmin(NSMaxX(pageBounds), p2.x + defaultHeight);
+                        p1.y = fmax(NSMinY(pageBounds), p2.y - defaultWidth);
+                        break;
+                    case 180:
+                        p2.x = ceil(NSMaxX(bounds));
+                        p2.y = floor(NSMidY(bounds));
+                        p1.x = fmin(NSMaxX(pageBounds), p2.x + defaultWidth);
+                        p1.y = fmin(NSMaxY(pageBounds), p2.y + defaultHeight);
+                        break;
+                    case 270:
+                        p2.x = ceil(NSMidX(bounds));
+                        p2.y = ceil(NSMaxY(bounds));
+                        p1.x = fmax(NSMinX(pageBounds), p2.x - defaultHeight);
+                        p1.y = fmin(NSMaxY(pageBounds), p2.y + defaultWidth);
+                        break;
+                    default:
+                        p2.x = floor(NSMinX(bounds));
+                        p2.y = ceil(NSMidY(bounds));
+                        p1.x = fmax(NSMinX(pageBounds), p2.x - defaultWidth);
+                        p1.y = fmax(NSMinY(pageBounds), p2.y - defaultHeight);
+                        break;
+                }
+                bounds = SKRectFromPoints(p1, p2);
+            } else if (annotationType == SKNoteTypeAnchored) {
+                NSRect pageBounds = [page boundsForBox:[self displayBox]];
+                switch ([page intrinsicRotation]) {
+                    case 0:
+                        bounds = [[page selectionForRect:NSMakeRect(NSMinX(pageBounds), NSMinY(bounds), NSWidth(pageBounds), NSHeight(bounds))] boundsForPage:page];
+                        bounds.origin.x = fmax(floor(NSMinX(bounds)) - SKNPDFAnnotationNoteSize.width, NSMinX(pageBounds));
+                        bounds.origin.y = floor(NSMaxY(bounds)) - SKNPDFAnnotationNoteSize.height;
+                        break;
+                    case 90:
+                        bounds = [[page selectionForRect:NSMakeRect(NSMinX(bounds), NSMinY(pageBounds), NSWidth(bounds), NSWidth(pageBounds))] boundsForPage:page];
+                        bounds.origin.x = ceil(NSMinX(bounds));
+                        bounds.origin.y = fmax(floor(NSMinY(bounds)) - SKNPDFAnnotationNoteSize.height, NSMinY(pageBounds));
+                        break;
+                    case 180:
+                        bounds = [[page selectionForRect:NSMakeRect(NSMinX(pageBounds), NSMinY(bounds), NSWidth(pageBounds), NSHeight(bounds))] boundsForPage:page];
+                        bounds.origin.x = fmin(ceil(NSMaxX(bounds)), NSMaxX(pageBounds) - SKNPDFAnnotationNoteSize.width);
+                        bounds.origin.y = ceil(NSMinY(bounds));
+                        break;
+                    case 270:
+                        bounds = [[page selectionForRect:NSMakeRect(NSMinX(bounds), NSMinY(pageBounds), NSWidth(bounds), NSWidth(pageBounds))] boundsForPage:page];
+                        bounds.origin.x = floor(NSMaxX(bounds)) - SKNPDFAnnotationNoteSize.height;
+                        bounds.origin.y = fmin(ceil(NSMaxY(bounds)), NSMaxY(pageBounds) - SKNPDFAnnotationNoteSize.width);
+                        break;
+                    default:
+                        break;
+                }
+                bounds.size = SKNPDFAnnotationNoteSize;
+                // Make sure it fits in the page
+                bounds = SKConstrainRect(bounds, pageBounds);
+            }
+            bounds = NSIntegralRect(bounds);
+            
+        } else {
+            
+            // First try the current mouse position
+            if (NSEqualPoints(point, SKUnspecifiedPoint))
+                point = [self convertPoint:[[self window] mouseLocationOutsideOfEventStream] fromView:nil];
+            
+            // if the mouse was in the toolbar and there is a page below the toolbar, we get a point outside of the visible rect
+            if (NSMouseInRect(point, [self unobscuredContentRect], [self isFlipped]))
+                page = [self pageForPoint:point nearest:NO];
+            
+            if (page == nil) {
+                // Get center of the PDFView.
+                NSRect viewFrame = [self frame];
+                point = SKCenterPoint(viewFrame);
+                page = [self pageForPoint:point nearest:YES];
+                if (page == nil) {
+                    // Get center of the current page
+                    page = [self currentPage];
+                    point = [self convertPoint:SKCenterPoint([page boundsForBox:[self displayBox]]) fromPage:page];
+                }
+            }
+            
             CGFloat defaultWidth = [[NSUserDefaults standardUserDefaults] floatForKey:SKDefaultNoteWidthKey];
             CGFloat defaultHeight = [[NSUserDefaults standardUserDefaults] floatForKey:SKDefaultNoteHeightKey];
-            NSRect pageBounds = [page boundsForBox:[self displayBox]];
-            NSPoint p1, p2;
-            switch ([page intrinsicRotation]) {
-                case 0:
-                    p2.x = floor(NSMinX(bounds));
-                    p2.y = ceil(NSMidY(bounds));
-                    p1.x = fmax(NSMinX(pageBounds), p2.x - defaultWidth);
-                    p1.y = fmax(NSMinY(pageBounds), p2.y - defaultHeight);
-                    break;
-                case 90:
-                    p2.x = floor(NSMidX(bounds));
-                    p2.y = floor(NSMinY(bounds));
-                    p1.x = fmin(NSMaxX(pageBounds), p2.x + defaultHeight);
-                    p1.y = fmax(NSMinY(pageBounds), p2.y - defaultWidth);
-                    break;
-                case 180:
-                    p2.x = ceil(NSMaxX(bounds));
-                    p2.y = floor(NSMidY(bounds));
-                    p1.x = fmin(NSMaxX(pageBounds), p2.x + defaultWidth);
-                    p1.y = fmin(NSMaxY(pageBounds), p2.y + defaultHeight);
-                    break;
-                case 270:
-                    p2.x = ceil(NSMidX(bounds));
-                    p2.y = ceil(NSMaxY(bounds));
-                    p1.x = fmax(NSMinX(pageBounds), p2.x - defaultHeight);
-                    p1.y = fmin(NSMaxY(pageBounds), p2.y + defaultWidth);
-                    break;
-                default:
-                    p2.x = floor(NSMinX(bounds));
-                    p2.y = ceil(NSMidY(bounds));
-                    p1.x = fmax(NSMinX(pageBounds), p2.x - defaultWidth);
-                    p1.y = fmax(NSMinY(pageBounds), p2.y - defaultHeight);
-                    break;
-            }
-            bounds = SKRectFromPoints(p1, p2);
-        } else if (annotationType == SKNoteTypeAnchored) {
-            NSRect pageBounds = [page boundsForBox:[self displayBox]];
-            switch ([page intrinsicRotation]) {
-                case 0:
-                    bounds = [[page selectionForRect:NSMakeRect(NSMinX(pageBounds), NSMinY(bounds), NSWidth(pageBounds), NSHeight(bounds))] boundsForPage:page];
-                    bounds.origin.x = fmax(floor(NSMinX(bounds)) - SKNPDFAnnotationNoteSize.width, NSMinX(pageBounds));
-                    bounds.origin.y = floor(NSMaxY(bounds)) - SKNPDFAnnotationNoteSize.height;
-                    break;
-                case 90:
-                    bounds = [[page selectionForRect:NSMakeRect(NSMinX(bounds), NSMinY(pageBounds), NSWidth(bounds), NSWidth(pageBounds))] boundsForPage:page];
-                    bounds.origin.x = ceil(NSMinX(bounds));
-                    bounds.origin.y = fmax(floor(NSMinY(bounds)) - SKNPDFAnnotationNoteSize.height, NSMinY(pageBounds));
-                    break;
-                case 180:
-                    bounds = [[page selectionForRect:NSMakeRect(NSMinX(pageBounds), NSMinY(bounds), NSWidth(pageBounds), NSHeight(bounds))] boundsForPage:page];
-                    bounds.origin.x = fmin(ceil(NSMaxX(bounds)), NSMaxX(pageBounds) - SKNPDFAnnotationNoteSize.width);
-                    bounds.origin.y = ceil(NSMinY(bounds));
-                    break;
-                case 270:
-                    bounds = [[page selectionForRect:NSMakeRect(NSMinX(bounds), NSMinY(pageBounds), NSWidth(bounds), NSWidth(pageBounds))] boundsForPage:page];
-                    bounds.origin.x = floor(NSMaxX(bounds)) - SKNPDFAnnotationNoteSize.height;
-                    bounds.origin.y = fmin(ceil(NSMaxY(bounds)), NSMaxY(pageBounds) - SKNPDFAnnotationNoteSize.width);
-                    break;
-                default:
-                    break;
-            }
-            bounds.size = SKNPDFAnnotationNoteSize;
+            NSSize defaultSize = (annotationType == SKNoteTypeAnchored) ? SKNPDFAnnotationNoteSize : ([page rotation] % 180 == 0) ? NSMakeSize(defaultWidth, defaultHeight) : NSMakeSize(defaultHeight, defaultWidth);
+            
+            // Convert to "page space".
+            point = SKIntegralPoint([self convertPoint:point toPage:page]);
+            bounds = SKRectFromCenterAndSize(point, defaultSize);
+            
             // Make sure it fits in the page
-            bounds = SKConstrainRect(bounds, pageBounds);
+            bounds = SKConstrainRect(bounds, [page boundsForBox:[self displayBox]]);
+            
         }
-        bounds = NSIntegralRect(bounds);
         
-	} else {
+        text = disableUpdateString < 2 ? [selection cleanedString] : nil;
         
-		// First try the current mouse position
-        if (NSEqualPoints(point, SKUnspecifiedPoint))
-            point = [self convertPoint:[[self window] mouseLocationOutsideOfEventStream] fromView:nil];
+        // we need a drawn path to add an ink note
+        PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:type];
+        // should never happen
+        if (newAnnotation == nil) {
+            NSBeep();
+            return;
+        }
         
-        // if the mouse was in the toolbar and there is a page below the toolbar, we get a point outside of the visible rect
-        if (NSMouseInRect(point, [self unobscuredContentRect], [self isFlipped]))
-            page = [self pageForPoint:point nearest:NO];
-        
-        if (page == nil) {
-            // Get center of the PDFView.
-            NSRect viewFrame = [self frame];
-            point = SKCenterPoint(viewFrame);
-            page = [self pageForPoint:point nearest:YES];
-            if (page == nil) {
-                // Get center of the current page
-                page = [self currentPage];
-                point = [self convertPoint:SKCenterPoint([page boundsForBox:[self displayBox]]) fromPage:page];
+        if (annotationType == SKNoteTypeLine) {
+            NSInteger rotation = [page intrinsicRotation];
+            if (rotation != 0) {
+                switch (rotation) {
+                    case 90:
+                        [newAnnotation setStartPoint:NSMakePoint(0.0, NSWidth(bounds))];
+                        [newAnnotation setEndPoint:NSMakePoint(NSHeight(bounds), 0.0)];
+                        break;
+                    case 180:
+                        [newAnnotation setStartPoint:NSMakePoint(NSWidth(bounds), NSHeight(bounds))];
+                        [newAnnotation setEndPoint:NSZeroPoint];
+                        break;
+                    case 270:
+                        [newAnnotation setStartPoint:NSMakePoint(NSHeight(bounds), 0.0)];
+                        [newAnnotation setEndPoint:NSMakePoint(0.0, NSWidth(bounds))];
+                        break;
+                    default:
+                        break;
+                }
             }
+        } else if ([text length] > 0) {
+            [newAnnotation setString:text];
+        } else if (disableUpdateString == 0) {
+            [newAnnotation autoUpdateStringWithPage:page];
         }
+        if ([newAnnotation string] == nil)
+            [newAnnotation setString:@""];
         
-        CGFloat defaultWidth = [[NSUserDefaults standardUserDefaults] floatForKey:SKDefaultNoteWidthKey];
-        CGFloat defaultHeight = [[NSUserDefaults standardUserDefaults] floatForKey:SKDefaultNoteHeightKey];
-        NSSize defaultSize = (annotationType == SKNoteTypeAnchored) ? SKNPDFAnnotationNoteSize : ([page rotation] % 180 == 0) ? NSMakeSize(defaultWidth, defaultHeight) : NSMakeSize(defaultHeight, defaultWidth);
-		
-		// Convert to "page space".
-		point = SKIntegralPoint([self convertPoint:point toPage:page]);
-        bounds = SKRectFromCenterAndSize(point, defaultSize);
+        [self addAnnotation:newAnnotation toPage:page select:YES];
         
-        // Make sure it fits in the page
-        bounds = SKConstrainRect(bounds, [page boundsForBox:[self displayBox]]);
-        
-	}
-    
-    if (page == nil || NO == [self addAnnotationWithType:annotationType selection:selection page:page bounds:bounds color:color]) {
-        NSBeep();
-    } else if (noSelection) {
-        if (isMarkup)
-            [self setCurrentSelection:nil];
-        else if (annotationType == SKNoteTypeAnchored || annotationType == SKNoteTypeFreeText)
+        if (noSelection && (annotationType == SKNoteTypeAnchored || annotationType == SKNoteTypeFreeText))
             [self editCurrentAnnotation:self];
     }
 }
@@ -4014,7 +4007,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             noteType = NOTE_TYPE_FROM_TEMP_TOOL_MODE(temporaryToolMode);
         originalBounds = SKRectFromCenterAndSquareSize(SKIntegralPoint(initialPoint), 0.0);
         if (noteType == SKNoteTypeAnchored) {
-            [self addAnnotationWithType:SKNoteTypeAnchored selection:nil page:page bounds:originalBounds color:nil];
+            PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithBounds:SKRectFromCenterAndSize(initialPoint, SKNPDFAnnotationNoteSize) forType:SKNNoteString];
+            [newAnnotation setString:@""];
+            [self addAnnotation:newAnnotation toPage:page select:YES];
             resizeHandle = SKRectEdgesNone;
             originalBounds = [[self currentAnnotation] bounds];
         } else if (noteType == SKNoteTypeLine) {
@@ -4053,10 +4048,13 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             break;
         } else if ([theEvent type] == NSEventTypeLeftMouseDragged) {
             if (draggedAnnotation == NO) {
-                if (currentAnnotation == nil)
-                    [self addAnnotationWithType:noteType selection:nil page:page bounds:originalBounds color:nil];
-                else if (shouldAddAnnotation == NO)
+                if (currentAnnotation == nil) {
+                    PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithBounds:SKRectFromCenterAndSquareSize(initialPoint, MIN_NOTE_SIZE) forType:SKTypeForNoteType(noteType)];
+                    [newAnnotation setString:@""];
+                    [self addAnnotation:newAnnotation toPage:page select:YES];
+                } else if (shouldAddAnnotation == NO) {
                     [self beginNewUndoGroupIfNeeded];
+                }
                 draggedAnnotation = YES;
             }
             mousePoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -5171,6 +5169,13 @@ static inline NSSize SKFitTextNoteSize(NSString *string, NSFont *font, CGFloat w
     else
         size.height = ceil(size.height + 2.0);
     return size;
+}
+
+static NSString *SKTypeForNoteType(SKNoteType annotationType) {
+    static NSArray *types = nil;
+    if (types == nil)
+        types = @[SKNFreeTextString, SKNNoteString, SKNCircleString, SKNSquareString, SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNLineString, SKNInkString];
+    return [types objectAtIndex:annotationType];
 }
 
 #pragma mark -
