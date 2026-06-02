@@ -2410,6 +2410,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     PDFPage *page = [selection safeFirstPage];
     
     if (annotationType == SKNoteTypeInk) {
+        // we need a drawn path to add an ink note
         // should never happen
         NSBeep();
         return;
@@ -2582,7 +2583,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         
         text = disableUpdateString < 2 ? [selection cleanedString] : nil;
         
-        // we need a drawn path to add an ink note
         PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:type];
         // should never happen
         if (newAnnotation == nil) {
