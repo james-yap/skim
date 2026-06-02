@@ -2399,8 +2399,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)addMarkupAnnotationWithType:(SKNoteType)annotationType selection:(PDFSelection *)selection {
     BOOL noSelection = selection == nil;
-    NSString *type = SKTypeForNoteType(annotationType);
-    NSInteger disableUpdateString = [[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey];
     if (noSelection)
         selection = [self currentSelection];
     PDFPage *page = [selection safeFirstPage];
@@ -2410,6 +2408,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         return;
     }
     
+    NSString *type = SKTypeForNoteType(annotationType);
     NSColor *color = nil;
     
     // add new markup to the active markup if it's the same type on the same page, unless we add a specific selection
@@ -2421,15 +2420,16 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         [self removeCurrentAnnotation:nil];
     }
     
+    NSInteger disableUpdateString = [[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey];
     NSString *text = disableUpdateString < 2 ? ([selection cleanedString] ?: @"") : @"";
     NSMutableArray *newAnnotations = [NSMutableArray array];
-    for (PDFPage *page in [selection pages]) {
-        PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithSelection:selection forPage:page forType:type];
+    for (PDFPage *aPage in [selection pages]) {
+        PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithSelection:selection forPage:aPage forType:type];
         if (newAnnotation) {
             [newAnnotation setString:text];
             if (color)
                 [newAnnotation setColor:color];
-            [newAnnotations addObject:@[newAnnotation, page]];
+            [newAnnotations addObject:@[newAnnotation, aPage]];
         }
     }
     if ([newAnnotations count] == 0) {
