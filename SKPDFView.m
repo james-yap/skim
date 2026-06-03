@@ -2629,7 +2629,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)addAnnotationWithType:(SKNoteType)annotationType {
-    if (IS_TEXT_OR_NOTE_TOOL && (annotationType == SKNoteTypeInk || (([[NSUserDefaults standardUserDefaults] boolForKey:SKNewNoteRequiresSelectionKey] || IS_MARKUP(annotationType)) && [[self currentSelection] hasCharacters] == NO))) {
+    if (IS_TEXT_OR_NOTE_TOOL && (annotationType == SKNoteTypeInk || ((IS_MARKUP(annotationType) || [[NSUserDefaults standardUserDefaults] boolForKey:SKNewNoteRequiresSelectionKey]) && [[self currentSelection] hasCharacters] == NO))) {
         [self setTemporaryToolMode:TEMP_TOOL_MODE_FROM_NOTE_TYPE(annotationType)];
     } else {
         [self addAnnotationWithType:annotationType selection:nil point:SKUnspecifiedPoint];
