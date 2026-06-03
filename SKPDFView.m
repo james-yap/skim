@@ -2442,8 +2442,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)addOtherAnnotationWithType:(SKNoteType)annotationType selection:(PDFSelection *)selection point:(NSPoint)point {
-    BOOL noSelection = selection == nil;
-    if (noSelection)
+    if (selection == nil)
         selection = [self currentSelection];
     
     PDFPage *page = [selection safeFirstPage];
@@ -2614,7 +2613,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
     [self addAnnotation:newAnnotation toPage:page select:YES];
     
-    if (noSelection && (annotationType == SKNoteTypeAnchored || annotationType == SKNoteTypeFreeText))
+    if (annotationType == SKNoteTypeAnchored || annotationType == SKNoteTypeFreeText)
         [self editCurrentAnnotation:self];
 }
 
