@@ -2421,7 +2421,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
     
     NSInteger disableUpdateString = [[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey];
-    NSString *text = disableUpdateString < 2 ? ([selection cleanedString] ?: @"") : @"";
+    NSString *text = disableUpdateString < 2 ? [selection cleanedString] : nil;
     NSMutableArray *newAnnotations = [NSMutableArray array];
     for (PDFPage *aPage in [selection pages]) {
         PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithSelection:selection forPage:aPage forType:type];
