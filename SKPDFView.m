@@ -2581,24 +2581,21 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
     
     if (annotationType == SKNoteTypeLine) {
-        NSInteger rotation = [page intrinsicRotation];
-        if (rotation != 0) {
-            switch (rotation) {
-                case 90:
-                    [newAnnotation setStartPoint:NSMakePoint(0.0, NSWidth(bounds))];
-                    [newAnnotation setEndPoint:NSMakePoint(NSHeight(bounds), 0.0)];
-                    break;
-                case 180:
-                    [newAnnotation setStartPoint:NSMakePoint(NSWidth(bounds), NSHeight(bounds))];
-                    [newAnnotation setEndPoint:NSZeroPoint];
-                    break;
-                case 270:
-                    [newAnnotation setStartPoint:NSMakePoint(NSHeight(bounds), 0.0)];
-                    [newAnnotation setEndPoint:NSMakePoint(0.0, NSWidth(bounds))];
-                    break;
-                default:
-                    break;
-            }
+        switch ([page intrinsicRotation]) {
+            case 90:
+                [newAnnotation setStartPoint:NSMakePoint(0.0, NSWidth(bounds))];
+                [newAnnotation setEndPoint:NSMakePoint(NSHeight(bounds), 0.0)];
+                break;
+            case 180:
+                [newAnnotation setStartPoint:NSMakePoint(NSWidth(bounds), NSHeight(bounds))];
+                [newAnnotation setEndPoint:NSZeroPoint];
+                break;
+            case 270:
+                [newAnnotation setStartPoint:NSMakePoint(NSHeight(bounds), 0.0)];
+                [newAnnotation setEndPoint:NSMakePoint(0.0, NSWidth(bounds))];
+                break;
+            default:
+                break;
         }
     } else {
         NSInteger disableUpdateString = [[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey];
