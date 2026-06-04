@@ -2605,8 +2605,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         else if (disableUpdateString == 0)
             [newAnnotation autoUpdateStringWithPage:page];
     }
-    if ([newAnnotation string] == nil)
-        [newAnnotation setString:@""];
     
     [self addAnnotation:newAnnotation toPage:page select:YES];
     
@@ -4008,7 +4006,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
         originalBounds = SKRectFromCenterAndSquareSize(SKIntegralPoint(initialPoint), 0.0);
         if (noteType == SKNoteTypeAnchored) {
             PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithBounds:SKRectFromCenterAndSize(initialPoint, SKNPDFAnnotationNoteSize) forType:SKNNoteString];
-            [newAnnotation setString:@""];
             [self addAnnotation:newAnnotation toPage:page select:YES];
             resizeHandle = SKRectEdgesNone;
             originalBounds = [[self currentAnnotation] bounds];
@@ -4050,7 +4047,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             if (draggedAnnotation == NO) {
                 if (currentAnnotation == nil) {
                     PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithBounds:SKRectFromCenterAndSquareSize(initialPoint, MIN_NOTE_SIZE) forType:SKTypeForNoteType(noteType)];
-                    [newAnnotation setString:@""];
                     [self addAnnotation:newAnnotation toPage:page select:YES];
                 } else if (shouldAddAnnotation == NO) {
                     [self beginNewUndoGroupIfNeeded];
