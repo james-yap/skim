@@ -2426,7 +2426,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     for (PDFPage *aPage in [selection pages]) {
         PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithSelection:selection forPage:aPage forType:type];
         if (newAnnotation) {
-            [newAnnotation setString:text];
+            if (text)
+                [newAnnotation setString:text];
             if (color)
                 [newAnnotation setColor:color];
             [newAnnotations addObject:@[newAnnotation, aPage]];
