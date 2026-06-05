@@ -136,11 +136,6 @@ enum {
     SKTemporaryToolMode temporaryToolMode;
     SKNoteType annotationMode;
     
-    NSInteger navigationMode;
-    SKNavigationWindow *navWindow;
-    
-    SKCursorStyleWindow *cursorWindow;
-    
     SKReadingBar *readingBar;
     
     NSTimer *pacerTimer;
