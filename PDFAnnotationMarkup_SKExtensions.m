@@ -96,7 +96,7 @@ static void replacement_setColor(id self, SEL _cmd, NSColor *color) {
     if (blackColor == nil)
         blackColor = [NSColor colorWithSRGBRed:0.0 green:0.0 blue:0.0 alpha:1.0];
     if ([self markupType] == kPDFMarkupTypeHighlight && [color isEqual:blackColor])
-        color = [NSColor colorWithSRGBRed:0.0000001 green:0.0000001 blue:0.0000001 alpha:1.0];
+        color = [NSColor blackColor];
     original_setColor(self, _cmd, color);
 }
 
