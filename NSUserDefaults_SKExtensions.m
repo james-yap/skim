@@ -85,4 +85,8 @@
     return fontName ? [NSFont fontWithName:fontName size:fontSize] : nil;
 }
 
+- (NSSize)sizeForWidthKey:(NSString *)widthKey heightKey:(NSString *)heightKey {
+    return NSMakeSize([self doubleForKey:widthKey], [self doubleForKey:heightKey]);
+}
+
 @end

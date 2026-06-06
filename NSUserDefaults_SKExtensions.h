@@ -47,5 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (nullable NSFont *)fontForNameKey:(NSString *)nameKey sizeKey:(NSString *)sizeKey;
 
+- (NSSize)sizeForWidthKey:(NSString *)widthKey heightKey:(NSString *)heightKey;
+
 @end
 NS_ASSUME_NONNULL_END

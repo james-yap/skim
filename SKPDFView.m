@@ -2470,40 +2470,39 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             CGFloat lw = [[NSUserDefaults standardUserDefaults] doubleForKey:SKSquareNoteLineWidthKey];
             bounds = NSInsetRect(bounds, -lw, -lw);
         } else if (annotationType == SKNoteTypeLine) {
-            CGFloat defaultWidth = [[NSUserDefaults standardUserDefaults] floatForKey:SKDefaultNoteWidthKey];
-            CGFloat defaultHeight = [[NSUserDefaults standardUserDefaults] floatForKey:SKDefaultNoteHeightKey];
+            NSSize defaultSize = [[NSUserDefaults standardUserDefaults] sizeForWidthKey:SKDefaultNoteWidthKey heightKey:SKDefaultNoteHeightKey];
             NSRect pageBounds = [page boundsForBox:[self displayBox]];
             NSPoint p1, p2;
             switch ([page intrinsicRotation]) {
                 case 0:
                     p2.x = floor(NSMinX(bounds));
                     p2.y = ceil(NSMidY(bounds));
-                    p1.x = fmax(NSMinX(pageBounds), p2.x - defaultWidth);
-                    p1.y = fmax(NSMinY(pageBounds), p2.y - defaultHeight);
+                    p1.x = fmax(NSMinX(pageBounds), p2.x - defaultSize.width);
+                    p1.y = fmax(NSMinY(pageBounds), p2.y - defaultSize.height);
                     break;
                 case 90:
                     p2.x = floor(NSMidX(bounds));
                     p2.y = floor(NSMinY(bounds));
-                    p1.x = fmin(NSMaxX(pageBounds), p2.x + defaultHeight);
-                    p1.y = fmax(NSMinY(pageBounds), p2.y - defaultWidth);
+                    p1.x = fmin(NSMaxX(pageBounds), p2.x + defaultSize.height);
+                    p1.y = fmax(NSMinY(pageBounds), p2.y - defaultSize.width);
                     break;
                 case 180:
                     p2.x = ceil(NSMaxX(bounds));
                     p2.y = floor(NSMidY(bounds));
-                    p1.x = fmin(NSMaxX(pageBounds), p2.x + defaultWidth);
-                    p1.y = fmin(NSMaxY(pageBounds), p2.y + defaultHeight);
+                    p1.x = fmin(NSMaxX(pageBounds), p2.x + defaultSize.width);
+                    p1.y = fmin(NSMaxY(pageBounds), p2.y + defaultSize.height);
                     break;
                 case 270:
                     p2.x = ceil(NSMidX(bounds));
                     p2.y = ceil(NSMaxY(bounds));
-                    p1.x = fmax(NSMinX(pageBounds), p2.x - defaultHeight);
-                    p1.y = fmin(NSMaxY(pageBounds), p2.y + defaultWidth);
+                    p1.x = fmax(NSMinX(pageBounds), p2.x - defaultSize.height);
+                    p1.y = fmin(NSMaxY(pageBounds), p2.y + defaultSize.width);
                     break;
                 default:
                     p2.x = floor(NSMinX(bounds));
                     p2.y = ceil(NSMidY(bounds));
-                    p1.x = fmax(NSMinX(pageBounds), p2.x - defaultWidth);
-                    p1.y = fmax(NSMinY(pageBounds), p2.y - defaultHeight);
+                    p1.x = fmax(NSMinX(pageBounds), p2.x - defaultSize.width);
+                    p1.y = fmax(NSMinY(pageBounds), p2.y - defaultSize.height);
                     break;
             }
             bounds = SKRectFromPoints(p1, p2);
@@ -2561,9 +2560,14 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             }
         }
         
-        CGFloat defaultWidth = [[NSUserDefaults standardUserDefaults] floatForKey:SKDefaultNoteWidthKey];
-        CGFloat defaultHeight = [[NSUserDefaults standardUserDefaults] floatForKey:SKDefaultNoteHeightKey];
-        NSSize defaultSize = (annotationType == SKNoteTypeAnchored) ? SKNPDFAnnotationNoteSize : ([page rotation] % 180 == 0) ? NSMakeSize(defaultWidth, defaultHeight) : NSMakeSize(defaultHeight, defaultWidth);
+        NSSize defaultSize;
+        if (annotationType == SKNoteTypeAnchored) {
+            defaultSize = SKNPDFAnnotationNoteSize;
+        } else {
+            defaultSize = [[NSUserDefaults standardUserDefaults] sizeForWidthKey:SKDefaultNoteWidthKey heightKey:SKDefaultNoteHeightKey];
+            if (([page rotation] % 180))
+                defaultSize = NSMakeSize(defaultSize.height, defaultSize.width);
+        }
         
         // Convert to "page space".
         point = SKIntegralPoint([self convertPoint:point toPage:page]);
