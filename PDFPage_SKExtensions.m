@@ -749,9 +749,10 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
             }
         } else if (type && [[NSSet setWithObjects:SKNFreeTextString, SKNNoteString, SKNCircleString, SKNSquareString, SKNLineString, nil] containsObject:type]) {
             NSRect bounds = NSZeroRect;
-            bounds.size = [[NSUserDefaults standardUserDefaults] sizeForWidthKey:SKDefaultNoteWidthKey heightKey:SKDefaultNoteHeightKey];
             if ([type isEqualToString:SKNNoteString])
                 bounds.size = SKNPDFAnnotationNoteSize;
+            else
+                bounds.size = [[NSUserDefaults standardUserDefaults] sizeForWidthKey:SKDefaultNoteWidthKey heightKey:SKDefaultNoteHeightKey];
             bounds = NSIntegralRect(SKRectFromCenterAndSize(SKIntegralPoint(SKCenterPoint([self boundsForBox:kPDFDisplayBoxCropBox])), bounds.size));
             
             annotation = [PDFAnnotation newSkimNoteWithBounds:bounds forType:type];
