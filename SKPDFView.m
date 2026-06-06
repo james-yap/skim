@@ -2371,7 +2371,7 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
         newAnnotation = [PDFAnnotation newSkimNoteWithPaths:paths];
         if ([string1 length] > 0 || [string2 length] > 0)
             [newAnnotation setString:[string2 length] == 0 ? string1 : [string1 length] == 0 ? string2 : [NSString stringWithFormat:@"%@ %@", string1, string2]];
-        [newAnnotation setBorder:[currentAnnotation border]];
+        [newAnnotation setBorder:[[currentAnnotation border] copy]];
     } else {
         return nil;
     }
@@ -4327,7 +4327,7 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
         if (currentAnnotation) {
             annotation = [PDFAnnotation newSkimNoteWithPaths:[[currentAnnotation pagePaths] arrayByAddingObject:bezierPath]];
             [annotation setColor:[currentAnnotation color]];
-            [annotation setBorder:[currentAnnotation border]];
+            [annotation setBorder:[[currentAnnotation border] copy]];
             [annotation setString:[currentAnnotation string]];
             [[self document] removeAnnotation:currentAnnotation];
         } else {
