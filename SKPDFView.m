@@ -670,13 +670,15 @@ enum {
     }
 }
 
-- (void)resetTemporaryToolMode {
+- (void)performTemporaryMarkupToolMode {
+    if (IS_MARKUP_TOOL(temporaryToolMode) && [[self currentSelection] hasCharacters])
+        [self addMarkupAnnotationWithType:NOTE_TYPE_FROM_TEMP_TOOL_MODE(temporaryToolMode) selection:nil];
     [self setTemporaryToolMode:SKToolModeNone];
 }
 
 - (void)setTemporaryToolMode:(SKTemporaryToolMode)newTemporaryToolMode {
     if (temporaryToolMode != newTemporaryToolMode) {
-        [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetTemporaryToolMode) object:nil];
+        [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(performTemporaryMarkupToolMode) object:nil];
         temporaryToolMode = newTemporaryToolMode;
         [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewTemporaryToolModeChangedNotification object:self];
     }
@@ -1730,16 +1732,17 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
             [self doDragAnnotationWithEvent:theEvent];
         } else {
             [self setCurrentAnnotation:nil];
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(performTemporaryMarkupToolMode) object:nil];
             BOOL mayMultiClick = [theEvent clickCount] < 3 && [NSApp willDragMouse] == NO;
             [super mouseDown:theEvent];
-            if ([[self currentSelection] hasCharacters])
-                [self addMarkupAnnotationWithType:NOTE_TYPE_FROM_TEMP_TOOL_MODE(temporaryToolMode) selection:nil];
-            else if (mayMultiClick)
+            if (mayMultiClick) {
+                [self performSelectorOnce:@selector(performTemporaryMarkupToolMode) afterDelay:[NSEvent doubleClickInterval]];
                 delayTempToolMode = YES;
+            } else if ([[self currentSelection] hasCharacters]) {
+                [self addMarkupAnnotationWithType:NOTE_TYPE_FROM_TEMP_TOOL_MODE(temporaryToolMode) selection:nil];
+            }
         }
-        if (delayTempToolMode)
-            [self performSelectorOnce:@selector(resetTemporaryToolMode) afterDelay:[NSEvent doubleClickInterval]];
-        else
+        if (delayTempToolMode == NO)
             [self setTemporaryToolMode:SKToolModeNone];
         if (wantsLoupe)
             [loupeController update];
