@@ -1671,6 +1671,11 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
     return NO;
 }
 
+- (void)performMarkupToolMode {
+    if (toolMode == SKToolModeNote && IS_MARKUP(annotationMode) && [[self currentSelection] hasCharacters])
+        [self addMarkupAnnotationWithType:annotationMode selection:nil];
+}
+
 #define IS_TABLET_EVENT(theEvent, deviceType) (([theEvent subtype] == NSEventSubtypeTabletProximity || [theEvent subtype] == NSEventSubtypeTabletPoint) && [NSEvent currentPointingDeviceType] == deviceType)
 
 - (void)mouseDown:(NSEvent *)theEvent{
@@ -1787,9 +1792,19 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
         [self doDragContentWithEvent:theEvent];
     } else if ([self doDragSelectedTextWithEvent:theEvent] == NO) {
         [self setCurrentAnnotation:nil];
-        [super mouseDown:theEvent];
-        if (toolMode == SKToolModeNote && [self canAddNotes] && IS_MARKUP(annotationMode) && [[self currentSelection] hasCharacters])
-            [self addMarkupAnnotationWithType:annotationMode selection:nil];
+        if (toolMode == SKToolModeNote && IS_MARKUP(annotationMode) && [self canAddNotes]) {
+            [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(performMarkupToolMode) object:nil];
+            BOOL mayMultiClick = [theEvent clickCount] == 2 && [NSApp willDragMouse] == NO;
+            [super mouseDown:theEvent];
+            if ([[self currentSelection] hasCharacters]) {
+                if (mayMultiClick)
+                    [self performSelectorOnce:@selector(performMarkupToolMode) afterDelay:[NSEvent doubleClickInterval]];
+                else
+                    [self addMarkupAnnotationWithType:annotationMode selection:nil];
+            }
+        } else {
+            [super mouseDown:theEvent];
+        }
     }
 }
 
