@@ -2620,11 +2620,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)addAnnotationWithType:(SKNoteType)annotationType selection:(PDFSelection *)selection point:(NSPoint)point {
     if (IS_MARKUP(annotationType))
         [self addMarkupAnnotationWithType:annotationType selection:selection];
-    else if (annotationType == SKNoteTypeInk)
-        // we need a drawn path to add an ink note
-        // should never happen
-        NSBeep();
-    else
+    else if (annotationType != SKNoteTypeInk)
+        // should never reach this for Ink
         [self addOtherAnnotationWithType:annotationType selection:selection point:point];
 }
 
