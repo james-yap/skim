@@ -167,8 +167,8 @@
     [outlineView setStronglyReferencesItems:YES];
 
     NSSortDescriptor *indexSortDescriptor = [[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationPageIndexKey ascending:YES];
-    NSSortDescriptor *stringSortDescriptor = [[NSSortDescriptor alloc] initWithKey:SKNPDFAnnotationStringKey ascending:YES selector:@selector(localizedCaseInsensitiveNumericCompare:)];
-    [arrayController setSortDescriptors:@[indexSortDescriptor, stringSortDescriptor]];
+    NSSortDescriptor *boundsSortDescriptor = [[NSSortDescriptor alloc] initWithKey:SKPDFAnnotationBoundsOrderKey ascending:YES selector:@selector(compare:)];
+    [arrayController setSortDescriptors:@[indexSortDescriptor, boundsSortDescriptor]];
     [outlineView reloadData];
     
     [outlineView setTypeSelectHelper:[SKTypeSelectHelper typeSelectHelperWithMatchOption:SKSubstringMatch]];
