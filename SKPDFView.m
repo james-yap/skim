@@ -3137,6 +3137,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
 }
 
+- (void)handleDocumentDidUnlockNotification:(NSNotification *)notification {
+    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewCanSelectNoteDidChangeNotification object:self];
+}
+
 - (void)registerForDocumentNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     PDFDocument *pdfDoc = [self document];
@@ -3207,10 +3211,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 - (void)handleOpenOrCloseUndoGroupNotification:(NSNotification *)notification {
     wantsNewUndoGroup = NO;
-}
-
-- (void)handleDocumentDidUnlockNotification:(NSNotification *)notification {
-    [[NSNotificationCenter defaultCenter] postNotificationName:SKPDFViewCanSelectNoteDidChangeNotification object:self];
 }
 
 #pragma mark Key and window changes
