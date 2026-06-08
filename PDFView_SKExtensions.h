@@ -57,10 +57,6 @@ typedef struct _SKDestination {
 - (BOOL)isPageAtIndexDisplayed:(NSUInteger)pageIndex;
 - (BOOL)isPageAtIndexesDisplayed:(NSIndexSet *)pageIndexes;
 
-- (void)updatedAnnotation:(PDFAnnotation *)annotation;
-- (void)addedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page;
-- (void)removedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page;
-
 - (void)doPdfsyncWithEvent:(NSEvent *)theEvent;
 - (void)doDragContentWithEvent:(NSEvent *)theEvent;
 - (BOOL)doDragSelectedTextWithEvent:(NSEvent *)theEvent;

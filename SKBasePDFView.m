@@ -56,8 +56,15 @@ static char SKBasePDFViewDefaultsObservationContext;
 @end
 #endif
 
-@interface PDFView (SKHistoryPrivateDeclarations)
+@interface PDFView (SKBasePrivateDeclarations)
 - (NSInteger)currentHistoryIndex;
+- (id)pageViewForPageAtIndex:(NSUInteger)index;
+@end
+
+@interface NSView (SKPDFPageViewPrivateDeclarations)
+- (void)addAnnotation:(PDFAnnotation *)annotation;
+- (void)updateAnnotation:(PDFAnnotation *)annotation;
+- (void)removeAnnotation:(PDFAnnotation *)annotation;
 @end
 
 @interface SKBasePDFView ()
@@ -164,11 +171,38 @@ static inline NSArray *defaultKeysToObserve() {
     }
 }
 
+#pragma mark Annotation updating
+
+- (NSView *)safePageViewForPage:(PDFPage *)page forSelector:(SEL)selector {
+    if ([self respondsToSelector:@selector(pageViewForPageAtIndex:)] == NO || [self isPageAtIndexDisplayed:[page pageIndex]] == NO)
+        return nil;
+    id pageView = [self pageViewForPageAtIndex:[page pageIndex]];
+    if ([pageView respondsToSelector:selector])
+        return pageView;
+    return nil;
+}
+
+- (void)updatedAnnotation:(PDFAnnotation *)annotation {
+    [[self safePageViewForPage:[annotation page] forSelector:@selector(updateAnnotation:)] updateAnnotation:annotation];
+}
+
+- (void)addedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
+    [[self safePageViewForPage:page forSelector:@selector(addAnnotation:)] addAnnotation:annotation];
+}
+
+- (void)removedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
+    [[self safePageViewForPage:page forSelector:@selector(removeAnnotation:)] removeAnnotation:annotation];
+}
+
+#pragma mark Page shadows
+
 - (void)setDisplaysPageBreaks:(BOOL)pageBreaks {
     [super setDisplaysPageBreaks:pageBreaks];
     if (@available(macOS 10.14, *))
         [self enablePageShadows:pageBreaks];
 }
+
+#pragma mark History
 
 - (BOOL)canGoBack {
     BOOL canGoBack = [super canGoBack];
@@ -195,6 +229,8 @@ static inline NSArray *defaultKeysToObserve() {
         @catch (id e) {}
     }
 }
+
+#pragma mark Responding overrides
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
     return aSelector != @selector(printDocument:) && [super respondsToSelector:aSelector];

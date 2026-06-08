@@ -53,16 +53,6 @@
 
 const NSPoint SKUnspecifiedPoint = (NSPoint){FLT_MAX, FLT_MAX};
 
-@interface PDFView (SKPrivatePageViewDeclarations)
-- (id)pageViewForPageAtIndex:(NSUInteger)index;
-@end
-
-@interface NSView (SKPDFPageViewPrivateDeclarations)
-- (void)addAnnotation:(PDFAnnotation *)annotation;
-- (void)updateAnnotation:(PDFAnnotation *)annotation;
-- (void)removeAnnotation:(PDFAnnotation *)annotation;
-@end
-
 #define PAGE_BREAK_MARGIN 4.0
 
 @implementation PDFView (SKExtensions)
@@ -90,27 +80,6 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     // e.g. in init or when the document is locked
     // also when -documentView is called from -initWithCoder: it may crash
     return [self descendantOfClass:[NSScrollView class]];
-}
-
-- (NSView *)safePageViewForPage:(PDFPage *)page forSelector:(SEL)selector {
-    if ([self respondsToSelector:@selector(pageViewForPageAtIndex:)] == NO || [self isPageAtIndexDisplayed:[page pageIndex]] == NO)
-        return nil;
-    id pageView = [self pageViewForPageAtIndex:[page pageIndex]];
-    if ([pageView respondsToSelector:selector])
-        return pageView;
-    return nil;
-}
-
-- (void)updatedAnnotation:(PDFAnnotation *)annotation {
-    [[self safePageViewForPage:[annotation page] forSelector:@selector(updateAnnotation:)] updateAnnotation:annotation];
-}
-
-- (void)addedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
-    [[self safePageViewForPage:page forSelector:@selector(addAnnotation:)] addAnnotation:annotation];
-}
-
-- (void)removedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
-    [[self safePageViewForPage:page forSelector:@selector(removeAnnotation:)] removeAnnotation:annotation];
 }
 
 - (void)doPdfsyncWithEvent:(NSEvent *)theEvent {

@@ -53,6 +53,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)resetHistory;
 
+- (void)updatedAnnotation:(PDFAnnotation *)annotation;
+- (void)addedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page;
+- (void)removedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page;
+
 @end
 
 NS_ASSUME_NONNULL_END
