@@ -3170,10 +3170,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)handlePageChangedNotification:(NSNotification *)notification {
-    if ([self displayMode] == kPDFDisplaySinglePage || [self displayMode] == kPDFDisplayTwoUp) {
-        if (toolMode == SKToolModeMagnify)
-            [loupeController updateContents];
-    }
+    if (([self displayMode] & kPDFDisplaySinglePageContinuous) == 0 && toolMode == SKToolModeMagnify)
+        [loupeController updateContents];
 }
 
 - (void)handleScaleChangedNotification:(NSNotification *)notification {
