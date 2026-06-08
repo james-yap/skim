@@ -2787,7 +2787,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 invisibleKeys = [[NSSet alloc] initWithObjects:SKNPDFAnnotationModificationDateKey, SKNPDFAnnotationUserNameKey, SKNPDFAnnotationTextKey, nil];
             
             // Update the UI, we should always do that unless the value did not really change or we're just changing the mod date or user name
-            if ([invisibleKeys containsObject:keyPath] == NO && ([note isText] || [keyPath isEqualToString:SKNPDFAnnotationStringKey] == NO)) {
+            if ([invisibleKeys containsObject:keyPath] == NO && ([note isText] || [keyPath isEqualToString:SKNPDFAnnotationStringKey] == NO) && ([note isNote] == NO || [(SKNPDFAnnotationNote *)note drawsImage] || [keyPath isEqualToString:SKNPDFAnnotationImageKey] == NO)) {
                 PDFPage *page = [note page];
                 
                 [self updateThumbnailAtPageIndex:[note pageIndex]];
