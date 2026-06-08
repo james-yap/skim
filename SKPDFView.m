@@ -3103,9 +3103,9 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (currentAnnotation == annotation) {
         [self setCurrentAnnotation:nil];
         [self beginNewUndoGroupIfNeeded];
+    } else {
+        [self updatedAnnotation:annotation];
     }
-    
-    [self updatedAnnotation:annotation];
 }
 
 - (void)handleDidRemoveAnnotationNotification:(NSNotification *)notification {
