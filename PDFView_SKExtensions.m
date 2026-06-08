@@ -92,25 +92,25 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
     return [self descendantOfClass:[NSScrollView class]];
 }
 
-- (NSView *)safePageViewForPage:(PDFPage *)page {
+- (NSView *)safePageViewForPage:(PDFPage *)page forSelector:(SEL)selector {
     if ([self respondsToSelector:@selector(pageViewForPageAtIndex:)] == NO || [self isPageAtIndexDisplayed:[page pageIndex]] == NO)
         return nil;
     id pageView = [self pageViewForPageAtIndex:[page pageIndex]];
-    if ([pageView respondsToSelector:@selector(addAnnotation:)] && [pageView respondsToSelector:@selector(updateAnnotation:)] && [pageView respondsToSelector:@selector(removeAnnotation:)])
+    if ([pageView respondsToSelector:selector])
         return pageView;
     return nil;
 }
 
 - (void)updatedAnnotation:(PDFAnnotation *)annotation {
-    [[self safePageViewForPage:[annotation page]] updateAnnotation:annotation];
+    [[self safePageViewForPage:[annotation page] forSelector:@selector(updateAnnotation:)] updateAnnotation:annotation];
 }
 
 - (void)addedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
-    [[self safePageViewForPage:page] addAnnotation:annotation];
+    [[self safePageViewForPage:page forSelector:@selector(addAnnotation:)] addAnnotation:annotation];
 }
 
 - (void)removedAnnotation:(PDFAnnotation *)annotation onPage:(PDFPage *)page {
-    [[self safePageViewForPage:page] removeAnnotation:annotation];
+    [[self safePageViewForPage:page forSelector:@selector(removeAnnotation:)] removeAnnotation:annotation];
 }
 
 - (void)doPdfsyncWithEvent:(NSEvent *)theEvent {
