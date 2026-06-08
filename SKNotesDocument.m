@@ -509,7 +509,28 @@
     [self outlineView:outlineView copyItems:[sender representedObject]];
 }
 
+- (void)resetHeightOfNoteRows:(id)sender {
+    NSArray *items = [sender representedObject];
+    if (items == nil) {
+        [outlineView noteHeightOfRowsChanged];
+    } else {
+        NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
+        for (id item in items) {
+            [outlineView setRowHeight:0.0 forItem:item];
+            NSInteger row = [outlineView rowForItem:item];
+            if (row != -1)
+                [indexes addIndex:row];
+        }
+        [outlineView noteHeightOfRowsWithIndexesChanged:indexes];
+    }
+}
+
 - (void)autoSizeNoteRows:(id)sender {
+    if (ndFlags.autoResizeRows) {
+        [self resetHeightOfNoteRows:sender];
+        return;
+    }
+    
     CGFloat height,rowHeight = [outlineView rowHeight];
     NSTableColumn *tableColumn = [outlineView outlineTableColumn];
     NSUInteger column = [[outlineView tableColumns] indexOfObject:tableColumn];
@@ -548,22 +569,6 @@
         }
     }
     [outlineView noteHeightOfRowsWithIndexesChanged:rowIndexes ?: [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView numberOfRows])]];
-}
-
-- (void)resetHeightOfNoteRows:(id)sender {
-    NSArray *items = [sender representedObject];
-    if (items == nil) {
-        [outlineView noteHeightOfRowsChanged];
-    } else {
-        NSMutableIndexSet *indexes = [NSMutableIndexSet indexSet];
-        for (id item in items) {
-            [outlineView setRowHeight:0.0 forItem:item];
-            NSInteger row = [outlineView rowForItem:item];
-            if (row != -1)
-                [indexes addIndex:row];
-        }
-        [outlineView noteHeightOfRowsWithIndexesChanged:indexes];
-    }
 }
 
 - (void)handleScrollViewFrameDidChangeNotification:(NSNotification *)notification {
@@ -852,14 +857,18 @@
             }
             item = [menu addItemWithTitle:[items count] == 1 ? NSLocalizedString(@"Auto Size Row", @"Menu item title") : NSLocalizedString(@"Auto Size Rows", @"Menu item title") action:@selector(autoSizeNoteRows:) target:self];
             [item setRepresentedObject:items];
-            item = [menu addItemWithTitle:[items count] == 1 ? NSLocalizedString(@"Auto Size Row", @"Menu item title") : NSLocalizedString(@"Auto Size Rows", @"Menu item title") action:@selector(resetHeightOfNoteRows:) target:self];
-            [item setRepresentedObject:items];
-            [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
-            [item setAlternate:YES];
+            if (ndFlags.autoResizeRows == NO) {
+                item = [menu addItemWithTitle:[items count] == 1 ? NSLocalizedString(@"Undo Auto Size Row", @"Menu item title") : NSLocalizedString(@"Undo Auto Size Rows", @"Menu item title") action:@selector(resetHeightOfNoteRows:) target:self];
+                [item setRepresentedObject:items];
+                [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
+                [item setAlternate:YES];
+            }
             [menu addItemWithTitle:NSLocalizedString(@"Auto Size All", @"Menu item title") action:@selector(autoSizeNoteRows:) target:self];
-            item = [menu addItemWithTitle:NSLocalizedString(@"Auto Size All", @"Menu item title") action:@selector(resetHeightOfNoteRows:) target:self];
-            [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
-            [item setAlternate:YES];
+            if (ndFlags.autoResizeRows == NO) {
+                item = [menu addItemWithTitle:NSLocalizedString(@"Undo Auto Size All", @"Menu item title") action:@selector(resetHeightOfNoteRows:) target:self];
+                [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
+                [item setAlternate:YES];
+            }
             [menu addItemWithTitle:NSLocalizedString(@"Automatically Resize", @"Menu item title") action:@selector(toggleAutoResizeNoteRows:) target:self];
         }
     }
