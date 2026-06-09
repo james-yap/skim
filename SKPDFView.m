@@ -3092,11 +3092,16 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 #pragma mark Notification handling
 
 - (void)handleDidAddRemoveAnnotationNotification:(NSNotification *)notification {
-    PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
+    NSDictionary *userInfo = [notification userInfo];
+    PDFPage *page = [userInfo objectForKey:SKPDFDocumentPageKey];
     
-    [loupeController updateContents];
-    if ([annotation isNote])
-        [self resetPDFToolTipRects];
+    if ([self isPageAtIndexDisplayed:[page pageIndex]]) {
+        PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
+        
+        [loupeController updateContents];
+        if ([annotation isNote])
+            [self resetPDFToolTipRects];
+    }
 }
 
 - (void)handleWillRemoveAnnotationNotification:(NSNotification *)notification {
