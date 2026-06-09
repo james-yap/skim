@@ -2894,6 +2894,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)updatedAnnotation:(PDFAnnotation *)annotation forKey:(NSString *)key fromValue:(id)oldValue {
+    if ([self isPageAtIndexDisplayed:[annotation pageIndex]] == NO)
+        return;
     if ([annotation isNote] && key) {
         // image does not notify automatically because it does not use the annotationKeyValues
         if ([key isEqualToString:SKNPDFAnnotationImageKey]) {
