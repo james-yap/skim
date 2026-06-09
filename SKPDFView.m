@@ -3091,7 +3091,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 #pragma mark Notification handling
 
-- (void)handleDidAddAnnotationNotification:(NSNotification *)notification {
+- (void)handleDidAddRemoveAnnotationNotification:(NSNotification *)notification {
     PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
     
     [loupeController updateContents];
@@ -3108,15 +3108,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
 }
 
-- (void)handleDidRemoveAnnotationNotification:(NSNotification *)notification {
-    NSDictionary *userInfo = [notification userInfo];
-    PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
-    
-    [loupeController updateContents];
-    if ([annotation isNote])
-        [self resetPDFToolTipRects];
-}
-
 - (void)handleWillMoveAnnotationNotification:(NSNotification *)notification {
     PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
     
@@ -3124,8 +3115,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)handleDidMoveAnnotationNotification:(NSNotification *)notification {
-    NSDictionary *userInfo = [notification userInfo];
-    PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
+    PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
     
     [self updatedAnnotation:annotation];
     if ([annotation isNote]) {
@@ -3145,12 +3135,10 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)registerForDocumentNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     PDFDocument *pdfDoc = [self document];
-    [nc addObserver:self selector:@selector(handleDidAddAnnotationNotification:)
+    [nc addObserver:self selector:@selector(handleDidAddRemoveAnnotationNotification:)
                              name:SKPDFDocumentDidAddAnnotationNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleWillRemoveAnnotationNotification:)
                              name:SKPDFDocumentWillRemoveAnnotationNotification object:pdfDoc];
-    [nc addObserver:self selector:@selector(handleDidRemoveAnnotationNotification:)
-                             name:SKPDFDocumentDidRemoveAnnotationNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleWillMoveAnnotationNotification:)
                              name:SKPDFDocumentWillMoveAnnotationNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleDidMoveAnnotationNotification:)
