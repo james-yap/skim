@@ -3094,7 +3094,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 - (void)handleDidAddAnnotationNotification:(NSNotification *)notification {
     PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
     
-    [self updatedAnnotation:annotation];
+    [loupeController updateContents];
     if ([annotation isNote])
         [self resetPDFToolTipRects];
 }
@@ -3105,8 +3105,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     if (currentAnnotation == annotation) {
         [self setCurrentAnnotation:nil];
         [self beginNewUndoGroupIfNeeded];
-    } else {
-        [self updatedAnnotation:annotation];
     }
 }
 
@@ -3114,6 +3112,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     NSDictionary *userInfo = [notification userInfo];
     PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
     
+    [loupeController updateContents];
     if ([annotation isNote])
         [self resetPDFToolTipRects];
 }
