@@ -3097,7 +3097,6 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
     if ([self isPageAtIndexDisplayed:[page pageIndex]]) {
         PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
-        
         [loupeController updateContents];
         if ([annotation isNote])
             [self resetPDFToolTipRects];
@@ -3144,6 +3143,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
                              name:SKPDFDocumentDidAddAnnotationNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleWillRemoveAnnotationNotification:)
                              name:SKPDFDocumentWillRemoveAnnotationNotification object:pdfDoc];
+    [nc addObserver:self selector:@selector(handleDidAddRemoveAnnotationNotification:)
+                             name:SKPDFDocumentDidRemoveAnnotationNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleWillMoveAnnotationNotification:)
                              name:SKPDFDocumentWillMoveAnnotationNotification object:pdfDoc];
     [nc addObserver:self selector:@selector(handleDidMoveAnnotationNotification:)
