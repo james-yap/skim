@@ -3113,9 +3113,15 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 }
 
 - (void)handleWillMoveAnnotationNotification:(NSNotification *)notification {
-    PDFAnnotation *annotation = [[notification userInfo] objectForKey:SKPDFDocumentAnnotationKey];
+    NSDictionary *userInfo = [notification userInfo];
+    PDFAnnotation *annotation = [userInfo objectForKey:SKPDFDocumentAnnotationKey];
     
-    [self updatedAnnotation:annotation];
+    if ([self isEditingAnnotation:annotation] && [self isPageAtIndexDisplayed:[[userInfo objectForKey:SKPDFDocumentPageKey] pageIndex]] == NO) {
+        [self commitEditing];
+        [self beginNewUndoGroupIfNeeded];
+    } else {
+        [self updatedAnnotation:annotation];
+    }
 }
 
 - (void)handleDidMoveAnnotationNotification:(NSNotification *)notification {
