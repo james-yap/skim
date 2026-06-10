@@ -1738,14 +1738,12 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
         } else {
             [self setCurrentAnnotation:nil];
             [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(performTemporaryMarkupToolMode) object:nil];
-            BOOL mayMultiClick = [theEvent clickCount] < 3 && [NSApp willDragMouse] == NO;
+            delayTempToolMode = [theEvent clickCount] < 3 && [NSApp willDragMouse] == NO;
             [super mouseDown:theEvent];
-            if (mayMultiClick) {
+            if (delayTempToolMode)
                 [self performSelectorOnce:@selector(performTemporaryMarkupToolMode) afterDelay:[NSEvent doubleClickInterval]];
-                delayTempToolMode = YES;
-            } else if ([[self currentSelection] hasCharacters]) {
+            else if ([[self currentSelection] hasCharacters])
                 [self addMarkupAnnotationWithType:NOTE_TYPE_FROM_TEMP_TOOL_MODE(temporaryToolMode) selection:nil];
-            }
         }
         if (delayTempToolMode == NO)
             [self setTemporaryToolMode:SKToolModeNone];
