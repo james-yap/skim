@@ -1741,7 +1741,7 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
             delayTempToolMode = [theEvent clickCount] < 3 && [NSApp willDragMouse] == NO;
             [super mouseDown:theEvent];
             if (delayTempToolMode)
-                [self performSelectorOnce:@selector(performTemporaryMarkupToolMode) afterDelay:[NSEvent doubleClickInterval]];
+                [self performSelector:@selector(performTemporaryMarkupToolMode) withObject:nil afterDelay:[NSEvent doubleClickInterval]];
             else if ([[self currentSelection] hasCharacters])
                 [self addMarkupAnnotationWithType:NOTE_TYPE_FROM_TEMP_TOOL_MODE(temporaryToolMode) selection:nil];
         }
@@ -1796,7 +1796,7 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
             [super mouseDown:theEvent];
             if ([[self currentSelection] hasCharacters]) {
                 if (mayMultiClick)
-                    [self performSelectorOnce:@selector(performMarkupToolMode) afterDelay:[NSEvent doubleClickInterval]];
+                    [self performSelector:@selector(performMarkupToolMode) withObject:nil afterDelay:[NSEvent doubleClickInterval]];
                 else
                     [self addMarkupAnnotationWithType:annotationMode selection:nil];
             }
