@@ -39,7 +39,7 @@
 #import "SKTemplateTag.h"
 #import "SKTemplateParser.h"
 
-static inline SKAttributeTemplate *copyTemplateForLink(id aLink, NSRange range) {
+static inline SKAttributeTemplate *templateForLink(id aLink, NSRange range) {
     SKAttributeTemplate *linkTemplate = nil;
     Class aClass = [aLink class];
     if ([aLink isKindOfClass:[NSURL class]])
@@ -50,20 +50,6 @@ static inline SKAttributeTemplate *copyTemplateForLink(id aLink, NSRange range) 
             linkTemplate = [[SKAttributeTemplate alloc] initWithTemplate:template range:range attributeClass:aClass];
     }
     return linkTemplate;
-}
-
-static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedString *attrString) {
-    NSMutableArray *templates = [[NSMutableArray alloc] init];
-    
-    [attrString enumerateAttribute:NSLinkAttributeName inRange:NSMakeRange(0, [attrString length]) options:0 usingBlock:^(id aLink, NSRange range, BOOL *stop) {
-        SKAttributeTemplate *linkTemplate = copyTemplateForLink(aLink, range);
-        if (linkTemplate) {
-            [templates addObject:linkTemplate];
-        }
-    }];
-    if ([templates count] == 0)
-        templates = nil;
-    return templates;
 }
 
 @implementation SKTemplateTag
@@ -108,7 +94,7 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 
 - (SKAttributeTemplate *)linkTemplate {
     if (linkTemplate == nil)
-        linkTemplate = copyTemplateForLink([attributes objectForKey:NSLinkAttributeName], NSMakeRange(0, 0)) ?: [[SKAttributeTemplate alloc] init];
+        linkTemplate = templateForLink([attributes objectForKey:NSLinkAttributeName], NSMakeRange(0, 0)) ?: [[SKAttributeTemplate alloc] init];
     return [linkTemplate template] ? linkTemplate : nil;
 }
 
@@ -268,8 +254,15 @@ static inline NSArray *copyTemplatesForLinksFromAttributedString(NSAttributedStr
 - (SKTemplateTagType)type { return SKTemplateTagText; }
 
 - (NSArray *)linkTemplates {
-    if (linkTemplates == nil)
-        linkTemplates = copyTemplatesForLinksFromAttributedString(attributedText) ?: [[NSArray alloc] init];
+    if (linkTemplates == nil) {
+        NSMutableArray *templates = [[NSMutableArray alloc] init];
+        [attributedText enumerateAttribute:NSLinkAttributeName inRange:NSMakeRange(0, [attributedText length]) options:0 usingBlock:^(id aLink, NSRange range, BOOL *stop) {
+            SKAttributeTemplate *linkTemplate = templateForLink(aLink, range);
+            if (linkTemplate)
+                [templates addObject:linkTemplate];
+        }];
+        linkTemplates = [templates copy];
+    }
     return [linkTemplates count] ? linkTemplates : nil;
 }
 
