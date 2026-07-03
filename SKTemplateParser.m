@@ -202,9 +202,9 @@ static inline BOOL scanConditionTagMatchTypeAndString(NSScanner *scanner, SKTemp
     else if ([scanner scanString:CONDITION_TAG_NOT_CONTAIN intoString:NULL])
         *matchType = SKTemplateTagMatchNotContain;
     else
-        *matchType = SKTemplateTagMatchOther;
+        *matchType = SKTemplateTagMatchNonEmpty;
     
-    if (*matchType == SKTemplateTagMatchOther || [scanner scanUpToString:CONDITION_TAG_CLOSE_DELIM intoString:argString] == NO)
+    if (*matchType == SKTemplateTagMatchNonEmpty || [scanner scanUpToString:CONDITION_TAG_CLOSE_DELIM intoString:argString] == NO)
         *argString = @"";
     
     return [scanner scanString:CONDITION_TAG_CLOSE_DELIM intoString:NULL];
@@ -402,7 +402,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
             } else {
                 
                 NSString *matchString = @"";
-                SKTemplateTagMatchType matchType = SKTemplateTagMatchOther;
+                SKTemplateTagMatchType matchType = SKTemplateTagMatchNonEmpty;
                 
                 if (scanConditionTagMatchTypeAndString(scanner, &matchType, &matchString)) {
                     
@@ -419,7 +419,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                         subTemplates = [[NSMutableArray alloc] init];
                         matchStrings = [[NSMutableArray alloc] initWithObjects:matchString, nil];
                         
-                        if (matchType != SKTemplateTagMatchOther) {
+                        if (matchType != SKTemplateTagMatchNonEmpty) {
                             altTag = compareConditionTagWithKeyPath(keyPath, matchType);
                             while (findAltConditionTag(subTemplate, altTag, &matchString, &altTagRange)) {
                                 [subTemplates addObject:[subTemplate substringToIndex:altTagRange.location]];
@@ -636,7 +636,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
             } else {
                 
                 NSString *matchString = @"";
-                SKTemplateTagMatchType matchType = SKTemplateTagMatchOther;
+                SKTemplateTagMatchType matchType = SKTemplateTagMatchNonEmpty;
                 
                 if (scanConditionTagMatchTypeAndString(scanner, &matchType, &matchString)) {
                     
@@ -656,7 +656,7 @@ static inline NSRange rangeAfterRemovingEmptyLines(NSString *string, SKTemplateT
                         subTemplates = [[NSMutableArray alloc] init];
                         matchStrings = [[NSMutableArray alloc] initWithObjects:matchString, nil];
                         
-                        if (matchType != SKTemplateTagMatchOther) {
+                        if (matchType != SKTemplateTagMatchNonEmpty) {
                             altTag = compareConditionTagWithKeyPath(keyPath, matchType);
                             while (findAltConditionTag([subTemplate string], altTag, &matchString, &altTagRange)) {
                                 [subTemplates addObject:[subTemplate attributedSubstringFromRange:NSMakeRange(0, altTagRange.location)]];

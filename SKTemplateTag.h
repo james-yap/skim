@@ -48,7 +48,7 @@ typedef NS_ENUM(NSInteger, SKTemplateTagType) {
 };
 
 typedef NS_ENUM(NSInteger, SKTemplateTagMatchType) {
-    SKTemplateTagMatchOther,
+    SKTemplateTagMatchNonEmpty,
     SKTemplateTagMatchEqual,
     SKTemplateTagMatchContain,
     SKTemplateTagMatchSmaller,
