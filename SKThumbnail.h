@@ -59,12 +59,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSUInteger pageIndex;
 @property (nonatomic, readonly) NSSize size;
 @property (nonatomic, nullable, readonly) PDFPage *page;
+@property (nonatomic) BOOL needsUpdate;
 @property (nonatomic, readonly, getter=isPlaceholder) BOOL placeholder;
 
 - (instancetype)initWithImage:(NSImage *)anImage label:(NSString *)aLabel pageIndex:(NSUInteger)anIndex NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
-
-- (void)setNeedsUpdate;
 
 @end
 

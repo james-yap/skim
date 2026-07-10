@@ -41,7 +41,7 @@
 
 @implementation SKThumbnail
 
-@synthesize delegate, label, pageIndex, placeholder;
+@synthesize delegate, label, pageIndex, needsUpdate, placeholder;
 @dynamic image, size, page;
 
 - (instancetype)initWithImage:(NSImage *)anImage label:(NSString *)aLabel pageIndex:(NSUInteger)anIndex {
@@ -85,10 +85,14 @@
     }
 }
 
-- (void)setNeedsUpdate {
-    [self willChangeValueForKey:@"image"];
-    needsUpdate = YES;
-    [self didChangeValueForKey:@"image"];
+- (void)setNeedsUpdate:(BOOL)flag {
+    if (flag) {
+        [self willChangeValueForKey:@"image"];
+        needsUpdate = YES;
+        [self didChangeValueForKey:@"image"];
+    } else {
+        needsUpdate = NO;
+    }
 }
 
 @end

@@ -853,15 +853,17 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     [self updatePageLabel];
     
-    // these carry a label, moreover when this is called the thumbnails will also be invalid
-    [self resetThumbnails];
+    // these carry a label
     [rightSideController.noteOutlineView reloadData];
     
-    if (changed) {
-        [leftSideController.thumbnailTableView reloadTypeSelectStrings];
-
+    // when this is called the thumbnails will also be invalid
+    if (changed)
         [self updatePageColumnWidthForTableViews:[[leftSideController tableViews] arrayByAddingObjectsFromArray:[rightSideController tableViews]]];
-    }
+    
+    // sizeToFit sometimes crashes with certain thumbnails (?), so reload after resizing the columns
+    [self resetThumbnails];
+    if (changed)
+        [leftSideController.thumbnailTableView reloadTypeSelectStrings];
     
     PDFOutline *outlineRoot = [[pdfView document] outlineRoot];
     
@@ -2993,6 +2995,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [pageLabels enumerateObjectsUsingBlock:^(NSString *label, NSUInteger i, BOOL *stop) {
             [newThumbnails addObject:[[SKThumbnail alloc] initWithImage:pageImage label:label pageIndex:i]];
         }];
+        if ([[pdfView document] isLocked])
+            [newThumbnails setValue:@NO forKey:@"needsUpdate"];
     }
     // reloadData resets the selection, so we have to ignore its notification and reset it
     mwcFlags.updatingThumbnailSelection = 1;
@@ -3025,15 +3029,15 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 }
 
 - (void)updateThumbnailAtPageIndex:(NSUInteger)anIndex {
-    [[thumbnails objectAtIndex:anIndex] setNeedsUpdate];
+    [[thumbnails objectAtIndex:anIndex] setNeedsUpdate:YES];
 }
 
 - (void)updateThumbnailsAtPageIndexes:(NSIndexSet *)indexSet {
-    [[thumbnails objectsAtIndexes:indexSet] makeObjectsPerformSelector:@selector(setNeedsUpdate)];
+    [[thumbnails objectsAtIndexes:indexSet] setValue:@YES forKey:@"needsUpdate"];
 }
 
 - (void)allThumbnailsNeedUpdate {
-    [thumbnails makeObjectsPerformSelector:@selector(setNeedsUpdate)];
+    [thumbnails setValue:@YES forKey:@"needsUpdate"];
 }
 
 #pragma mark Notes
