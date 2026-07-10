@@ -88,6 +88,9 @@
     [searchField setAction:@selector(searchNotes:)];
     [searchField setTarget:mainController];
     
+    if (@available(macOS 11.0, *))
+        [snapshotTableView setStyle:NSTableViewStyleFullWidth];
+    
     [noteOutlineView setAutoresizesOutlineColumn: NO];
     
     [noteOutlineView setStronglyReferencesItems:YES];
