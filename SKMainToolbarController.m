@@ -167,7 +167,8 @@ static char SKDefaultsObservationContext;
 
 - (void)setMainController:(SKMainWindowController *)newMainController {
     if (newMainController == nil) {
-        [colorSwatch unbind:SKColorsBinding];
+        if ([colorSwatch infoForBinding:SKColorsBinding])
+            [colorSwatch unbind:SKColorsBinding];
         [[NSNotificationCenter defaultCenter] removeObserver: self];
     }
     mainController = newMainController;
