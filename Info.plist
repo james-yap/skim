@@ -229,6 +229,8 @@
 				<string>com.apple.rtfd</string>
 				<string>com.adobe.fdf</string>
 			</array>
+			<key>NSIsRelatedItemType</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>CFBundleTypeName</key>
