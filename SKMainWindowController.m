@@ -1778,7 +1778,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 
 - (BOOL)findString:(NSString *)string forward:(BOOL)forward {
     PDFDocument *pdfDoc = [pdfView document];
-    if ([pdfDoc isFinding]) {
+    if (0&[pdfDoc isFinding]) {
         NSBeep();
         return NO;
     }
