@@ -240,6 +240,11 @@ static NSUInteger maxRecentDocumentsCount = 0;
     [[statusBar leftField] setStringValue:message ?: @""];
 }
 
+- (void)windowWillClose:(NSNotification *)notification {
+    if ([[[self window] firstResponder] isKindOfClass:[NSTextView class]])
+        [[self window] makeFirstResponder:nil];
+}
+
 - (void)saveBookmarksData {
     if (bookmarksCache == nil)
         bookmarksCache = [[bookmarkRoot children] valueForKey:@"properties"];
