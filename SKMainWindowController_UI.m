@@ -1960,7 +1960,7 @@
                 return YES;
             case NSFindPanelActionNext:
             case NSFindPanelActionPrevious:
-                return YES;
+                return [[pdfView document] isFinding] == NO;
             case NSFindPanelActionSetFindString:
                 return [[[self pdfView] currentSelection] hasCharacters];
             default:

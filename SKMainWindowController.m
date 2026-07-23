@@ -2067,6 +2067,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 }
 
 - (void)documentDidBeginDocumentFind:(NSNotification *)note {
+    [[findController navigationButton] setEnabled:NO];
     NSArray *results = @[[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSLocalizedString(@"Searching", @"Message in search table header") stringByAppendingEllipsis], LABEL_KEY, @(NSNotFound), SKGroupedSearchResultCountKey, @-1, SKGroupedSearchResultPageIndexKey, nil]];
     [self setSearchResults:results];
     [self setGroupedSearchResults:results];
@@ -2081,6 +2082,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 }
 
 - (void)documentDidEndDocumentFind:(NSNotification *)note {
+    [[findController navigationButton] setEnabled:YES];
     NSString *header = nil;
     if ([searchResults count] == 2)
         header = NSLocalizedString(@"1 Result", @"Message in search table header");
