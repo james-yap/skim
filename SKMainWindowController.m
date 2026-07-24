@@ -1981,7 +1981,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 NSRect rect = NSZeroRect;
                 for (PDFSelection *sel in findResults) {
                     if ([[sel pages] containsObject:page])
-                        rect = NSUnionRect(rect, [sel boundsForPage:page]);
+                        rect = NSUnionRect(rect, [sel safeBoundsForPage:page]);
                 }
                 rect = NSIntersectionRect(NSInsetRect(rect, -FIND_RESULT_MARGIN, -FIND_RESULT_MARGIN), [page boundsForBox:kPDFDisplayBoxCropBox]);
                 [pdfView goAndScrollToPage:page];
