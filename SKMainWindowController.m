@@ -1874,6 +1874,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if (findController == nil) {
         findController = [[SKFindController alloc] init];
         [findController setDelegate:self];
+        if ([[pdfView document] isFinding]) {
+            [[findController navigationButton] setEnabled:NO];
+            [[findController findField] setEnabled:NO];
+        }
     }
     
     NSView *findBar = [findController view];
