@@ -1783,6 +1783,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         return NO;
     }
     
+    // this should never happen at this point
     if ([self hasOverview]) {
         [self hideOverviewWithCompletionHandler:^{
             [self findString:string forward:forward];

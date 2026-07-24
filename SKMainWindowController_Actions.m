@@ -1261,9 +1261,7 @@
                 [findController findForward:forward];
             } else {
                 NSPasteboard *findPboard = [NSPasteboard pasteboardWithName:NSPasteboardNameFind];
-                NSArray *strings = [findPboard readObjectsForClasses:@[[NSString class]] options:@{}];
-                if ([strings count] > 0)
-                    findString = [strings objectAtIndex:0];
+                findString = [[findPboard readObjectsForClasses:@[[NSString class]] options:@{}] firstObject];
                 if ([findString length] > 0)
                     [self findString:findString forward:forward];
                 else
