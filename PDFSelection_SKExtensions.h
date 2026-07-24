@@ -58,6 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)hasCharacters;
 
+- (NSRect)safeBoundsForPage:(PDFPage *)page;
+
 - (CGFloat)boundsOrderForPage:(PDFPage *)page;
 
 - (NSArray<PDFSelection *> *)connectedSelectionsOnPage:(nullable PDFPage *)page;

@@ -1806,9 +1806,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     PDFSelection *selection = [pdfDoc findString:string fromSelection:sel withOptions:options];
     if ([selection hasCharacters] == NO && [sel hasCharacters])
         selection = [pdfDoc findString:string fromSelection:nil withOptions:options];
-    if ([selection hasCharacters]) {
-        PDFPage *page = [selection safeFirstPage];
-        NSRect rect = [selection boundsForPage:page];
+    PDFPage *page = [selection safeFirstPage];
+    if (page) {
+        NSRect rect = [selection safeBoundsForPage:page];
         rect = NSIntersectionRect(NSInsetRect(rect, -FIND_RESULT_MARGIN, -FIND_RESULT_MARGIN), [page boundsForBox:kPDFDisplayBoxCropBox]);
         [pdfView goToRect:rect onPage:page];
         [leftSideController.findTableView deselectAll:self];

@@ -251,6 +251,26 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
     return [self safeFirstPage] != nil;
 }
 
+- (NSRect)safeBoundsForPage:(PDFPage *)page {
+    NSRect rect = [self boundsForPage:page];
+    if (isfinite(NSMinX(rect)) == NO || isfinite(NSMinX(rect)) == NO || NSIsEmptyRect(rect)) {
+        // On Tahoe, boundsForPage: can return a degenerate rect
+        // for selections found inside certain table-structured PDFs.
+        // Reconstruct from per-character bounds instead,
+        // which use a different PDFKit code path and are unaffected.
+        NSUInteger firstIndex = [self safeIndexOfFirstCharacterOnPage:page];
+        if (firstIndex != NSNotFound) {
+            rect = [page characterBoundsAtIndex:firstIndex];
+            NSUInteger lastIndex = [self safeIndexOfLastCharacterOnPage:page];
+            if (lastIndex != firstIndex && lastIndex != NSNotFound)
+                rect = NSUnionRect(rect, [page characterBoundsAtIndex:lastIndex]);
+            if (isfinite(NSMinX(rect)) == NO || isfinite(NSMinX(rect)) == NO)
+                rect = [[page selectionForRect:[page boundsForBox:kPDFDisplayBoxCropBox]] boundsForPage:page];
+        }
+    }
+    return rect;
+}
+
 - (CGFloat)boundsOrderForPage:(PDFPage *)page {
     NSUInteger i = [self safeIndexOfFirstCharacterOnPage:page];
     return [page sortOrderForBounds:[(i == NSNotFound ? self : [page selectionForRange:NSMakeRange(i, 1)]) boundsForPage:page]];
