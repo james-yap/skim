@@ -265,7 +265,7 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
             if (lastIndex != firstIndex && lastIndex != NSNotFound)
                 rect = NSUnionRect(rect, [page characterBoundsAtIndex:lastIndex]);
             if (isfinite(NSMinX(rect)) == NO || isfinite(NSMinX(rect)) == NO)
-                rect = [[page selectionForRect:[page boundsForBox:kPDFDisplayBoxCropBox]] boundsForPage:page];
+                rect = [page foregroundRect];
         }
     }
     return rect;
