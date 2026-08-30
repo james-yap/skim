@@ -184,6 +184,23 @@ CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
 #define LG 0.7152
 #define LB 0.0722
 
+#define SKInvertedColorsBackgroundWhiteKey @"SKInvertedColorsBackgroundWhite"
+
+static CGFloat SKInvertedColorsBackgroundWhite() {
+    static CGFloat backgroundWhite = -2.0;
+    if (backgroundWhite < -1.0) {
+        NSNumber *bgw = [[NSUserDefaults standardUserDefaults] objectForKey:SKInvertedColorsBackgroundWhiteKey];
+        if (bgw == nil) {
+            backgroundWhite = -1.0;
+        } else {
+            backgroundWhite = fmax(0.0, fmin(1.0, [bgw  doubleValue]));
+            // map from sRGB to gamma=1.6 colorspace
+            backgroundWhite = backgroundWhite <= 0.04045 ? pow(backgroundWhite / 12.92, 0.625) : pow((backgroundWhite + 0.055) / 1.055, 1.5);
+        }
+    }
+    return backgroundWhite;
+}
+
 NSArray *SKColorEffectFilters(void) {
     NSMutableArray *filters = [NSMutableArray array];
     CIFilter *filter;
@@ -200,7 +217,8 @@ NSArray *SKColorEffectFilters(void) {
     }
     if (SKHasDarkAppearance() && [sud boolForKey:SKInvertColorsInDarkModeKey]) {
         // map the white page background to 45/255, or 30/255 with high contrast
-        CGFloat f = [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 1.9338 : 1.8972;
+        CGFloat bgw = SKInvertedColorsBackgroundWhite();
+        CGFloat f = bgw >= 0.0 ? 2.0 - bgw : [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 1.9338 : 1.8972;
         CGFloat lrf = LR * f, lgf = LG * f, lbf = LB * f;
         // This is like CIColorInvert + CIHueAdjust, modified to map white to dark gray rather than black
         // Inverts a linear luminocity with weights from the CIE standards
