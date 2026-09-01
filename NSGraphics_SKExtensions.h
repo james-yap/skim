@@ -67,4 +67,6 @@ extern CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context);
 
 extern NSArray<CIFilter *> *SKColorEffectFilters(void);
 
+extern NSColor *SKPreInvertedColor(NSColor *color);
+
 NS_ASSUME_NONNULL_END

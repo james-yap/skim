@@ -186,7 +186,11 @@ CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
 
 #define SKInvertedColorsBackgroundWhiteKey @"SKInvertedColorsBackgroundWhite"
 
-static CGFloat SKInvertedColorsBackgroundWhite() {
+static inline CGFloat sRGBToGamma16(CGFloat c) { return c <= 0.04045 ? pow(c / 12.92, 0.625) : pow((c + 0.055) / 1.055, 1.5); }
+
+static inline CGFloat sRGBFromGamma16(CGFloat c) { return c <= 0.0031308 ? 12.92 * pow(c, 1.6) : 1.055 * pow(c, 2.0/3.0) - 0.055; }
+
+static CGFloat invertedColorsFilterFactor() {
     static CGFloat backgroundWhite = -2.0;
     if (backgroundWhite < -1.0) {
         NSNumber *bgw = [[NSUserDefaults standardUserDefaults] objectForKey:SKInvertedColorsBackgroundWhiteKey];
@@ -195,10 +199,10 @@ static CGFloat SKInvertedColorsBackgroundWhite() {
         } else {
             backgroundWhite = fmax(0.0, fmin(1.0, [bgw  doubleValue]));
             // map from sRGB to gamma=1.6 colorspace
-            backgroundWhite = backgroundWhite <= 0.04045 ? pow(backgroundWhite / 12.92, 0.625) : pow((backgroundWhite + 0.055) / 1.055, 1.5);
+            backgroundWhite = sRGBToGamma16(backgroundWhite);
         }
     }
-    return backgroundWhite;
+    return backgroundWhite >= 0.0 ? 2.0 - backgroundWhite : [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 1.9338 : 1.8972;
 }
 
 NSArray *SKColorEffectFilters(void) {
@@ -217,8 +221,7 @@ NSArray *SKColorEffectFilters(void) {
     }
     if (SKHasDarkAppearance() && [sud boolForKey:SKInvertColorsInDarkModeKey]) {
         // map the white page background to 45/255, or 30/255 with high contrast
-        CGFloat bgw = SKInvertedColorsBackgroundWhite();
-        CGFloat f = bgw >= 0.0 ? 2.0 - bgw : [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 1.9338 : 1.8972;
+        CGFloat f = invertedColorsFilterFactor();
         CGFloat lrf = LR * f, lgf = LG * f, lbf = LB * f;
         // This is like CIColorInvert + CIHueAdjust, modified to map white to dark gray rather than black
         // Inverts a linear luminocity with weights from the CIE standards
@@ -231,4 +234,19 @@ NSArray *SKColorEffectFilters(void) {
             [filters addObject:filter];
     }
     return filters;
+}
+
+NSColor *SKPreInvertedColor(NSColor *color) {
+    CGFloat f = invertedColorsFilterFactor();
+    if (f <= 1.0001)
+        return color;
+    CGFloat c[4] = {0.0, 0.0, 0.0, 1.0};
+    NSUInteger i;
+    [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getComponents:c];
+    for (i = 0; i < 3; i++)
+        c[i] = sRGBToGamma16(c[i]);
+    CGFloat offset = (1.0 - f * (LR * c[0] + LG * c[1] + LB * c[2])) / (f - 1.0);
+    for (i = 0; i < 3; i++)
+        c[i] = sRGBFromGamma16(fmin(1.0, fmax(0.0, c[i] + offset)));
+    return [NSColor colorWithSRGBRed:c[0] green:c[1] blue:c[2] alpha:c[3]];
 }

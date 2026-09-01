@@ -301,8 +301,11 @@ static inline CGFloat physicalScaleFactorForView(NSView *view) {
 
 static NSColor *defaultBackgroundColor(NSString *backgroundColorKey, NSString *darkBackgroundColorKey) {
     NSColor *color = nil;
-    if (SKHasDarkAppearance())
+    if (SKHasDarkAppearance()) {
         color = [[NSUserDefaults standardUserDefaults] colorForKey:darkBackgroundColorKey];
+        if (color && [color type] == NSColorTypeComponentBased && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+            color = SKPreInvertedColor(color);
+    }
     if (color == nil)
         color = [[NSUserDefaults standardUserDefaults] colorForKey:backgroundColorKey];
     return color;
