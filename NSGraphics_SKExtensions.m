@@ -191,18 +191,12 @@ static inline CGFloat sRGBToGamma16(CGFloat c) { return c <= 0.04045 ? pow(c / 1
 static inline CGFloat sRGBFromGamma16(CGFloat c) { return c <= 0.0031308 ? 12.92 * pow(c, 1.6) : 1.055 * pow(c, 2.0/3.0) - 0.055; }
 
 static CGFloat invertedColorsFilterFactor() {
-    static CGFloat backgroundWhite = -2.0;
-    if (backgroundWhite < -1.0) {
+    static CGFloat backgroundWhite = -1.0;
+    if (backgroundWhite < 0.0) {
         NSNumber *bgw = [[NSUserDefaults standardUserDefaults] objectForKey:SKInvertedColorsBackgroundWhiteKey];
-        if (bgw == nil) {
-            backgroundWhite = -1.0;
-        } else {
-            backgroundWhite = fmax(0.0, fmin(1.0, [bgw  doubleValue]));
-            // map from sRGB to gamma=1.6 colorspace
-            backgroundWhite = sRGBToGamma16(backgroundWhite);
-        }
+        backgroundWhite = bgw ? sRGBToGamma16(fmax(0.0, fmin(1.0, [bgw  doubleValue]))) : 2.0;
     }
-    return backgroundWhite >= 0.0 ? 2.0 - backgroundWhite : [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 1.9338 : 1.8972;
+    return 2.0 - backgroundWhite ?: [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 1.9338 : 1.8972;
 }
 
 NSArray *SKColorEffectFilters(void) {
