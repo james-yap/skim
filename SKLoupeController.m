@@ -76,10 +76,9 @@
         level = 0;
         layer = aLayer;
         [layer setDelegate:self];
-        if (@available(macOS 10.14, *)) {
-            backgroundView = bgView;
+        backgroundView = bgView;
+        if (@available(macOS 10.14, *))
             filterBackground = [[[[[pdfView embeddedScrollView] subviews] firstObject] className] containsString:@"Background"];
-        }
         [self updateColorFilters];
         [[NSNotificationCenter defaultCenter] addObserver:self
             selector:@selector(handlePDFContentViewFrameChangedNotification:)
@@ -95,43 +94,40 @@
 + (NSWindow *)makeWindowForView:(NSView *)pdfView layer:(CALayer **)layerp backgroundView:(NSBox **)viewp {
     NSWindow *window = [[SKAnimatedBorderlessWindow alloc] initWithContentRect:[[pdfView window] convertRectToScreen:[pdfView convertRect:[pdfView bounds] toView:nil]]];
     NSView *contentView = [window contentView];
+    [contentView setWantsLayer:YES];
+    [[contentView layer] setCornerRadius:LOUPE_RADIUS];
+    [[contentView layer] setMasksToBounds:YES];
+    NSBox *bgView = [[NSBox alloc] initWithFrame:[pdfView bounds]];
+    [bgView setBoxType:NSBoxCustom];
+    [bgView setContentViewMargins:NSZeroSize];
+    [bgView setTitlePosition:NSNoTitle];
+    [bgView setBorderWidth:0.0];
+    [bgView setFillColor:[NSColor whiteColor]];
+    [bgView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    NSBox *bgView2 = [[NSBox alloc] initWithFrame:[pdfView bounds]];
+    [bgView2 setBoxType:NSBoxCustom];
+    [bgView2 setContentViewMargins:NSZeroSize];
+    [bgView2 setTitlePosition:NSNoTitle];
+    [bgView2 setBorderWidth:0.0];
+    [bgView setContentView:bgView2];
+    [contentView addSubview:bgView];
     CALayer *layer = [[CALayer alloc] init];
     [layer setMasksToBounds:YES];
     [layer setActions:@{@"contents":[NSNull null]}];
     [layer setFrame:NSRectToCGRect([pdfView bounds])];
-    if (@available(macOS 10.14, *)) {
-        [contentView setWantsLayer:YES];
-        [[contentView layer] setCornerRadius:LOUPE_RADIUS];
-        [[contentView layer] setMasksToBounds:YES];
-        NSBox *bgView = [[NSBox alloc] initWithFrame:[pdfView bounds]];
-        [bgView setBoxType:NSBoxCustom];
-        [bgView setContentViewMargins:NSZeroSize];
-        [bgView setTitlePosition:NSNoTitle];
-        [bgView setBorderWidth:0.0];
-        [bgView setFillColor:[NSColor whiteColor]];
-        [bgView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        NSBox *bgView2 = [[NSBox alloc] initWithFrame:[pdfView bounds]];
-        [bgView2 setBoxType:NSBoxCustom];
-        [bgView2 setContentViewMargins:NSZeroSize];
-        [bgView2 setTitlePosition:NSNoTitle];
-        [bgView2 setBorderWidth:0.0];
-        [bgView setContentView:bgView2];
-        [contentView addSubview:bgView];
-        NSView *loupeView = [[NSView alloc] initWithFrame:[pdfView bounds]];
-        [loupeView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-        [loupeView setLayer:layer];
-        [loupeView setWantsLayer:YES];
-        [contentView addSubview:loupeView];
-        *viewp = bgView;
-    } else {
+    if (@available(macOS 10.14, *)) {} else {
         [layer setCornerRadius:LOUPE_RADIUS];
         CGColorRef borderColor = CGColorCreateGenericGray(LOUPE_BORDER_GRAY, 1.0);
         [layer setBorderColor:borderColor];
         [layer setBorderWidth:LOUPE_BORDER_WIDTH];
         CGColorRelease(borderColor);
-        [contentView setLayer:layer];
-        [contentView setWantsLayer:YES];
     }
+    NSView *loupeView = [[NSView alloc] initWithFrame:[pdfView bounds]];
+    [loupeView setLayer:layer];
+    [loupeView setWantsLayer:YES];
+    [loupeView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+    [contentView addSubview:loupeView];
+    *viewp = bgView;
     [window setHasShadow:YES];
     *layerp = layer;
     return window;
@@ -142,14 +138,7 @@
 }
 
 - (void)updateBackgroundColor {
-    if (@available(macOS 10.14, *)) {
-        [(NSBox *)[backgroundView contentView] setFillColor:[pdfView backgroundColor]];
-    } else {
-        NSColor *bgColor = [pdfView backgroundColor];
-        if ([bgColor alphaComponent] < 1.0)
-            bgColor = [[NSColor whiteColor] blendedColorWithFraction:[bgColor alphaComponent] ofColor:[bgColor colorWithAlphaComponent:1.0]] ?: bgColor;
-        [layer setBackgroundColor:[bgColor CGColor]];
-    }
+    [(NSBox *)[backgroundView contentView] setFillColor:[pdfView backgroundColor]];
 }
 
 - (void)updateColorFilters {
