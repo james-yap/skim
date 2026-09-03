@@ -188,8 +188,6 @@ CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
 
 static inline CGFloat sRGBToGamma16(CGFloat c) { return c <= 0.04045 ? pow(c / 12.92, 0.625) : pow((c + 0.055) / 1.055, 1.5); }
 
-static inline CGFloat sRGBFromGamma16(CGFloat c) { return c <= 0.0031308 ? 12.92 * pow(c, 1.6) : 1.055 * pow(c, 2.0/3.0) - 0.055; }
-
 static CGFloat invertedColorsFilterFactor() {
     static CGFloat customFactor = -1.0;
     if (customFactor < 0.0) {
@@ -246,20 +244,4 @@ NSArray *SKInvertedColorEffectFilters(void) {
             [filters addObject:filter];
     }
     return filters;
-}
-
-NSColor *SKInvertedFilteredColor(NSColor *color) {
-    if (color && SKHasDarkAppearance() && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
-        CGFloat f = 2.0;//fmax(1.0001, invertedColorsFilterFactor());
-        CGFloat c[4] = {0.0, 0.0, 0.0, 1.0};
-        NSUInteger i;
-        [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getComponents:c];
-        for (i = 0; i < 3; i++)
-            c[i] = sRGBToGamma16(c[i]);
-        CGFloat offset = (1.0 - f * ( LR * c[0] + LG * c[1] + LB * c[2] )) / (f - 1.0);
-        for (i = 0; i < 3; i++)
-            c[i] = sRGBFromGamma16(fmin(1.0, fmax(0.0, c[i] + offset)));
-        color = [NSColor colorWithSRGBRed:c[0] green:c[1] blue:c[2] alpha:c[3]];
-    }
-    return color;
 }
