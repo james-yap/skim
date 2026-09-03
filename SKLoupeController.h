@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
     __weak PDFView *pdfView;
     CGFloat magnification;
     NSInteger level;
+    NSBox *backgroundView;
+    BOOL filterBackground;
 }
 
 - (instancetype)initWithPDFView:(PDFView *)aPdfView NS_DESIGNATED_INITIALIZER;
