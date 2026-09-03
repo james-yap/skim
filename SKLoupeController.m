@@ -109,7 +109,15 @@
         [bgView setTitlePosition:NSNoTitle];
         [bgView setBorderWidth:0.0];
         [bgView setContentViewMargins:NSZeroSize];
+        [bgView setFillColor:[NSColor whiteColor]];
         [bgView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+        NSBox *bgView2 = [[NSBox alloc] initWithFrame:[pdfView bounds]];
+        [bgView2 setBoxType:NSBoxCustom];
+        [bgView2 setBorderType:NSNoBorder];
+        [bgView2 setTitlePosition:NSNoTitle];
+        [bgView2 setBorderWidth:0.0];
+        [bgView2 setContentViewMargins:NSZeroSize];
+        [bgView setContentView:bgView2];
         [contentView addSubview:bgView];
         NSView *loupeView = [[NSView alloc] initWithFrame:[pdfView bounds]];
         [loupeView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -137,12 +145,7 @@
 
 - (void)updateBackgroundColor {
     if (@available(macOS 10.14, *)) {
-        SKRunWithAppearance(backgroundView, ^{
-            NSColor *bgColor = [pdfView backgroundColor];
-            if ([bgColor alphaComponent] < 1.0)
-                bgColor = [[NSColor whiteColor] blendedColorWithFraction:[bgColor alphaComponent] ofColor:[bgColor colorWithAlphaComponent:1.0]] ?: bgColor;
-            [backgroundView setFillColor:bgColor];
-        });
+        [(NSBox *)[backgroundView contentView] setFillColor:[pdfView backgroundColor]];
     } else {
         NSColor *bgColor = [pdfView backgroundColor];
         if ([bgColor alphaComponent] < 1.0)
