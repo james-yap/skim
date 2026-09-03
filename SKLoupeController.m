@@ -117,7 +117,7 @@
         NSView *loupeView = [window contentView];
         if ([[loupeView subviews] count] > 0) {
             hasBackgroundView = YES;
-            loupeView = [[loupeView subviews] firstObject];
+            loupeView = [[loupeView subviews] lastObject];
         }
         NSColor *bgColor = [pdfView backgroundColor];
         NSVisualEffectMaterial material = 0;
@@ -129,11 +129,14 @@
             material = NSVisualEffectMaterialUnderPageBackground;
         if (material == 0) {
             __block CGColorRef cgColor = NULL;
-            SKRunWithAppearance([pdfView embeddedScrollView], ^{
+            NSScrollView *scrollView = [pdfView embeddedScrollView];
+            SKRunWithAppearance(scrollView, ^{
+                NSColor *color = bgColor;
                 if ([bgColor alphaComponent] < 1.0)
-                    cgColor = [[[NSColor whiteColor] blendedColorWithFraction:[bgColor alphaComponent] ofColor:[bgColor colorWithAlphaComponent:1.0]] CGColor];
-                if (cgColor == NULL)
-                    cgColor = [bgColor CGColor] ?: CGColorGetConstantColor(kCGColorBlack);
+                    color = [[NSColor whiteColor] blendedColorWithFraction:[bgColor alphaComponent] ofColor:[bgColor colorWithAlphaComponent:1.0]] ?: bgColor;
+                if ([scrollView appearance] == nil)
+                    color = SKInvertedFilteredColor(color);
+                cgColor = [color CGColor] ?: CGColorGetConstantColor(kCGColorBlack);
             });
             [layer setBackgroundColor:cgColor];
             if (hasBackgroundView) {
@@ -141,18 +144,23 @@
                 [loupeView setContentFilters:SKColorEffectFilters()];
             }
         } else if (hasBackgroundView) {
-            [(NSVisualEffectView *)[window contentView] setMaterial:material];
+            [(NSVisualEffectView *)[[[window contentView] subviews] firstObject] setMaterial:material];
         } else {
-            NSVisualEffectView *view = [[NSVisualEffectView alloc] init];
-            [view setMaterial:material];
-            [view setState:NSVisualEffectStateActive];
+            NSView *view = [[NSView alloc] init];
+            NSVisualEffectView *veView = [[NSVisualEffectView alloc] init];
+            [veView setMaterial:material];
+            [veView setState:NSVisualEffectStateActive];
+            [veView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+            [view addSubview:veView];
             [loupeView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
             [window setContentView:view];
             [view addSubview:loupeView];
             [view setContentFilters:SKColorEffectFilters()];
+            if ([[pdfView embeddedScrollView] appearance] == nil)
+                [veView setContentFilters:SKInvertedColorEffectFilters()];
             [loupeView setContentFilters:@[]];
-            if (NSIsEmptyRect([view bounds]) == NO)
-                [view setMaskImage:[NSImage maskImageWithSize:[view bounds].size cornerRadius:LOUPE_RADIUS]];
+            if (NSIsEmptyRect([veView bounds]) == NO)
+                [veView setMaskImage:[NSImage maskImageWithSize:[veView bounds].size cornerRadius:LOUPE_RADIUS]];
             [layer setBackgroundColor:NULL];
         }
     } else {
@@ -167,10 +175,9 @@
     NSWindow *window = [self window];
     [[window contentView] setContentFilters:SKColorEffectFilters()];
     if (@available(macOS 10.14, *)) {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-            [window setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
-        else
-            [window setAppearance:nil];
+        [window setAppearance:[[pdfView embeddedScrollView] appearance]];
+        if ([window appearance] == nil && [[[window contentView] subviews] count] > 0)
+            [[[[window contentView] subviews] firstObject] setContentFilters:SKInvertedColorEffectFilters()];
     }
     [self updateBackgroundColor];
 }
@@ -198,11 +205,11 @@
         NSWindow *window = [self window];
         NSView *loupeView = [window contentView];
         if (@available(macOS 10.14, *))
-            loupeView = [[loupeView subviews] firstObject] ?: loupeView;
+            loupeView = [[loupeView subviews] lastObject] ?: loupeView;
         BOOL needsMask = loupeView != [window contentView] && NSEqualSizes([window frame].size, magRect.size) == NO;
         [window setFrame:magRect display:YES];
         if (needsMask)
-            [(NSVisualEffectView *)[window contentView] setMaskImage:[NSImage maskImageWithSize:[window frame].size cornerRadius:LOUPE_RADIUS]];
+            [(NSVisualEffectView *)[[[window contentView] subviews] firstObject] setMaskImage:[NSImage maskImageWithSize:[window frame].size cornerRadius:LOUPE_RADIUS]];
         [layer setNeedsDisplay];
         if ([window parentWindow] == nil) {
             [NSCursor hide];

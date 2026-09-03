@@ -2551,7 +2551,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
     for (NSString *key in @[SKBackgroundColorKey, SKFullScreenBackgroundColorKey,
                             SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,
-                            SKInvertColorsInDarkModeKey,
                             SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey,
                             SKInterpolationQualityKey,
                             SKTableFontSizeKey])
@@ -2568,7 +2567,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
     for (NSString *key in @[SKBackgroundColorKey, SKFullScreenBackgroundColorKey,
                             SKDarkBackgroundColorKey, SKDarkFullScreenBackgroundColorKey,
-                            SKInvertColorsInDarkModeKey,
                             SKThumbnailSizeKey, SKSnapshotThumbnailSizeKey,
                             SKInterpolationQualityKey,
                             SKTableFontSizeKey]) {
@@ -2649,7 +2647,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if (context == &SKMainWindowDefaultsObservationContext) {
         
         // A default value that we are observing has changed
-        if ([keyPath isEqualToString:SKBackgroundColorKey] || [keyPath isEqualToString:SKDarkBackgroundColorKey] || [keyPath isEqualToString:SKInvertColorsInDarkModeKey]) {
+        if ([keyPath isEqualToString:SKBackgroundColorKey] || [keyPath isEqualToString:SKDarkBackgroundColorKey]) {
             NSColor *backgroundColor = nil;
             if (interactionMode == SKNormalMode)
                 backgroundColor = [PDFView defaultBackgroundColor];

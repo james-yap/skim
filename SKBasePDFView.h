@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SKBasePDFView : PDFView {
     NSInteger minHistoryIndex;
     NSInteger keyDirection;
+    NSView *bgView;
 }
 
 - (void)colorFiltersDidChange;

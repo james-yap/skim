@@ -91,15 +91,22 @@ static inline NSArray *defaultKeysToObserve() {
     NSScrollView *scrollView = [self embeddedScrollView];
     
     if (@available(macOS 10.14, *)) {
+        bgView = [[scrollView subviews] firstObject];
+        if ([[bgView className] containsString:@"Background"] == NO)
+            bgView = nil;
+        
         [self setAppearance:nil];
         [[scrollView contentView] setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+        if (bgView == nil && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
             [scrollView setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
         
         [self handleScrollerStyleChangedNotification:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScrollerStyleChangedNotification:)
                                                          name:NSPreferredScrollerStyleDidChangeNotification object:nil];
+        
+        if (bgView)
+            [bgView setContentFilters:SKInvertedColorEffectFilters()];
     }
     
     [scrollView setContentFilters:SKColorEffectFilters()];
@@ -143,7 +150,9 @@ static inline NSArray *defaultKeysToObserve() {
 - (void)colorFiltersDidChange {
     NSScrollView *scrollView = [self embeddedScrollView];
     if (@available(macOS 10.14, *)) {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
+        if (bgView)
+            [bgView setContentFilters:SKInvertedColorEffectFilters()];
+        else if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
             [scrollView setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameAqua]];
         else
             [scrollView setAppearance:nil];
@@ -152,10 +161,14 @@ static inline NSArray *defaultKeysToObserve() {
 }
 
 - (void)viewDidChangeEffectiveAppearance {
-    if (@available(macOS 10.14, *))
+    if (@available(macOS 10.14, *)) {
         [super viewDidChangeEffectiveAppearance];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey])
-        [[self embeddedScrollView] setContentFilters:SKColorEffectFilters()];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+            [[self embeddedScrollView] setContentFilters:SKColorEffectFilters()];
+            if (bgView)
+                [bgView setContentFilters:SKInvertedColorEffectFilters()];
+        }
+    }
 }
 
 - (void)handleScrollerStyleChangedNotification:(NSNotification *)notification {

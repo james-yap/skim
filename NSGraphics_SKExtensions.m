@@ -230,17 +230,36 @@ NSArray *SKColorEffectFilters(void) {
     return filters;
 }
 
-NSColor *SKPreInvertedColor(NSColor *color) {
-    CGFloat f = invertedColorsFilterFactor();
-    if (f <= 1.0001)
-        return color;
-    CGFloat c[4] = {0.0, 0.0, 0.0, 1.0};
-    NSUInteger i;
-    [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getComponents:c];
-    for (i = 0; i < 3; i++)
-        c[i] = sRGBToGamma16(c[i]);
-    CGFloat offset = (1.0 - f * (LR * c[0] + LG * c[1] + LB * c[2])) / (f - 1.0);
-    for (i = 0; i < 3; i++)
-        c[i] = sRGBFromGamma16(fmin(1.0, fmax(0.0, c[i] + offset)));
-    return [NSColor colorWithSRGBRed:c[0] green:c[1] blue:c[2] alpha:c[3]];
+NSArray *SKInvertedColorEffectFilters(void) {
+    NSMutableArray *filters = [NSMutableArray array];
+    CIFilter *filter;
+    if (SKHasDarkAppearance() && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        // this is roughly the inverse of the color inversion filter above
+        CGFloat f = 2.0;//fmax(1.0001, invertedColorsFilterFactor());
+        CGFloat fi = 1.0 / (f - 1.0);
+        CGFloat lrf = LR * f * fi, lgf = LG * f * fi, lbf = LB * f * fi;
+        if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", @0.625, nil]))
+            [filters addObject:filter];
+        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-lrf Y:-lgf Z:-lbf W:0.0], @"inputGVector", [CIVector vectorWithX:-lrf Y:1.0-lgf Z:-lbf W:0.0], @"inputBVector", [CIVector vectorWithX:-lrf Y:-lgf Z:1.0-lbf W:0.0], @"inputAVector", [CIVector vectorWithX:0.0 Y:0.0 Z:0.0 W:1.0], @"inputBiasVector", [CIVector vectorWithX:fi Y:fi Z:fi W:0.0], nil]))
+            [filters addObject:filter];
+        if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", @1.6, nil]))
+            [filters addObject:filter];
+    }
+    return filters;
+}
+
+NSColor *SKInvertedFilteredColor(NSColor *color) {
+    if (color && SKHasDarkAppearance() && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
+        CGFloat f = 2.0;//fmax(1.0001, invertedColorsFilterFactor());
+        CGFloat c[4] = {0.0, 0.0, 0.0, 1.0};
+        NSUInteger i;
+        [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getComponents:c];
+        for (i = 0; i < 3; i++)
+            c[i] = sRGBToGamma16(c[i]);
+        CGFloat offset = (1.0 - f * ( LR * c[0] + LG * c[1] + LB * c[2] )) / (f - 1.0);
+        for (i = 0; i < 3; i++)
+            c[i] = sRGBFromGamma16(fmin(1.0, fmax(0.0, c[i] + offset)));
+        color = [NSColor colorWithSRGBRed:c[0] green:c[1] blue:c[2] alpha:c[3]];
+    }
+    return color;
 }
