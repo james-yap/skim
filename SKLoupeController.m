@@ -115,18 +115,20 @@
     [layer setMasksToBounds:YES];
     [layer setActions:@{@"contents":[NSNull null]}];
     [layer setFrame:NSRectToCGRect([pdfView bounds])];
-    if (@available(macOS 10.14, *)) {} else {
+    NSView *loupeView = [[NSView alloc] initWithFrame:[pdfView bounds]];
+    [loupeView setLayer:layer];
+    [loupeView setWantsLayer:YES];
+    if (@available(macOS 10.14, *)) {
+        [loupeView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+        [contentView addSubview:loupeView];
+    } else {
         [layer setCornerRadius:LOUPE_RADIUS];
         CGColorRef borderColor = CGColorCreateGenericGray(LOUPE_BORDER_GRAY, 1.0);
         [layer setBorderColor:borderColor];
         [layer setBorderWidth:LOUPE_BORDER_WIDTH];
         CGColorRelease(borderColor);
+        [bgView2 setContentView:loupeView];
     }
-    NSView *loupeView = [[NSView alloc] initWithFrame:[pdfView bounds]];
-    [loupeView setLayer:layer];
-    [loupeView setWantsLayer:YES];
-    [loupeView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-    [contentView addSubview:loupeView];
     [window setHasShadow:YES];
     *viewp = bgView;
     *layerp = layer;
