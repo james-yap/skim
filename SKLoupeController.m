@@ -127,8 +127,8 @@
     [loupeView setWantsLayer:YES];
     [loupeView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
     [contentView addSubview:loupeView];
-    *viewp = bgView;
     [window setHasShadow:YES];
+    *viewp = bgView;
     *layerp = layer;
     return window;
 }
