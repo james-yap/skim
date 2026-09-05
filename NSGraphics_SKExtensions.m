@@ -198,8 +198,7 @@ static CGFloat invertedColorsBackgroundWhite() {
     return backgroundWhite >= 0.0 ? backgroundWhite : [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 0.0662 : 0.0900;
 }
 
-static NSArray *colorInvertFilters(CGFloat b, CGFloat w) {
-    NSMutableArray *filters = [NSMutableArray array];
+static inline void addColorInvertFilters(NSMutableArray *filters, CGFloat b, CGFloat w) {
     CIFilter *filter;
     CGFloat f = 1.0 + b - w;
     CGFloat lrf = LR * f, lgf = LG * f, lbf = LB * f;
@@ -212,7 +211,6 @@ static NSArray *colorInvertFilters(CGFloat b, CGFloat w) {
         [filters addObject:filter];
     if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", @1.6, nil]))
         [filters addObject:filter];
-    return filters;
 }
 
 NSArray *SKColorEffectFilters(void) {
@@ -230,16 +228,17 @@ NSArray *SKColorEffectFilters(void) {
             [filters addObject:filter];
     }
     if (SKHasDarkAppearance() && [sud boolForKey:SKInvertColorsInDarkModeKey]) {
-        [filters addObjectsFromArray:colorInvertFilters(1.0, invertedColorsBackgroundWhite())];
+        addColorInvertFilters(filters, 1.0, invertedColorsBackgroundWhite());
     }
     return filters;
 }
 
 NSArray *SKInvertedColorEffectFilters(void) {
+    NSMutableArray *filters = [NSMutableArray array];
     if (SKHasDarkAppearance() && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         // this is roughly the inverse of the color inversion filter above
         // return colorInvertFilters(1.0/fmax(0.0001, invertedColorsBackgroundWhite()), 0.0);
-        return colorInvertFilters(1.0, 0.0);
+        addColorInvertFilters(filters, 1.0, 0.0);
     }
-    return @[];
+    return filters;
 }
