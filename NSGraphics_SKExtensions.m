@@ -237,7 +237,7 @@ NSArray *SKInvertedColorEffectFilters(void) {
     NSMutableArray *filters = [NSMutableArray array];
     if (SKHasDarkAppearance() && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         // this is roughly the inverse of the color inversion filter above
-        // return colorInvertFilters(1.0/fmax(0.0001, 1.0 - invertedColorsBackgroundWhite()), 0.0);
+        // colorInvertFilters(1.0/fmax(0.0001, 1.0 - invertedColorsBackgroundWhite()), 0.0);
         addColorInvertFilters(filters, 1.0, 0.0);
     }
     return filters;
