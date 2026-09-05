@@ -49,6 +49,7 @@ extern NSString * const SKDarkBackgroundColorKey;
 extern NSString * const SKDarkFullScreenBackgroundColorKey;
 extern NSString * const SKLastOpenFileNamesKey;
 extern NSString * const SKOpenContentsPaneOnlyForTOCKey;
+extern NSString * const SKOpenNotesPaneOnlyForNotesKey;
 extern NSString * const SKInitialWindowSizeOptionKey;
 extern NSString * const SKReopenLastOpenFilesKey;
 extern NSString * const SKRememberLastPageViewedKey;

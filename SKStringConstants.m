@@ -49,6 +49,7 @@ NSString * const SKDarkBackgroundColorKey = @"SKDarkBackgroundColor";
 NSString * const SKDarkFullScreenBackgroundColorKey = @"SKDarkFullScreenBackgroundColor";
 NSString * const SKLastOpenFileNamesKey = @"SKLastOpenFileNames";
 NSString * const SKOpenContentsPaneOnlyForTOCKey = @"SKOpenContentsPaneOnlyForTOC";
+NSString * const SKOpenNotesPaneOnlyForNotesKey = @"SKOpenNotesPaneOnlyForNotes";
 NSString * const SKInitialWindowSizeOptionKey = @"SKInitialWindowSizeOption";
 NSString * const SKReopenLastOpenFilesKey = @"SKReopenLastOpenFiles";
 NSString * const SKRememberLastPageViewedKey = @"SKRememberLastPageViewed";

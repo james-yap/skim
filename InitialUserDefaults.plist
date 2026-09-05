@@ -16,6 +16,8 @@
 		<array/>
 		<key>SKOpenContentsPaneOnlyForTOC</key>
 		<false/>
+		<key>SKOpenNotesPaneOnlyForNotes</key>
+		<false/>
 		<key>SKInitialWindowSizeOption</key>
 		<integer>0</integer>
 		<key>SKReopenLastOpenFiles</key>
@@ -252,6 +254,7 @@
 			<string>SKReopenLastOpenFiles</string>
 			<string>SKInitialWindowSizeOption</string>
 			<string>SKOpenContentsPaneOnlyForTOC</string>
+			<string>SKOpenNotesPaneOnlyForNotes</string>
 			<string>SKRememberLastPageViewed</string>
 			<string>SKRememberSnapshots</string>
 			<string>SKDefaultPDFDisplaySettings</string>
