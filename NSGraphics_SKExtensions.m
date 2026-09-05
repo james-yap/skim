@@ -194,7 +194,8 @@ static CGFloat invertedColorsFilterFactor() {
         NSNumber *bgw = [[NSUserDefaults standardUserDefaults] objectForKey:SKInvertedColorsBackgroundWhiteKey];
         customFactor = bgw ? 2.0 - sRGBToGamma16(fmax(0.0, fmin(1.0, [bgw  doubleValue]))) : 0.0;
     }
-    return customFactor ?: [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 1.9338 : 1.8972;
+    // map the white page background to 40/255, or 30/255 with high contrast
+    return customFactor ?: [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 1.9338 : 1.9100;
 }
 
 NSArray *SKColorEffectFilters(void) {
@@ -212,7 +213,6 @@ NSArray *SKColorEffectFilters(void) {
             [filters addObject:filter];
     }
     if (SKHasDarkAppearance() && [sud boolForKey:SKInvertColorsInDarkModeKey]) {
-        // map the white page background to 45/255, or 30/255 with high contrast
         CGFloat f = invertedColorsFilterFactor();
         CGFloat lrf = LR * f, lgf = LG * f, lbf = LB * f;
         // This is like CIColorInvert + CIHueAdjust, modified to map white to dark gray rather than black
