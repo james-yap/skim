@@ -188,14 +188,31 @@ CGRect SKPixelAlignedRect(CGRect rect, CGContextRef context) {
 
 static inline CGFloat sRGBToGamma16(CGFloat c) { return c <= 0.04045 ? pow(c / 12.92, 0.625) : pow((c + 0.055) / 1.055, 1.5); }
 
-static CGFloat invertedColorsFilterFactor() {
-    static CGFloat customFactor = -1.0;
-    if (customFactor < 0.0) {
+static CGFloat invertedColorsBackgroundWhite() {
+    static CGFloat backgroundWhite = -2.0;
+    if (backgroundWhite < -1.0) {
         NSNumber *bgw = [[NSUserDefaults standardUserDefaults] objectForKey:SKInvertedColorsBackgroundWhiteKey];
-        customFactor = bgw ? 2.0 - sRGBToGamma16(fmax(0.0, fmin(1.0, [bgw  doubleValue]))) : 0.0;
+        backgroundWhite = bgw ? sRGBToGamma16(fmax(0.0, fmin(1.0, [bgw  doubleValue]))) : -1.0;
     }
     // map the white page background to 40/255, or 30/255 with high contrast
-    return customFactor ?: [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 1.9338 : 1.9100;
+    return backgroundWhite >= 0.0 ? backgroundWhite : [[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast] ? 0.0662 : 0.0900;
+}
+
+static NSArray *colorInvertFilters(CGFloat b, CGFloat w) {
+    NSMutableArray *filters = [NSMutableArray array];
+    CIFilter *filter;
+    CGFloat f = 1.0 + b - w;
+    CGFloat lrf = LR * f, lgf = LG * f, lbf = LB * f;
+    // This is like CIColorInvert + CIHueAdjust, modified to map white to w rather than black and black to b rather than white
+    // Inverts a linear luminocity with weights from the CIE standards
+    // see https://wiki.preterhuman.net/Matrix_Operations_for_Image_Processingand https://beesbuzz.biz/code/16-hsv-color-transforms
+    if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", @0.625, nil]))
+        [filters addObject:filter];
+    if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-lrf Y:-lgf Z:-lbf W:0.0], @"inputGVector", [CIVector vectorWithX:-lrf Y:1.0-lgf Z:-lbf W:0.0], @"inputBVector", [CIVector vectorWithX:-lrf Y:-lgf Z:1.0-lbf W:0.0], @"inputAVector", [CIVector vectorWithX:0.0 Y:0.0 Z:0.0 W:1.0], @"inputBiasVector", [CIVector vectorWithX:b Y:b Z:b W:0.0], nil]))
+        [filters addObject:filter];
+    if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", @1.6, nil]))
+        [filters addObject:filter];
+    return filters;
 }
 
 NSArray *SKColorEffectFilters(void) {
@@ -213,35 +230,16 @@ NSArray *SKColorEffectFilters(void) {
             [filters addObject:filter];
     }
     if (SKHasDarkAppearance() && [sud boolForKey:SKInvertColorsInDarkModeKey]) {
-        CGFloat f = invertedColorsFilterFactor();
-        CGFloat lrf = LR * f, lgf = LG * f, lbf = LB * f;
-        // This is like CIColorInvert + CIHueAdjust, modified to map white to dark gray rather than black
-        // Inverts a linear luminocity with weights from the CIE standards
-        // see https://wiki.preterhuman.net/Matrix_Operations_for_Image_Processingand https://beesbuzz.biz/code/16-hsv-color-transforms
-        if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", @0.625, nil]))
-            [filters addObject:filter];
-        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-lrf Y:-lgf Z:-lbf W:0.0], @"inputGVector", [CIVector vectorWithX:-lrf Y:1.0-lgf Z:-lbf W:0.0], @"inputBVector", [CIVector vectorWithX:-lrf Y:-lgf Z:1.0-lbf W:0.0], @"inputAVector", [CIVector vectorWithX:0.0 Y:0.0 Z:0.0 W:1.0], @"inputBiasVector", [CIVector vectorWithX:1.0 Y:1.0 Z:1.0 W:0.0], nil]))
-            [filters addObject:filter];
-        if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", @1.6, nil]))
-            [filters addObject:filter];
+        [filters addObjectsFromArray:colorInvertFilters(1.0, invertedColorsBackgroundWhite())];
     }
     return filters;
 }
 
 NSArray *SKInvertedColorEffectFilters(void) {
-    NSMutableArray *filters = [NSMutableArray array];
-    CIFilter *filter;
     if (SKHasDarkAppearance() && [[NSUserDefaults standardUserDefaults] boolForKey:SKInvertColorsInDarkModeKey]) {
         // this is roughly the inverse of the color inversion filter above
-        CGFloat f = 2.0;//fmax(1.0001, invertedColorsFilterFactor());
-        CGFloat fi = 1.0 / (f - 1.0);
-        CGFloat lrf = LR * f * fi, lgf = LG * f * fi, lbf = LB * f * fi;
-        if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", @0.625, nil]))
-            [filters addObject:filter];
-        if ((filter = [CIFilter filterWithName:@"CIColorMatrix" keysAndValues:@"inputRVector", [CIVector vectorWithX:1.0-lrf Y:-lgf Z:-lbf W:0.0], @"inputGVector", [CIVector vectorWithX:-lrf Y:1.0-lgf Z:-lbf W:0.0], @"inputBVector", [CIVector vectorWithX:-lrf Y:-lgf Z:1.0-lbf W:0.0], @"inputAVector", [CIVector vectorWithX:0.0 Y:0.0 Z:0.0 W:1.0], @"inputBiasVector", [CIVector vectorWithX:fi Y:fi Z:fi W:0.0], nil]))
-            [filters addObject:filter];
-        if ((filter = [CIFilter filterWithName:@"CIGammaAdjust" keysAndValues:@"inputPower", @1.6, nil]))
-            [filters addObject:filter];
+        // return colorInvertFilters(1.0/fmax(0.0001, invertedColorsBackgroundWhite()), 0.0);
+        return colorInvertFilters(1.0, 0.0);
     }
-    return filters;
+    return @[];
 }
