@@ -311,6 +311,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
     } else if (openType == SKSnapshotOpenFromSetup) {
         frame.origin = SKTopLeftPoint([window frame]);
         frame.origin.y -= NSHeight(frame);
+        [self setShouldCascadeWindows:NO];
         [window setFrameAutosaveName:SKSnapshotWindowFrameAutosaveName];
     } else if (openType == SKSnapshotOpenPreview) {
         [pdfView setDisplayMode:kPDFDisplaySinglePage];
