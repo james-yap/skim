@@ -460,8 +460,12 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [leftSideController.button setEnabled:NO forSegment:SKSidePaneStateOutline];
     
     // Show/hide right side pane if necessary
-    if ([sud boolForKey:SKOpenNotesPaneOnlyForNotesKey])
-        [[[splitViewController splitViewItems] lastObject] setCollapsed:[notes count] == 0];
+    BOOL hasNotes = [notes count] == 0;
+    if ([sud boolForKey:SKOpenNotesPaneOnlyForNotesKey]) {
+        [[[splitViewController splitViewItems] lastObject] setCollapsed:hasNotes];
+        if (hasNotes)
+            [self setRightSidePaneState:SKSidePaneStateNote];
+    }
     
     // Due to a bug in Leopard we should only resize and swap in the PDFView after loading the PDFDocument
     
