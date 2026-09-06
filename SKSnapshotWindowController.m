@@ -311,7 +311,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
     } else if (openType == SKSnapshotOpenFromSetup) {
         frame.origin = SKTopLeftPoint([window frame]);
         frame.origin.y -= NSHeight(frame);
-        [self setWindowFrameAutosaveName:SKSnapshotWindowFrameAutosaveName];
+        [window setFrameAutosaveName:SKSnapshotWindowFrameAutosaveName];
     } else if (openType == SKSnapshotOpenPreview) {
         [pdfView setDisplayMode:kPDFDisplaySinglePage];
         frame = SKRectFromCenterAndSize(SKCenterPoint([screen frame]), frame.size);
