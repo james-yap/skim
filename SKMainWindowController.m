@@ -2754,7 +2754,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             else if ([item viewController] == rightSideController)
                 [toolbarController rightSidePaneDidShowOrHide:[item isCollapsed] == NO];
             if ([[[self window] frameAutosaveName] length])
-                [self performSelectorOnce:@selector(splitViewDidResizeSubviewsDelayed) afterDelay:0.0];
+                [self performSelectorOnce:@selector(sidePaneWidthDidChange) afterDelay:0.0];
         }
         
     } else if (context == &SKPDFAnnotationPropertiesObservationContext) {

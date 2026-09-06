@@ -2097,7 +2097,7 @@
     undoGroupOldPropertiesPerNote = nil;
 }
 
-- (void)splitViewDidResizeSubviewsDelayed {
+- (void)sidePaneWidthDidChange {
     NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
     CGFloat width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
     [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKLeftSidePaneWidthKey];
@@ -2106,8 +2106,8 @@
     [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKRightSidePaneWidthKey];
 }
 
-- (void)handleSplitViewDidResizeSubviewsNotification:(NSNotification *)notification {
-    [self performSelectorOnce:@selector(splitViewDidResizeSubviewsDelayed) afterDelay:0.0];
+- (void)handleSidePaneViewFrameDidChangeNotification:(NSNotification *)notification {
+    [self performSelectorOnce:@selector(sidePaneWidthDidChange) afterDelay:0.0];
 }
 
 #pragma mark Observer registration
@@ -2137,9 +2137,12 @@
     [nc addObserver:self selector:@selector(handlePageLabelsChangedNotification:)
                              name:SKPDFPageLabelsChangedNotification object:nil];
     // NSSplitView
-    if ([[[self window] frameAutosaveName] length])
-        [nc addObserver:self selector:@selector(handleSplitViewDidResizeSubviewsNotification:)
-                   name:NSSplitViewDidResizeSubviewsNotification object:[splitViewController splitView]];
+    if ([[[self window] frameAutosaveName] length]) {
+        [nc addObserver:self selector:@selector(handleSidePaneViewFrameDidChangeNotification:)
+                   name:NSViewFrameDidChangeNotification object:leftSideController.view];
+        [nc addObserver:self selector:@selector(handleSidePaneViewFrameDidChangeNotification:)
+                   name:NSViewFrameDidChangeNotification object:rightSideController.view];
+    }
 }
 
 @end

@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)handlePageChangedNotification:(nullable NSNotification *)notification;
 
-- (void)splitViewDidResizeSubviewsDelayed;
+- (void)sidePaneWidthDidChange;
 
 - (NSInteger)thumbnailHighlightLevelForRow:(NSInteger)row;
 
