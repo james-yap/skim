@@ -2748,10 +2748,13 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         if ([[change objectForKey:NSKeyValueChangeNotificationIsPriorKey] boolValue]) {
             if ([item isCollapsed] == NO && [[self window] firstResponderIsDescendantOf:[[item viewController] view]])
                 [[self window] makeFirstResponder:pdfView];
-        } else if ([item viewController] == leftSideController) {
-            [toolbarController leftSidePaneDidShowOrHide:[item isCollapsed] == NO];
-        } else if ([item viewController] == rightSideController) {
-            [toolbarController rightSidePaneDidShowOrHide:[item isCollapsed] == NO];
+        } else {
+            if ([item viewController] == leftSideController)
+                [toolbarController leftSidePaneDidShowOrHide:[item isCollapsed] == NO];
+            else if ([item viewController] == rightSideController)
+                [toolbarController rightSidePaneDidShowOrHide:[item isCollapsed] == NO];
+            if ([[[self window] frameAutosaveName] length])
+                [self performSelectorOnce:@selector(splitViewDidResizeSubviewsDelayed) afterDelay:0.0];
         }
         
     } else if (context == &SKPDFAnnotationPropertiesObservationContext) {

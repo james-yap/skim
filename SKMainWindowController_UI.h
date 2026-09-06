@@ -52,6 +52,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)handlePageChangedNotification:(nullable NSNotification *)notification;
 
+- (void)splitViewDidResizeSubviewsDelayed;
+
 - (NSInteger)thumbnailHighlightLevelForRow:(NSInteger)row;
 
 - (void)updateTocSelectionHighlights;
