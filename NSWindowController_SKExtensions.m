@@ -39,6 +39,7 @@
 #import "NSWindowController_SKExtensions.h"
 #import "NSPointerArray_SKExtensions.h"
 #import "NSPointerFunctions_SKExtensions.h"
+#import "NSGeometry_SKExtensions.h"
 
 
 @implementation NSWindowController (SKExtensions)
@@ -48,18 +49,18 @@
     if (nextWindowLocations == nil)
         nextWindowLocations = [[NSMapTable alloc] initWithKeyPointerFunctions:[NSPointerFunctions strongPointerFunctions] valuePointerFunctions:[NSPointerFunctions pointPointerFunctions] capacity:0];
     
+    NSWindow *window = [self window];
     NSPointPointer pointPtr = (NSPointPointer)NSMapGet(nextWindowLocations, (__bridge void *)name);
     NSPoint point;
     
-    [[self window] setFrameUsingName:name];
     [self setShouldCascadeWindows:NO];
-    if ([[self window] setFrameAutosaveName:name] || pointPtr == NULL) {
-        NSRect windowFrame = [[self window] frame];
-        point = NSMakePoint(NSMinX(windowFrame), NSMaxY(windowFrame));
+    [window setFrameUsingName:name];
+    if ([window setFrameAutosaveName:name] || pointPtr == NULL) {
+        point = SKTopLeftPoint([window frame]);
     } else {
         point = *pointPtr;
     }
-    point = [[self window] cascadeTopLeftFromPoint:point];
+    point = [window cascadeTopLeftFromPoint:point];
     NSMapInsert(nextWindowLocations, (__bridge void *)name, &point);
 }
 
