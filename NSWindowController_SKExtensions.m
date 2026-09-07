@@ -54,11 +54,11 @@
     NSPoint point;
     
     [self setShouldCascadeWindows:NO];
-    if ([window setFrameAutosaveName:name]) {
+    [window setFrameUsingName:name];
+    if ([window setFrameAutosaveName:name] || pointPtr == NULL) {
         point = SKTopLeftPoint([window frame]);
     } else {
-        [window setFrameUsingName:name];
-        point = pointPtr ? *pointPtr : SKTopLeftPoint([window frame]);
+        point = *pointPtr;
     }
     point = [window cascadeTopLeftFromPoint:point];
     NSMapInsert(nextWindowLocations, (__bridge void *)name, &point);
