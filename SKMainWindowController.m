@@ -582,6 +582,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     }
 }
 
+- (void)setWindow:(NSWindow *)window {
+    [super setWindow:window];
+}
+
 - (void)setCurrentSetup:(NSDictionary *)setup{
     if ([self isWindowLoaded] == NO) {
         [savedNormalSetup setDictionary:setup];

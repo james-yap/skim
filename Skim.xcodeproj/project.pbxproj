@@ -1004,6 +1004,37 @@
 		CE4A8BA10BB15980004AD07D /* NSWindowController_SKExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSWindowController_SKExtensions.m; sourceTree = "<group>"; };
 		CE4BC12D0C357A0300C2AF03 /* SKLineWell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKLineWell.h; sourceTree = "<group>"; };
 		CE4BC12E0C357A0300C2AF03 /* SKLineWell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKLineWell.m; sourceTree = "<group>"; };
+		CE4D389430507207000083E6 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = tr; path = tr.lproj/Credits.rtf; sourceTree = "<group>"; };
+		CE4D389530507207000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CE4D389630507207000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE4D389730507207000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/ServicesMenu.strings; sourceTree = "<group>"; };
+		CE4D389830507207000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/ZoomValues.strings; sourceTree = "<group>"; };
+		CE4D38B230507398000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/BookmarkSheet.strings; sourceTree = "<group>"; };
+		CE4D38B3305073B3000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/BookmarksWindow.strings; sourceTree = "<group>"; };
+		CE4D38B4305073C1000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/DisplayPreferences.strings; sourceTree = "<group>"; };
+		CE4D38B5305073D5000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/DownloadsWindow.strings; sourceTree = "<group>"; };
+		CE4D38B6305073E2000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/DownloadPreferenceSheet.strings; sourceTree = "<group>"; };
+		CE4D38B7305073F0000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/ExportAccessoryView.strings; sourceTree = "<group>"; };
+		CE4D38B830507400000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/FindBar.strings; sourceTree = "<group>"; };
+		CE4D38B93050740D000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/GeneralPreferences.strings; sourceTree = "<group>"; };
+		CE4D38BA3050741D000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/InfoWindow.strings; sourceTree = "<group>"; };
+		CE4D38BB3050742C000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LineInspector.strings; sourceTree = "<group>"; };
+		CE4D38BC30507438000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/MainMenu.strings; sourceTree = "<group>"; };
+		CE4D38BD30507449000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/NotesPanel.strings; sourceTree = "<group>"; };
+		CE4D38BE30507455000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/NotesPreferences.strings; sourceTree = "<group>"; };
+		CE4D38BF30507461000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/NoteTypeSheet.strings; sourceTree = "<group>"; };
+		CE4D38C03050746E000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/NoteWindow.strings; sourceTree = "<group>"; };
+		CE4D38C13050747A000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/PageSheet.strings; sourceTree = "<group>"; };
+		CE4D38C230507489000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/PasswordSheet.strings; sourceTree = "<group>"; };
+		CE4D38C330507494000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/PreferenceWindow.strings; sourceTree = "<group>"; };
+		CE4D38C4305074A1000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/PrintAccessoryView.strings; sourceTree = "<group>"; };
+		CE4D38C5305074AE000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/ReleaseNotes.strings; sourceTree = "<group>"; };
+		CE4D38C6305074C0000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/ScaleSheet.strings; sourceTree = "<group>"; };
+		CE4D38C7305074EF000083E6 /* ru */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/ScaleSheet.strings; sourceTree = "<group>"; };
+		CE4D38C83050750C000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/SpeedSheet.strings; sourceTree = "<group>"; };
+		CE4D38C93050751B000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/SyncPreferences.strings; sourceTree = "<group>"; };
+		CE4D38CA3050752A000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/TransitionSheet.strings; sourceTree = "<group>"; };
+		CE4D38CB3050753A000083E6 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/ViewSettings.strings; sourceTree = "<group>"; };
 		CE4D88D70C3AE52F002C20CB /* DVIDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = DVIDocument.icns; sourceTree = "<group>"; };
 		CE4D97FA0C3C2BFF002C20CB /* SKColorSwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKColorSwatch.h; sourceTree = "<group>"; };
 		CE4D97FB0C3C2BFF002C20CB /* SKColorSwatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKColorSwatch.m; sourceTree = "<group>"; };
@@ -2559,17 +2590,18 @@
 			knownRegions = (
 				Base,
 				en,
-				ja,
-				fr,
-				de,
 				nl,
+				de,
+				fr,
 				it,
 				es,
-				ru,
 				cs,
-				zh_TW,
 				pl,
+				ru,
+				tr,
+				ja,
 				zh_CN,
+				zh_TW,
 				"zh-Hant",
 				"zh-Hans",
 			);
@@ -3330,6 +3362,7 @@
 				CEC4C3420CA90CA200299397 /* es */,
 				CEF8773611905923006436A2 /* pl */,
 				CE4F96F40CFB4AC200DBEA14 /* ru */,
+				CE4D389530507207000083E6 /* tr */,
 				CE157F0912D4EBE600515B85 /* ja */,
 				CE1632C11582AC7700CFF419 /* zh_CN */,
 				CEB53FF50F261D1400723C1F /* zh_TW */,
@@ -3348,6 +3381,7 @@
 				CEC4C33F0CA90CA200299397 /* es */,
 				CEF877371190592B006436A2 /* pl */,
 				CE4F96F10CFB4ABA00DBEA14 /* ru */,
+				CE4D389430507207000083E6 /* tr */,
 				CE157F0812D4EBE600515B85 /* ja */,
 				CE1632C01582AC7000CFF419 /* zh_CN */,
 				CEB53FF20F261D1400723C1F /* zh_TW */,
@@ -3366,6 +3400,7 @@
 				CE0D371F24323E4900451593 /* es */,
 				CE0D372124323E5200451593 /* pl */,
 				CE0D371E24323E4500451593 /* ru */,
+				CE4D38C83050750C000083E6 /* tr */,
 				CE0D372224323E5400451593 /* ja */,
 				CE0D37242432410700451593 /* zh_CN */,
 				CE0D37252432411900451593 /* zh_TW */,
@@ -3384,6 +3419,7 @@
 				CE0E84E8114D520900E37F38 /* es */,
 				CEF877541190593E006436A2 /* pl */,
 				CE0E84E4114D51EC00E37F38 /* ru */,
+				CE4D38C93050751B000083E6 /* tr */,
 				CE157EEE12D4EBC100515B85 /* ja */,
 				CE1632BE1582AC6600CFF419 /* zh_CN */,
 				CE0E84EC114D521F00E37F38 /* zh_TW */,
@@ -3402,6 +3438,7 @@
 				CE0E84E9114D520900E37F38 /* es */,
 				CEF877481190593E006436A2 /* pl */,
 				CE0E84E5114D51EC00E37F38 /* ru */,
+				CE4D38BE30507455000083E6 /* tr */,
 				CE157EE212D4EBC000515B85 /* ja */,
 				CE1632B51582AC4100CFF419 /* zh_CN */,
 				CE0E84ED114D521F00E37F38 /* zh_TW */,
@@ -3420,6 +3457,7 @@
 				CE0E84EA114D520900E37F38 /* es */,
 				CEF8773F1190593E006436A2 /* pl */,
 				CE0E84E6114D51EC00E37F38 /* ru */,
+				CE4D38B93050740D000083E6 /* tr */,
 				CE157ED912D4EBC000515B85 /* ja */,
 				CE1632B01582AC2900CFF419 /* zh_CN */,
 				CE0E84EE114D521F00E37F38 /* zh_TW */,
@@ -3438,10 +3476,11 @@
 				CE0E84EB114D520900E37F38 /* es */,
 				CEF8773B1190593E006436A2 /* pl */,
 				CE0E84E7114D51EC00E37F38 /* ru */,
+				CE4D38B93050740D000083E6 /* tr */,
 				CE157ED512D4EBC000515B85 /* ja */,
 				CE1632AC1582AC1300CFF419 /* zh_CN */,
 				CE0E84EF114D521F00E37F38 /* zh_TW */,
-			);
+x			);
 			name = DisplayPreferences.strings;
 			sourceTree = "<group>";
 		};
@@ -3456,6 +3495,7 @@
 				CE1098FA1613D05A00C4FA18 /* es */,
 				CE1098F81613D05100C4FA18 /* pl */,
 				CE1098F91613D05700C4FA18 /* ru */,
+				CE4D38B7305073F0000083E6 /* tr */,
 				CE1098F71613D04D00C4FA18 /* ja */,
 				CE1098FB1613D06400C4FA18 /* zh_CN */,
 				CE1098FC1613D06900C4FA18 /* zh_TW */,
@@ -3474,6 +3514,7 @@
 				CE13EC18255F41F2000F47CF /* es */,
 				CE13EC19255F41F6000F47CF /* pl */,
 				CE13EC1A255F41F7000F47CF /* ru */,
+				CE4D38CB3050753A000083E6 /* tr */,
 				CE13EC1E255F42E9000F47CF /* ja */,
 				CE13EC1D255F42DA000F47CF /* zh_CN */,
 				CE13EC1B255F4200000F47CF /* zh_TW */,
@@ -3492,6 +3533,7 @@
 				CEC4C3450CA90CA200299397 /* es */,
 				CEF87733119058F7006436A2 /* pl */,
 				CE4F96F70CFB4ACA00DBEA14 /* ru */,
+				CE4D389630507207000083E6 /* tr */,
 				CE157F0A12D4EBE600515B85 /* ja */,
 				CE1632C21582AC7B00CFF419 /* zh_CN */,
 				CEB53FF80F261D1500723C1F /* zh_TW */,
@@ -3519,6 +3561,7 @@
 				CEC4C3540CA90CA200299397 /* es */,
 				CEF8773411905909006436A2 /* pl */,
 				CE4F96FA0CFB4AD400DBEA14 /* ru */,
+				CE4D389830507207000083E6 /* tr */,
 				CE157F0C12D4EBE600515B85 /* ja */,
 				CE1632C41582AC8300CFF419 /* zh_CN */,
 				CEB540460F261D1700723C1F /* zh_TW */,
@@ -3737,6 +3780,7 @@
 				CE9768A811611C28008DCB8F /* es */,
 				CEF8773C1190593E006436A2 /* pl */,
 				CE9768A711611C25008DCB8F /* ru */,
+				CE4D38B6305073E2000083E6 /* tr */,
 				CE157ED612D4EBC000515B85 /* ja */,
 				CE1632AE1582AC1D00CFF419 /* zh_CN */,
 				CE9768A911611C2D008DCB8F /* zh_TW */,
@@ -3755,6 +3799,7 @@
 				CEF60DFD114C0EC10074ACC4 /* es */,
 				CEF877551190593E006436A2 /* pl */,
 				CEF60DE7114C0EA80074ACC4 /* ru */,
+				CE4D38CA3050752A000083E6 /* tr */,
 				CE157EEF12D4EBC100515B85 /* ja */,
 				CE1632BF1582AC6A00CFF419 /* zh_CN */,
 				CEF60E13114C0ED70074ACC4 /* zh_TW */,
@@ -3772,6 +3817,8 @@
 				CEF60DD3114C0E8E0074ACC4 /* it */,
 				CEF60DFF114C0EC10074ACC4 /* es */,
 				CEF877521190593E006436A2 /* pl */,
+				CE4D38C7305074EF000083E6 /* ru */,
+				CE4D38C6305074C0000083E6 /* tr */,
 				CE157EEC12D4EBC100515B85 /* ja */,
 				CE1632BD1582AC6200CFF419 /* zh_CN */,
 				CEF60E15114C0ED70074ACC4 /* zh_TW */,
@@ -3790,6 +3837,7 @@
 				CEF60E00114C0EC10074ACC4 /* es */,
 				CEF877501190593E006436A2 /* pl */,
 				CEF60DEA114C0EA80074ACC4 /* ru */,
+				CE4D38C5305074AE000083E6 /* tr */,
 				CE157EEA12D4EBC000515B85 /* ja */,
 				CE1632BC1582AC5E00CFF419 /* zh_CN */,
 				CEF60E16114C0ED70074ACC4 /* zh_TW */,
@@ -3808,6 +3856,7 @@
 				CEF60E02114C0EC10074ACC4 /* es */,
 				CEF8774E1190593E006436A2 /* pl */,
 				CEF60DEC114C0EA80074ACC4 /* ru */,
+				CE4D38C4305074A1000083E6 /* tr */,
 				CE157EE812D4EBC000515B85 /* ja */,
 				CE1632BB1582AC5A00CFF419 /* zh_CN */,
 				CEF60E18114C0ED70074ACC4 /* zh_TW */,
@@ -3826,6 +3875,7 @@
 				CEF60E03114C0EC10074ACC4 /* es */,
 				CEF8774C1190593E006436A2 /* pl */,
 				CEF60DED114C0EA80074ACC4 /* ru */,
+				CE4D38C230507489000083E6 /* tr */,
 				CE157EE612D4EBC000515B85 /* ja */,
 				CE1632B91582AC5200CFF419 /* zh_CN */,
 				CEF60E19114C0ED70074ACC4 /* zh_TW */,
@@ -3844,6 +3894,7 @@
 				CEF60E04114C0EC10074ACC4 /* es */,
 				CEF8774B1190593E006436A2 /* pl */,
 				CEF60DEE114C0EA80074ACC4 /* ru */,
+				CE4D38C13050747A000083E6 /* tr */,
 				CE157EE512D4EBC000515B85 /* ja */,
 				CE1632B81582AC4F00CFF419 /* zh_CN */,
 				CEF60E1A114C0ED70074ACC4 /* zh_TW */,
@@ -3862,6 +3913,7 @@
 				CEF60E05114C0EC10074ACC4 /* es */,
 				CEF8774A1190593E006436A2 /* pl */,
 				CEF60DEF114C0EA80074ACC4 /* ru */,
+				CE4D38C03050746E000083E6 /* tr */,
 				CE157EE412D4EBC000515B85 /* ja */,
 				CE1632B71582AC4B00CFF419 /* zh_CN */,
 				CEF60E1B114C0ED70074ACC4 /* zh_TW */,
@@ -3880,6 +3932,7 @@
 				CEF60E06114C0EC10074ACC4 /* es */,
 				CEF877491190593E006436A2 /* pl */,
 				CEF60DF0114C0EA80074ACC4 /* ru */,
+				CE4D38BF30507461000083E6 /* tr */,
 				CE157EE312D4EBC000515B85 /* ja */,
 				CE1632B61582AC4700CFF419 /* zh_CN */,
 				CEF60E1C114C0ED70074ACC4 /* zh_TW */,
@@ -3898,6 +3951,7 @@
 				CEF60E07114C0EC10074ACC4 /* es */,
 				CEF877471190593E006436A2 /* pl */,
 				CEF60DF1114C0EA80074ACC4 /* ru */,
+				CE4D38BD30507449000083E6 /* tr */,
 				CE157EE112D4EBC000515B85 /* ja */,
 				CE1632B41582AC3C00CFF419 /* zh_CN */,
 				CEF60E1D114C0ED70074ACC4 /* zh_TW */,
@@ -3916,6 +3970,7 @@
 				CEF60E0A114C0EC10074ACC4 /* es */,
 				CEF877421190593E006436A2 /* pl */,
 				CEF60DF4114C0EA80074ACC4 /* ru */,
+				CE4D38BB3050742C000083E6 /* tr */,
 				CE157EDC12D4EBC000515B85 /* ja */,
 				CE1632B21582AC3200CFF419 /* zh_CN */,
 				CEF60E20114C0ED70074ACC4 /* zh_TW */,
@@ -3934,6 +3989,7 @@
 				CEF60E0D114C0EC10074ACC4 /* es */,
 				CEF8773D1190593E006436A2 /* pl */,
 				CEF60DF7114C0EA80074ACC4 /* ru */,
+				CE4D38B5305073D5000083E6 /* tr */,
 				CE157ED712D4EBC000515B85 /* ja */,
 				CE1632AD1582AC1800CFF419 /* zh_CN */,
 				CEF60E23114C0ED70074ACC4 /* zh_TW */,
@@ -3952,6 +4008,7 @@
 				CEF60E0F114C0EC10074ACC4 /* es */,
 				CEF877391190593E006436A2 /* pl */,
 				CEF60DF9114C0EA80074ACC4 /* ru */,
+				CE4D38B3305073B3000083E6 /* tr */,
 				CE157ED312D4EBC000515B85 /* ja */,
 				CE1632AB1582AC0D00CFF419 /* zh_CN */,
 				CEF60E25114C0ED70074ACC4 /* zh_TW */,
@@ -3970,6 +4027,7 @@
 				CEF60E10114C0EC10074ACC4 /* es */,
 				CEF877381190593E006436A2 /* pl */,
 				CEF60DFA114C0EA80074ACC4 /* ru */,
+				CE4D38B230507398000083E6 /* tr */,
 				CE157ED212D4EBC000515B85 /* ja */,
 				CE1632AA1582AC0600CFF419 /* zh_CN */,
 				CEF60E26114C0ED70074ACC4 /* zh_TW */,
@@ -3988,6 +4046,7 @@
 				CEF60E11114C0EC10074ACC4 /* es */,
 				CEF877431190593E006436A2 /* pl */,
 				CEF60DFB114C0EA80074ACC4 /* ru */,
+				CE4D38BC30507438000083E6 /* tr */,
 				CE157EDD12D4EBC000515B85 /* ja */,
 				CE1632B31582AC3700CFF419 /* zh_CN */,
 				CEF60E27114C0ED70074ACC4 /* zh_TW */,
@@ -4006,6 +4065,7 @@
 				CEF60E12114C0EC10074ACC4 /* es */,
 				CEF8774D1190593E006436A2 /* pl */,
 				CEF60DFC114C0EA80074ACC4 /* ru */,
+				CE4D38C330507494000083E6 /* tr */,
 				CE157EE712D4EBC000515B85 /* ja */,
 				CE1632BA1582AC5600CFF419 /* zh_CN */,
 				CEF60E28114C0ED70074ACC4 /* zh_TW */,
@@ -4024,6 +4084,7 @@
 				CEF60E0B114C0EC10074ACC4 /* es */,
 				CEF877401190593E006436A2 /* pl */,
 				CEF60DF5114C0EA80074ACC4 /* ru */,
+				CE4D38BA3050741D000083E6 /* tr */,
 				CE157EDA12D4EBC000515B85 /* ja */,
 				CE1632B11582AC2D00CFF419 /* zh_CN */,
 				CEF60E21114C0ED70074ACC4 /* zh_TW */,
@@ -4042,6 +4103,7 @@
 				CEFBB33F13AA73BC00162F75 /* ja */,
 				CEFBB34013AA73C900162F75 /* pl */,
 				CEFBB34113AA73CB00162F75 /* ru */,
+				CE4D38B830507400000083E6 /* tr */,
 				CEFBB34213AA73D400162F75 /* es */,
 				CEFBB34313AA73D600162F75 /* zh_TW */,
 				CE1632AF1582AC2200CFF419 /* zh_CN */,
@@ -4060,6 +4122,7 @@
 				CEFE71991129AAC40018CD74 /* es */,
 				CEF8773511905912006436A2 /* pl */,
 				CEFE719B1129AAD00018CD74 /* ru */,
+				CE4D389730507207000083E6 /* tr */,
 				CE157F0B12D4EBE600515B85 /* ja */,
 				CE1632C31582AC7F00CFF419 /* zh_CN */,
 				CEFE719C1129AAD80018CD74 /* zh_TW */,
