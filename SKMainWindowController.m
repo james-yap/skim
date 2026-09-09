@@ -2757,7 +2757,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 [toolbarController leftSidePaneDidShowOrHide:[item isCollapsed] == NO];
             else if ([item viewController] == rightSideController)
                 [toolbarController rightSidePaneDidShowOrHide:[item isCollapsed] == NO];
-            if ([[[self window] frameAutosaveName] length])
+            if ([[[self window] frameAutosaveName] length] && [self interactionMode] == SKNormalMode)
                 [self performSelectorOnce:@selector(sidePaneWidthDidChange) afterDelay:0.0];
         }
         

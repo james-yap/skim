@@ -2098,16 +2098,19 @@
 }
 
 - (void)sidePaneWidthDidChange {
-    NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
-    CGFloat width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
-    [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKLeftSidePaneWidthKey];
-    item = [[splitViewController splitViewItems] lastObject];
-    width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
-    [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKRightSidePaneWidthKey];
+    if ([self interactionMode] == SKNormalMode) {
+        NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
+        CGFloat width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
+        [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKLeftSidePaneWidthKey];
+        item = [[splitViewController splitViewItems] lastObject];
+        width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
+        [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKRightSidePaneWidthKey];
+    }
 }
 
 - (void)handleSidePaneViewFrameDidChangeNotification:(NSNotification *)notification {
-    [self performSelectorOnce:@selector(sidePaneWidthDidChange) afterDelay:0.0];
+    if ([self interactionMode] == SKNormalMode)
+        [self performSelectorOnce:@selector(sidePaneWidthDidChange) afterDelay:0.0];
 }
 
 #pragma mark Observer registration
