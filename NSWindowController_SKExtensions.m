@@ -40,7 +40,6 @@
 #import "NSPointerArray_SKExtensions.h"
 #import "NSPointerFunctions_SKExtensions.h"
 #import "NSGeometry_SKExtensions.h"
-#import "NSWindow_SKExtensions.h"
 
 
 @implementation NSWindowController (SKExtensions)
@@ -55,8 +54,8 @@
     NSPoint point;
     
     [self setShouldCascadeWindows:NO];
-    [window setSafeFrameUsingName:name];
-    if ([window setSafeFrameAutosaveName:name] || pointPtr == NULL) {
+    [window setFrameUsingName:name];
+    if ([window setFrameAutosaveName:name] || pointPtr == NULL) {
         point = SKTopLeftPoint([window frame]);
     } else {
         point = *pointPtr;
