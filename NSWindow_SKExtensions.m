@@ -39,8 +39,62 @@
 #import "NSWindow_SKExtensions.h"
 #import "NSDocument_SKExtensions.h"
 #import "NSString_SKExtensions.h"
+#import <objc/objc-runtime.h>
 
 @implementation NSWindow (SKExtensions)
+
+static NSMutableSet *autosaveNames = nil;
+
+static char SKFrameAutosaveNameKey;
+
+- (void)handleAutosavedFrameDidChangeNotification:(NSNotification *)note {
+    NSString *name = [self safeFrameAutosaveName];
+    if ([name length])
+        [self saveSafeFrameUsingName:name];
+}
+
+- (void)saveSafeFrameUsingName:(NSString *)name {
+    NSString *key = [NSString stringWithFormat:@"NSWindow Frame %@", name];
+    NSString *string = [self stringWithSavedFrame];
+    [[NSUserDefaults standardUserDefaults] setObject:string forKey:key];
+}
+
+- (BOOL)setSafeFrameUsingName:(NSString *)name {
+    NSString *key = [NSString stringWithFormat:@"NSWindow Frame %@", name];
+    NSString *string = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+    if (string == nil)
+        return NO;
+    [self setFrameFromString:string];
+    return YES;
+}
+
+- (NSString *)safeFrameAutosaveName {
+    return objc_getAssociatedObject(self, &SKFrameAutosaveNameKey);
+}
+
+- (BOOL)setSafeFrameAutosaveName:(NSString *)name {
+    NSString *currentName = [self safeFrameAutosaveName];
+    if ([name ?: @"" isEqualToString:currentName ?: @""])
+        return YES;
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    if ([currentName length]) {
+        [autosaveNames removeObject:currentName];
+        objc_setAssociatedObject(self, &SKFrameAutosaveNameKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        [nc removeObserver:self name:NSWindowDidMoveNotification object:self];
+        [nc removeObserver:self name:NSWindowDidResizeNotification object:self];
+    }
+    if ([name length] == 0 || [autosaveNames containsObject:name])
+        return NO;
+    if (autosaveNames == nil)
+        autosaveNames = [NSMutableSet set];
+    [autosaveNames addObject:name];
+    objc_setAssociatedObject(self, &SKFrameAutosaveNameKey, name, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    if ([self setSafeFrameUsingName:name] == NO)
+        [self saveSafeFrameUsingName:name];
+    [nc addObserver:self selector:@selector(handleAutosavedFrameDidChangeNotification:) name:NSWindowDidMoveNotification object:self];
+    [nc addObserver:self selector:@selector(handleAutosavedFrameDidChangeNotification:) name:NSWindowDidResizeNotification object:self];
+    return YES;
+}
 
 + (void)addTabs:(NSArray *)tabInfos forWindows:(NSArray *)windows {
     if ([windows count] < 2)

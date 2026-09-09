@@ -88,6 +88,7 @@
 #import "SKBookmarkController.h"
 #import "SKNoteToolbarController.h"
 #import "SKPresentationNotesAuxiliary.h"
+#import "NSWindow_SKExtensions.h"
 
 #define NOTES_KEY       @"notes"
 #define SNAPSHOTS_KEY   @"snapshots"
@@ -2137,11 +2138,11 @@
     [nc addObserver:self selector:@selector(handlePageLabelsChangedNotification:)
                              name:SKPDFPageLabelsChangedNotification object:nil];
     // NSSplitView
-    if ([[[self window] frameAutosaveName] length]) {
+    if ([[[self window] safeFrameAutosaveName] length]) {
         [nc addObserver:self selector:@selector(handleSidePaneViewFrameDidChangeNotification:)
-                   name:NSViewFrameDidChangeNotification object:leftSideController.view];
-        [nc addObserver:self selector:@selector(handleSidePaneViewFrameDidChangeNotification:)
-                   name:NSViewFrameDidChangeNotification object:rightSideController.view];
+                   name:NSSplitViewDidResizeSubviewsNotification object:splitViewController.splitView];
+        //[nc addObserver:self selector:@selector(handleSidePaneViewFrameDidChangeNotification:)
+          //         name:NSViewFrameDidChangeNotification object:rightSideController.view];
     }
 }
 

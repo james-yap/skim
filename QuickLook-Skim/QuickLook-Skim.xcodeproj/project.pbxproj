@@ -44,6 +44,7 @@
 		CE1632CD1582ACE000CFF419 /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CE4F80E90CFB06EE00DBEA14 /* SKQLConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKQLConverter.h; sourceTree = "<group>"; };
 		CE4F80EA0CFB06EE00DBEA14 /* SKQLConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKQLConverter.m; sourceTree = "<group>"; };
+		CE6E4B1D305206CA00910DD5 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CE82D0AA0ED347B100020950 /* Ink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Ink.png; sourceTree = "<group>"; };
 		CE861AAD2A0AABE6002FFA1D /* Widget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Widget.png; sourceTree = "<group>"; };
 		CE90B6602B4028DA00187C8F /* Skim-QuickLook.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Skim-QuickLook.xcconfig"; sourceTree = "<group>"; };
@@ -224,6 +225,7 @@
 				zh_TW,
 				pl,
 				zh_CN,
+				tr,
 			);
 			mainGroup = 089C166AFE841209C02AAC07 /* QuickLookSkim */;
 			projectDirPath = "";
@@ -285,15 +287,16 @@
 			children = (
 				089C167EFE841241C02AAC07 /* en */,
 				CECB02690DC5EB2D0000B16B /* nl */,
-				CECB026A0DC5EB320000B16B /* it */,
-				CECB026B0DC5EB370000B16B /* fr */,
 				CECB026C0DC5EB3B0000B16B /* de */,
-				CECB026D0DC5EB3E0000B16B /* ru */,
+				CECB026B0DC5EB370000B16B /* fr */,
+				CECB026A0DC5EB320000B16B /* it */,
 				CECB027F0DC5EB5D0000B16B /* es */,
-				CEB5409B0F261EEF00723C1F /* zh_TW */,
 				CEF8779E11905C53006436A2 /* pl */,
+				CECB026D0DC5EB3E0000B16B /* ru */,
+				CE6E4B1D305206CA00910DD5 /* tr */,
 				CE157F3512D4EE6900515B85 /* ja */,
 				CE1632CD1582ACE000CFF419 /* zh_CN */,
+				CEB5409B0F261EEF00723C1F /* zh_TW */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

@@ -54,6 +54,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)firstResponderIsDescendantOf:(NSView *)aView;
 
+- (void)saveSafeFrameUsingName:(NSString *)name;
+- (BOOL)setSafeFrameUsingName:(nullable NSString *)name;
+
+- (nullable NSString *)safeFrameAutosaveName;
+- (BOOL)setSafeFrameAutosaveName:(nullable NSString *)name;
+
 @end
 
 NS_ASSUME_NONNULL_END

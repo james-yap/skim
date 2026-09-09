@@ -238,6 +238,7 @@
 		CE5280B10E41C137000F9CAC /* SkimNotes-Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "SkimNotes-Common.xcconfig"; sourceTree = "<group>"; };
 		CE5280B60E41C20A000F9CAC /* SkimNotesBase-Framework.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "SkimNotesBase-Framework.xcconfig"; sourceTree = "<group>"; };
 		CE5A82DD0E6C5403008C0AA9 /* it */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SkimNotes.strings; sourceTree = "<group>"; };
+		CE6E4B063052044600910DD5 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/SkimNotes.strings; sourceTree = "<group>"; };
 		CE83E4251059A831007E3D28 /* ReleaseNotes.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = ReleaseNotes.rtf; sourceTree = "<group>"; };
 		CEA5F53D0E2CED0E00F65088 /* SkimNotesBase.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SkimNotesBase.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA5F5490E2CED6D00F65088 /* SkimNotesBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkimNotesBase.h; sourceTree = "<group>"; };
@@ -774,6 +775,7 @@
 				zh_TW,
 				pl,
 				zh_CN,
+				tr,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* SkimNotes */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -1007,12 +1009,13 @@
 				CE3907B50E082C930015B0B7 /* fr */,
 				CE3907B70E082C9A0015B0B7 /* de */,
 				CE3907B80E082CAD0015B0B7 /* es */,
-				CE3907BA0E082CB40015B0B7 /* ru */,
 				CE5A82DD0E6C5403008C0AA9 /* it */,
-				CEB540910F261E9D00723C1F /* zh_TW */,
 				CEF877D211905CED006436A2 /* pl */,
+				CE3907BA0E082CB40015B0B7 /* ru */,
+				CE6E4B063052044600910DD5 /* tr */,
 				CE157F2712D4EDC700515B85 /* ja */,
 				CE1632C71582ACC600CFF419 /* zh_CN */,
+				CEB540910F261E9D00723C1F /* zh_TW */,
 			);
 			name = SkimNotes.strings;
 			sourceTree = "<group>";

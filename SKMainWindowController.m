@@ -311,6 +311,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [noteTypeSheetController setDelegate:nil];
     [[pdfView document] setContainingDocument:nil];
     [self setPresentationNotesDocument:nil];
+    if ([[[self window] safeFrameAutosaveName] length])
+        [[self window] setSafeFrameAutosaveName:nil];
 }
 
 - (void)windowDidLoad{
@@ -2757,7 +2759,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 [toolbarController leftSidePaneDidShowOrHide:[item isCollapsed] == NO];
             else if ([item viewController] == rightSideController)
                 [toolbarController rightSidePaneDidShowOrHide:[item isCollapsed] == NO];
-            if ([[[self window] frameAutosaveName] length])
+            if (0&[[[self window] frameAutosaveName] length])
                 [self performSelectorOnce:@selector(sidePaneWidthDidChange) afterDelay:0.0];
         }
         

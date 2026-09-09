@@ -66,6 +66,7 @@
 
 /* Begin PBXFileReference section */
 		CE399C2227B32B6200B454EB /* SKTTransitions.cikernel */ = {isa = PBXFileReference; lastKnownFileType = text; path = SKTTransitions.cikernel; sourceTree = "<group>"; };
+		CE6E4B073052053300910DD5 /* tr */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Description.strings; sourceTree = "<group>"; };
 		CE9C4B8F296D6AAA001D73C6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		CE9C4B91296D7047001D73C6 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		CEB35B3E22A32FA70033E232 /* SKTRadialSwipeTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKTRadialSwipeTransition.m; sourceTree = "<group>"; };
@@ -517,6 +518,7 @@
 				zh_TW,
 				"zh-Hant",
 				ja,
+				tr,
 			);
 			mainGroup = CEDA02742295829B00881DE1;
 			productRefGroup = CEDA027F2295829B00881DE1 /* Products */;
@@ -587,11 +589,12 @@
 				CEDA052722959EE100881DE1 /* nl */,
 				CEDA052A22959EE900881DE1 /* es */,
 				CEDA052B22959EF500881DE1 /* it */,
-				CEDA052D22959EFF00881DE1 /* ru */,
 				CEDA053022959F0800881DE1 /* pl */,
+				CEDA052D22959EFF00881DE1 /* ru */,
+				CE6E4B073052053300910DD5 /* tr */,
+				CEDA053722959F6900881DE1 /* ja */,
 				CEDA053422959F1800881DE1 /* zh_CN */,
 				CEDA053522959F2000881DE1 /* zh_TW */,
-				CEDA053722959F6900881DE1 /* ja */,
 			);
 			name = Description.strings;
 			sourceTree = "<group>";
