@@ -2667,9 +2667,11 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             }
         } else if ([keyPath isEqualToString:SKFullScreenBackgroundColorKey] || [keyPath isEqualToString:SKDarkFullScreenBackgroundColorKey]) {
             if ([self interactionMode] == SKFullScreenMode) {
-                NSColor *color = [PDFView defaultFullScreenBackgroundColor];
-                [pdfView setBackgroundColor:color];
-                [secondaryPdfView setBackgroundColor:color];
+                NSColor *backgroundColor = [PDFView defaultFullScreenBackgroundColor];
+                if (backgroundColor) {
+                    [pdfView setBackgroundColor:backgroundColor];
+                    [secondaryPdfView setBackgroundColor:backgroundColor];
+                }
             }
         } else if ([keyPath isEqualToString:SKThumbnailSizeKey]) {
             [self resetThumbnailSizeIfNeeded];
