@@ -2108,7 +2108,7 @@
     }
 }
 
-- (void)handleSidePaneViewFrameDidChangeNotification:(NSNotification *)notification {
+- (void)handleSplitviewDidResizeSubviewsNotification:(NSNotification *)notification {
     if ([self interactionMode] == SKNormalMode)
         [self performSelectorOnce:@selector(sidePaneWidthDidChange) afterDelay:0.0];
 }
@@ -2140,12 +2140,9 @@
     [nc addObserver:self selector:@selector(handlePageLabelsChangedNotification:)
                              name:SKPDFPageLabelsChangedNotification object:nil];
     // NSSplitView
-    if ([[[self window] frameAutosaveName] length]) {
-        [nc addObserver:self selector:@selector(handleSidePaneViewFrameDidChangeNotification:)
-                   name:NSViewFrameDidChangeNotification object:leftSideController.view];
-        [nc addObserver:self selector:@selector(handleSidePaneViewFrameDidChangeNotification:)
-                   name:NSViewFrameDidChangeNotification object:rightSideController.view];
-    }
+    if ([[[self window] frameAutosaveName] length])
+        [nc addObserver:self selector:@selector(handleSplitviewDidResizeSubviewsNotification:)
+                   name:NSSplitViewDidResizeSubviewsNotification object:[splitViewController splitView]];
 }
 
 @end

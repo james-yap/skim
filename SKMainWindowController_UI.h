@@ -52,8 +52,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)handlePageChangedNotification:(nullable NSNotification *)notification;
 
-- (void)sidePaneWidthDidChange;
-
 - (NSInteger)thumbnailHighlightLevelForRow:(NSInteger)row;
 
 - (void)updateTocSelectionHighlights;
