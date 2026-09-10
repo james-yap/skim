@@ -2097,7 +2097,7 @@
     undoGroupOldPropertiesPerNote = nil;
 }
 
-- (void)sidePaneWidthDidChange {
+- (void)saveSidePaneWidths {
     if ([self interactionMode] == SKNormalMode && mwcFlags.isSwitchingFullScreen == NO) {
         NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
         CGFloat width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
@@ -2110,7 +2110,7 @@
 
 - (void)handleSplitviewDidResizeSubviewsNotification:(NSNotification *)notification {
     if ([self interactionMode] == SKNormalMode && mwcFlags.isSwitchingFullScreen == NO)
-        [self performSelectorOnce:@selector(sidePaneWidthDidChange) afterDelay:0.0];
+        [self performSelectorOnce:@selector(saveSidePaneWidths) afterDelay:0.0];
 }
 
 #pragma mark Observer registration
