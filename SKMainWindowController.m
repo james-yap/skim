@@ -933,6 +933,18 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [self updatePageColumnWidthForTableViews:[[leftSideController tableViews] arrayByAddingObjectsFromArray:[rightSideController tableViews]]];
 }
 
+- (void)updatebackgroundColor {
+    NSColor *backgroundColor = nil;
+    if (interactionMode == SKNormalMode)
+        backgroundColor = [PDFView defaultBackgroundColor];
+    else if (interactionMode == SKFullScreenMode)
+        backgroundColor = [PDFView defaultFullScreenBackgroundColor];
+    if (backgroundColor) {
+        [pdfView setBackgroundColor:backgroundColor];
+        [secondaryPdfView setBackgroundColor:backgroundColor];
+    }
+}
+
 #pragma mark Notes and Widgets
 
 - (void)registerWidgets:(NSArray *)array {
@@ -2656,23 +2668,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
         // A default value that we are observing has changed
         if ([keyPath isEqualToString:SKBackgroundColorKey] || [keyPath isEqualToString:SKDarkBackgroundColorKey]) {
-            NSColor *backgroundColor = nil;
-            if (interactionMode == SKNormalMode)
-                backgroundColor = [PDFView defaultBackgroundColor];
-            else if (interactionMode == SKFullScreenMode)
-                backgroundColor = [PDFView defaultFullScreenBackgroundColor];
-            if (backgroundColor) {
-                [pdfView setBackgroundColor:backgroundColor];
-                [secondaryPdfView setBackgroundColor:backgroundColor];
-            }
+            [self updatebackgroundColor];
         } else if ([keyPath isEqualToString:SKFullScreenBackgroundColorKey] || [keyPath isEqualToString:SKDarkFullScreenBackgroundColorKey]) {
-            if ([self interactionMode] == SKFullScreenMode) {
-                NSColor *backgroundColor = [PDFView defaultFullScreenBackgroundColor];
-                if (backgroundColor) {
-                    [pdfView setBackgroundColor:backgroundColor];
-                    [secondaryPdfView setBackgroundColor:backgroundColor];
-                }
-            }
+            if ([self interactionMode] == SKFullScreenMode)
+                [self updatebackgroundColor];
         } else if ([keyPath isEqualToString:SKThumbnailSizeKey]) {
             [self resetThumbnailSizeIfNeeded];
             [leftSideController.thumbnailTableView noteHeightOfRowsChanged];
@@ -2694,15 +2693,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
     } else if (context == &SKMainWindowAppObservationContext) {
         
-        NSColor *backgroundColor = nil;
-        if (interactionMode == SKNormalMode)
-            backgroundColor = [PDFView defaultBackgroundColor];
-        else if (interactionMode == SKFullScreenMode)
-            backgroundColor = [PDFView defaultFullScreenBackgroundColor];
-        if (backgroundColor) {
-            [pdfView setBackgroundColor:backgroundColor];
-            [secondaryPdfView setBackgroundColor:backgroundColor];
-        }
+        [self updatebackgroundColor];
         
     } else if (context == &SKMainWindowContentLayoutObservationContext) {
         
