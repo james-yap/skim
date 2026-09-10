@@ -2098,7 +2098,7 @@
 }
 
 - (void)sidePaneWidthDidChange {
-    if ([self interactionMode] == SKNormalMode) {
+    if ([self interactionMode] == SKNormalMode && mwcFlags.isSwitchingFullScreen == NO) {
         NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
         CGFloat width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
         [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKLeftSidePaneWidthKey];
@@ -2109,7 +2109,7 @@
 }
 
 - (void)handleSplitviewDidResizeSubviewsNotification:(NSNotification *)notification {
-    if ([self interactionMode] == SKNormalMode)
+    if ([self interactionMode] == SKNormalMode && mwcFlags.isSwitchingFullScreen == NO)
         [self performSelectorOnce:@selector(sidePaneWidthDidChange) afterDelay:0.0];
 }
 
