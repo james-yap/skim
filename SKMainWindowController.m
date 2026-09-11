@@ -507,7 +507,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
         // We can fit only after the PDF has been loaded
         if (windowSizeOption == SKWindowOptionFit) {
-            //[[window contentView] layoutSubtreeIfNeeded];
+            [[window contentView] layoutSubtreeIfNeeded];
             [self performFit:self];
         } else if (windowSizeOption == SKWindowOptionMaximize) {
             [window zoom:self];
