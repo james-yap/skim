@@ -465,6 +465,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     // Due to a bug in Leopard we should only resize and swap in the PDFView after loading the PDFDocument
     
+    [pdfView setFrame:[centerContentView bounds]];
+    
     pdfSplitViewController  = [[NSSplitViewController alloc] init];
     
     viewController = [[NSViewController alloc] init];
@@ -476,6 +478,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [[pdfSplitViewController splitView] setVertical:NO];
     
     view = [pdfSplitViewController view];
+    [view setFrame:[centerContentView bounds]];
     constraints = @[[[view leadingAnchor] constraintEqualToAnchor:[centerContentView leadingAnchor]],
         [[centerContentView trailingAnchor] constraintEqualToAnchor:[view trailingAnchor]],
         [[view topAnchor] constraintEqualToAnchor:[centerContentView topAnchor]],
