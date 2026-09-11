@@ -340,7 +340,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [item setAllowsFullHeightLayout:NO];
     [splitViewController addSplitViewItem:item];
     NSViewController *viewController = [[NSViewController alloc] init];
-    centerContentView = [[NSView alloc] initWithFrame:NSInsetRect([[window contentView] bounds], 250.0, 0.0)];
+    centerContentView = [[NSView alloc] initWithFrame:NSInsetRect([[window contentView] bounds], 251.0, 0.0)];
     [viewController setView:centerContentView];
     item = [NSSplitViewItem splitViewItemWithViewController:viewController];
     [item setMinimumThickness:MIN_PDF_PANE_WIDTH];
