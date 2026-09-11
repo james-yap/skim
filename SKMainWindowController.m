@@ -489,6 +489,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [centerContentView addSubview:view];
     [NSLayoutConstraint activateConstraints:constraints];
     
+    if (mwcFlags.fullSizeContent)
+        [[pdfView embeddedScrollView] setContentInsets:NSEdgeInsetsMake(titleBarHeight, 0.0, 0.0, 0.0)];
+    
     if (hasWindowSetup == NO) {
         NSInteger windowSizeOption = [sud integerForKey:SKInitialWindowSizeOptionKey];
         
@@ -504,7 +507,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
         // We can fit only after the PDF has been loaded
         if (windowSizeOption == SKWindowOptionFit) {
-            [[window contentView] layoutSubtreeIfNeeded];
+            //[[window contentView] layoutSubtreeIfNeeded];
             [self performFit:self];
         } else if (windowSizeOption == SKWindowOptionMaximize) {
             [window zoom:self];
