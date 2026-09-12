@@ -419,11 +419,7 @@ static NSData *convertTIFFDataToPDF(NSData *tiffData)
         
         NSURL *fileURL = [bookmark fileURLToOpen];
         if (fileURL && [fileURL checkResourceIsReachableAndReturnError:NULL] && NO == [fileURL isTrashedFileURL]) {
-            NSDictionary *setup = nil;
-            if ([bookmark hasSetup])
-                setup = [bookmark properties];
-            else if ([bookmark pageIndex] != NSNotFound)
-                setup = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedInteger:[bookmark pageIndex]], @"pageIndex", [bookmark snapshots], @"snapshots", nil];
+            NSDictionary *setup = [bookmark setup]; // this may be just the pageIndex and possibly snapshots
             [self openDocumentWithContentsOfURL:fileURL display:setup == nil completionHandler:^(NSDocument *document, BOOL documentWasAlreadyOpen, NSError *error){
                 if (document && setup) {
                     if (documentWasAlreadyOpen == NO)

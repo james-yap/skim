@@ -594,7 +594,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 - (void)setCurrentSetup:(NSDictionary *)setup{
     if ([self isWindowLoaded] == NO) {
         [savedNormalSetup setDictionary:setup];
-        [savedNormalSetup removeObjectsForKeys:@[SKDocumentSetupBookmarkKey, SKDocumentSetupAliasKey, SKDocumentSetupTabsKey, LABEL_KEY]];
     } else {
         
         NSString *rectString = [setup objectForKey:MAINWINDOWFRAME_KEY];
@@ -616,7 +615,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         if ([[pdfView document] isLocked]) {
             NSArray *snapshotSetups = [savedNormalSetup objectForKey:SNAPSHOTS_KEY];
             [savedNormalSetup addEntriesFromDictionary:setup];
-            [savedNormalSetup removeObjectsForKeys:@[SKDocumentSetupBookmarkKey, SKDocumentSetupAliasKey, SKDocumentSetupTabsKey, LABEL_KEY]];
             if ([setup objectForKey:SCROLLPOINT_KEY] == nil)
                 [savedNormalSetup removeObjectForKey:SCROLLPOINT_KEY];
             if (applySidePaneWidths)
@@ -628,7 +626,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         } else {
             if ([self interactionMode] != SKNormalMode) {
                 [savedNormalSetup addEntriesFromDictionary:setup];
-                [savedNormalSetup removeObjectsForKeys:@[CROPBOXES_KEY, SNAPSHOTS_KEY, PAGEINDEX_KEY, SCROLLPOINT_KEY, SKDocumentSetupBookmarkKey, SKDocumentSetupAliasKey, SKDocumentSetupTabsKey, LABEL_KEY]];
+                [savedNormalSetup removeObjectsForKeys:@[CROPBOXES_KEY, SNAPSHOTS_KEY, PAGEINDEX_KEY, SCROLLPOINT_KEY]];
                 if (applySidePaneWidths)
                     [savedNormalSetup removeObjectsForKeys:@[LEFTSIDEPANEWIDTH_KEY, RIGHTSIDEPANEWIDTH_KEY]];
             }

@@ -96,7 +96,7 @@
 @implementation SKBookmark
 
 @synthesize parent;
-@dynamic properties, bookmarkType, label, icon, alternateIcon, fileURL, fileURLToOpen, fileDescription, toolTip, pageIndex, pageNumber, hasSetup, snapshots, tabs, containingBookmarks, children, countOfChildren, scriptingParent, entireContents, bookmarks, expanded, skimURL;
+@dynamic properties, bookmarkType, label, icon, alternateIcon, fileURL, fileURLToOpen, fileDescription, toolTip, pageIndex, pageNumber, setup, snapshots, tabs, containingBookmarks, children, countOfChildren, scriptingParent, entireContents, bookmarks, expanded, skimURL;
 
 static Class SKBookmarkClass = Nil;
 
@@ -212,7 +212,7 @@ static Class SKBookmarkClass = Nil;
 - (NSURL *)previewItemURL { return [self fileURL]; }
 - (NSString *)previewItemTitle { return [self label]; }
 
-- (BOOL)hasSetup { return NO; }
+- (NSDictionary *)setup { return nil; }
 
 - (NSArray *)snapshots { return nil; }
 - (NSString *)tabs { return nil; }
@@ -541,7 +541,7 @@ static Class SKBookmarkClass = Nil;
 - (NSImage *)icon {
     NSURL *fileURL = [self fileURL];
     NSString *type = fileURL ? [[NSWorkspace  sharedWorkspace] typeOfFile:[fileURL path] error:NULL] : nil;
-    return [[self class] iconForFileType:type hasSetup:[self hasSetup]];
+    return [[self class] iconForFileType:type hasSetup:[setup objectForKey:SKDocumentSetupWindowFrameKey] != nil];
 }
 
 - (NSUInteger)pageIndex {
@@ -573,8 +573,14 @@ static Class SKBookmarkClass = Nil;
     }
 }
 
-- (BOOL)hasSetup {
-    return [setup objectForKey:SKDocumentSetupWindowFrameKey] != nil;
+- (NSDictionary *)setup {
+    if (pageIndex != NSNotFound) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:setup];
+        [dict setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:PAGEINDEX_KEY];
+        if ([[setup objectForKey:PAGEINDEX_KEY] unsignedIntegerValue] != pageIndex)
+            [dict removeObjectForKey:@"scrollPoint"];
+    }
+    return setup;
 }
 
 - (NSArray *)snapshots {
