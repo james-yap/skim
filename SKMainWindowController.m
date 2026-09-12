@@ -505,7 +505,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             NSDictionary *initialSettings = [[self pdfDocument] initialSettings];
             if (initialSettings) {
                 [pdfView setDisplaySettings:initialSettings];
-                if ([initialSettings objectForKey:@"fitWindow"] && [[initialSettings objectForKey:@"fitWindow"] boolValue])
+                if ([[initialSettings objectForKey:@"fitWindow"] boolValue])
                     windowSizeOption = SKWindowOptionFit;
             }
         }
