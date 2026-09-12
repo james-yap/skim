@@ -464,15 +464,12 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [[[splitViewController splitViewItems] lastObject] setCollapsed:[notes count] == 0];
     
     // Due to a bug in Leopard we should only resize and swap in the PDFView after loading the PDFDocument
-    NSRect rect = [view bounds];
-    item = [[splitViewController splitViewItems] firstObject];
-    if ([item isCollapsed] == NO)
-        rect.size.width -= NSWidth([[[item viewController] view] frame]) + [[splitViewController splitView] dividerThickness];
-    item = [[splitViewController splitViewItems] lastObject];
-    if ([item isCollapsed] == NO)
-        rect.size.width -= NSWidth([[[item viewController] view] frame]) + [[splitViewController splitView] dividerThickness];
     
-    [pdfView setFrame:rect];
+    // Make sure we already get the correct size for the pdfView,
+    // so performFit: and going to a destination will calculate correctly
+    [[window contentView] layoutSubtreeIfNeeded];
+    
+    [pdfView setFrame:[centerContentView bounds]];
     
     pdfSplitViewController  = [[NSSplitViewController alloc] init];
     
@@ -485,7 +482,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [[pdfSplitViewController splitView] setVertical:NO];
     
     view = [pdfSplitViewController view];
-    [view setFrame:rect];
+    [view setFrame:[centerContentView bounds]];
     constraints = @[[[view leadingAnchor] constraintEqualToAnchor:[centerContentView leadingAnchor]],
         [[centerContentView trailingAnchor] constraintEqualToAnchor:[view trailingAnchor]],
         [[view topAnchor] constraintEqualToAnchor:[centerContentView topAnchor]],
@@ -513,12 +510,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         }
         
         // We can fit only after the PDF has been loaded
-        if (windowSizeOption == SKWindowOptionFit) {
-            [[window contentView] layoutSubtreeIfNeeded];
-            [self performFit:self];
-        } else if (windowSizeOption == SKWindowOptionMaximize) {
-            [window zoom:self];
-        }
+        if (windowSizeOption == SKWindowOptionFit)
+            [self performFit:nil];
+        else if (windowSizeOption == SKWindowOptionMaximize)
+            [window zoom:nil];
     }
     
     // Go to page?
