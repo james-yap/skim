@@ -61,6 +61,7 @@
 #define BOOKMARK_KEY    @"bookmark"
 #define TYPE_KEY        @"type"
 #define SNAPSHOTS_KEY   @"snapshots"
+#define SCROLLPOINT_KEY @"scrollPoint"
 
 #define SKUTTypeFolder (__bridge NSString *)kUTTypeFolder
 
@@ -483,7 +484,9 @@ static Class SKBookmarkClass = Nil;
             label = [aLabel copy];
             if ([aSetupDict objectForKey:SKDocumentSetupWindowFrameKey]) {
                 setup = [aSetupDict mutableCopy];
-                [(NSMutableDictionary *)setup removeObjectsForKeys:@[ALIASDATA_KEY, BOOKMARK_KEY, PAGEINDEX_KEY, LABEL_KEY]];
+                [(NSMutableDictionary *)setup removeObjectsForKeys:@[TYPE_KEY, ALIASDATA_KEY, BOOKMARK_KEY, LABEL_KEY]];
+                if (pageIndexNumber && pageIndex == NSNotFound)
+                    [(NSMutableDictionary *)setup removeObjectForKey:PAGEINDEX_KEY];
             } else if ([aSetupDict objectForKey:SNAPSHOTS_KEY]) {
                 setup = @{SNAPSHOTS_KEY:[aSetupDict objectForKey:SNAPSHOTS_KEY]};
             } else {
@@ -505,9 +508,11 @@ static Class SKBookmarkClass = Nil;
     NSData *data = [alias data];
     NSString *dataKey = [alias isBookmark] ? BOOKMARK_KEY : ALIASDATA_KEY;
     [properties removeObjectForKey:[dataKey isEqualToString:ALIASDATA_KEY] ? BOOKMARK_KEY : ALIASDATA_KEY];
-    [properties addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:BOOKMARK_STRING, TYPE_KEY, data, dataKey, [NSNumber numberWithUnsignedInteger:pageIndex], PAGEINDEX_KEY, label, LABEL_KEY, nil]];
+    [properties addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:BOOKMARK_STRING, TYPE_KEY, data, dataKey, label, LABEL_KEY, nil]];
+    if (pageIndex != NSNotFound)
+        [properties setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:PAGEINDEX_KEY];
     if ([setup objectForKey:PAGEINDEX_KEY] && [[setup objectForKey:PAGEINDEX_KEY] unsignedIntegerValue] != pageIndex)
-        [properties removeObjectForKey:@"scrollPoint"];
+        [properties removeObjectForKey:SCROLLPOINT_KEY];
     return properties;
 }
 
@@ -578,7 +583,7 @@ static Class SKBookmarkClass = Nil;
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:setup];
         [dict setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:PAGEINDEX_KEY];
         if ([[setup objectForKey:PAGEINDEX_KEY] unsignedIntegerValue] != pageIndex)
-            [dict removeObjectForKey:@"scrollPoint"];
+            [dict removeObjectForKey:SCROLLPOINT_KEY];
     }
     return setup;
 }
