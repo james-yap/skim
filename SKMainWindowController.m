@@ -471,7 +471,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     [pdfView setFrame:[centerContentView bounds]];
     
-    pdfSplitViewController  = [[NSSplitViewController alloc] init];
+    pdfSplitViewController = [[NSSplitViewController alloc] init];
     
     viewController = [[NSViewController alloc] init];
     [viewController setView:pdfView];
@@ -493,6 +493,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [centerContentView addSubview:view];
     [NSLayoutConstraint activateConstraints:constraints];
     
+    // contentInsets is not updated immediately, but is used by calculations in performFit: and goToSKDestination:
     if (mwcFlags.fullSizeContent)
         [[pdfView embeddedScrollView] setContentInsets:NSEdgeInsetsMake(titleBarHeight, 0.0, 0.0, 0.0)];
     
