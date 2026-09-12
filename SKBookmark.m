@@ -582,8 +582,8 @@ static Class SKBookmarkClass = Nil;
 }
 
 - (NSDictionary *)setup {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:setup];
     if (pageIndex != NSNotFound) {
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:setup];
         [dict setObject:[NSNumber numberWithUnsignedInteger:pageIndex] forKey:PAGEINDEX_KEY];
         if ([[setup objectForKey:PAGEINDEX_KEY] unsignedIntegerValue] != pageIndex)
             [dict removeObjectForKey:SCROLLPOINT_KEY];
