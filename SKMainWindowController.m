@@ -615,6 +615,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         if ([[pdfView document] isLocked]) {
             NSArray *snapshotSetups = [savedNormalSetup objectForKey:SNAPSHOTS_KEY];
             [savedNormalSetup addEntriesFromDictionary:setup];
+            [savedNormalSetup removeObjectsForKeys:@[SKDocumentSetupBookmarkKey, SKDocumentSetupAliasKey, SKDocumentSetupTabsKey, LABEL_KEY]];
             if ([setup objectForKey:SCROLLPOINT_KEY] == nil)
                 [savedNormalSetup removeObjectForKey:SCROLLPOINT_KEY];
             if (applySidePaneWidths)
