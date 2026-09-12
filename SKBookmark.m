@@ -506,7 +506,7 @@ static Class SKBookmarkClass = Nil;
     NSString *dataKey = [alias isBookmark] ? BOOKMARK_KEY : ALIASDATA_KEY;
     [properties removeObjectForKey:[dataKey isEqualToString:ALIASDATA_KEY] ? BOOKMARK_KEY : ALIASDATA_KEY];
     [properties addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:BOOKMARK_STRING, TYPE_KEY, data, dataKey, [NSNumber numberWithUnsignedInteger:pageIndex], PAGEINDEX_KEY, label, LABEL_KEY, nil]];
-    if ([[setup objectForKey:PAGEINDEX_KEY] unsignedIntegerValue] != pageIndex && pageIndex != NSNotFound)
+    if ([setup objectForKey:PAGEINDEX_KEY] && [[setup objectForKey:PAGEINDEX_KEY] unsignedIntegerValue] != pageIndex)
         [properties removeObjectForKey:@"scrollPoint"];
     return properties;
 }
