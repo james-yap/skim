@@ -594,6 +594,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
 - (void)setCurrentSetup:(NSDictionary *)setup{
     if ([self isWindowLoaded] == NO) {
         [savedNormalSetup setDictionary:setup];
+        [savedNormalSetup removeObjectsForKeys:@[SKDocumentSetupBookmarkKey, SKDocumentSetupAliasKey, SKDocumentSetupTabsKey, LABEL_KEY]];
     } else {
         
         NSString *rectString = [setup objectForKey:MAINWINDOWFRAME_KEY];
