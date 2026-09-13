@@ -318,6 +318,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     BOOL hasWindowSetup = [savedNormalSetup count] > 2;
     NSWindow *window = [self window];
     NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+    BOOL leftCollapsed = NO, rightCollapsed = YES;
+    NSView *view;
+    NSNumber *width;
     
     mwcFlags.needsCleanup = YES;
     
@@ -325,15 +328,33 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     leftSideController = [[SKLeftSideViewController alloc] init];
     [leftSideController setMainController:self];
+    view = [leftSideController view];
+    width = [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKLeftSidePaneWidthKey];
+    if (width && [width doubleValue] > 0.0) {
+        NSSize size = [view frame].size;
+        size.width = [width doubleValue];
+        [view setFrameSize:size];
+    } else if (width) {
+        leftCollapsed = YES;
+    }
+    
     rightSideController = [[SKRightSideViewController alloc] init];
     [rightSideController setMainController:self];
+    view = [rightSideController view];
+    width = [savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKRightSidePaneWidthKey];
+    if (width && [width doubleValue] > 0.0) {
+        NSSize size = [view frame].size;
+        size.width = [width doubleValue];
+        [view setFrameSize:size];
+        rightCollapsed = NO;
+    }
     
     splitViewController = [[NSSplitViewController alloc] init];
     
     NSSplitViewItem *item = [NSSplitViewItem sidebarWithViewController:leftSideController];
     [item setMinimumThickness:MIN_SIDE_PANE_WIDTH];
     [item setCanCollapse:YES];
-    [item setCollapsed:NO];
+    [item setCollapsed:leftCollapsed];
     [item setHoldingPriority:260.0];
     [item setSpringLoaded:NO];
     if (@available(macOS 11.0, *))
@@ -349,13 +370,13 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     item = [NSSplitViewItem splitViewItemWithViewController:rightSideController];
     [item setMinimumThickness:MIN_SIDE_PANE_WIDTH];
     [item setCanCollapse:YES];
-    [item setCollapsed:NO];
+    [item setCollapsed:rightCollapsed];
     [item setHoldingPriority:255.0];
     if ([item respondsToSelector:@selector(setRevealsOnEdgeHoverInFullscreen:)])
         [item setRevealsOnEdgeHoverInFullscreen:YES];
     [splitViewController addSplitViewItem:item];
     
-    NSView *view = [splitViewController view];
+    view = [splitViewController view];
     NSView *contentView = [window contentView];
     NSArray *constraints = @[[[view leadingAnchor] constraintEqualToAnchor:[contentView leadingAnchor]],
         [[contentView trailingAnchor] constraintEqualToAnchor:[view trailingAnchor]],
@@ -438,9 +459,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     [pdfView setDelegate:self];
     
-    [self setLeftSideWidth:[savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKLeftSidePaneWidthKey]];
-    [self setRightSideWidth:[savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKRightSidePaneWidthKey] ?: @0.0];
-    
     // this needs to be done before loading the PDFDocument
     [self resetThumbnailSizeIfNeeded];
     [self resetSnapshotSizeIfNeeded];
@@ -452,16 +470,20 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     
     // Show/hide left side pane if necessary
     BOOL hasOutline = ([[pdfView document] outlineRoot] != nil);
-    if ([sud boolForKey:SKOpenContentsPaneOnlyForTOCKey])
+    if ([sud boolForKey:SKOpenContentsPaneOnlyForTOCKey] && hasOutline == leftCollapsed) {
         [[[splitViewController splitViewItems] firstObject] setCollapsed:hasOutline == NO];
+        [toolbarController leftSidePaneDidShowOrHide:hasOutline];
+    }
     if (hasOutline)
         [self setLeftSidePaneState:SKSidePaneStateOutline];
     else
         [leftSideController.button setEnabled:NO forSegment:SKSidePaneStateOutline];
     
     // Show/hide right side pane if necessary
-    if ([sud boolForKey:SKOpenNotesPaneOnlyForNotesKey])
-        [[[splitViewController splitViewItems] lastObject] setCollapsed:[notes count] == 0];
+    if ([sud boolForKey:SKOpenNotesPaneOnlyForNotesKey] && ([notes count] > 0) == rightCollapsed) {
+        [[[splitViewController splitViewItems] lastObject] setCollapsed:rightCollapsed == NO];
+        [toolbarController rightSidePaneDidShowOrHide:rightCollapsed];
+    }
     
     // Due to a bug in Leopard we should only resize and swap in the PDFView after loading the PDFDocument
     
