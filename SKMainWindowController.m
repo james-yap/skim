@@ -550,10 +550,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     if (rememberSnapshots && recentDoc)
         snapshotSetups = mergedSnapshotSetups(snapshotSetups, [recentDoc snapshots]);
     if ([snapshotSetups count]) {
-        if ([[pdfView document] isLocked])
-            [savedNormalSetup setObject:snapshotSetups forKey:SNAPSHOTS_KEY];
-        else
+        if ([[pdfView document] isLocked] == NO)
             [self showSnapshotsWithSetups:snapshotSetups];
+        else if (rememberSnapshots && recentDoc)
+            [savedNormalSetup setObject:snapshotSetups forKey:SNAPSHOTS_KEY];
     }
     
     noteTypeSheetController = [[SKNoteTypeSheetController alloc] init];
