@@ -59,7 +59,6 @@ NS_ASSUME_NONNULL_BEGIN
         unsigned int exportUsingPanel:1;
         unsigned int caseInsensitiveSearch:1;
         unsigned int autoResizeRows:1;
-        unsigned int settingUpWindow:1;
         unsigned int recentInfoNeedsUpdate:1;
     } ndFlags;
 }

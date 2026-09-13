@@ -143,8 +143,6 @@
 }
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController {
-    ndFlags.settingUpWindow = YES;
-    
     [aController setShouldCloseDocument:YES];
     
     [self setupToolbarForWindow:[aController window]];
@@ -181,8 +179,6 @@
     [[menu addItemWithTitle:NSLocalizedString(@"Note Type", @"Menu item title") action:NULL keyEquivalent:@""] setSubmenu:[noteTypeSheetController noteTypeMenu]];
     
     [self setRecentInfoNeedsUpdate:YES];
-    
-    ndFlags.settingUpWindow = NO;
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
