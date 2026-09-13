@@ -258,7 +258,7 @@ extern NSNotificationName const SKMainWindowControllerDidShowOrHideOverviewNotif
 
 @property (nonatomic, readonly) BOOL displaysFindPane;
 @property (nonatomic, readonly) BOOL leftSidePaneIsOpen, rightSidePaneIsOpen;
-@property (nonatomic, strong) NSNumber *leftSideWidth, *rightSideWidth;
+@property (nonatomic) CGFloat leftSideWidth, rightSideWidth;
 
 @property (nonatomic, nullable, readonly) NSMenu *notesMenu;
 

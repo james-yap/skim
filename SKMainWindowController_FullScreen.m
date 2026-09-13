@@ -556,10 +556,10 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         [pdfView setBackgroundColor:backgroundColor];
         [secondaryPdfView setBackgroundColor:backgroundColor];
         if ([[NSUserDefaults standardUserDefaults] boolForKey:SKShowSidePanesInFullScreenKey] == NO) {
-            [savedNormalSetup setObject:[self leftSideWidth] forKey:LEFTSIDEPANEWIDTH_KEY];
-            [savedNormalSetup setObject:[self rightSideWidth] forKey:RIGHTSIDEPANEWIDTH_KEY];
-            [self setLeftSideWidth:@0.0];
-            [self setRightSideWidth:@0.0];
+            [savedNormalSetup setObject:[NSNumber numberWithDouble:[self leftSideWidth]] forKey:LEFTSIDEPANEWIDTH_KEY];
+             [savedNormalSetup setObject:[NSNumber numberWithDouble:[self rightSideWidth]] forKey:RIGHTSIDEPANEWIDTH_KEY];
+            [self setLeftSideWidth:0.0];
+            [self setRightSideWidth:0.0];
         }
         if ([[pdfView document] isLocked] == NO) {
             NSDictionary *fullScreenSetup = [[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey];
@@ -575,9 +575,10 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         NSColor *backgroundColor = [PDFView defaultBackgroundColor];
         [pdfView setBackgroundColor:backgroundColor];
         [secondaryPdfView setBackgroundColor:backgroundColor];
-        // this does nothing when we did not save the pane widths
-        [self setLeftSideWidth:[savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY]];
-        [self setRightSideWidth:[savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY]];
+        if ([savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY]) {
+            [self setLeftSideWidth:[[savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] doubleValue]];
+            [self setRightSideWidth:[[savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY] doubleValue]];
+        }
         if ([[[NSUserDefaults standardUserDefaults] dictionaryForKey:SKDefaultFullScreenPDFDisplaySettingsKey] count])
             [pdfView setDisplaySettingsAndRewind:savedNormalSetup];
     }

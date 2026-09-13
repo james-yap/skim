@@ -630,8 +630,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
         BOOL applySidePaneWidths = ([self interactionMode] != SKFullScreenMode || [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] == nil) && [setup objectForKey:LEFTSIDEPANEWIDTH_KEY];
         if (applySidePaneWidths) {
-            [self setLeftSideWidth:[setup objectForKey:LEFTSIDEPANEWIDTH_KEY]];
-            [self setRightSideWidth:[setup objectForKey:RIGHTSIDEPANEWIDTH_KEY]];
+            [self setLeftSideWidth:[[setup objectForKey:LEFTSIDEPANEWIDTH_KEY] doubleValue]];
+            [self setRightSideWidth:[[setup objectForKey:RIGHTSIDEPANEWIDTH_KEY] doubleValue]];
         }
         
         if ([[pdfView document] isLocked]) {
@@ -697,8 +697,8 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [setup setObject:NSStringFromRect([savedNormalWindow frame]) forKey:MAINWINDOWFRAME_KEY];
     else
         [setup setObject:NSStringFromRect([[self window] frame]) forKey:MAINWINDOWFRAME_KEY];
-    [setup setObject:[self leftSideWidth] forKey:LEFTSIDEPANEWIDTH_KEY];
-    [setup setObject:[self rightSideWidth] forKey:RIGHTSIDEPANEWIDTH_KEY];
+    [setup setObject:[NSNumber numberWithDouble:[self leftSideWidth]] forKey:LEFTSIDEPANEWIDTH_KEY];
+    [setup setObject:[NSNumber numberWithDouble:[self rightSideWidth]] forKey:RIGHTSIDEPANEWIDTH_KEY];
     setDestinationInSetup(dest, setup);
     if (cropBoxes)
         [setup setObject:cropBoxes forKey:CROPBOXES_KEY];
@@ -1440,33 +1440,27 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         return NO == [[[splitViewController splitViewItems] lastObject] isCollapsed];
 }
 
-- (NSNumber *)leftSideWidth {
+- (CGFloat)leftSideWidth {
     NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
-    return [item isCollapsed] ? @0.0 : [NSNumber numberWithDouble:NSWidth([[[item viewController] view] frame])];
+    return [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
 }
 
-- (void)setLeftSideWidth:(NSNumber *)leftSideWidth {
-    if (leftSideWidth) {
-        CGFloat width = [leftSideWidth doubleValue];
-        [[[splitViewController splitViewItems] firstObject] setCollapsed:width <= 0.0];
-        if (width > 0.0)
-            [[splitViewController splitView] setPosition:width ofDividerAtIndex:0];
-    }
+- (void)setLeftSideWidth:(CGFloat)width {
+    [[[splitViewController splitViewItems] firstObject] setCollapsed:width <= 0.0];
+    if (width > 0.0)
+        [[splitViewController splitView] setPosition:width ofDividerAtIndex:0];
 }
 
-- (NSNumber *)rightSideWidth {
+- (CGFloat)rightSideWidth {
     NSSplitViewItem *item = [[splitViewController splitViewItems] lastObject];
-    return [item isCollapsed] ? @0.0 : [NSNumber numberWithDouble:NSWidth([[[item viewController] view] frame])];
+    return [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
 }
 
-- (void)setRightSideWidth:(NSNumber *)rightSideWidth {
-    if (rightSideWidth) {
-        CGFloat width = [rightSideWidth doubleValue];
-        [[[splitViewController splitViewItems] lastObject] setCollapsed:width <= 0.0];
-        if (width > 0.0) {
-            NSSplitView *sv = [splitViewController splitView];
-            [sv setPosition:[sv maxPossiblePositionOfDividerAtIndex:1] - [sv dividerThickness] - width ofDividerAtIndex:1];
-        }
+- (void)setRightSideWidth:(CGFloat)width {
+    [[[splitViewController splitViewItems] lastObject] setCollapsed:width <= 0.0];
+    if (width > 0.0) {
+        NSSplitView *sv = [splitViewController splitView];
+        [sv setPosition:[sv maxPossiblePositionOfDividerAtIndex:1] - [sv dividerThickness] - width ofDividerAtIndex:1];
     }
 }
 
