@@ -2005,7 +2005,7 @@
     [self updateThumbnailSelectionHighlights];
     [self updateTocSelectionHighlights];
     
-    if (beforeMarkedPage.pageIndex != NSNotFound && [[pdfView currentPage] pageIndex] != markedPage.pageIndex)
+    if (beforeMarkedPage.pageIndex != NSNotFound && pageIndex != markedPage.pageIndex)
         beforeMarkedPage.pageIndex = NSNotFound;
     
     [self updateSubtitle];
