@@ -887,17 +887,16 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     CGFloat minWidth = fmin(MAX_MIN_COLUMN_WIDTH, 7.0 + [ov indentationPerLevel] * [outlineRoot deepestLevel]);
     [[ov tableColumnWithIdentifier:LABEL_COLUMNID] setMinWidth:minWidth];
     
-    mwcFlags.updatingOutlineSelection = 1;
-    
     // If this is a reload following a TeX run and the user just killed the outline for some reason, we get a crash if the outlineView isn't reloaded, so no longer make it conditional on pdfOutline != nil
-    [ov reloadData];
     if (outlineRoot) {
+        mwcFlags.updatingOutlineSelection = 1;
+        [ov reloadData];
         NSInteger level = [[NSUserDefaults standardUserDefaults] boolForKey:SKCollapseTOCSublevelsKey] ? ([outlineRoot numberOfChildren] > 1) : -1;
         [self expandOutline:outlineRoot forExpansionState:info level:level];
         mwcFlags.updatingOutlineSelection = 0;
         [self updateTocSelectionHighlights];
     } else {
-        mwcFlags.updatingOutlineSelection = 0;
+        [ov reloadData];
     }
     
     // handle the case as above where the outline has disappeared in a reload situation
