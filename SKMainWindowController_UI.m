@@ -2099,12 +2099,8 @@
 
 - (void)saveSidePaneWidths {
     if ([self interactionMode] == SKNormalMode && mwcFlags.isSwitchingFullScreen == NO) {
-        NSSplitViewItem *item = [[splitViewController splitViewItems] firstObject];
-        CGFloat width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
-        [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKLeftSidePaneWidthKey];
-        item = [[splitViewController splitViewItems] lastObject];
-        width = [item isCollapsed] ? 0.0 : NSWidth([[[item viewController] view] frame]);
-        [[NSUserDefaults standardUserDefaults] setFloat:width forKey:SKRightSidePaneWidthKey];
+        [[NSUserDefaults standardUserDefaults] setFloat:[self leftSideWidth] forKey:SKLeftSidePaneWidthKey];
+        [[NSUserDefaults standardUserDefaults] setFloat:[self rightSideWidth] forKey:SKRightSidePaneWidthKey];
     }
 }
 
