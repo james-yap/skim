@@ -321,6 +321,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     BOOL leftCollapsed = NO, rightCollapsed = YES;
     NSView *view;
     NSNumber *width;
+    NSRect frame = [[window contentView] bounds];
     
     mwcFlags.needsCleanup = YES;
     
@@ -334,8 +335,11 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         NSSize size = [view frame].size;
         size.width = MAX(MIN_SIDE_PANE_WIDTH, [width doubleValue]);
         [view setFrameSize:size];
+        frame.size.width -= size.width + 1.0;
     } else if (width) {
         leftCollapsed = YES;
+    } else {
+        frame.size.width -= NSWidth([view frame]) + 1.0;
     }
     
     rightSideController = [[SKRightSideViewController alloc] init];
@@ -347,6 +351,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         size.width = MAX(MIN_SIDE_PANE_WIDTH, [width doubleValue]);
         [view setFrameSize:size];
         rightCollapsed = NO;
+        frame.size.width -= size.width + 1.0;
     }
     
     splitViewController = [[NSSplitViewController alloc] init];
@@ -361,7 +366,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [item setAllowsFullHeightLayout:NO];
     [splitViewController addSplitViewItem:item];
     NSViewController *viewController = [[NSViewController alloc] init];
-    centerContentView = [[NSView alloc] initWithFrame:NSInsetRect([[window contentView] bounds], 251.0, 0.0)];
+    centerContentView = [[NSView alloc] initWithFrame:frame];
     [viewController setView:centerContentView];
     item = [NSSplitViewItem splitViewItemWithViewController:viewController];
     [item setMinimumThickness:MIN_PDF_PANE_WIDTH];
