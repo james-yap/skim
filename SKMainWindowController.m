@@ -332,7 +332,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     width = [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKLeftSidePaneWidthKey];
     if (width && [width doubleValue] > 0.0) {
         NSSize size = [view frame].size;
-        size.width = [width doubleValue];
+        size.width = MAX(MIN_SIDE_PANE_WIDTH, [width doubleValue]);
         [view setFrameSize:size];
     } else if (width) {
         leftCollapsed = YES;
@@ -344,7 +344,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     width = [savedNormalSetup objectForKey:RIGHTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKRightSidePaneWidthKey];
     if (width && [width doubleValue] > 0.0) {
         NSSize size = [view frame].size;
-        size.width = [width doubleValue];
+        size.width = MAX(MIN_SIDE_PANE_WIDTH, [width doubleValue]);
         [view setFrameSize:size];
         rightCollapsed = NO;
     }
