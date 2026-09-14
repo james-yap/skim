@@ -105,9 +105,6 @@
 
 #define HEADER_IDENTIFIER @"header"
 
-#define SKLeftSidePaneWidthKey  @"SKLeftSidePaneWidth"
-#define SKRightSidePaneWidthKey @"SKRightSidePaneWidth"
-
 #define SNAPSHOT_HEIGHT 200.0
 
 #define EXTRA_ROW_HEIGHT 2.0

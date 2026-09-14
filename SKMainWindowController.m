@@ -180,9 +180,6 @@ static char SKMainWindowTransitionsObservationContext;
 
 static char SKMainWindowSplitViewItemObservationContext;
 
-#define SKLeftSidePaneWidthKey @"SKLeftSidePaneWidth"
-#define SKRightSidePaneWidthKey @"SKRightSidePaneWidth"
-
 #define SKCollapseTOCSublevelsKey @"SKCollapseTOCSublevels"
 
 #define SKDisableSearchBarBlurringKey @"SKDisableSearchBarBlurring"
