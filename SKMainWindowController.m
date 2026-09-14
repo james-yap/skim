@@ -432,8 +432,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         [leftSideController setTopInset:titleBarHeight];
         [rightSideController setTopInset:titleBarHeight];
         // temporarily force the contentInsets we will get, otherwise initial layout will use zero insets
-        [[pdfView embeddedScrollView] setAutomaticallyAdjustsContentInsets:NO];
-        [[pdfView embeddedScrollView] setContentInsets:NSEdgeInsetsMake(titleBarHeight, 0.0, 0.0, 0.0)];
+        NSScrollView *scrollView = [pdfView embeddedScrollView];
+        [scrollView setAutomaticallyAdjustsContentInsets:NO];
+        [scrollView setContentInsets:NSEdgeInsetsMake(titleBarHeight, 0.0, 0.0, 0.0)];
     }
     
     [self setWindowFrameAutosaveNameOrCascade:SKMainWindowFrameAutosaveName];
