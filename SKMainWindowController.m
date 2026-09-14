@@ -2698,8 +2698,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             [self resetSnapshotSizeIfNeeded];
             [rightSideController.snapshotTableView noteHeightOfRowsChanged];
         } else if ([keyPath isEqualToString:SKInterpolationQualityKey]) {
-            [pdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
-            [secondaryPdfView setInterpolationQuality:[[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey]];
+            PDFInterpolationQuality interpolation = [[NSUserDefaults standardUserDefaults] integerForKey:SKInterpolationQualityKey];
+            [pdfView setInterpolationQuality:interpolation];
+            [secondaryPdfView setInterpolationQuality:interpolation];
             [pdfView setNeedsDisplay:YES];
             [secondaryPdfView setNeedsDisplay:YES];
             [self allThumbnailsNeedUpdate];
