@@ -434,6 +434,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         titleBarHeight = NSHeight([window frame]) - NSHeight([window contentLayoutRect]);
         [leftSideController setTopInset:titleBarHeight];
         [rightSideController setTopInset:titleBarHeight];
+        // temporarily force the contentInsets we will get, otherwise initial layout will use zero insets
+        [[pdfView embeddedScrollView] setAutomaticallyAdjustsContentInsets:NO];
+        [[pdfView embeddedScrollView] setContentInsets:NSEdgeInsetsMake(titleBarHeight, 0.0, 0.0, 0.0)];
     }
     
     [self setWindowFrameAutosaveNameOrCascade:SKMainWindowFrameAutosaveName];
@@ -520,9 +523,9 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [centerContentView addSubview:view];
     [NSLayoutConstraint activateConstraints:constraints];
     
-    // contentInsets is not updated immediately, but is used by calculations in performFit: and goToSKDestination:
+    // revert to automatic contentInsets
     if (mwcFlags.fullSizeContent)
-        [[pdfView embeddedScrollView] setContentInsets:NSEdgeInsetsMake(titleBarHeight, 0.0, 0.0, 0.0)];
+        [[pdfView embeddedScrollView] setAutomaticallyAdjustsContentInsets:YES];
     
     if (hasWindowSetup == NO) {
         NSInteger windowSizeOption = [sud integerForKey:SKInitialWindowSizeOptionKey];
