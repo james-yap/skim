@@ -331,15 +331,15 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [leftSideController setMainController:self];
     view = [leftSideController view];
     width = [savedNormalSetup objectForKey:LEFTSIDEPANEWIDTH_KEY] ?: [sud objectForKey:SKLeftSidePaneWidthKey];
-    if (width && [width doubleValue] > 0.0) {
+    if (width == nil) {
+        frame.size.width -= NSWidth([view frame]) + 1.0;
+    } else if ([width doubleValue] > 0.0) {
         NSSize size = [view frame].size;
         size.width = MAX(MIN_SIDE_PANE_WIDTH, [width doubleValue]);
         [view setFrameSize:size];
         frame.size.width -= size.width + 1.0;
-    } else if (width) {
-        leftCollapsed = YES;
     } else {
-        frame.size.width -= NSWidth([view frame]) + 1.0;
+        leftCollapsed = YES;
     }
     
     rightSideController = [[SKRightSideViewController alloc] init];
