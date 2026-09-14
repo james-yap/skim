@@ -958,7 +958,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [self updatePageColumnWidthForTableViews:[[leftSideController tableViews] arrayByAddingObjectsFromArray:[rightSideController tableViews]]];
 }
 
-- (void)updatebackgroundColor {
+- (void)updateBackgroundColor {
     NSColor *backgroundColor = nil;
     if (interactionMode == SKNormalMode)
         backgroundColor = [PDFView defaultBackgroundColor];
@@ -2687,10 +2687,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
         // A default value that we are observing has changed
         if ([keyPath isEqualToString:SKBackgroundColorKey] || [keyPath isEqualToString:SKDarkBackgroundColorKey]) {
-            [self updatebackgroundColor];
+            [self updateBackgroundColor];
         } else if ([keyPath isEqualToString:SKFullScreenBackgroundColorKey] || [keyPath isEqualToString:SKDarkFullScreenBackgroundColorKey]) {
             if ([self interactionMode] == SKFullScreenMode)
-                [self updatebackgroundColor];
+                [self updateBackgroundColor];
         } else if ([keyPath isEqualToString:SKThumbnailSizeKey]) {
             [self resetThumbnailSizeIfNeeded];
             [leftSideController.thumbnailTableView noteHeightOfRowsChanged];
@@ -2712,7 +2712,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         
     } else if (context == &SKMainWindowAppObservationContext) {
         
-        [self updatebackgroundColor];
+        [self updateBackgroundColor];
         
     } else if (context == &SKMainWindowContentLayoutObservationContext) {
         
