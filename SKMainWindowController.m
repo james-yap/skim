@@ -598,12 +598,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
     [window recalculateKeyViewLoop];
     [window makeFirstResponder:pdfView];
     
-    // initially autoScale does not take the content inset into account
-    if (mwcFlags.fullSizeContent && [pdfView autoScales] && ([pdfView extendedDisplayMode] & kPDFDisplaySinglePageContinuous) == 0) {
-        [pdfView setAutoScales:NO];
-        [pdfView setAutoScales:YES];
-    }
-    
     // Update page states
     [self handlePageChangedNotification:nil];
     [toolbarController handlePageChangedNotification:nil];
