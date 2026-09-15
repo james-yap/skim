@@ -539,10 +539,10 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
         }
         
         // We can fit only after the PDF has been loaded
-        if (windowSizeOption == SKWindowOptionFit)
-            [self performFit:nil];
-        else if (windowSizeOption == SKWindowOptionMaximize)
+        if (windowSizeOption == SKWindowOptionMaximize)
             [window zoom:nil];
+        else if (windowSizeOption == SKWindowOptionFit && [[pdfView document] isLocked] == NO)
+            [self performFit:nil];
     }
     
     // Go to page?
