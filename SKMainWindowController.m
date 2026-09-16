@@ -1278,10 +1278,6 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 [annotation setShouldPrint:shouldDisplay];
                 // there is nothing to observe PDFDocument notifications at this point
                 [page addAnnotation:annotation];
-                if ([annotation popup]) {
-                    [page removeAnnotation:[annotation popup]];
-                    [annotation setPopup:nil];
-                }
                 [addedNotes addObject:annotation];
             }
             
