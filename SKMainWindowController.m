@@ -1273,10 +1273,15 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             
             for (NSArray *annotationAndPage in notesAndPagesToAdd) {
                 PDFAnnotation *annotation = [annotationAndPage firstObject];
+                PDFPage *page = [annotationAndPage lastObject];
                 [annotation setShouldDisplay:shouldDisplay];
                 [annotation setShouldPrint:shouldDisplay];
                 // there is nothing to observe PDFDocument notifications at this point
-                [[annotationAndPage lastObject] addAnnotation:annotation];
+                [page addAnnotation:annotation];
+                if ([annotation popup]) {
+                    [page removeAnnotation:[annotation popup]];
+                    [annotation setPopup:nil];
+                }
                 [addedNotes addObject:annotation];
             }
             
