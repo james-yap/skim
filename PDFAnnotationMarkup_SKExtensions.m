@@ -112,6 +112,7 @@ static void replacement_setColor(id self, SEL _cmd, NSColor *color) {
         default: key = SKHighlightNoteColorKey; break;
     }
     [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:key]];
+    [self setPopup:nil];
 }
 
 - (instancetype)initSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type {
