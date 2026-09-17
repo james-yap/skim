@@ -1274,6 +1274,10 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
     return YES;
 }
 
+- (BOOL)accessibilityAlternateUIVisible {
+    return [navWindow isVisible] || [cursorWindow isVisible];
+}
+
 - (BOOL)accessibilityPerformDecrement {
     if ([self canGoToPreviousPage] == NO)
         return NO;
