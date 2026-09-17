@@ -323,9 +323,9 @@ static inline NSInteger angleForDirection(NSLocaleLanguageDirection direction, B
 - (NSArray *)detectedWidgets { return nil; }
 
 - (void)addAnnotation:(PDFAnnotation *)annotation toPage:(PDFPage *)page {
-    PDFAnnotation *popup = [annotation popup];
     NSDictionary *userInfo = @{SKPDFDocumentAnnotationKey:annotation, SKPDFDocumentPageKey:page};
     [page addAnnotation:annotation];
+    PDFAnnotation *popup = [annotation popup];
     if (popup) {
         if ([annotation isSkimNote]) {
             [page removeAnnotation:popup];
