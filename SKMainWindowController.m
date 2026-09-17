@@ -2851,6 +2851,14 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
             if ([note isSkimNote] == NO)
                 return;
             
+            if ([keyPath isEqualToString:SKNPDFAnnotationStringKey] && ([note isText] || [note isMarkup])) {
+                PDFAnnotation *popup = [note popup];
+                if (popup) {
+                    [[note page] removeAnnotation:popup];
+                    [note setPopup:nil];
+                }
+            }
+            
             if (mwcFlags.autoResizeNoteRows) {
                 if ([keyPath isEqualToString:SKNPDFAnnotationStringKey])
                     [rightSideController.noteOutlineView setRowHeight:0.0 forItem:note];
