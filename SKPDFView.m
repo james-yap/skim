@@ -215,6 +215,8 @@ enum {
 
 - (void)setNeedsDisplay:(BOOL)needsDisplay forReadingBarBounds:(NSRect)rect onPage:(PDFPage *)page notify:(BOOL)notify;
 
+- (void)updateSwipeGestures;
+
 - (void)doMoveCurrentAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta;
 - (void)doResizeCurrentAnnotationForKey:(unichar)eventChar byAmount:(CGFloat)delta;
 - (void)doAutoSizeActiveNoteIgnoringWidth:(BOOL)ignoreWidth;
@@ -313,10 +315,7 @@ enum {
     if (options)
         [self addTrackingArea:[[NSTrackingArea alloc] initWithRect:NSZeroRect options:options | NSTrackingActiveInKeyWindow | NSTrackingInVisibleRect owner:self userInfo:nil]];
     
-    // without this private option,
-    // page navigation by swiping in single page mode is broken
-    if ([self respondsToSelector:@selector(enableSwipeGestures:)])
-        [self enableSwipeGestures:YES];
+    [self updateSwipeGestures];
     
     [self registerForDraggedTypes:@[NSPasteboardTypeColor, SKPasteboardTypeLineStyle, NSPasteboardTypeFileURL]];
     
@@ -3253,15 +3252,25 @@ static inline CGFloat secondaryOutset(CGFloat x) {
 
 #pragma mark Dark mode
 
+- (void)updateSwipeGestures {
+    // without this private option,
+    // page navigation by swiping in single page mode is broken
+    // however the filters are not applied to the animation
+    if ([self respondsToSelector:@selector(enableSwipeGestures:)])
+        [self enableSwipeGestures:[[[self embeddedScrollView] contentFilters] count] == 0];
+}
+
 - (void)viewDidChangeEffectiveAppearance {
     if (@available(macOS 10.14, *))
         [super viewDidChangeEffectiveAppearance];
     [loupeController updateColorFilters];
+    [self updateSwipeGestures];
 }
 
 - (void)colorFiltersDidChange {
     [super colorFiltersDidChange];
     [loupeController updateColorFilters];
+    [self updateSwipeGestures];
 }
 
 #pragma mark Menu validation
