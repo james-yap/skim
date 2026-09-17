@@ -231,6 +231,13 @@
     }
 }
 
+- (void)windowDidBecomeKey:(NSNotification *)notification {
+    if ([self interactionMode] == SKPresentationMode && [[self window] firstResponder] != presentationView && [self window] == [presentationView window]) {
+        [[self window] makeFirstResponder:presentationView];
+    }
+}
+
+
 - (void)windowDidResignKey:(NSNotification *)notification {
     if ([self interactionMode] != SKPresentationMode) {
         [[SKImageToolTipWindow sharedToolTipWindow] orderOut:nil];
