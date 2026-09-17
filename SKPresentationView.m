@@ -221,6 +221,8 @@ static inline BOOL equalStrings(NSString *s1, NSString *s2) {
             [pageLayer setContents:nil];
             // nothing needs the notification when set to nil
         }
+        if ([self isAccessibilityElement])
+            NSAccessibilityPostNotification(self, NSAccessibilityValueChangedNotification);
     }
 }
 
