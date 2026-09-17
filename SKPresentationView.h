@@ -72,7 +72,7 @@ extern NSNotificationName const SKPresentationViewAutoScalesChangedNotification;
 
 #pragma mark -
 
-@interface SKPresentationView : SKPDFPageView {
+@interface SKPresentationView : SKPDFPageView <NSAccessibilityStaticText> {
     NSMapTable *predrawnImages;
     SKNavigationWindow *navWindow;
     SKCursorStyleWindow *cursorWindow;

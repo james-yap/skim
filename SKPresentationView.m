@@ -1243,4 +1243,58 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
         [self handleWindowDidBecomeKeyNotification:nil];
 }
 
+- (BOOL)isAccessibilityElement {
+    return YES;
+}
+
+- (NSString *)accessibilityRole {
+    return NSAccessibilityStaticTextRole;
+}
+
+- (NSString *)accessibilityRoleDescription {
+    return NSAccessibilityRoleDescription(NSAccessibilityStaticTextRole, nil);
+}
+
+- (NSRect)accessibilityFrame {
+    return [[self window] convertRectToScreen:[self convertRect:[self bounds] toView:nil]];
+}
+
+- (id)accessibilityParent {
+    return NSAccessibilityUnignoredAncestor([self superview]);
+}
+
+- (id)accessibilityValue {
+    return [page string];
+}
+
+- (BOOL)accessibilityPerformIncrement {
+    if ([self canGoToNextPage] == NO)
+        return NO;
+    [self goToNextPage:nil];
+    return YES;
+}
+
+- (BOOL)accessibilityPerformDecrement {
+    if ([self canGoToPreviousPage] == NO)
+        return NO;
+    [self goToPreviousPage:nil];
+    return YES;
+}
+
+- (BOOL)accessibilityPerformShowDefaultUI {
+    if ([navWindow isVisible]) {
+        [navWindow fadeOut];
+        return YES;
+    } else if ([cursorWindow isVisible]) {
+        [cursorWindow fadeOut];
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)accessibilityPerformShowAlternateUI {
+    [self showCursorStyleWindow:nil];
+    return YES;
+}
+
 @end
