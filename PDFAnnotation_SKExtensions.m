@@ -390,7 +390,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
             [self setButtonWidgetState:[newObjectValue integerValue]];
         else
             [self setWidgetStringValue:newObjectValue];
-    } else if ([newObjectValue isKindOfClass:[NSString class]]) {
+    } else if ([newObjectValue isKindOfClass:[NSString class]] || newObjectValue == nil) {
         [self setString:newObjectValue];
     }
 }

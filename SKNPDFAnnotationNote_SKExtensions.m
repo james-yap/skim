@@ -179,7 +179,7 @@ NSString * const SKPDFAnnotationScriptingImageDataKey = @"scriptingImageData";
         if ([newText isKindOfClass:[NSAttributedString class]])
             [[self mutableText] replaceCharactersInRange:NSMakeRange(0, [[self mutableText] length]) withAttributedString:newText];
         else
-            [[self mutableText] replaceCharactersInRange:NSMakeRange(0, [[self mutableText] length]) withString:newText];
+            [[self mutableText] replaceCharactersInRange:NSMakeRange(0, [[self mutableText] length]) withString:newText ?: @""];
     }
 }
 
