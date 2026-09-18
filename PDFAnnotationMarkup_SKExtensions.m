@@ -267,7 +267,7 @@ static void replacement_setColor(id self, SEL _cmd, NSColor *color) {
 
 - (BOOL)isWidget { return NO; }
 
-- (BOOL)isLnk { return NO; }
+- (BOOL)isLink { return NO; }
 
 - (BOOL)hasBorder { return NO; }
 
