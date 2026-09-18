@@ -677,7 +677,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 - (id)textContents;
 {
-    return [[NSTextStorage alloc] initWithString:[self string] ?: @""];
+    return [self string] == nil ? nil : [[NSTextStorage alloc] initWithString:[self string]];
 }
 
 - (void)setTextContents:(id)text;

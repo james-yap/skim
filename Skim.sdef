@@ -846,8 +846,10 @@
                 description="The type of note.">
                 <cocoa key="type"/>
             </property>
-            <property name="text" code="ctxt" type="rich text"
+            <property name="text" code="ctxt"
                 description="The text of the note. Attributes are ignored.">
+                <type type="rich text"/>
+                <type type="missing value"/>
                 <cocoa key="textContents"/>
             </property>
             <property name="color" code="colr" type="RGBA color"
@@ -866,8 +868,10 @@
                 description="The modification date of a note.">
                 <cocoa key="scriptingModificationDate"/>
             </property>
-            <property name="user name" code="UsrN" type="text"
+            <property name="user name" code="UsrN"
                 description="The user name of the creator of a note.">
+                <type type="text"/>
+                <type type="missing value"/>
                 <cocoa key="scriptingUserName"/>
             </property>
             <property name="font name" code="FntN" type="text"
@@ -898,8 +902,10 @@
                 description="The raw data for the image of an anchored note.">
                 <cocoa key="scriptingImageData"/>
             </property>
-            <property name="interior color" code="IClr" type="RGBA color"
+            <property name="interior color" code="IClr"
                 description="The fill color of a circle, box, or line.">
+                <type type="RGBA color"/>
+                <type type="missing value"/>
                 <cocoa key="scriptingInteriorColor"/>
             </property>
             <property name="line width" code="LnWd" type="real"
