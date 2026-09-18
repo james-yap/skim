@@ -564,6 +564,8 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
                 case kSKNPDFWidgetTypeChoice:
                     [self setWidgetFieldType:PDFAnnotationWidgetSubtypeChoice];
                     break;
+                default:
+                    break;
             }
             if ([fieldName isKindOfClass:stringClass])
                 [self setFieldName:fieldName];
