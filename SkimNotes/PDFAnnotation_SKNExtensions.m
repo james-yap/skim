@@ -946,32 +946,50 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 }
 
 - (NSString *)string {
-    if ([[self type] isEqualToString:SKNWidgetString]) {
-        if ([self respondsToSelector:@selector(valueForAnnotationKey:)]) {
-            SKNPDFWidgetType widgetType;
-            if ([self respondsToSelector:@selector(widgetFieldType)])
-                widgetType = SKNPDFWidgetTypeFromAnnotationValue([self widgetFieldType]);
+    if ([[self type] isEqualToString:SKNWidgetString] == NO) {
+        return [self contents];
+    } else if ([self respondsToSelector:@selector(valueForAnnotationKey:)]) {
+        SKNPDFWidgetType widgetType;
+        if ([self respondsToSelector:@selector(widgetFieldType)])
+            widgetType = SKNPDFWidgetTypeFromAnnotationValue([self widgetFieldType]);
+        else
+            widgetType = SKNPDFWidgetTypeFromAnnotationValue([self valueForAnnotationKey:@"/FT"]);
+        if (widgetType == kSKNPDFWidgetTypeButton) {
+            if ([self respondsToSelector:@selector(buttonWidgetState)])
+                return [NSString stringWithFormat:@"%ld", (long)[self buttonWidgetState]];
             else
-                widgetType = SKNPDFWidgetTypeFromAnnotationValue([self valueForAnnotationKey:@"/FT"]);
-            if (widgetType == kSKNPDFWidgetTypeButton) {
-                if ([self respondsToSelector:@selector(buttonWidgetState)])
-                    return [NSString stringWithFormat:@"%ld", (long)[self buttonWidgetState]];
-                else if ([self respondsToSelector:@selector(valueForAnnotationKey:)])
-                    return [[self valueForAnnotationKey:@"/V"] isEqual:@"Off"] ? @"0" : @"1";
-            } else {
-                if ([self respondsToSelector:@selector(widgetStringValue)])
-                    return [self widgetStringValue];
-                else if ([self respondsToSelector:@selector(valueForAnnotationKey:)])
-                    return [self valueForAnnotationKey:@"/V"];
-            }
+                return [[self valueForAnnotationKey:@"/V"] isEqual:@"Off"] ? @"0" : @"1";
+        } else {
+            if ([self respondsToSelector:@selector(widgetStringValue)])
+                return [self widgetStringValue];
+            else
+                return [self valueForAnnotationKey:@"/V"];
         }
-        return nil;
     }
-    return [self contents];
+    return nil;
 }
 
 - (void)setString:(NSString *)string {
-    [self setContents:string];
+    if ([[self type] isEqualToString:SKNWidgetString] == NO) {
+        [self setContents:string];
+    } else if ([self respondsToSelector:@selector(setValue:forAnnotationKey:)]) {
+        SKNPDFWidgetType widgetType;
+        if ([self respondsToSelector:@selector(widgetFieldType)])
+            widgetType = SKNPDFWidgetTypeFromAnnotationValue([self widgetFieldType]);
+        else
+            widgetType = SKNPDFWidgetTypeFromAnnotationValue([self valueForAnnotationKey:@"/FT"]);
+        if (widgetType == kSKNPDFWidgetTypeButton) {
+            if ([self respondsToSelector:@selector(setButtonWidgetState:)])
+                [self setButtonWidgetState:[string integerValue]];
+            else
+                [self setValue:[string boolValue] ? @"On" : @"Off" forAnnotationKey:@"/V"];
+        } else {
+            if ([self respondsToSelector:@selector(setWidgetStringValue:)])
+                [self setWidgetStringValue:string];
+            else
+                [self setValue:string forAnnotationKey:@"/V"];
+        }
+    }
 }
 
 + (NSArray *)pointsFromSkimNotePath:(PDFKitPlatformBezierPath *)path {
