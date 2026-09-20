@@ -60,7 +60,6 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
 - (void)drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context;
 - (id)valueForAnnotationKey:(NSString *)key;
 - (BOOL)setValue:(id)value forAnnotationKey:(NSString *)key;
-- (void)removeValueForAnnotationKey:(NSString *)key;
 @end
 @interface PDFPage (SKNSierraDeclarations)
 - (void)transformContext:(CGContextRef)context forBox:(PDFDisplayBox)box;
