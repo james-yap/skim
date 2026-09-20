@@ -117,7 +117,10 @@ NSString * const SKPDFAnnotationScriptingImageDataKey = @"scriptingImageData";
 }
 
 - (void)setName:(NSString *)name {
-    [self setValue:name forAnnotationKey:PDFAnnotationKeyIconName];
+    if (name)
+        [self setValue:name forAnnotationKey:PDFAnnotationKeyIconName];
+    else
+        [self removeValueForAnnotationKey:PDFAnnotationKeyIconName];
 }
 
 // override these Leopard methods to avoid showing the standard tool tips over our own
