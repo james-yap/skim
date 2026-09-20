@@ -945,8 +945,6 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     objc_setAssociatedObject(self, &SKNIsSkimNoteKey, flag ? [NSNumber numberWithBool:YES] : nil, OBJC_ASSOCIATION_RETAIN);
 }
 
-static char SKNStringKey;
-
 - (NSString *)string {
 #if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13)
     if (@available(macOS 27.0, iOS 27.0, *)) {
@@ -954,7 +952,7 @@ static char SKNStringKey;
         if (markupTypes == nil)
             markupTypes = [[NSSet alloc] initWithObjects:SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNMarkUpString, SKNSquigglyString, nil];
         if ([markupTypes containsObject:[self type]]) {
-            return objc_getAssociatedObject(self, &SKNStringKey);
+            return [self valueForAnnotationKey:@"/SkimContents"] ?: [self contents];
         }
     }
 #endif
@@ -988,7 +986,7 @@ static char SKNStringKey;
         if (markupTypes == nil)
             markupTypes = [[NSSet alloc] initWithObjects:SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNMarkUpString, SKNSquigglyString, nil];
         if ([markupTypes containsObject:[self type]]) {
-            objc_setAssociatedObject(self, &SKNStringKey, string, OBJC_ASSOCIATION_RETAIN);
+            [self setValue:string forAnnotationKey:@"/SkimContents"];
             return;
         }
     }
@@ -1420,7 +1418,7 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 - (NSString *)string {
 #if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13
     if (@available(macOS 27.0, iOS 27.0, *))
-        return objc_getAssociatedObject(self, &SKNStringKey);
+        return [self valueForAnnotationKey:@"/SkimContents"] ?: [self contents];
     else
 #endif
         return [self contents];
@@ -1429,7 +1427,7 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 - (void)setString:(NSString *)string {
 #if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13
     if (@available(macOS 27.0, iOS 27.0, *))
-        objc_setAssociatedObject(self, &SKNStringKey, string, OBJC_ASSOCIATION_RETAIN);
+        [self setValue:string forAnnotationKey:@"/SkimContents"];
     else
 #endif
         [self setContents:string];
