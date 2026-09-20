@@ -290,6 +290,7 @@ static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment)
 char SKNIsSkimNoteKey;
 
 #if !defined(PDFKIT_PLATFORM_IOS)
+
 static inline Class SKNAnnotationClassForType(NSString *type) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -313,6 +314,21 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
         return Nil;
 #pragma clang diagnostic pop
 }
+
+- (id)initSkimNoteWithBounds:(NSRect)bounds {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    self = [self initWithBounds:bounds];
+#pragma clang diagnostic pop
+    if (self) {
+        [self setShouldPrint:YES];
+        [self setSkimNote:YES];
+        if ([self respondsToSelector:@selector(setUserName:)])
+            [self setUserName:nil];
+    }
+    return self;
+}
+
 #endif
 
 - (id)initSkimNoteWithBounds:(PDFRect)bounds forType:(NSString *)type {
@@ -376,24 +392,6 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     
     return self;
 }
-
-#if !defined(PDFKIT_PLATFORM_IOS)
-
-- (id)initSkimNoteWithBounds:(NSRect)bounds {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    self = [self initWithBounds:bounds];
-#pragma clang diagnostic pop
-    if (self) {
-        [self setShouldPrint:YES];
-        [self setSkimNote:YES];
-        if ([self respondsToSelector:@selector(setUserName:)])
-            [self setUserName:nil];
-    }
-    return self;
-}
-
-#endif
 
 - (id)initSkimNoteWithProperties:(NSDictionary *)dict{
     Class stringClass = [NSString class];
