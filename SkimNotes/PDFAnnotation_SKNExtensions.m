@@ -948,6 +948,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 static char SKNStringKey;
 
 - (NSString *)string {
+#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_13)
     if (@available(macOS 27.0, iOS 27.0, *)) {
         static NSSet *markupTypes = nil;
         if (markupTypes == nil)
@@ -956,6 +957,7 @@ static char SKNStringKey;
             return objc_getAssociatedObject(self, &SKNStringKey);
         }
     }
+#endif
     if ([[self type] isEqualToString:SKNWidgetString] == NO) {
         return [self contents];
     } else if ([self respondsToSelector:@selector(valueForAnnotationKey:)]) {
@@ -980,6 +982,7 @@ static char SKNStringKey;
 }
 
 - (void)setString:(NSString *)string {
+#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_13)
     if (@available(macOS 27.0, iOS 27.0, *)) {
         static NSSet *markupTypes = nil;
         if (markupTypes == nil)
@@ -989,6 +992,7 @@ static char SKNStringKey;
             return;
         }
     }
+#endif
     if ([[self type] isEqualToString:SKNWidgetString] == NO) {
         [self setContents:string];
     } else if ([self respondsToSelector:@selector(setValue:forAnnotationKey:)]) {
@@ -1414,16 +1418,20 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 }
 
 - (NSString *)string {
+#if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_13
     if (@available(macOS 27.0, iOS 27.0, *))
         return objc_getAssociatedObject(self, &SKNStringKey);
     else
+#endif
         return [self contents];
 }
 
 - (void)setString:(NSString *)string {
+#if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_13
     if (@available(macOS 27.0, iOS 27.0, *))
         objc_setAssociatedObject(self, &SKNStringKey, string, OBJC_ASSOCIATION_RETAIN);
     else
+#endif
         [self setContents:string];
 }
 
