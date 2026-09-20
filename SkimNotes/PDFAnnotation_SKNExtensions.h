@@ -314,7 +314,7 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
     @discussion By default, this is just the same as the contents.  However for <code>SKNPDFAnnotationNote</code> the contents will contain both string and text.  Normally you set this by setting the <code>content</code> property.
     @result     A string representing the string value associated with the annotation.
 */
-@property (nonatomic, strong, nullable) NSString *string;
+@property (nonatomic, copy, nullable) NSString *string;
 
 /*!
     @abstract   Method to get the points from a path of an Ink Skim note.

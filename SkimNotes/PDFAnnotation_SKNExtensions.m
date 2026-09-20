@@ -985,7 +985,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             markupTypes = [[NSSet alloc] initWithObjects:SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNMarkUpString, SKNSquigglyString, nil];
         if ([markupTypes containsObject:[self type]]) {
             if (string)
-                [self setValue:string forAnnotationKey:@"/SkimContents"];
+                [self setValue:[string copy] forAnnotationKey:@"/SkimContents"];
             else
                 [self removeValueForAnnotationKey:@"/SkimContents"];
             return;
@@ -1431,7 +1431,7 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 #if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13
     if (@available(macOS 27.0, iOS 27.0, *)) {
         if (string)
-            [self setValue:string forAnnotationKey:@"/SkimContents"];
+            [self setValue:[string copy] forAnnotationKey:@"/SkimContents"];
         else
             [self removeValueForAnnotationKey:@"/SkimContents"];
     } else
