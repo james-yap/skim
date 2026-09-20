@@ -84,7 +84,7 @@ OSStatus GeneratePreviewForURL(void *thisInterface, QLPreviewRequestRef preview,
             
         } else if (UTTypeEqual(CFSTR("com.adobe.postscript"), contentTypeUTI)) {
             
-            if (floor(NSAppKitVersionNumber) <= 2299.0) {
+            if (@available(macOS 14.0, *)) {} else {
                 bool converted = false;
                 CGPSConverterCallbacks converterCallbacks = { 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
                 CGPSConverterRef converter = CGPSConverterCreate(NULL, &converterCallbacks, NULL);
