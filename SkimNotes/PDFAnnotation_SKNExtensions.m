@@ -948,7 +948,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 static char SKNStringKey;
 
 - (NSString *)string {
-#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_13)
+#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13)
     if (@available(macOS 27.0, iOS 27.0, *)) {
         static NSSet *markupTypes = nil;
         if (markupTypes == nil)
@@ -982,7 +982,7 @@ static char SKNStringKey;
 }
 
 - (void)setString:(NSString *)string {
-#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_13)
+#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13)
     if (@available(macOS 27.0, iOS 27.0, *)) {
         static NSSet *markupTypes = nil;
         if (markupTypes == nil)
@@ -1418,7 +1418,7 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 }
 
 - (NSString *)string {
-#if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_13
+#if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13
     if (@available(macOS 27.0, iOS 27.0, *))
         return objc_getAssociatedObject(self, &SKNStringKey);
     else
@@ -1427,7 +1427,7 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 }
 
 - (void)setString:(NSString *)string {
-#if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_13
+#if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13
     if (@available(macOS 27.0, iOS 27.0, *))
         objc_setAssociatedObject(self, &SKNStringKey, string, OBJC_ASSOCIATION_RETAIN);
     else
