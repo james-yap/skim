@@ -945,7 +945,17 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     objc_setAssociatedObject(self, &SKNIsSkimNoteKey, flag ? [NSNumber numberWithBool:YES] : nil, OBJC_ASSOCIATION_RETAIN);
 }
 
+static char SKNStringKey;
+
 - (NSString *)string {
+    if (@available(macOS 27.0, iOS 27.0, *)) {
+        static NSSet *markupTypes = nil;
+        if (markupTypes == nil)
+            markupTypes = [[NSSet alloc] initWithObjects:SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNMarkUpString, SKNSquigglyString, nil];
+        if ([markupTypes containsObject:[self type]]) {
+            return objc_getAssociatedObject(self, &SKNStringKey);
+        }
+    }
     if ([[self type] isEqualToString:SKNWidgetString] == NO) {
         return [self contents];
     } else if ([self respondsToSelector:@selector(valueForAnnotationKey:)]) {
@@ -970,6 +980,15 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 }
 
 - (void)setString:(NSString *)string {
+    if (@available(macOS 27.0, iOS 27.0, *)) {
+        static NSSet *markupTypes = nil;
+        if (markupTypes == nil)
+            markupTypes = [[NSSet alloc] initWithObjects:SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNMarkUpString, SKNSquigglyString, nil];
+        if ([markupTypes containsObject:[self type]]) {
+            objc_setAssociatedObject(self, &SKNStringKey, string, OBJC_ASSOCIATION_RETAIN);
+            return;
+        }
+    }
     if ([[self type] isEqualToString:SKNWidgetString] == NO) {
         [self setContents:string];
     } else if ([self respondsToSelector:@selector(setValue:forAnnotationKey:)]) {
