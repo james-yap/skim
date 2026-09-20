@@ -1201,6 +1201,14 @@ static char SKNStringKey;
     return dict;
 }
 
+- (NSString *)string {
+    return [self contents];
+}
+
+- (void)setString:(NSString *)string {
+    [self setContents:string];
+}
+
 @end
 
 #pragma mark -
@@ -1225,6 +1233,14 @@ static char SKNStringKey;
     NSMutableDictionary *dict = [self genericSkimNoteProperties];
     [dict setValue:[self interiorColor] forKey:SKNPDFAnnotationInteriorColorKey];
     return dict;
+}
+
+- (NSString *)string {
+    return [self contents];
+}
+
+- (void)setString:(NSString *)string {
+    [self setContents:string];
 }
 
 @end
@@ -1270,6 +1286,14 @@ static char SKNStringKey;
     return dict;
 }
 
+- (NSString *)string {
+    return [self contents];
+}
+
+- (void)setString:(NSString *)string {
+    [self setContents:string];
+}
+
 @end
 
 #pragma mark -
@@ -1311,6 +1335,14 @@ static char SKNStringKey;
         [dict setValue:fontColor forKey:SKNPDFAnnotationFontColorKey];
     [dict setValue:[NSNumber numberWithInteger:SKNAlignmentFromTextAlignment([self alignment])] forKey:SKNPDFAnnotationAlignmentKey];
     return dict;
+}
+
+- (NSString *)string {
+    return [self contents];
+}
+
+- (void)setString:(NSString *)string {
+    [self setContents:string];
 }
 
 @end
@@ -1379,6 +1411,20 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
         [dict setValue:quadPointStrings forKey:SKNPDFAnnotationQuadrilateralPointsKey];
     }
     return dict;
+}
+
+- (NSString *)string {
+    if (@available(macOS 27.0, iOS 27.0, *))
+        return objc_getAssociatedObject(self, &SKNStringKey);
+    else
+        return [self contents];
+}
+
+- (void)setString:(NSString *)string {
+    if (@available(macOS 27.0, iOS 27.0, *))
+        objc_setAssociatedObject(self, &SKNStringKey, string, OBJC_ASSOCIATION_RETAIN);
+    else
+        [self setContents:string];
 }
 
 @end
@@ -1476,6 +1522,14 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
         [dict setValue:pointLists forKey:SKNPDFAnnotationPointListsKey];
     }
     return dict;
+}
+
+- (NSString *)string {
+    return [self contents];
+}
+
+- (void)setString:(NSString *)string {
+    [self setContents:string];
 }
 
 @end
