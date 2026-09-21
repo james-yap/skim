@@ -95,13 +95,6 @@ PDFKIT_EXTERN const PDFSize SKNPDFAnnotationNoteSize;
 }
 
 /*!
-    @abstract   This is overridden and different from the contents.
-    @discussion This should give a short string value for the anchored note annotation.  Setting this updates the contents using <code>updateContents</code>.
-    @result     A string representing the string value associated with the annotation.
-*/
-@property (nonatomic, copy, nullable) NSString *string;
-
-/*!
     @abstract   The rich text of the annotation.
     @discussion This is the longer rich text contents of the anchored note annotation.  Setting this updates the contents using <code>updateContents</code>.
 */

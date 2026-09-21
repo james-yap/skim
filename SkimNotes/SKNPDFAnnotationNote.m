@@ -80,7 +80,6 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
 
 @implementation SKNPDFAnnotationNote
 
-@synthesize string = _string;
 @synthesize text = _text;
 @synthesize image = _image;
 @synthesize drawsImage = _drawsImage;
@@ -156,6 +155,10 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
     _drawsImage = drawsImage;
     if ([self respondsToSelector:@selector(setValue:forAnnotationKey:)])
         [self setValue:drawsImage ? @"/Stamp" : @"/Text" forAnnotationKey:@"/Subtype"];
+}
+
+- (NSString *)string {
+    return _string;
 }
 
 - (void)setString:(NSString *)string {
