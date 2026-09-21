@@ -42,7 +42,7 @@
 #import "NSFileManager_SKNExtensions.h"
 #import "SKNDefines.h"
 
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
 
 #import <CoreGraphics/CoreGraphics.h>
 
@@ -98,7 +98,7 @@
 }
 
 static inline SKNPDFWidgetType SKNWidgetTypeForAnnotation(PDFAnnotation *annotation) {
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     if ([annotation isKindOfClass:[PDFAnnotationTextWidget class]])
@@ -157,14 +157,14 @@ static inline NSString *SKNFieldNameForAnnotation(PDFAnnotation *annotation) {
                     if (widgetType == kSKNPDFWidgetTypeButton) {
                         if ([annotation respondsToSelector:@selector(setButtonWidgetState:)])
                             [annotation setButtonWidgetState:[[dict objectForKey:SKNPDFAnnotationStateKey] integerValue]];
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
                         else if ([annotation respondsToSelector:@selector(setState:)])
                             [(id)annotation setState:[[dict objectForKey:SKNPDFAnnotationStateKey] integerValue]];
 #endif
                     } else {
                         if ([annotation respondsToSelector:@selector(setWidgetStringValue:)])
                             [annotation setWidgetStringValue:[dict objectForKey:SKNPDFAnnotationStringValueKey]];
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
                         else if ([annotation respondsToSelector:@selector(setStringValue:)])
                             [(id)annotation setStringValue:[dict objectForKey:SKNPDFAnnotationStringValueKey]];
 #endif

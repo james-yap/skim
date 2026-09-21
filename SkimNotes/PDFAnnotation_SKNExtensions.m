@@ -40,7 +40,7 @@
 #import "SKNPDFAnnotationNote.h"
 #import <tgmath.h>
 
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
 
 #import <CoreGraphics/CoreGraphics.h>
 #import <objc/runtime.h>
@@ -141,7 +141,7 @@ static PDFKitPlatformColor *SKNColorFromArray(NSArray *array) {
         NSUInteger i;
         for (i = 0; i < MAX([array count], 4); i++)
             c[i] = [[array objectAtIndex:i] doubleValue];
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
         return [UIColor colorWithRed:c[0] green:c[1] blue:c[2] alpha:c[3]];
 #else
         return [NSColor colorWithColorSpace:[NSColorSpace sRGBColorSpace] components:c count:4];
@@ -151,7 +151,7 @@ static PDFKitPlatformColor *SKNColorFromArray(NSArray *array) {
         c[0] = [[array objectAtIndex:0] doubleValue];
         if ([array count] == 2)
             c[1] = [[array objectAtIndex:1] doubleValue];
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
         return [UIColor colorWithWhite:c[0] alpha:c[1]];
 #else
         return [NSColor colorWithColorSpace:[NSColorSpace genericGamma22GrayColorSpace] components:c count:2];
@@ -161,7 +161,7 @@ static PDFKitPlatformColor *SKNColorFromArray(NSArray *array) {
     }
 }
 
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
 
 static UIImage *appearanceImageForAnnotation(PDFAnnotation *annotation) {
     CGRect rect = [annotation bounds];
@@ -265,7 +265,7 @@ static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment)
 
 #endif
 
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
 
 #if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_12
 @interface PDFAnnotation (SKNSierraDeclarations)
@@ -289,7 +289,7 @@ static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment)
 
 char SKNIsSkimNoteKey;
 
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
 
 static inline Class SKNAnnotationClassForType(NSString *type) {
 #pragma clang diagnostic push
@@ -335,7 +335,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     if ([type hasPrefix:@"/"])
         type = [type substringFromIndex:1];
     
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
     
     if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString]) {
         if ([self isMemberOfClass:[PDFAnnotation class]]) {
@@ -398,7 +398,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     NSString *type = [dict objectForKey:SKNPDFAnnotationTypeKey];
     
         
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
     
     if (([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString]) && [self isMemberOfClass:[PDFAnnotation class]]) {
         // replace by our subclass
@@ -466,7 +466,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
             [[self border] setLineWidth:0.0];
         }
         
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
         
         color = [dict objectForKey:SKNPDFAnnotationInteriorColorKey];
         if ([color isKindOfClass:colorClass])
@@ -606,7 +606,7 @@ static PDFKitPlatformColor *SKNColorFromAnnotationValue(id value) {
         return value;
     else if ([value isKindOfClass:[NSArray class]] == NO || [value count] == 0)
         return nil;
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
     CGFloat c[5] = {0.0, 1.0, 0.0, 1.0, 1.0};
     NSUInteger i;
     for (i = 0; i < MIN([value count], 4); i++)
@@ -1018,7 +1018,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 
 + (NSArray *)pointsFromSkimNotePath:(PDFKitPlatformBezierPath *)path {
     NSMutableArray *points = [NSMutableArray array];
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
     CGPathApplyWithBlock([path CGPath], ^(const CGPathElement *element){
         CGPoint *p = element->points;
         NSUInteger i = 0;
@@ -1085,7 +1085,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                 controlPoint2.y -= diff1.y / (3.0 * (d0 + d2));
             }
             
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
             [path addCurveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
 #else
             [path curveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
@@ -1099,7 +1099,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         }
     }
     
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
     if (iMax == 2)
         [path addLineToPoint:point];
     else if (iMax > 2)
@@ -1112,7 +1112,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 #endif
 }
 
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
 
 + (void)addPoint:(NSPoint)point toSkimNotesPath:(NSBezierPath *)path {
     NSUInteger count = [path elementCount];
@@ -1182,7 +1182,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 
 #pragma mark -
 
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
 
 @implementation PDFAnnotationCircle (SKNExtensions)
 

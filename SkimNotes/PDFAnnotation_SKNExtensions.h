@@ -268,7 +268,7 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 */
 @interface PDFAnnotation (SKNExtensions)
 
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
 /*!
     @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim note on macOS.
     @discussion This method can be implemented in subclasses to provide default properties for Skim notes.
@@ -332,7 +332,7 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 */
 + (void)setPoints:(NSArray *)points ofSkimNotePath:(PDFKitPlatformBezierPath *)path;
 
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
 /*!
     @abstract   Method to add a point to a path, to be used to build the path for a Skim note.
     @param      point The point to add to the path.
@@ -356,7 +356,7 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 
 #pragma mark -
 
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
 
 /*!
     @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.

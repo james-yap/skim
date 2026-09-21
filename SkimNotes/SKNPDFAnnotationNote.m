@@ -45,7 +45,7 @@ NSString * const SKNPDFAnnotationDrawsImageKey = @"drawsImage";
 
 const PDFSize SKNPDFAnnotationNoteSize = {16.0, 16.0};
 
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
 
 #import <CoreGraphics/CoreGraphics.h>
 
@@ -84,7 +84,7 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
 @synthesize text = _text;
 @synthesize image = _image;
 @synthesize drawsImage = _drawsImage;
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
 @dynamic mutableText;
 @synthesize texts = _texts;
 #endif
@@ -166,7 +166,7 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
     }
 }
 
-#if defined(PDFKIT_PLATFORM_IOS)
+#ifdef PDFKIT_PLATFORM_IOS
 
 - (void)setText:(NSAttributedString *)text {
     if (_text != text) {

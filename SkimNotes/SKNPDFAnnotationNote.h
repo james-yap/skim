@@ -71,7 +71,7 @@ PDFKIT_EXTERN NSString * const SKNPDFAnnotationDrawsImageKey;
 */
 PDFKIT_EXTERN const PDFSize SKNPDFAnnotationNoteSize;
 
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 /*!
@@ -88,7 +88,7 @@ PDFKIT_EXTERN const PDFSize SKNPDFAnnotationNoteSize;
     PDFKitPlatformImage *_image;
     NSAttributedString *_text;
     BOOL _drawsImage;
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
     NSTextStorage *_textStorage;
     NSArray *_texts;
 #endif

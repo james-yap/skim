@@ -167,7 +167,7 @@ static NSArray *SKNArrayFromColor(SKNColor *color, NSMapTable *colors) {
     if (array)
         return array;
     if ([color isKindOfClass:[SKNColor class]]) {
-#if defined(SKIMNOTES_PLATFORM_IOS)
+#ifdef SKIMNOTES_PLATFORM_IOS
         if (CGColorSpaceGetModel(CGColorGetColorSpace([color CGColor])) == kCGColorSpaceModelMonochrome) {
             CGFloat w = 0.0, a = 1.0;
             [color getWhite:&w alpha:&a];
@@ -205,7 +205,7 @@ static SKNColor *SKNColorFromArray(NSArray *array) {
             NSUInteger i;
             for (i = 0; i < MAX([array count], 4); i++)
                 c[i] = [[array objectAtIndex:i] doubleValue];
-#if defined(SKIMNOTES_PLATFORM_IOS)
+#ifdef SKIMNOTES_PLATFORM_IOS
             return [UIColor colorWithRed:c[0] green:c[1] blue:c[2] alpha:c[3]];
 #else
             return [NSColor colorWithColorSpace:[NSColorSpace sRGBColorSpace] components:c count:4];
@@ -215,7 +215,7 @@ static SKNColor *SKNColorFromArray(NSArray *array) {
             c[0] = [[array objectAtIndex:0] doubleValue];
             if ([array count] == 2)
                 c[1] = [[array objectAtIndex:1] doubleValue];
-#if defined(SKIMNOTES_PLATFORM_IOS)
+#ifdef SKIMNOTES_PLATFORM_IOS
             return [UIColor colorWithWhite:c[0] alpha:c[1]];
 #else
             return [NSColor colorWithColorSpace:[NSColorSpace genericGamma22GrayColorSpace] components:c count:2];
@@ -240,7 +240,7 @@ NSArray *SKNSkimNotesFromData(NSData *data) {
         [data getBytes:&ch range:NSMakeRange(8, 1)];
     ch >>= 4;
     if (ch == 0xD) {
-#if !defined(SKIMNOTES_PLATFORM_IOS)
+#ifndef SKIMNOTES_PLATFORM_IOS
         @try {
 #if (!defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_13)
             if ([NSKeyedUnarchiver respondsToSelector:@selector(unarchivedObjectOfClasses:fromData:error:)] == NO)
@@ -310,7 +310,7 @@ NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
     if (noteDicts == nil) {
         return nil;
     }
-#if !defined(PDFKIT_PLATFORM_IOS)
+#ifndef PDFKIT_PLATFORM_IOS
     if (asPlist == NO) {
 #if (!defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_13)
         if ([NSKeyedArchiver respondsToSelector:@selector(archivedDataWithRootObject:requiringSecureCoding:error:)] == NO)
@@ -361,7 +361,7 @@ NSData *SKNDataFromSkimNotes(NSArray *noteDicts, BOOL asPlist) {
         }
         if ((value = [dict objectForKey:NOTE_IMAGE_KEY])) {
             if ([value isKindOfClass:[SKNImage class]]) {
-#if defined(SKIMNOTES_PLATFORM_IOS)
+#ifdef SKIMNOTES_PLATFORM_IOS
                 value = UIImagePNGRepresentation(value);
 #else
                 id imageRep = [[value representations] count] == 1 ? [[value representations] objectAtIndex:0] : nil;
