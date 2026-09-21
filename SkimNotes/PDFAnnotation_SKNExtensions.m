@@ -944,7 +944,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 }
 
 - (NSString *)string {
-#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13)
+#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13 && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10)
     if (@available(macOS 27.0, iOS 27.0, *)) {
         static NSSet *markupTypes = nil;
         if (markupTypes == nil)
@@ -978,7 +978,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 }
 
 - (void)setString:(NSString *)string {
-#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13)
+#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13 && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10)
     if (@available(macOS 27.0, iOS 27.0, *)) {
         static NSSet *markupTypes = nil;
         if (markupTypes == nil)
@@ -1419,7 +1419,7 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 }
 
 - (NSString *)string {
-#if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13
+#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13 && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10)
     if (@available(macOS 27.0, iOS 27.0, *))
         return [self valueForAnnotationKey:@"/SkimContents"] ?: [self contents];
     else
@@ -1428,7 +1428,7 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 }
 
 - (void)setString:(NSString *)string {
-#if defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13
+#if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13 && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10)
     if (@available(macOS 27.0, iOS 27.0, *)) {
         if (string)
             [self setValue:[string copy] forAnnotationKey:@"/SkimContents"];
