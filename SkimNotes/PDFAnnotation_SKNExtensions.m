@@ -292,12 +292,6 @@ static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment)
 @end
 #endif
 
-#if !defined(MAC_OS_X_VERSION_10_15) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_15
-static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotationIconType iconType);
-#define SKNAppKitVersionNumber10_12 1504
-#define SKNAppKitVersionNumber10_14 1671
-#endif
-
 #endif
 
 @implementation PDFAnnotation (SKNExtensions)
@@ -1855,6 +1849,12 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
     }
     return _textStorage;
 }
+
+#if !defined(MAC_OS_X_VERSION_10_15) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_15
+static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotationIconType iconType);
+#define SKNAppKitVersionNumber10_12 1504
+#define SKNAppKitVersionNumber10_14 1671
+#endif
 
 - (void)drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context {
     if ([self drawsImage] && [self hasAppearanceStream] == NO && [self image] != nil) {
