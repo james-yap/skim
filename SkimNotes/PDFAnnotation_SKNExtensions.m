@@ -1678,6 +1678,8 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
 
 @end
 
+#endif
+
 #pragma mark -
 
 #ifndef PDFKIT_PLATFORM_IOS
@@ -1907,6 +1909,8 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
 
 @end
 
+#pragma mark -
+
 #if !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_15) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_15)
 
 #define KAPPA   0.552284749830793398402251632279597438
@@ -2080,7 +2084,5 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
         default:                                 drawIconNote(context, bounds);         break;
     }
 }
-
-#endif
 
 #endif
