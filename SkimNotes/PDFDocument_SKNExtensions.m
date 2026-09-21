@@ -38,7 +38,6 @@
 
 #import "PDFDocument_SKNExtensions.h"
 #import "PDFAnnotation_SKNExtensions.h"
-#import "SKNPDFAnnotationNote.h"
 #import "NSFileManager_SKNExtensions.h"
 #import "SKNDefines.h"
 

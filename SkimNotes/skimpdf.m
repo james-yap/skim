@@ -41,7 +41,6 @@
 #import "NSFileManager_SKNExtensions.h"
 #import "PDFDocument_SKNExtensions.h"
 #import "PDFAnnotation_SKNExtensions.h"
-#import "SKNPDFAnnotationNote.h"
 
 #define SKNAppKitVersionNumber11_0 2022
 

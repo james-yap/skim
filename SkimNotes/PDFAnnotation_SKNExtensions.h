@@ -38,8 +38,8 @@
 
 /*!
     @header      
-    @abstract    An <code>PDFAnnotation</code> category to manage Skim notes.
-    @discussion  This header file provides API for an <code>PDFAnnotation</code> categories to convert Skim note dictionaries to <code>PDFAnnotations</code> and back.
+    @abstract    An <code>PDFAnnotation</code> category and an <code>PDFAnnotation</code> subclass to manage Skim notes.
+    @discussion  This header file provides API for <code>PDFAnnotation</code> categories and an <code>PDFAnnotation</code> subclass to convert Skim note dictionaries to <code>PDFAnnotations</code> and back.
 */
 #import <Foundation/Foundation.h>
 #import <PDFKit/PDFKit.h>
@@ -49,8 +49,14 @@ NS_ASSUME_NONNULL_BEGIN
 #ifndef PDFRect
 #define PDFRect NSRect
 #endif
+#ifndef PDFSize
+#define PDFSize NSSize
+#endif
 #ifndef PDFKitPlatformBezierPath
 #define PDFKitPlatformBezierPath NSBezierPath
+#endif
+#ifndef PDFKitPlatformImage
+#define PDFKitPlatformImage NSImage
 #endif
 
 /*!
@@ -245,6 +251,24 @@ PDFKIT_EXTERN NSString * const SKNPDFAnnotationWidgetTypeKey;
     @discussion  Global string for annotation field name key.
 */
 PDFKIT_EXTERN NSString * const SKNPDFAnnotationFieldNameKey;
+
+/*!
+    @discussion  Global string for annotation text key.
+*/
+PDFKIT_EXTERN NSString * const SKNPDFAnnotationTextKey;
+/*!
+    @discussion  Global string for annotation image key.
+*/
+PDFKIT_EXTERN NSString * const SKNPDFAnnotationImageKey;
+/*!
+    @discussion  Global string for annotation drawsImage key.
+*/
+PDFKIT_EXTERN NSString * const SKNPDFAnnotationDrawsImageKey;
+
+/*!
+    @discussion  Default size of an anchored note.
+*/
+PDFKIT_EXTERN const PDFSize SKNPDFAnnotationNoteSize;
 
 /**
  @enum        SKNWidgetType
@@ -470,5 +494,56 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 @end
 
 #endif
+
+#pragma mark -
+
+#ifndef PDFKIT_PLATFORM_IOS
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+/*!
+    @abstract    A concrete <code>PDFAnnotation</code> subclass representing a Skim anchored note.
+    @discussion  This is a <code>PDFAnnotationText</code> subclass containing a separate short string value, a longer rich text property, and an image property.
+*/
+@interface SKNPDFAnnotationNote : PDFAnnotationText
+#pragma clang diagnostic pop
+#else
+@interface SKNPDFAnnotationNote : PDFAnnotation
+#endif
+{
+    NSString *_string;
+    PDFKitPlatformImage *_image;
+    NSAttributedString *_text;
+    BOOL _drawsImage;
+#ifndef PDFKIT_PLATFORM_IOS
+    NSTextStorage *_textStorage;
+    NSArray *_texts;
+#endif
+}
+
+/*!
+    @abstract   The rich text of the annotation.
+    @discussion This is the longer rich text contents of the anchored note annotation.  Setting this updates the contents using <code>updateContents</code>.
+*/
+@property (nonatomic, copy, nullable) NSAttributedString *text;
+
+/*!
+    @abstract   The image of the annotation.
+    @discussion
+*/
+@property (nonatomic, strong, nullable) PDFKitPlatformImage *image;
+
+/*!
+    @abstract   Whether the annotation should draw the image rather than an icon.
+    @discussion
+*/
+@property (nonatomic) BOOL drawsImage;
+
+/*!
+    @abstract   Synchronizes the contents of the annotation with the string and text.
+    @discussion This sets the contents to the string value and the text appended, separated by a double space.
+*/
+- (void)updateContents;
+
+@end
 
 NS_ASSUME_NONNULL_END

@@ -45,4 +45,3 @@
 #import <SkimNotes/PDFDocument_SKNExtensions.h>
 
 #import <SkimNotes/PDFAnnotation_SKNExtensions.h>
-#import <SkimNotes/SKNPDFAnnotationNote.h>
