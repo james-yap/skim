@@ -46,6 +46,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#ifndef PDFKIT_PLATFORM_IOS
+// Undefine this if you want Skim notes to be implemented by the PDFAnnotation class
+#define SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
+#endif
+
 #ifndef PDFRect
 #define PDFRect NSRect
 #endif
@@ -292,9 +297,9 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 */
 @interface PDFAnnotation (SKNExtensions)
 
-#ifndef PDFKIT_PLATFORM_IOS
+#ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
 /*!
-    @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim note on macOS.
+    @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim note on macOS when using legacy <code>PDFAnnotation</code> subclasses.
     @discussion This method can be implemented in subclasses to provide default properties for Skim notes.
     @param      bounds The bounding box of the annotation, in page space.
     @result     An initialized Skim note annotation instance, or <code>nil</code> if the object could not be initialized.
@@ -303,8 +308,8 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 #endif
 
 /*!
-    @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim noteon iOS.
-    @discussion On macOS this returns a subclasses initialized with <code>initSkimNoteWithBounds:</code>.
+    @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim noteon iOS, or on macOS when not using legacy <code>PDFAnnotation</code> classes.
+    @discussion On macOS when using legacsy <code>PDFAnnotation</code> classes, this returns a subclasses initialized with <code>initSkimNoteWithBounds:</code>.
     @param      bounds The bounding box of the annotation, in page space.
     @param      type The type of the note .
     @result     An initialized Skim note annotation instance, or <code>nil</code> if the object could not be initialized.
@@ -380,7 +385,7 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 
 #pragma mark -
 
-#ifndef PDFKIT_PLATFORM_IOS
+#ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
 
 /*!
     @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
@@ -497,7 +502,7 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 
 #pragma mark -
 
-#ifndef PDFKIT_PLATFORM_IOS
+#ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 /*!

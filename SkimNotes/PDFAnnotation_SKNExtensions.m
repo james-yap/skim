@@ -304,7 +304,7 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
 
 char SKNIsSkimNoteKey;
 
-#ifndef PDFKIT_PLATFORM_IOS
+#ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
 
 static inline Class SKNAnnotationClassForType(NSString *type) {
 #pragma clang diagnostic push
@@ -344,13 +344,17 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     return self;
 }
 
+#elif !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_13)
+
+#error "Deployment target before macOS 10.13 not supported without legacy PDFAnnotation classes"
+
 #endif
 
 - (id)initSkimNoteWithBounds:(PDFRect)bounds forType:(NSString *)type {
     if ([type hasPrefix:@"/"])
         type = [type substringFromIndex:1];
     
-#ifdef PDFKIT_PLATFORM_IOS
+#ifndef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
     
     if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString]) {
         if ([self isMemberOfClass:[PDFAnnotation class]]) {
@@ -413,7 +417,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     NSString *type = [dict objectForKey:SKNPDFAnnotationTypeKey];
     
         
-#ifdef PDFKIT_PLATFORM_IOS
+#ifndef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
     
     if (([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString]) && [self isMemberOfClass:[PDFAnnotation class]]) {
         // replace by our subclass
@@ -481,7 +485,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
             [[self border] setLineWidth:0.0];
         }
         
-#ifdef PDFKIT_PLATFORM_IOS
+#ifndef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
         
         color = [dict objectForKey:SKNPDFAnnotationInteriorColorKey];
         if ([color isKindOfClass:colorClass])
@@ -1197,7 +1201,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 
 #pragma mark -
 
-#ifndef PDFKIT_PLATFORM_IOS
+#ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
 
 @implementation PDFAnnotationCircle (SKNExtensions)
 
