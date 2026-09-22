@@ -55,15 +55,20 @@
 
 #import <objc/objc-runtime.h>
 
-#if !defined(PDFKIT_PLATFORM_OSX)
-
-#define PDFKIT_PLATFORM_OSX
+#ifndef PDFKitPlatformColor
 #define PDFKitPlatformColor         NSColor
+#endif
+#ifndef PDFKitPlatformFont
 #define PDFKitPlatformFont          NSFont
+#endif
+#ifndef PDFPoint
 #define PDFPoint                    NSPoint
+#endif
+#ifndef PDFPointZero
 #define PDFPointZero                NSZeroPoint
+#endif
+#ifndef PDFRectZero
 #define PDFRectZero                 NSZeroRect
-
 #endif
 
 #define SKNMakePoint(x, y)          NSMakePoint(x, y)
