@@ -530,11 +530,9 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
             
             NSArray *pointStrings = [dict objectForKey:SKNPDFAnnotationQuadrilateralPointsKey];
             NSMutableArray *pointValues = [[NSMutableArray alloc] initWithCapacity:[pointStrings count]];
-            NSUInteger i, iMax = [pointStrings count];
-            for (i = 0; i < iMax; i++) {
-                PDFPoint p = SKNPointFromString([pointStrings objectAtIndex:i]);
-                NSValue *val = [[NSValue alloc] initWithBytes:&p objCType:@encode(PDFPoint)];
-                [pointValues addObject:val];
+            for (NSString *pointString in pointStrings) {
+                PDFPoint p = SKNPointFromString(pointString);
+                [pointValues addObject:[[NSValue alloc] initWithBytes:&p objCType:@encode(PDFPoint)]];
             }
             [self setQuadrilateralPoints:pointValues];
             
@@ -551,9 +549,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
             
             NSArray *pointLists = [dict objectForKey:SKNPDFAnnotationPointListsKey];
             if ([pointLists isKindOfClass:arrayClass]) {
-                NSUInteger i, iMax = [pointLists count];
-                for (i = 0; i < iMax; i++) {
-                    NSArray *pointStrings = [pointLists objectAtIndex:i];
+                for (NSArray *pointStrings in pointStrings) {
                     if ([pointStrings isKindOfClass:arrayClass]) {
                         PDFKitPlatformBezierPath *path = [[PDFKitPlatformBezierPath alloc] init];
                         [[self class] setPoints:pointStrings ofSkimNotePath:path];
@@ -772,10 +768,9 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             if ([self respondsToSelector:@selector(quadrilateralPoints)]) {
                 NSArray *quadPoints = [(id)self quadrilateralPoints];
                 if (quadPoints) {
-                    NSUInteger i, iMax = [quadPoints count];
-                    NSMutableArray *quadPointStrings = [[NSMutableArray alloc] initWithCapacity:iMax];
-                    for (i = 0; i < iMax; i++)
-                        [quadPointStrings addObject:SKNStringFromPoint(SKNPointFromValue([quadPoints objectAtIndex:i]))];
+                    NSMutableArray *quadPointStrings = [[NSMutableArray alloc] initWithCapacity:[quadPoints count]];
+                    for (NSValue *pointValue in quadPoints)
+                        [quadPointStrings addObject:SKNStringFromPoint(SKNPointFromValue(pointValue))];
                     [dict setValue:quadPointStrings forKey:SKNPDFAnnotationQuadrilateralPointsKey];
                 }
             } else if ((value = [self valueForAnnotationKey:@"/QuadPoints"])) {
@@ -807,10 +802,8 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                 NSArray *paths = [(id)self paths];
                 if (paths) {
                     Class selfClass = [self class];
-                    NSUInteger i, iMax = [paths count];
-                    NSMutableArray *pointLists = [[NSMutableArray alloc] initWithCapacity:iMax];
-                    for (i = 0; i < iMax; i++) {
-                        PDFKitPlatformBezierPath *path = [paths objectAtIndex:i];
+                    NSMutableArray *pointLists = [[NSMutableArray alloc] initWithCapacity:[paths count]];
+                    for (PDFKitPlatformBezierPath *path in paths) {
                         NSArray *pointStrings = [selfClass pointsFromSkimNotePath:path];
                         if ([pointStrings count])
                             [pointLists addObject:pointStrings];
@@ -825,19 +818,17 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                     Class numberClass = [NSNumber class];
                     Class valueClass = [NSValue class];
                     NSMutableArray *pointLists = [NSMutableArray array];
-                    NSUInteger i, iMax = [value count];
-                    for (i = 0; i < iMax; i++) {
-                        id path = [value objectAtIndex:i];
+                    for (id path in value) {
                         NSMutableArray *points = [NSMutableArray array];
                         if ([path isKindOfClass:pathClass]) {
                             [points addObjectsFromArray:[[self class] pointsFromSkimNotePath:path]];
                         } else if ([path isKindOfClass:arrayClass]) {
-                            NSUInteger j, jMax = [path count];
-                            for (j = 0; j < jMax; j++) {
+                            NSUInteger i, iMax = [path count];
+                            for (i = 0; i < iMax; i++) {
                                 NSValue *val = [path objectAtIndex:i];
                                 PDFPoint p;
                                 if ([val isKindOfClass:numberClass])
-                                    p = SKNMakePoint([(NSNumber *)val doubleValue], [(NSNumber *)[value objectAtIndex:++j] doubleValue]);
+                                    p = SKNMakePoint([(NSNumber *)val doubleValue], [(NSNumber *)[value objectAtIndex:++i] doubleValue]);
                                 else if ([val isKindOfClass:valueClass])
                                     p = SKNPointFromValue(val);
                                 else
@@ -1425,10 +1416,9 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
     NSMutableDictionary *dict = [self genericSkimNoteProperties];
     NSArray *quadPoints = [self quadrilateralPoints];
     if (quadPoints) {
-        NSUInteger i, iMax = [quadPoints count];
-        NSMutableArray *quadPointStrings = [[NSMutableArray alloc] initWithCapacity:iMax];
-        for (i = 0; i < iMax; i++)
-            [quadPointStrings addObject:NSStringFromPoint([[quadPoints objectAtIndex:i] pointValue])];
+        NSMutableArray *quadPointStrings = [[NSMutableArray alloc] initWithCapacity:[quadPoints count]];
+        for (NSValue *quadPoint in quadPoints)
+            [quadPointStrings addObject:NSStringFromPoint([quadPoint pointValue])];
         [dict setValue:quadPointStrings forKey:SKNPDFAnnotationQuadrilateralPointsKey];
     }
     return dict;
@@ -1520,9 +1510,7 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
         Class selfClass = [self class];
         NSArray *pointLists = [dict objectForKey:SKNPDFAnnotationPointListsKey];
         if ([pointLists isKindOfClass:arrayClass]) {
-            NSUInteger i, iMax = [pointLists count];
-            for (i = 0; i < iMax; i++) {
-                NSArray *pointStrings = [pointLists objectAtIndex:i];
+            for (NSArray *pointStrings in pointLists) {
                 if ([pointStrings isKindOfClass:arrayClass]) {
                     NSBezierPath *path = [[NSBezierPath alloc] init];
                     [selfClass setPoints:pointStrings ofSkimNotePath:path];
@@ -1539,10 +1527,8 @@ static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
     NSArray *paths = [self paths];
     if (paths) {
         Class selfClass = [self class];
-        NSUInteger i, iMax = [paths count];
-        NSMutableArray *pointLists = [[NSMutableArray alloc] initWithCapacity:iMax];
-        for (i = 0; i < iMax; i++) {
-            NSBezierPath *path = [paths objectAtIndex:i];
+        NSMutableArray *pointLists = [[NSMutableArray alloc] initWithCapacity:[paths count]];
+        for (NSBezierPath *path in paths) {
             NSArray *pointStrings = [selfClass pointsFromSkimNotePath:path];
             if ([pointStrings count])
                 [pointLists addObject:pointStrings];
