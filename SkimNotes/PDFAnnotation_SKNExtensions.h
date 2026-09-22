@@ -47,9 +47,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 #ifndef PDFKIT_PLATFORM_IOS
+
 // Undefine this if you want Skim notes to be implemented by the PDFAnnotation class
 #define SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
-#endif
 
 #ifndef PDFRect
 #define PDFRect NSRect
@@ -62,6 +62,8 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
 #ifndef PDFKitPlatformImage
 #define PDFKitPlatformImage NSImage
+#endif
+
 #endif
 
 /*!
