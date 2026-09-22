@@ -639,7 +639,7 @@ static PDFKitPlatformColor *SKNColorFromAnnotationValue(id value) {
     else if ([value count] < 4)
         return [NSColor colorWithDeviceRed:[[value objectAtIndex:0] doubleValue] green:[[value objectAtIndex:1] doubleValue] blue:[[value objectAtIndex:2] doubleValue] alpha:1.0];
     else
-        return [NSColor colorWithDeviceCyan:[[value objectAtIndex:0] doubleValue] magenta:[[value objectAtIndex:1] doubleValue] yellow:[[value objectAtIndex:2] doubleValue] black:[[value objectAtIndex:31] doubleValue] alpha:.0];
+        return [NSColor colorWithDeviceCyan:[[value objectAtIndex:0] doubleValue] magenta:[[value objectAtIndex:1] doubleValue] yellow:[[value objectAtIndex:2] doubleValue] black:[[value objectAtIndex:3] doubleValue] alpha:1.0];
 #endif
 }
 
