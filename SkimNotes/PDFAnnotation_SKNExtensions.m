@@ -59,9 +59,7 @@
 
 #define PDFKIT_PLATFORM_OSX
 #define PDFKitPlatformColor         NSColor
-#define PDFKitPlatformFont          NSfont
-#define PDFKitPlatformBezierPath    NSBezierPath
-#define PDFRect                     NSRect
+#define PDFKitPlatformFont          NSFont
 #define PDFPoint                    NSPoint
 #define PDFPointZero                NSZeroPoint
 #define PDFRectZero                 NSZeroRect
