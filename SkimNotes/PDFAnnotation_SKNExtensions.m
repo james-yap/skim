@@ -2045,14 +2045,6 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
  --------
  */
 
-#ifndef PDFKIT_PLATFORM_IOS
-static inline void swapPoints(NSPoint p[4], NSUInteger i, NSUInteger j) {
-    NSPoint tmp = p[i];
-    p[i] = p[j];
-    p[j] = tmp;
-}
-#endif
-
 static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings) {
     NSMutableArray *quadPoints = [[NSMutableArray alloc] initWithCapacity:[pointStrings count]];
 #ifdef PDFKIT_PLATFORM_IOS
@@ -2070,17 +2062,12 @@ static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings
             p[j] = NSPointFromString([pointStrings objectAtIndex:4 * i + j]);
         // p[0]-p[1] should be in the same direction as p[2]-p[3]
         if ((p[1].x - p[0].x) * (p[3].x - p[2].x) + (p[1].y - p[0].y) * (p[3].y - p[2].y) < 0.0) {
-            swapPoints(p, 2, 3);
+            NSPoint tmp = p[2];
+            p[2] = p[3];
+            p[3] = tmp;
         }
-        // p[0], p[1], p[2] should be ordered clockwise
-        if ((p[1].y - p[0].y) * (p[2].x - p[0].x) - (p[1].x - p[0].x) * (p[2].y - p[0].y) < 0.0) {
-            swapPoints(p, 0, 2);
-            swapPoints(p, 1, 3);
-        }
-        for (j = 0; j < 4; j++) {
-            NSValue *value = [[NSValue alloc] initWithBytes:&p[j] objCType:@encode(NSPoint)];
-            [quadPoints addObject:value];
-        }
+        for (j = 0; j < 4; j++)
+            [quadPoints addObject:[NSValue valueWithPoint:p[j]]];
     }
 #endif
     return quadPoints;
