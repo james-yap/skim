@@ -1123,7 +1123,7 @@ static NSArray *mergedSnapshotSetups(NSArray *setups1, NSArray *setups2);
                 else if (pageIndex >= [pdfDoc pageCount])
                     pageIndex = [pdfDoc pageCount] - 1;
                 PDFPage *page = [pdfDoc pageAtIndex:pageIndex];
-                if (autoUpdate && [[annotation contents] length] == 0)
+                if (autoUpdate && [[annotation string] length] == 0)
                     [annotation autoUpdateStringWithPage:page];
                 [notesAndPagesToAdd addObject:@[annotation, page]];
             }
