@@ -61,7 +61,7 @@ NSString * const SKPDFAnnotationScriptingEndLineStyleKey = @"scriptingEndLineSty
 static void (*original_setBounds)(id, SEL, NSRect) = NULL;
 
 static void replacement_setBounds(id self, SEL _cmd , NSRect newBounds) {
-    NSArray *points = [self valueForAnnotationKey:@"/L"];
+    NSArray *points = [self valueForAnnotationKey:PDFAnnotationKeyLinePoints];
     if ([points isKindOfClass:[NSArray class]] && [points count] == 4) {
         NSPoint d = SKSubstractPoints(newBounds.origin, [self bounds].origin);
         if (NSEqualPoints(d, NSZeroPoint))
@@ -73,7 +73,7 @@ static void replacement_setBounds(id self, SEL _cmd , NSRect newBounds) {
     }
     original_setBounds(self, _cmd, newBounds);
     if (points)
-        [self setValue:points forAnnotationKey:@"/L"];
+        [self setValue:points forAnnotationKey:PDFAnnotationKeyLinePoints];
 }
 
 + (void)load {
