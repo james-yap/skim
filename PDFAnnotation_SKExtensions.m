@@ -235,8 +235,10 @@ static inline Class SKAnnotationClassForType(NSString *type) {
             [fdfString appendFormat:@" %f", [border lineWidth]];
             [fdfString appendFDFName:SKFDFAnnotationBorderStyleKey];
             [fdfString appendFDFName:SKFDFBorderStyleFromPDFBorderStyle([border style])];
-            [fdfString appendFDFName:SKFDFAnnotationDashPatternKey];
-            [fdfString appendFormat:@"[%@]", [[[border dashPattern] valueForKey:@"stringValue"] componentsJoinedByString:@" "]];
+            if ([border style] == kPDFBorderStyleDashed) {
+                [fdfString appendFDFName:SKFDFAnnotationDashPatternKey];
+                [fdfString appendFormat:@"[%@]", [[[border dashPattern] valueForKey:@"stringValue"] componentsJoinedByString:@" "]];
+            }
         } else {
             [fdfString appendFDFName:SKFDFAnnotationLineWidthKey];
             [fdfString appendString:@" 0.0"];
