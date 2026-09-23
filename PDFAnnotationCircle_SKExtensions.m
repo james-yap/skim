@@ -48,13 +48,14 @@
 @implementation PDFAnnotationCircle (SKExtensions)
 
 - (void)setDefaultSkimNoteProperties {
-    NSColor *color = [[NSUserDefaults standardUserDefaults] colorForKey:SKCircleNoteInteriorColorKey];
+    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+    NSColor *color = [sud colorForKey:SKCircleNoteInteriorColorKey];
     if ([color alphaComponent] > 0.0)
         [self setInteriorColor:color];
-    [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKCircleNoteColorKey]];
-    [[self border] setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKCircleNoteLineWidthKey]];
-    [[self border] setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKCircleNoteDashPatternKey]];
-    [[self border] setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKCircleNoteLineStyleKey]];
+    [self setColor:[sud colorForKey:SKCircleNoteColorKey]];
+    [[self border] setLineWidth:[sud floatForKey:SKCircleNoteLineWidthKey]];
+    [[self border] setDashPattern:[sud arrayForKey:SKCircleNoteDashPatternKey]];
+    [[self border] setStyle:[sud floatForKey:SKCircleNoteLineStyleKey]];
 }
 
 - (NSString *)fdfString {

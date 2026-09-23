@@ -83,19 +83,20 @@ static void replacement_setBounds(id self, SEL _cmd , NSRect newBounds) {
 }
 
 - (void)setDefaultSkimNoteProperties {
+    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
     NSRect bounds = [self bounds];
-    [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKLineNoteColorKey]];
-    NSColor *color = [[NSUserDefaults standardUserDefaults] colorForKey:SKLineNoteInteriorColorKey];
+    [self setColor:[sud colorForKey:SKLineNoteColorKey]];
+    NSColor *color = [sud colorForKey:SKLineNoteInteriorColorKey];
     if ([color alphaComponent] > 0.0)
         [self setInteriorColor:color];
-    [self setStartLineStyle:[[NSUserDefaults standardUserDefaults] integerForKey:SKLineNoteStartLineStyleKey]];
-    [self setEndLineStyle:[[NSUserDefaults standardUserDefaults] integerForKey:SKLineNoteEndLineStyleKey]];
+    [self setStartLineStyle:[sud integerForKey:SKLineNoteStartLineStyleKey]];
+    [self setEndLineStyle:[sud integerForKey:SKLineNoteEndLineStyleKey]];
     [self setStartPoint:NSMakePoint(0.0, 0.0)];
     [self setEndPoint:NSMakePoint(NSWidth(bounds), NSHeight(bounds))];
     PDFBorder *border = [[PDFBorder alloc] init];
-    [border setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKLineNoteLineWidthKey]];
-    [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKLineNoteDashPatternKey]];
-    [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKLineNoteLineStyleKey]];
+    [border setLineWidth:[sud floatForKey:SKLineNoteLineWidthKey]];
+    [border setDashPattern:[sud arrayForKey:SKLineNoteDashPatternKey]];
+    [border setStyle:[sud floatForKey:SKLineNoteLineStyleKey]];
     [self setBorder:[border lineWidth] > 0.0 ? border : nil];
 }
 

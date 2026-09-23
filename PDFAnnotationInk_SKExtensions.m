@@ -63,11 +63,12 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
 }
 
 - (void)setDefaultSkimNoteProperties {
-    [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKInkNoteColorKey]];
+    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+    [self setColor:[sud colorForKey:SKInkNoteColorKey]];
     PDFBorder *border = [[PDFBorder alloc] init];
-    [border setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKInkNoteLineWidthKey]];
-    [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKInkNoteDashPatternKey]];
-    [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKInkNoteLineStyleKey]];
+    [border setLineWidth:[sud floatForKey:SKInkNoteLineWidthKey]];
+    [border setDashPattern:[sud arrayForKey:SKInkNoteDashPatternKey]];
+    [border setStyle:[sud floatForKey:SKInkNoteLineStyleKey]];
     [self setBorder:[border lineWidth] > 0.0 ? border : nil];
 }
 

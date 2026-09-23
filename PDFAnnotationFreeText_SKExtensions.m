@@ -60,16 +60,17 @@ static inline NSTextAlignment textAlignmentFromAlignment(NSInteger alignment) {
 }
 
 - (void)setDefaultSkimNoteProperties {
-    NSFont *font = [[NSUserDefaults standardUserDefaults] fontForNameKey:SKFreeTextNoteFontNameKey sizeKey:SKFreeTextNoteFontSizeKey];
+    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+    NSFont *font = [sud fontForNameKey:SKFreeTextNoteFontNameKey sizeKey:SKFreeTextNoteFontSizeKey];
     if (font)
         [self setFont:font];
-    [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKFreeTextNoteColorKey]];
-    [self setFontColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKFreeTextNoteFontColorKey]];
-    [self setAlignment:textAlignmentFromAlignment([[NSUserDefaults standardUserDefaults] integerForKey:SKFreeTextNoteAlignmentKey])];
+    [self setColor:[sud colorForKey:SKFreeTextNoteColorKey]];
+    [self setFontColor:[sud colorForKey:SKFreeTextNoteFontColorKey]];
+    [self setAlignment:textAlignmentFromAlignment([sud integerForKey:SKFreeTextNoteAlignmentKey])];
     PDFBorder *border = [[PDFBorder alloc] init];
-    [border setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKFreeTextNoteLineWidthKey]];
-    [border setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKFreeTextNoteDashPatternKey]];
-    [border setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKFreeTextNoteLineStyleKey]];
+    [border setLineWidth:[sud floatForKey:SKFreeTextNoteLineWidthKey]];
+    [border setDashPattern:[sud arrayForKey:SKFreeTextNoteDashPatternKey]];
+    [border setStyle:[sud floatForKey:SKFreeTextNoteLineStyleKey]];
     if ([border lineWidth] > 0.0) {
         [self setBorder:border];
     } else {

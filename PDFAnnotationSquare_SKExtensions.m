@@ -48,13 +48,14 @@
 @implementation PDFAnnotationSquare (SKExtensions)
 
 - (void)setDefaultSkimNoteProperties {
-    NSColor *color = [[NSUserDefaults standardUserDefaults] colorForKey:SKSquareNoteInteriorColorKey];
+    NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
+    NSColor *color = [sud colorForKey:SKSquareNoteInteriorColorKey];
     if ([color alphaComponent] > 0.0)
         [self setInteriorColor:color];
-    [self setColor:[[NSUserDefaults standardUserDefaults] colorForKey:SKSquareNoteColorKey]];
-    [[self border] setLineWidth:[[NSUserDefaults standardUserDefaults] floatForKey:SKSquareNoteLineWidthKey]];
-    [[self border] setDashPattern:[[NSUserDefaults standardUserDefaults] arrayForKey:SKSquareNoteDashPatternKey]];
-    [[self border] setStyle:[[NSUserDefaults standardUserDefaults] floatForKey:SKSquareNoteLineStyleKey]];
+    [self setColor:[sud colorForKey:SKSquareNoteColorKey]];
+    [[self border] setLineWidth:[sud floatForKey:SKSquareNoteLineWidthKey]];
+    [[self border] setDashPattern:[sud arrayForKey:SKSquareNoteDashPatternKey]];
+    [[self border] setStyle:[sud floatForKey:SKSquareNoteLineStyleKey]];
 
 }
 
