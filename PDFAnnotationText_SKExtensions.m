@@ -53,7 +53,7 @@
 
 - (BOOL)isWidget { return NO; }
 
-- (BOOL)isLnk { return NO; }
+- (BOOL)isLink { return NO; }
 
 - (BOOL)isMovable { return [self isSkimNote]; }
 

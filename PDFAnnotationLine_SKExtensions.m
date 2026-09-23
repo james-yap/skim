@@ -124,7 +124,7 @@ static void replacement_setBounds(id self, SEL _cmd , NSRect newBounds) {
 
 - (BOOL)isWidget { return NO; }
 
-- (BOOL)isLnk { return NO; }
+- (BOOL)isLink { return NO; }
 
 - (BOOL)isResizable { return [self isSkimNote]; }
 

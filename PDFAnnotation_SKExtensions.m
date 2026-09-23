@@ -418,6 +418,8 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 - (BOOL)isText { return NO; }
 
+- (BOOL)isShape { return NO; }
+
 - (BOOL)isLine { return NO; }
 
 - (BOOL)isInk { return NO; }
@@ -487,8 +489,6 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SKDisableModificationDateKey] == NO)
         [self setModificationDate:[NSDate date]];
 }
-
-- (void)autoUpdateString {}
 
 - (void)autoUpdateStringWithPage:(PDFPage *)page {}
 

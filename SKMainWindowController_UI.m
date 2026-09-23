@@ -1755,7 +1755,7 @@
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && [annotation isEditable];
     } else if (action == @selector(autoSizeNote:)) {
         PDFAnnotation *annotation = [pdfView currentAnnotation];
-        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isResizable] && ([annotation isText] || [annotation isNote] || (([[annotation type] isEqualToString:SKNCircleString] || [[annotation type] isEqualToString:SKNSquareString]) && [[pdfView currentSelection] hasCharacters]));
+        return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isResizable] && ([annotation isText] || [annotation isNote] || ([annotation isShape] && [[pdfView currentSelection] hasCharacters]));
     } else if (action == @selector(alignLeft:) || action == @selector(alignRight:) || action == @selector(alignCenter:)) {
         PDFAnnotation *annotation = [pdfView currentAnnotation];
         return [self interactionMode] != SKPresentationMode && [self hasOverview] == NO && [annotation isSkimNote] && [annotation isEditable] && [annotation isText];

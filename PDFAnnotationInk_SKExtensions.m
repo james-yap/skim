@@ -96,7 +96,7 @@ static CGAffineTransform (*CGContextGetBaseCTM_func)(CGContextRef) = NULL;
 
 - (BOOL)isWidget { return NO; }
 
-- (BOOL)isLnk { return NO; }
+- (BOOL)isLink { return NO; }
 
 - (BOOL)isResizable { return [self isSkimNote]; }
 

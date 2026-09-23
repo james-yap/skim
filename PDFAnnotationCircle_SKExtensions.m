@@ -71,7 +71,9 @@
 
 - (BOOL)isWidget { return NO; }
 
-- (BOOL)isLnk { return NO; }
+- (BOOL)isShape { return YES; }
+
+- (BOOL)isLink { return NO; }
 
 - (BOOL)isResizable { return [self isSkimNote]; }
 
@@ -102,11 +104,6 @@
     dx = 2.0 * (point.x - NSMidX(bounds)) / NSWidth(bounds);
     dy = 2.0 * (point.y - NSMidY(bounds)) / NSHeight(bounds);
     return dx * dx + dy * dy >= 1.0;
-}
-
-- (void)autoUpdateString {
-    if (NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableUpdateContentsFromEnclosedTextKey] && [self page])
-        [self autoUpdateStringWithPage:[self page]];
 }
 
 - (void)autoUpdateStringWithPage:(PDFPage *)page {

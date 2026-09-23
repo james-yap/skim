@@ -71,7 +71,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     return [self controlType] == kPDFWidgetCheckBoxControl || [self controlType] == kPDFWidgetRadioButtonControl;
 }
 
-- (BOOL)isLnk { return NO; }
+- (BOOL)isLink { return NO; }
 
 - (NSSet *)keysForValuesToObserveForUndo {
     if ([self controlType] != kPDFWidgetCheckBoxControl && [self controlType] != kPDFWidgetRadioButtonControl)

@@ -69,7 +69,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 - (BOOL)isWidget { return YES; }
 
-- (BOOL)isLnk { return NO; }
+- (BOOL)isLink { return NO; }
 
 - (NSSet *)keysForValuesToObserveForUndo {
     static NSSet *keys = nil;

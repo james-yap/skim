@@ -72,7 +72,9 @@
 
 - (BOOL)isWidget { return NO; }
 
-- (BOOL)isLnk { return NO; }
+- (BOOL)isShape { return YES; }
+
+- (BOOL)isLink { return NO; }
 
 - (BOOL)isResizable { return [self isSkimNote]; }
 
@@ -92,11 +94,6 @@
     NSRect bounds = [self bounds];
     CGFloat delta = fmax(8.0, [self lineWidth]);
     return NSWidth(bounds) <= 2.0 * delta || NSHeight(bounds) <= 2.0 * delta || NSPointInRect(point, NSInsetRect(bounds, delta, delta)) == NO;
-}
-
-- (void)autoUpdateString {
-    if (NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableUpdateContentsFromEnclosedTextKey] && [self page])
-        [self autoUpdateStringWithPage:[self page]];
 }
 
 - (void)autoUpdateStringWithPage:(PDFPage *)page {

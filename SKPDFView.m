@@ -3435,7 +3435,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     
     if (NSEqualRects(bounds, newBounds) == NO) {
         [currentAnnotation setBounds:newBounds];
-        [currentAnnotation autoUpdateString];
+        if ([currentAnnotation isShape] && NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableUpdateContentsFromEnclosedTextKey])
+            [currentAnnotation autoUpdateStringWithPage:page];
     }
 }
 
@@ -3692,7 +3693,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
             }
             
             [currentAnnotation setBounds:newBounds];
-            [currentAnnotation autoUpdateString];
+            if ([currentAnnotation isShape] && NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableUpdateContentsFromEnclosedTextKey])
+                [currentAnnotation autoUpdateStringWithPage:page];
         }
     }
 }
@@ -4128,8 +4130,8 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     }
     
     if (currentAnnotation) {
-        if (draggedAnnotation)
-            [currentAnnotation autoUpdateString];
+        if (draggedAnnotation && [currentAnnotation isShape] && NO == [[NSUserDefaults standardUserDefaults] boolForKey:SKDisableUpdateContentsFromEnclosedTextKey])
+            [currentAnnotation autoUpdateStringWithPage:page];
         
         if (shouldAddAnnotation && (noteType == SKNoteTypeAnchored || noteType == SKNoteTypeFreeText))
             [self editCurrentAnnotation:self]; 	 

@@ -97,7 +97,7 @@ extern NSPasteboardType const SKPasteboardTypeSkimNote;
 
 @property (nonatomic, nullable, readonly) NSString *textString;
 
-@property (nonatomic, readonly) BOOL isMarkup, isNote, isText, isLine, isInk, isLink, isWidget;
+@property (nonatomic, readonly) BOOL isMarkup, isNote, isText, isShape, isLine, isInk, isLink, isWidget;
 @property (nonatomic, readonly) BOOL isResizable, isMovable, isEditable;
 @property (nonatomic, readonly) BOOL hasBorder, hasInteriorColor;
 @property (nonatomic, readonly) BOOL isConvertibleAnnotation;
@@ -112,7 +112,6 @@ extern NSPasteboardType const SKPasteboardTypeSkimNote;
 
 - (void)registerUserName;
 
-- (void)autoUpdateString;
 - (void)autoUpdateStringWithPage:(PDFPage *)page;
 
 @property (nonatomic, readonly) NSString *uniqueID;
