@@ -399,12 +399,12 @@ static inline Class SKAnnotationClassForType(NSString *type) {
 
 - (SKNPDFWidgetType)widgetType {
     if ([[self type] isEqualToString:SKNWidgetString]) {
-        NSString *ft = [self valueForAnnotationKey:@"/FT"];
-        if ([ft isEqualToString:@"/Tx"])
+        NSString *ft = [self widgetFieldType];
+        if ([ft isEqualToString:PDFAnnotationWidgetSubtypeText])
             return kSKNPDFWidgetTypeText;
-        else if ([ft isEqualToString:@"/Btn"])
+        else if ([ft isEqualToString:PDFAnnotationWidgetSubtypeButton])
             return kSKNPDFWidgetTypeButton;
-        else if ([ft isEqualToString:@"/Ch"])
+        else if ([ft isEqualToString:PDFAnnotationWidgetSubtypeChoice])
             return kSKNPDFWidgetTypeChoice;
     }
     return kSKNPDFWidgetTypeUnknown;
