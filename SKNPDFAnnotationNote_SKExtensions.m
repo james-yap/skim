@@ -54,9 +54,8 @@ NSString * const SKPDFAnnotationScriptingIconTypeKey = @"scriptingIconType";
 NSString * const SKPDFAnnotationScriptingImageDataKey = @"scriptingImageData";
 
 @interface SKNPDFAnnotationNote (SKPrivateDeclarations)
-- (NSTextStorage *)mutableText;
-- (NSArray *)texts;
-- (void)setTexts:(NSArray *)texts;
+@property (nonatomic, readonly) NSTextStorage *mutableText;
+@property (nonatomic, strong, nullable) NSArray *texts;
 @end
 
 @implementation SKNPDFAnnotationNote (SKExtensions)
@@ -138,39 +137,7 @@ NSString * const SKPDFAnnotationScriptingImageDataKey = @"scriptingImageData";
 
 - (NSString *)colorDefaultKey { return SKAnchoredNoteColorKey; }
 
-- (NSSet *)keysForValuesToObserveForUndo {
-    static NSSet *noteKeys = nil;
-    if (noteKeys == nil) {
-        NSMutableSet *mutableKeys = [[super keysForValuesToObserveForUndo] mutableCopy];
-        [mutableKeys removeObject:SKNPDFAnnotationBorderKey];
-        [mutableKeys addObject:SKNPDFAnnotationNameKey];
-        [mutableKeys addObject:SKNPDFAnnotationTextKey];
-        [mutableKeys addObject:SKNPDFAnnotationImageKey];
-        [mutableKeys addObject:SKNPDFAnnotationDrawsImageKey];
-        noteKeys = [mutableKeys copy];
-    }
-    return noteKeys;
-}
-
 #pragma mark Scripting support
-
-+ (NSSet *)customScriptingKeys {
-    static NSSet *customNoteScriptingKeys = nil;
-    if (customNoteScriptingKeys == nil) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        NSMutableSet *customKeys = [[super customScriptingKeys] mutableCopy];
-#pragma clang diagnostic pop
-        [customKeys removeObject:SKNPDFAnnotationLineWidthKey];
-        [customKeys removeObject:SKNPDFAnnotationBorderStyleKey];
-        [customKeys removeObject:SKNPDFAnnotationDashPatternKey];
-        [customKeys addObject:SKPDFAnnotationScriptingIconTypeKey];
-        [customKeys addObject:SKPDFAnnotationRichTextKey];
-        [customKeys addObject:SKPDFAnnotationScriptingImageDataKey];
-        customNoteScriptingKeys = [customKeys copy];
-    }
-    return customNoteScriptingKeys;
-}
 
 - (id)richText {
     return [self mutableText];

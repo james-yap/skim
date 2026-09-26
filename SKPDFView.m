@@ -40,9 +40,6 @@
 #import "SKImageToolTipWindow.h"
 #import <SkimNotes/SkimNotes.h>
 #import "PDFAnnotation_SKExtensions.h"
-#import "PDFAnnotationMarkup_SKExtensions.h"
-#import "PDFAnnotationInk_SKExtensions.h"
-#import "PDFAnnotationLine_SKExtensions.h"
 #import "SKNPDFAnnotationNote_SKExtensions.h"
 #import "PDFPage_SKExtensions.h"
 #import "NSString_SKExtensions.h"

@@ -71,7 +71,6 @@
 #import "NSDocument_SKExtensions.h"
 #import "SKApplication.h"
 #import "SKTextFieldSheetController.h"
-#import "PDFAnnotationMarkup_SKExtensions.h"
 #import "NSWindowController_SKExtensions.h"
 #import "SKSyncPreferences.h"
 #import "NSScreen_SKExtensions.h"
