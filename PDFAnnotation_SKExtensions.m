@@ -234,25 +234,10 @@ static void replacement_setBounds(id self, SEL _cmd , NSRect newBounds) {
 }
 
 static inline Class SKAnnotationClassForType(NSString *type) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString])
         return [SKNPDFAnnotationNote class];
-    else if ([type isEqualToString:SKNFreeTextString])
-        return [PDFAnnotationFreeText class];
-    else if ([type isEqualToString:SKNCircleString])
-        return [PDFAnnotationCircle class];
-    else if ([type isEqualToString:SKNSquareString])
-        return [PDFAnnotationSquare class];
-    else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNMarkUpString])
-        return [PDFAnnotationMarkup class];
-    else if ([type isEqualToString:SKNLineString])
-        return [PDFAnnotationLine class];
-    else if ([type isEqualToString:SKNInkString])
-        return [PDFAnnotationInk class];
     else
-        return Nil;
-#pragma clang diagnostic pop
+        return [PDFAnnotation class];
 }
 
 + (PDFAnnotation *)newSkimNoteWithBounds:(NSRect)bounds forType:(NSString *)type {
@@ -285,15 +270,15 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     }
     if (lines == nil)
         return nil;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    PDFAnnotation *annotation = [[PDFAnnotationMarkup alloc] initSkimNoteWithBounds:bounds forType:type];
-#pragma clang diagnostic pop
+    
+    PDFAnnotation *annotation = [[PDFAnnotation alloc] initSkimNoteWithBounds:bounds forType:type];
+    
     if (annotation) {
         NSArray *quadPoints = quadPointsForLineRects(lines, bounds.origin, [page lineDirectionAngle] / 90);
         [annotation setQuadrilateralPoints:quadPoints];
         objc_setAssociatedObject(annotation, &SKLineRectsKey, lines, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
+    
     return annotation;
 }
 
@@ -306,12 +291,11 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     bounds = NSInsetRect(NSIntegralRect(bounds), -8.0, -8.0);
     [transform translateXBy:-NSMinX(bounds) yBy:-NSMinY(bounds)];
     
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    PDFAnnotation *annotation = [[PDFAnnotationInk alloc] initSkimNoteWithBounds:bounds forType:SKNInkString];
-#pragma clang diagnostic pop
+    PDFAnnotation *annotation = [[PDFAnnotation alloc] initSkimNoteWithBounds:bounds forType:SKNInkString];
+    
     for (NSBezierPath *path in paths)
         [annotation addBezierPath:[transform transformBezierPath:path]];
+    
     return annotation;
 }
 
