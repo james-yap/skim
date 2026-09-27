@@ -223,19 +223,19 @@ static void replacement_setBounds(id self, SEL _cmd , NSRect newBounds) {
     return nil;
 }
 
-static inline Class SKAnnotationClassForType(NSString *type) {
++ (Class)annotationClassForType:(NSString *)type {
     if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString])
         return [SKNPDFAnnotationNote class];
     else
-        return [PDFAnnotation class];
+        return self;
 }
 
 + (PDFAnnotation *)newSkimNoteWithBounds:(NSRect)bounds forType:(NSString *)type {
-    return [[SKAnnotationClassForType(type) alloc] initSkimNoteWithBounds:bounds forType:type];
+    return [[[self annotationClassForType:type] alloc] initSkimNoteWithBounds:bounds forType:type];
 }
 
 + (PDFAnnotation *)newSkimNoteWithProperties:(NSDictionary *)dict {
-    PDFAnnotation *annotation = [[SKAnnotationClassForType([dict objectForKey:SKNPDFAnnotationTypeKey]) alloc] initSkimNoteWithProperties:dict];
+    PDFAnnotation *annotation = [[[self annotationClassForType:[dict objectForKey:SKNPDFAnnotationTypeKey]] alloc] initSkimNoteWithProperties:dict];
     if ([annotation isMarkup]) {
         // generate the lineRects now, for thread safety
         NSPointerArray *lines = lineRectsForQuadPoints([annotation quadrilateralPoints], [annotation bounds].origin);
@@ -261,7 +261,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     if (lines == nil)
         return nil;
     
-    PDFAnnotation *annotation = [[PDFAnnotation alloc] initSkimNoteWithBounds:bounds forType:type];
+    PDFAnnotation *annotation = [[self alloc] initSkimNoteWithBounds:bounds forType:type];
     
     if (annotation) {
         NSArray *quadPoints = quadPointsForLineRects(lines, bounds.origin, [page lineDirectionAngle] / 90);
@@ -281,7 +281,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     bounds = NSInsetRect(NSIntegralRect(bounds), -8.0, -8.0);
     [transform translateXBy:-NSMinX(bounds) yBy:-NSMinY(bounds)];
     
-    PDFAnnotation *annotation = [[PDFAnnotation alloc] initSkimNoteWithBounds:bounds forType:SKNInkString];
+    PDFAnnotation *annotation = [[self alloc] initSkimNoteWithBounds:bounds forType:SKNInkString];
     
     for (NSBezierPath *path in paths)
         [annotation addBezierPath:[transform transformBezierPath:path]];
