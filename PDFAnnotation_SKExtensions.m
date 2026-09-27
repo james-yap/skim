@@ -97,7 +97,7 @@ static NSArray *quadPointsForLineRects(NSPointerArray *lines, NSPoint origin, NS
     NSMutableArray *quadPoints = [[NSMutableArray alloc] init];
     NSUInteger i, iMax = [lines count];
     for (i = 0; i < iMax; i++) {
-        static NSInteger offset[4] = {0, 1, 3, 2};
+        NSInteger offset[4] = {0, 1, 3, 2};
         NSRect r = NSOffsetRect([lines rectAtIndex:i], -origin.x, -origin.y);
         NSInteger j = lineDirection;
         NSPoint p[4];
