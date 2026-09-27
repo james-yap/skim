@@ -547,7 +547,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
             
             NSArray *pointLists = [dict objectForKey:SKNPDFAnnotationPointListsKey];
             if ([pointLists isKindOfClass:arrayClass]) {
-                for (NSArray *pointStrings in pointStrings) {
+                for (NSArray *pointStrings in pointLists) {
                     if ([pointStrings isKindOfClass:arrayClass]) {
                         PDFKitPlatformBezierPath *path = [[PDFKitPlatformBezierPath alloc] init];
                         [[self class] setPoints:pointStrings ofSkimNotePath:path];
@@ -845,9 +845,9 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         } else if ([type isEqualToString:SKNFreeTextString]) {
             
             if ([self respondsToSelector:@selector(alignment)]) {
-                [dict setValue:[NSNumber numberWithInteger:SKNTextAlignmentFromAlignment([(id)self alignment])] forKey:SKNPDFAnnotationAlignmentKey];
+                [dict setValue:[NSNumber numberWithInteger:SKNAlignmentFromTextAlignment([(id)self alignment])] forKey:SKNPDFAnnotationAlignmentKey];
             } else if ((value = [self valueForAnnotationKey:PDFAnnotationKeyQuadding])) {
-                [dict setValue:[NSNumber numberWithInteger:SKNTextAlignmentFromAlignment([value integerValue])] forKey:SKNPDFAnnotationAlignmentKey];
+                [dict setValue:[NSNumber numberWithInteger:SKNAlignmentFromTextAlignment([value integerValue])] forKey:SKNPDFAnnotationAlignmentKey];
             }
             
             PDFKitPlatformFont *font = nil;
