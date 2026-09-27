@@ -857,10 +857,11 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
     } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString]) {
         NSPointerArray *lines = [self lineRects];
         NSUInteger i = [lines count];
-        BOOL isContained = NO;
-        while (i-- && NO == isContained)
-            isContained = NSPointInRect(point, [lines rectAtIndex:i]);
-        return isContained;
+        while (i--) {
+            if (NSPointInRect(point, [lines rectAtIndex:i]))
+                return YES;
+        }
+        return NO;
     }
     return YES;
 }
