@@ -63,7 +63,7 @@ extern NSString * const SKPDFAnnotationBoundsOrderKey;
 
 extern NSPasteboardType const SKPasteboardTypeSkimNote;
 
-@class SKPDFView, SKNoteText;
+@class SKNoteText;
 
 @interface PDFAnnotation (SKExtensions) <NSPasteboardReading, NSPasteboardWriting>
 
