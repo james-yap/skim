@@ -2372,7 +2372,7 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
                 string = string2;
         }
         
-        newAnnotation = [PDFAnnotation newSkimNoteWithSelection:sel forPage:page forType:type];
+        newAnnotation = [PDFAnnotation newSkimNoteWithSelection:sel onPage:page forType:type];
         if ([string length] > 0)
             [newAnnotation setString:string];
     } else if ([currentAnnotation isInk]) {
@@ -2436,7 +2436,7 @@ static inline CGFloat secondaryOutset(CGFloat x) {
     NSString *text = disableUpdateString < 2 ? [selection cleanedString] : nil;
     NSMutableArray *newAnnotations = [NSMutableArray array];
     for (PDFPage *aPage in [selection pages]) {
-        PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithSelection:selection forPage:aPage forType:type];
+        PDFAnnotation *newAnnotation = [PDFAnnotation newSkimNoteWithSelection:selection onPage:aPage forType:type];
         if (newAnnotation) {
             if (text)
                 [newAnnotation setString:text];

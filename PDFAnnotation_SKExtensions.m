@@ -254,7 +254,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     return annotation;
 }
 
-+ (PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection forPage:(PDFPage *)page forType:(NSString *)type {
++ (PDFAnnotation *)newSkimNoteWithSelection:(PDFSelection *)selection onPage:(PDFPage *)page forType:(NSString *)type {
     NSRect bounds = NSZeroRect;
     NSPointerArray *lines = nil;
     if ([selection safeIndexOfFirstCharacterOnPage:page] != NSNotFound) {

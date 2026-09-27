@@ -713,7 +713,7 @@ static inline NSInteger distanceForAngle(NSInteger angle, NSRect bounds, NSRect 
                 [[NSScriptCommand currentCommand] setScriptErrorNumber:NSRequiredArgumentsMissingScriptError]; 
                 [[NSScriptCommand currentCommand] setScriptErrorString:@"New markup notes need a selection."];
             } else if (selection) {
-                annotation = [PDFAnnotation newSkimNoteWithSelection:selection forPage:self forType:type];
+                annotation = [PDFAnnotation newSkimNoteWithSelection:selection onPage:self forType:type];
                 if ([props objectForKey:SKPDFAnnotationScriptingTextContentsKey] == nil &&
                     [[NSUserDefaults standardUserDefaults] integerForKey:SKDisableUpdateContentsFromEnclosedTextKey] != 2)
                     [props setValue:[selection cleanedString] forKey:SKPDFAnnotationScriptingTextContentsKey];
