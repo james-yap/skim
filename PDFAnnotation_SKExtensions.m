@@ -830,14 +830,12 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
     if ([self shouldDisplay] == NO || [self isSkimNote] == NO)
         return NO;
     NSString *type = [self type];
-    if ([type isEqualToString:SKNLineString]) {
-        CGFloat delta = fmax(4.0, 0.5 * [self lineWidth]);
-        return SKPointNearLineFromPointToPoint(SKSubstractPoints(point, [self bounds].origin), [self startPoint], [self endPoint], delta);
-    } else if (NSPointInRect(point, [self bounds]) == NO) {
+    if ([type isEqualToString:SKNLineString])
+        return SKPointNearLineFromPointToPoint(SKSubstractPoints(point, [self bounds].origin), [self startPoint], [self endPoint], fmax(4.0, 0.5 * [self lineWidth]));
+    NSRect bounds = [self bounds];
+    if (NSPointInRect(point, bounds) == NO)
         return NO;
-    }
     if ([type isEqualToString:SKNCircleString]) {
-        NSRect bounds = [self bounds];
         CGFloat dx = 2.0 * (point.x - NSMidX(bounds)) / NSWidth(bounds);
         CGFloat dy = 2.0 * (point.y - NSMidY(bounds)) / NSHeight(bounds);
         if (dx * dx + dy * dy > 1.0)
@@ -854,7 +852,6 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
     } else if ([type isEqualToString:SKNSquareString]) {
         if ([self interiorColor])
             return YES;
-        NSRect bounds = [self bounds];
         CGFloat delta = fmax(8.0, [self lineWidth]);
         return NSWidth(bounds) <= 2.0 * delta || NSHeight(bounds) <= 2.0 * delta || NSPointInRect(point, NSInsetRect(bounds, delta, delta)) == NO;
     } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString]) {
