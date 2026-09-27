@@ -378,14 +378,9 @@ int main (int argc, const char * argv[]) {
                     for (PDFAnnotation *annotation in annotations) {
                         if ([convertibleTypes containsObject:[annotation type]]) {
                             NSDictionary *note = [annotation SkimNoteProperties];
-                            if ([[annotation type] isEqualToString:SKNTextString]) {
+                            if ([[annotation type] isEqualToString:SKNTextString] || [[annotation type] isEqualToString:SKNStampString]) {
                                 NSMutableDictionary *mutableNote = [note mutableCopy];
-                                NSRect bounds = NSRectFromString([note objectForKey:SKNPDFAnnotationBoundsKey]);
                                 NSString *contents = [note objectForKey:SKNPDFAnnotationContentsKey];
-                                [mutableNote setObject:SKNNoteString forKey:SKNPDFAnnotationTypeKey];
-                                bounds.origin.y = NSMaxY(bounds) - SKNPDFAnnotationNoteSize.height;
-                                bounds.size = SKNPDFAnnotationNoteSize;
-                                [mutableNote setObject:NSStringFromRect(bounds) forKey:SKNPDFAnnotationBoundsKey];
                                 if (contents) {
                                     NSRange r = [contents rangeOfString:@"  "];
                                     NSRange r1 = [contents rangeOfString:@"\n"];
@@ -397,22 +392,16 @@ int main (int argc, const char * argv[]) {
                                         [mutableNote setObject:[contents substringToIndex:r.location] forKey:SKNPDFAnnotationContentsKey];
                                     }
                                 }
-                                note = mutableNote;
-                            } else if ([[annotation type] isEqualToString:SKNStampString]) {
-                                NSMutableDictionary *mutableNote = [note mutableCopy];
-                                NSString *contents = [note objectForKey:SKNPDFAnnotationContentsKey];
                                 [mutableNote setObject:SKNNoteString forKey:SKNPDFAnnotationTypeKey];
-                                [mutableNote setObject:[NSNumber numberWithBool:YES] forKey:SKNPDFAnnotationDrawsImageKey];
-                                if (contents) {
-                                    NSRange r = [contents rangeOfString:@"  "];
-                                    NSRange r1 = [contents rangeOfString:@"\n"];
-                                    if (r1.location < r.location)
-                                        r = r1;
-                                    if (NSMaxRange(r) < [contents length]) {
-                                        NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:[contents substringFromIndex:NSMaxRange(r)]];
-                                        [mutableNote setObject:attrString forKey:SKNPDFAnnotationTextKey];
-                                        [mutableNote setObject:[contents substringToIndex:r.location] forKey:SKNPDFAnnotationContentsKey];
+                                if ([[annotation type] isEqualToString:SKNTextString]) {
+                                    NSRect bounds = NSRectFromString([note objectForKey:SKNPDFAnnotationBoundsKey]);
+                                    if (NSEqualSizes(bounds.size, SKNPDFAnnotationNoteSize) == NO) {
+                                        bounds.origin.y = NSMaxY(bounds) - SKNPDFAnnotationNoteSize.height;
+                                        bounds.size = SKNPDFAnnotationNoteSize;
+                                        [mutableNote setObject:NSStringFromRect(bounds) forKey:SKNPDFAnnotationBoundsKey];
                                     }
+                                } else {
+                                    [mutableNote setObject:[NSNumber numberWithBool:YES] forKey:SKNPDFAnnotationDrawsImageKey];
                                 }
                                 note = mutableNote;
                             }
