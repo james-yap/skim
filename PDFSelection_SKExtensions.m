@@ -253,19 +253,36 @@ static BOOL inline isHyphenated(NSString *string, PDFSelection *line, PDFSelecti
 
 - (NSRect)safeBoundsForPage:(PDFPage *)page {
     NSRect rect = [self boundsForPage:page];
-    if (isfinite(NSMinX(rect)) == NO || isfinite(NSMinX(rect)) == NO || NSIsEmptyRect(rect)) {
-        // On Tahoe, boundsForPage: can return a degenerate rect
-        // for selections found inside certain table-structured PDFs.
-        // Reconstruct from per-character bounds instead,
-        // which use a different PDFKit code path and are unaffected.
-        NSUInteger firstIndex = [self safeIndexOfFirstCharacterOnPage:page];
-        if (firstIndex != NSNotFound) {
-            rect = [page characterBoundsAtIndex:firstIndex];
-            NSUInteger lastIndex = [self safeIndexOfLastCharacterOnPage:page];
-            if (lastIndex != firstIndex && lastIndex != NSNotFound)
-                rect = NSUnionRect(rect, [page characterBoundsAtIndex:lastIndex]);
-            if (isfinite(NSMinX(rect)) == NO || isfinite(NSMinX(rect)) == NO)
-                rect = [page foregroundRect];
+    if (@available(macOS 26.0, *)) {
+        if (isfinite(NSMinX(rect)) == NO || isfinite(NSMinX(rect)) == NO || NSIsEmptyRect(rect)) {
+            // On Tahoe, boundsForPage: can return a degenerate rect
+            // for selections found inside certain table-structured PDFs.
+            // Reconstruct from per-character bounds instead,
+            // which use a different PDFKit code path and are unaffected.
+            rect = NSZeroRect;
+            NSUInteger i, iMax = [self numberOfTextRangesOnPage:page];
+            for (i = 0; i < iMax; i++) {
+                NSRange tr = [self rangeAtIndex:i onPage:page];
+                if (tr.length > 0) {
+                    PDFSelection *sub = [page selectionForRange:tr];
+                    if (sub) {
+                        NSRect subRect = [sub boundsForPage:page];
+                        if (isfinite(NSMinX(subRect)) && isfinite(NSMinY(subRect)) && NSIsEmptyRect(subRect) == NO)
+                            rect = NSUnionRect(rect, subRect);
+                    }
+                }
+            }
+            if (isfinite(NSMinX(rect)) == NO || isfinite(NSMinX(rect)) == NO || NSIsEmptyRect(rect)) {
+                NSUInteger firstIndex = [self safeIndexOfFirstCharacterOnPage:page];
+                if (firstIndex != NSNotFound) {
+                    rect = [page characterBoundsAtIndex:firstIndex];
+                    NSUInteger lastIndex = [self safeIndexOfLastCharacterOnPage:page];
+                    if (lastIndex != firstIndex && lastIndex != NSNotFound)
+                        rect = NSUnionRect(rect, [page characterBoundsAtIndex:lastIndex]);
+                    if (isfinite(NSMinX(rect)) == NO || isfinite(NSMinX(rect)) == NO)
+                        rect = [page foregroundRect];
+                }
+            }
         }
     }
     return rect;
