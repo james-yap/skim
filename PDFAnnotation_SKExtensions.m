@@ -634,11 +634,12 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
 }
 
 - (NSArray *)pagePaths {
-    NSMutableArray *paths = [[NSMutableArray alloc] initWithArray:[self paths] copyItems:YES];
+    NSMutableArray *paths = [[NSMutableArray alloc] init];
     NSRect bounds = [self bounds];
     NSAffineTransform *transform = [NSAffineTransform transform];
     [transform translateXBy:NSMinX(bounds) yBy:NSMinY(bounds)];
-    [paths makeObjectsPerformSelector:@selector(transformUsingAffineTransform:) withObject:transform];
+    for (NSBezierPath *path in [self paths])
+        [paths addObject:[transform transformBezierPath:path]];
     return paths;
 }
 
