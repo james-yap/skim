@@ -250,7 +250,7 @@ static inline Class SKAnnotationClassForType(NSString *type) {
     if ([selection safeIndexOfFirstCharacterOnPage:page] != NSNotFound) {
         for (PDFSelection *sel in [selection connectedSelectionsOnPage:page]) {
             NSRect lineRect = [sel boundsForPage:page];
-            if (NSIsEmptyRect(lineRect) == NO && [[sel string] rangeOfCharacterFromSet:[NSCharacterSet nonWhitespaceAndNewlineCharacterSet]].length) {
+            if (NSIsEmptyRect(lineRect) == NO && isfinite(NSMinX(lineRect)) && isfinite(NSMinY(lineRect)) && [[sel string] rangeOfCharacterFromSet:[NSCharacterSet nonWhitespaceAndNewlineCharacterSet]].length) {
                 if (lines == nil)
                     lines = [[NSPointerArray alloc] initForRectPointers];
                 [lines addPointer:&lineRect];
