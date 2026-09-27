@@ -136,21 +136,11 @@ static NSPointerArray *lineRectsForQuadPoints(NSArray *quadPoints, NSPoint origi
 
 // NSTextAlignment enum values depend on the architecture, on arm64 right=2 and center=1
 static inline NSTextAlignment textAlignmentFromAlignment(NSInteger alignment) {
-    switch (alignment) {
-        case 0: return NSTextAlignmentLeft;
-        case 1: return NSTextAlignmentRight;
-        case 2: return NSTextAlignmentCenter;
-        default: return NSTextAlignmentLeft;
-    }
+    return alignment == 2 ? NSTextAlignmentCenter : alignment == 1 ? NSTextAlignmentRight : 0;
 }
 
 static inline NSInteger alignmentFromTextAlignment(NSTextAlignment alignment) {
-    switch (alignment) {
-        case NSTextAlignmentLeft: return 0;
-        case NSTextAlignmentRight: return 1;
-        case NSTextAlignmentCenter: return 2;
-        default: return 0;
-    }
+    return alignment == NSTextAlignmentCenter ? 2 : alignment == NSTextAlignmentRight ? 1 : NSTextAlignmentLeft;
 }
 
 @implementation PDFAnnotation (SKExtensions)
