@@ -101,7 +101,7 @@ extern NSPasteboardType const SKPasteboardTypeSkimNote;
 
 @property (nonatomic, nullable, readonly) PDFSelection *selection;
 
-@property (nonatomic, nullable, strong) id objectValue;
+@property (nonatomic, nullable, copy) id objectValue;
 
 @property (nonatomic, readonly) SKNPDFWidgetType widgetType;
 
