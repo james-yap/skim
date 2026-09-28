@@ -300,6 +300,47 @@ static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment)
 
 static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings);
 
+#pragma mark -
+
+#ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
+
+@interface PDFAnnotationCircle (SKNExtensions)
+@end
+
+@interface PDFAnnotationSquare (SKNExtensions)
+@end
+
+@interface PDFAnnotationLine (SKNExtensions)
+@end
+
+@interface PDFAnnotationFreeText (SKNExtensions)
+@end
+
+@interface PDFAnnotationMarkup (SKNExtensions)
+@end
+
+@interface PDFAnnotationText (SKNExtensions)
+@end
+
+@interface PDFAnnotationStamp (SKNExtensions)
+@end
+
+@interface PDFAnnotationInk (SKNExtensions)
+@end
+
+@interface PDFAnnotationTextWidget (SKNExtensions)
+@end
+
+@interface PDFAnnotationButtonWidget (SKNExtensions)
+@end
+
+@interface PDFAnnotationChoiceWidget (SKNExtensions)
+@end
+
+#endif
+
+#pragma mark -
+
 @implementation PDFAnnotation (SKNExtensions)
 
 char SKNIsSkimNoteKey;

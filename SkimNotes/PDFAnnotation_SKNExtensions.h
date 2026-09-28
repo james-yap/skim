@@ -39,7 +39,7 @@
 /*!
     @header      
     @abstract    An <code>PDFAnnotation</code> category and an <code>PDFAnnotation</code> subclass to manage Skim notes.
-    @discussion  This header file provides API for <code>PDFAnnotation</code> categories and an <code>PDFAnnotation</code> subclass to convert Skim note dictionaries to <code>PDFAnnotations</code> and back.
+    @discussion  This header file provides API for an <code>PDFAnnotation</code> category and an <code>PDFAnnotation</code> subclass to convert Skim note dictionaries to <code>PDFAnnotations</code> and back.
 */
 #import <Foundation/Foundation.h>
 #import <PDFKit/PDFKit.h>
@@ -388,118 +388,18 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 #pragma mark -
 
 #ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
-
-/*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
-    @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a circle annotation.
-*/
-@interface PDFAnnotationCircle (SKNExtensions)
-@end
-
-#pragma mark -
-
-/*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
-    @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a square annotation.
-*/
-@interface PDFAnnotationSquare (SKNExtensions)
-@end
-
-#pragma mark -
-
-/*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
-    @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a line annotation.
-*/
-@interface PDFAnnotationLine (SKNExtensions)
-@end
-
-#pragma mark -
-
-/*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
-    @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a free text annotation.
-*/
-@interface PDFAnnotationFreeText (SKNExtensions)
-@end
-
-#pragma mark -
-
-/*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
-    @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a markup annotation.
-*/
-@interface PDFAnnotationMarkup (SKNExtensions)
-@end
-
-/*!
-    @abstract    An informal protocol providing a method name for an optional method that may be implemented in a category.
-    @discussion  This defines an optional method that another <code>PDFAnnotationMarkup</code> category may implement to provide a default color.
-*/
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 @interface PDFAnnotationMarkup (SKNOptional)
+#pragma clang diagnostic pop
 /*!
     @abstract   Optional method to implement to return the default color to use for markup initialized with properties that do not contain a color.
     @param      markupType The markup style for which to return the default color.
-    @discussion This optional method can be implemented in another category to provide a default color for Skim notes that have no color set in the properties dictionary.  This method is not implemented by default.
+    @discussion This optional method can be implemented when using legacy <code>PDFAnnotation</code> subclasses in a category to provide a default color for Skim notes that have no color set in the properties dictionary.  This method is not implemented by default.
     @result     The default color for an annotation with the passed in markup style.
 */
 + (NSColor *)defaultSkimNoteColorForMarkupType:(NSInteger)markupType;
 @end
-
-#pragma mark -
-
-/*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
-    @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a text annotation.
-*/
-@interface PDFAnnotationText (SKNExtensions)
-@end
-
-#pragma mark -
-
-/*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
-    @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a stamp annotation.
-*/
-@interface PDFAnnotationStamp (SKNExtensions)
-@end
-
-#pragma mark -
-
-/*!
-    @abstract    Provides methods to translate between dictionary representations of Skim notes and <code>PDFAnnotation</code> objects.
-    @discussion  Implements <code>initSkimNotesWithProperties:</code> and properties to take care of the extra properties of a text annotation.
-*/
-@interface PDFAnnotationInk (SKNExtensions)
-@end
-
-#pragma mark -
-
-/*!
-    @abstract    Provides methods to save data for a widget object.
-    @discussion  Implements <code>SkimNoteProperties</code> for a text widget annotation.
-*/
-@interface PDFAnnotationTextWidget (SKNExtensions)
-@end
-
-#pragma mark -
-
-/*!
-    @abstract    Provides methods to save data for a widget object.
-    @discussion  Implements <code>SkimNoteProperties</code> for a button widget annotation.
-*/
-@interface PDFAnnotationButtonWidget (SKNExtensions)
-@end
-
-#pragma mark -
-
-/*!
-    @abstract    Provides methods to save data for a widget object.
-    @discussion  Implements <code>SkimNoteProperties</code> for a choice widget annotation.
-*/
-@interface PDFAnnotationChoiceWidget (SKNExtensions)
-@end
-
 #endif
 
 #pragma mark -
@@ -507,13 +407,13 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 #ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-/*!
-    @abstract    A concrete <code>PDFAnnotation</code> subclass representing a Skim anchored note.
-    @discussion  This is a <code>PDFAnnotationText</code> subclass containing a separate short string value, a longer rich text property, and an image property.
-*/
 @interface SKNPDFAnnotationNote : PDFAnnotationText
 #pragma clang diagnostic pop
 #else
+/*!
+    @abstract    A concrete <code>PDFAnnotation</code> subclass representing a Skim anchored note.
+    @discussion  This is a <code>PDFAnnotation</code> subclass containing a separate short string value, a longer rich text property, and an image property.
+*/
 @interface SKNPDFAnnotationNote : PDFAnnotation
 #endif
 {
