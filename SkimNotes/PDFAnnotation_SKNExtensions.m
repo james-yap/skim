@@ -1642,7 +1642,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 
 @synthesize text = _text;
 @synthesize image = _image;
-@synthesize drawsImage = _drawsImage;
+@dynamic drawsImage;
 #ifndef PDFKIT_PLATFORM_IOS
 @dynamic mutableText;
 @synthesize texts = _texts;
@@ -1650,8 +1650,9 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 
 - (void)updateContents {
     NSMutableString *contents = [NSMutableString string];
-    if ([_string length])
-        [contents appendString:_string];
+    NSString *string = [self string];
+    if ([string length])
+        [contents appendString:string];
     if ([_text length]) {
         [contents appendString:@"  "];
         [contents appendString:[_text string]];
@@ -1711,22 +1712,41 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     return SKNNoteString;
 }
 
+- (BOOL)drawsImage {
+#if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12
+    return _drawsImage;
+#else
+    return [[self valueForAnnotationKey:@"/SubType"] isEqualToString:@"/Stamp"];
+#endif
+}
+
 - (void)setDrawsImage:(BOOL)drawsImage {
+#if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12
     _drawsImage = drawsImage;
     if ([self respondsToSelector:@selector(setValue:forAnnotationKey:)])
-        [self setValue:drawsImage ? @"/Stamp" : @"/Text" forAnnotationKey:@"/Subtype"];
+#endif
+    [self setValue:drawsImage ? @"/Stamp" : @"/Text" forAnnotationKey:@"/Subtype"];
 }
 
 - (NSString *)string {
+#if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12
     return _string;
+#else
+    return [self valueForAnnotationKey:@"/SkimComment"];
+#endif
 }
 
 - (void)setString:(NSString *)string {
-    if (_string != string) {
-        _string = [string copy];
-        // update the contents to string + text
-        [self updateContents];
-    }
+#if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12
+    _string = [string copy];
+#else
+    if (string)
+        [self setValue:[string copy] forAnnotationKey:@"/SkimComment"];
+    else
+        [self removeValueForAnnotationKey:@"/SkimComment"];
+#endif
+    // update the contents to string + text
+    [self updateContents];
 }
 
 #ifdef PDFKIT_PLATFORM_IOS

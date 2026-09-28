@@ -517,11 +517,13 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 @interface SKNPDFAnnotationNote : PDFAnnotation
 #endif
 {
-    NSString *_string;
     PDFKitPlatformImage *_image;
     NSAttributedString *_text;
-    BOOL _drawsImage;
 #ifndef PDFKIT_PLATFORM_IOS
+#if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12
+    NSString *_string;
+    BOOL _drawsImage;
+#endif
     NSTextStorage *_textStorage;
     NSArray *_texts;
 #endif
