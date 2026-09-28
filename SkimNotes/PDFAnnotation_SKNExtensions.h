@@ -299,16 +299,6 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 */
 @interface PDFAnnotation (SKNExtensions)
 
-#ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
-/*!
-    @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim note on macOS when using legacy <code>PDFAnnotation</code> subclasses.
-    @discussion This method can be implemented in subclasses to provide default properties for Skim notes.
-    @param      bounds The bounding box of the annotation, in page space.
-    @result     An initialized Skim note annotation instance, or <code>nil</code> if the object could not be initialized.
-*/
-- (nullable id)initSkimNoteWithBounds:(NSRect)bounds;
-#endif
-
 /*!
     @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim noteon iOS, or on macOS when not using legacy <code>PDFAnnotation</code> classes.
     @discussion On macOS when using legacsy <code>PDFAnnotation</code> classes, this returns a subclasses initialized with <code>initSkimNoteWithBounds:</code>.
@@ -388,9 +378,20 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 #pragma mark -
 
 #ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
+
+@interface PDFAnnotation (SKNLegacyExtensions)
+/*!
+    @abstract   Initializes a new Skim note annotation.  This is the designated initializer for a Skim note on macOS when using legacy <code>PDFAnnotation</code> subclasses.
+    @discussion This method can be implemented in subclasses to provide default properties for Skim notes.
+    @param      bounds The bounding box of the annotation, in page space.
+    @result     An initialized Skim note annotation instance, or <code>nil</code> if the object could not be initialized.
+*/
+- (nullable id)initSkimNoteWithBounds:(NSRect)bounds;
+@end
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-@interface PDFAnnotationMarkup (SKNOptional)
+@interface PDFAnnotationMarkup (SKNLegacyOptional)
 #pragma clang diagnostic pop
 /*!
     @abstract   Optional method to implement to return the default color to use for markup initialized with properties that do not contain a color.
@@ -400,6 +401,7 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 */
 + (NSColor *)defaultSkimNoteColorForMarkupType:(NSInteger)markupType;
 @end
+
 #endif
 
 #pragma mark -
