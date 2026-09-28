@@ -362,7 +362,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
             self = [self init];
             self = [[SKNPDFAnnotationNote alloc] initSkimNoteWithBounds:bounds forType:type];
             return self;
-        } else if ([self isKindOfClass:[SKNPDFAnnotationNote class]]) {
+        } else if ([self isKindOfClass:[SKNPDFAnnotationNote class]] && [type isEqualToString:SKNNoteString]) {
             // set Text as the type in the annotationDictionary to fool PDFKit
             type = SKNTextString;
         }
