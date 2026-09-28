@@ -320,7 +320,7 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 
 /*!
     @abstract   Initializes a new Skim note annotation with the given properties.
-    @discussion This method determines the proper subclass from the value for the <code>"type"</code> key in dict, initializes an instance using <code>initSkimNoteWithBounds:</code>, and sets the known properties from dict. Implementations in subclasses should call it on super and set their properties from dict if available.
+    @discussion This method may return a subclass determined from the value for the <code>"type"</code> key in dict, initializes an instance using the designated initializer for Skim notes, and sets the known properties from dict. Implementations in subclasses call it on super and set their properties from dict if available.
     @param      dict A dictionary with Skim notes properties, as returned from properties.  This is required to contain values for <code>"type"</code> and <code>"bounds"</code>.
     @result     An initialized Skim note annotation instance, or <code>nil</code> if the object could not be initialized.
 */
