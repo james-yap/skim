@@ -337,15 +337,23 @@ static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings
 @interface PDFAnnotationChoiceWidget (SKNExtensions)
 @end
 
-#pragma mark -
+#elif !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_13)
+
+#error "Deployment target before macOS 10.13 not supported without legacy PDFAnnotation classes"
+
+#endif
 
 static inline Class SKNAnnotationClassForType(NSString *type) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     if ([type isKindOfClass:[NSString class]] == NO)
         return Nil;
     else if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString])
         return [SKNPDFAnnotationNote class];
+#ifndef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
+    else
+        return [PDFAnnotation class];
+#else
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     else if ([type isEqualToString:SKNFreeTextString])
         return [PDFAnnotationFreeText class];
     else if ([type isEqualToString:SKNCircleString])
@@ -361,13 +369,8 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     else
         return Nil;
 #pragma clang diagnostic pop
-}
-
-#elif !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_13)
-
-#error "Deployment target before macOS 10.13 not supported without legacy PDFAnnotation classes"
-
 #endif
+}
 
 #pragma mark -
 
@@ -379,19 +382,20 @@ char SKNIsSkimNoteKey;
     if ([type hasPrefix:@"/"])
         type = [type substringFromIndex:1];
     
-#ifndef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
-    
-    if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString]) {
-        if ([self isMemberOfClass:[PDFAnnotation class]]) {
-            // replace by our subclass
+    if ([self isMemberOfClass:[PDFAnnotation class]]) {
+        // possibly replace by a subclass
+        Class annotationClass = SKNAnnotationClassForType(type);
+        if ([annotationClass isEqual:[PDFAnnotation class]] == NO) {
             self = [self init];
-            self = [[SKNPDFAnnotationNote alloc] initSkimNoteWithBounds:bounds forType:type];
+            self = [[annotationClass alloc] initSkimNoteWithBounds:bounds forType:type];
             return self;
-        } else if ([self isKindOfClass:[SKNPDFAnnotationNote class]] && [type isEqualToString:SKNNoteString]) {
-            // set Text as the type in the annotationDictionary to fool PDFKit
-            type = SKNTextString;
         }
+    } else if ([self isKindOfClass:[SKNPDFAnnotationNote class]] && [type isEqualToString:SKNNoteString]) {
+        // set Text as the type in the annotationDictionary to fool PDFKit
+        type = SKNTextString;
     }
+    
+#ifndef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
     
     self = [self initWithBounds:bounds forType:[@"/" stringByAppendingString:type] withProperties:nil];
     if (self) {
@@ -401,15 +405,6 @@ char SKNIsSkimNoteKey;
     }
     
 #else
-    
-    if ([self isMemberOfClass:[PDFAnnotation class]]) {
-        
-        // generic, initalize the class for the type in the dictionary
-        Class annotationClass = SKNAnnotationClassForType(type);
-        
-        self = [self init];
-        self = [annotationClass alloc];
-    }
     
     self = [self initSkimNoteWithBounds:bounds];
 #pragma clang diagnostic push
@@ -441,28 +436,15 @@ char SKNIsSkimNoteKey;
     Class stringClass = [NSString class];
     NSString *type = [dict objectForKey:SKNPDFAnnotationTypeKey];
     
-        
-#ifndef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
-    
-    if (([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString]) && [self isMemberOfClass:[PDFAnnotation class]]) {
-        // replace by our subclass
-        self = [self init];
-        self = [[SKNPDFAnnotationNote alloc] initSkimNoteWithProperties:dict];
-        return self;
-    }
-    
-#else
-    
     if ([self isMemberOfClass:[PDFAnnotation class]]) {
-        // generic, initalize the class for the type in the dictionary
+        // possibly replace by a subclass
         Class annotationClass = SKNAnnotationClassForType(type);
-        
-        self = [self init];
-        self = [[annotationClass alloc] initSkimNoteWithProperties:dict];
-        return self;
+        if ([annotationClass isEqual:[PDFAnnotation class]] == NO) {
+            self = [self init];
+            self = [[annotationClass alloc] initSkimNoteWithProperties:dict];
+            return self;
+        }
     }
-    
-#endif
     
     NSString *boundsString = [dict objectForKey:SKNPDFAnnotationBoundsKey];
     PDFRect bounds = [boundsString isKindOfClass:stringClass] ? SKNRectFromString(boundsString) : PDFRectZero;
