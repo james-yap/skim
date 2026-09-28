@@ -388,7 +388,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
     self = [self initSkimNoteWithBounds:bounds];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    if ([[self class] isSubclassOfClass:[PDFAnnotationMarkup class]]) {
+    if ([self isKindOfClass:[PDFAnnotationMarkup class]]) {
 #pragma clang diagnostic pop
         NSInteger markupType = kPDFMarkupTypeHighlight;
         if ([type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNSquigglyString])
