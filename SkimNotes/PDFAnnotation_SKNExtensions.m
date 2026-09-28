@@ -385,7 +385,7 @@ char SKNIsSkimNoteKey;
     if ([self isMemberOfClass:[PDFAnnotation class]]) {
         // possibly replace by a subclass
         Class annotationClass = SKNAnnotationClassForType(type);
-        if ([annotationClass isEqual:[PDFAnnotation class]] == NO) {
+        if ([self isMemberOfClass:annotationClass] == NO) {
             self = [self init];
             self = [[annotationClass alloc] initSkimNoteWithBounds:bounds forType:type];
             return self;
@@ -439,7 +439,7 @@ char SKNIsSkimNoteKey;
     if ([self isMemberOfClass:[PDFAnnotation class]]) {
         // possibly replace by a subclass
         Class annotationClass = SKNAnnotationClassForType(type);
-        if ([annotationClass isEqual:[PDFAnnotation class]] == NO) {
+        if ([self isMemberOfClass:annotationClass] == NO) {
             self = [self init];
             self = [[annotationClass alloc] initSkimNoteWithProperties:dict];
             return self;
