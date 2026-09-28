@@ -279,6 +279,7 @@ static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment)
 @interface PDFAnnotation (SKNSierraDeclarations)
 - (id)valueForAnnotationKey:(NSString *)key;
 - (BOOL)setValue:(id)value forAnnotationKey:(NSString *)key;
+- (id)removeValueForAnnotationKey:(NSString *)key;
 - (void)drawWithBox:(PDFDisplayBox)box inContext:(CGContextRef)context;
 @end
 @interface PDFPage (SKNSierraDeclarations)
