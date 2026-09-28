@@ -1717,7 +1717,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 #if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12
     return _drawsImage;
 #else
-    return [[self valueForAnnotationKey:@"/SubType"] isEqualToString:@"/Stamp"];
+    return [[self valueForAnnotationKey:@"/Subtype"] isEqualToString:@"/Stamp"];
 #endif
 }
 
