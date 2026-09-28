@@ -337,15 +337,7 @@ static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings
 @interface PDFAnnotationChoiceWidget (SKNExtensions)
 @end
 
-#endif
-
 #pragma mark -
-
-@implementation PDFAnnotation (SKNExtensions)
-
-char SKNIsSkimNoteKey;
-
-#ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
 
 static inline Class SKNAnnotationClassForType(NSString *type) {
 #pragma clang diagnostic push
@@ -371,25 +363,17 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
 #pragma clang diagnostic pop
 }
 
-- (id)initSkimNoteWithBounds:(NSRect)bounds {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    self = [self initWithBounds:bounds];
-#pragma clang diagnostic pop
-    if (self) {
-        [self setShouldPrint:YES];
-        [self setSkimNote:YES];
-        if ([self respondsToSelector:@selector(setUserName:)])
-            [self setUserName:nil];
-    }
-    return self;
-}
-
 #elif !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_13)
 
 #error "Deployment target before macOS 10.13 not supported without legacy PDFAnnotation classes"
 
 #endif
+
+#pragma mark -
+
+@implementation PDFAnnotation (SKNExtensions)
+
+char SKNIsSkimNoteKey;
 
 - (id)initSkimNoteWithBounds:(PDFRect)bounds forType:(NSString *)type {
     if ([type hasPrefix:@"/"])
@@ -1230,6 +1214,26 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 #pragma mark -
 
 #ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
+
+@implementation PDFAnnotation (SKNLegacyExtensions)
+
+- (id)initSkimNoteWithBounds:(NSRect)bounds {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    self = [self initWithBounds:bounds];
+#pragma clang diagnostic pop
+    if (self) {
+        [self setShouldPrint:YES];
+        [self setSkimNote:YES];
+        if ([self respondsToSelector:@selector(setUserName:)])
+            [self setUserName:nil];
+    }
+    return self;
+}
+
+@end
+
+#pragma mark -
 
 @implementation PDFAnnotationCircle (SKNExtensions)
 
