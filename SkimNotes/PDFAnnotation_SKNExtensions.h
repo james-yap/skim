@@ -389,10 +389,7 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 - (nullable id)initSkimNoteWithBounds:(NSRect)bounds;
 @end
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 @interface PDFAnnotationMarkup (SKNLegacyOptional)
-#pragma clang diagnostic pop
 /*!
     @abstract   Optional method to implement to return the default color to use for markup initialized with properties that do not contain a color.
     @param      markupType The markup style for which to return the default color.
