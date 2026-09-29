@@ -337,6 +337,18 @@ static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings
 @interface PDFAnnotationChoiceWidget (SKNExtensions)
 @end
 
+static inline Class SKNAnnotationClassForWidgetType(SKNPDFWidgetType widgetType) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    switch (widgetType) {
+        case kSKNPDFWidgetTypeText: return [PDFAnnotationTextWidget class];
+        case kSKNPDFWidgetTypeButton: return [PDFAnnotationButtonWidget class];
+        case kSKNPDFWidgetTypeChoice: return [PDFAnnotationChoiceWidget class];
+        default: return Nil;
+    }
+#pragma clang diagnostic pop
+}
+
 #elif !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_13)
 
 #error "Deployment target before macOS 10.13 not supported without legacy PDFAnnotation classes"
@@ -439,6 +451,10 @@ char SKNIsSkimNoteKey;
     if ([self isMemberOfClass:[PDFAnnotation class]]) {
         // possibly replace by a subclass
         Class annotationClass = SKNAnnotationClassForType(type);
+#ifdef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
+        if (annotationClass == Nil && [type isEqualToString:SKNWidgetString])
+            annotationClass = SKNAnnotationClassForWidgetType([[dict objectForKey:SKNPDFAnnotationWidgetTypeKey] integerValue]);
+#endif
         if ([self isMemberOfClass:annotationClass] == NO) {
             self = [self init];
             self = [[annotationClass alloc] initSkimNoteWithProperties:dict];
