@@ -37,35 +37,14 @@ A class with a shared object to read and write data from and to extended attribu
 
 \f0\b PDFAnnotation (SKNExtensions)
 \f1\b0 \
-
-\f0\b PDFAnnotationCircle (SKNExtensions)
-\f1\b0 \
-
-\f0\b PDFAnnotationSquare (SKNExtensions)
-\f1\b0 \
-
-\f0\b PDFAnnotationFreeText (SKNExtensions)
-\f1\b0 \
-
-\f0\b PDFAnnotationText (SKNExtensions)
-\f1\b0 \
-
-\f0\b PDFAnnotationLine (SKNExtensions)
-\f1\b0 \
-
-\f0\b PDFAnnotationMarkup (SKNExtensions)
-\f1\b0 \
-
-\f0\b PDFAnnotationInk (SKNExtensions)
-\f1\b0 \
 \
-Categories on PDFAnnotation (sub)classes.  These categories define the logic to translate between a dictionary of properties and a PDFAnnotation.  It defines a new property to find out if an annotation is created as a Skim note.  It also defines a new designated initializer for initialing new Skim note annotations, as well as a custom initializer to create an annotation from a Skim note.  You don't need to deal directly with the methods defined in this category, and only indirectly use it from the PDFDocument category.  You may add overrides of the designated initializer to the concrete subclasses to provide default values for their properties. \
+A category on the PDFAnnotation class.  This category defines the logic to translate between a dictionary of properties and a PDFAnnotation.  It defines a new property to find out if an annotation is created as a Skim note.  It also defines a new designated initializer for initialing new Skim note annotations, as well as a custom initializer to create an annotation from a Skim note.  You don't need to deal directly with the methods defined in this category, and only indirectly use it from the PDFDocument category.  You may implement an optional method to provide default values for its properties.  When using legacy PDFAnnotation classes for older macOS systems, there are also corresponding categories on the PDFAnnotation subclasses to complete this support.\
 \
 
 \f0\b SKNPDFAnnotationNote
 \f1\b0 \
 \
-A concrete subclass of PDFAnnotationText.  This class is used to represent Skim anchored notes.  Objects of this class contain, apart from the properties of PDFAnnotationText, an image and an attributed string value.\
+A concrete subclass of PDFAnnotation.  This class is used to represent Skim anchored notes.  Objects of this class contain, apart from the properties of PDFAnnotation, an image and an attributed string value.  When using legacy PDFAnnotation classes for older macOS systems, this class is a subclass of PDFAnnotationText.\
 \
 \
 
@@ -170,7 +149,9 @@ If you need to build the frameworks and/or the tools with support for older Mac 
 \pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
 
 \f1\fs24 \cf0 \CocoaLigature1 \
-The code does not support deployment targets lower than 10.6 currently.  However, for older compiler versions the nullability qualifiers and macros and lightweight generics declarations may need to be removed.\
+The code does not support deployment targets lower than 10.6 currently.  However, for older compiler versions the nullability qualifiers and macros and lightweight generics declarations may need to be removed.  When you want to use a deployment target of 10.12 or lower, you should define the 
+\f3\fs22 \CocoaLigature0 SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
+\f1\fs24 \CocoaLigature1  macro in the PDFAnnotation category header.\
 \
 Also you may want to support older architectures by changing the 
 \f3\fs22 \CocoaLigature0 ARCHS
