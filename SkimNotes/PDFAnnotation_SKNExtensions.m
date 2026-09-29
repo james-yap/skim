@@ -1030,10 +1030,16 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         else
             widgetType = SKNPDFWidgetTypeFromAnnotationValue([self valueForAnnotationKey:@"/FT"]);
         if (widgetType == kSKNPDFWidgetTypeButton) {
-            if ([self respondsToSelector:@selector(setButtonWidgetState:)])
+            if ([self respondsToSelector:@selector(setButtonWidgetState:)]) {
                 [self setButtonWidgetState:[string integerValue]];
-            else
-                [self setValue:[string boolValue] ? @"On" : @"Off" forAnnotationKey:@"/V"];
+            } else if ([string boolValue] == NO) {
+                [self setValue:@"Off" forAnnotationKey:@"/V"];
+            } else {
+                NSString *s = nil;
+                @try { s = [self valueForKey:@"widgetOnStateString"]; }
+                @catch (id e) {}
+                [self setValue:s ?: @"On" forAnnotationKey:@"/V"];
+            }
         } else {
             if ([self respondsToSelector:@selector(setWidgetStringValue:)])
                 [self setWidgetStringValue:string];
