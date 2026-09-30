@@ -296,6 +296,10 @@ static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment)
 @end
 #endif
 
+@interface PDFAnnotation (SKNPrivateDeclarations)
+- (NSString *)widgetOnStateString;
+@end
+
 #endif
 
 static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings);
@@ -2122,7 +2126,7 @@ static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings
 #ifdef PDFKIT_PLATFORM_IOS
     for (NSString *pointString in pointStrings) {
         CGPoint p = CGPointFromString(pointString);
-        [pointValues addObject:[[NSValue alloc] initWithBytes:&p objCType:@encode(CGPoint)]];
+        [quadPoints addObject:[[NSValue alloc] initWithBytes:&p objCType:@encode(CGPoint)]];
     }
 #else
     // fix the order, as we have done it wrong for a long time
