@@ -512,26 +512,14 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
         [fdfString appendFDFName:SKFDFTextAnnotationIconTypeFromPDFTextAnnotationIconType([self iconType])];
     } else if ([type isEqualToString:SKNWidgetString]) {
         NSString *ft = [self widgetFieldType];
-        if ([ft isEqualToString:PDFAnnotationWidgetSubtypeText]) {
-            [fdfString appendFDFName:SKFDFAnnotationFieldTypeKey];
-            [fdfString appendFDFName:SKFDFFieldTypeText];
-            [fdfString appendFDFName:SKFDFAnnotationFieldNameKey];
-            [fdfString appendFormat:@"(%@)", [[[self fieldName] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
-            [fdfString appendFDFName:SKFDFAnnotationFieldValueKey];
-            [fdfString appendFormat:@"(%@)", [[[self widgetStringValue] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
-        } else if ([ft isEqualToString:PDFAnnotationWidgetSubtypeButton]) {
-            [fdfString appendFDFName:SKFDFAnnotationFieldTypeKey];
-            [fdfString appendFDFName:SKFDFFieldTypeButton];
-            [fdfString appendFDFName:SKFDFAnnotationFieldNameKey];
-            [fdfString appendFormat:@"(%@)", [[[self fieldName] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
-            [fdfString appendFDFName:SKFDFAnnotationFieldValueKey];
+        [fdfString appendFDFName:SKFDFAnnotationFieldTypeKey];
+        [fdfString appendString:ft];
+        [fdfString appendFDFName:SKFDFAnnotationFieldNameKey];
+        [fdfString appendFormat:@"(%@)", [[[self fieldName] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
+        [fdfString appendFDFName:SKFDFAnnotationFieldValueKey];
+        if ([ft isEqualToString:PDFAnnotationWidgetSubtypeButton]) {
             [fdfString appendFormat:@"/%@", [self buttonWidgetState] == kPDFWidgetOnState ? [self buttonWidgetStateString] : @"Off"];
-        } else if ([ft isEqualToString:PDFAnnotationWidgetSubtypeChoice]) {
-            [fdfString appendFDFName:SKFDFAnnotationFieldTypeKey];
-            [fdfString appendFDFName:SKFDFFieldTypeChoice];
-            [fdfString appendFDFName:SKFDFAnnotationFieldNameKey];
-            [fdfString appendFormat:@"(%@)", [[[self fieldName] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
-            [fdfString appendFDFName:SKFDFAnnotationFieldValueKey];
+        } else {
             [fdfString appendFormat:@"(%@)", [[[self widgetStringValue] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
         }
         
