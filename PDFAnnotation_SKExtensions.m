@@ -416,21 +416,21 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
     [fdfString appendFDFName:SKFDFAnnotationTypeKey];
     [fdfString appendString:[self valueForAnnotationKey:PDFAnnotationKeySubtype]];
     [fdfString appendFDFName:SKFDFAnnotationBoundsKey];
-    [fdfString appendFormat:@"[%f %f %f %f]", NSMinX(bounds), NSMinY(bounds), NSMaxX(bounds), NSMaxY(bounds)];
+    [fdfString appendFormat:@"[%g %g %g %g]", NSMinX(bounds), NSMinY(bounds), NSMaxX(bounds), NSMaxY(bounds)];
     [fdfString appendFDFName:SKFDFAnnotationPageIndexKey];
     [fdfString appendFormat:@" %lu", (unsigned long)[self pageIndex]];
     [fdfString appendFDFName:SKFDFAnnotationFlagsKey];
     [fdfString appendString:@" 4"];
     if (a > 0.0) {
         [fdfString appendFDFName:SKFDFAnnotationColorKey];
-        [fdfString appendFormat:@"[%f %f %f]", r, g, b];
+        [fdfString appendFormat:@"[%g %g %g]", r, g, b];
     }
     if (border) {
         [fdfString appendFDFName:SKFDFAnnotationBorderStylesKey];
         [fdfString appendString:@"<<"];
         if ([border lineWidth] > 0.0) {
             [fdfString appendFDFName:SKFDFAnnotationLineWidthKey];
-            [fdfString appendFormat:@" %f", [border lineWidth]];
+            [fdfString appendFormat:@" %g", [border lineWidth]];
             [fdfString appendFDFName:SKFDFAnnotationBorderStyleKey];
             [fdfString appendFDFName:SKFDFBorderStyleFromPDFBorderStyle([border style])];
             if ([border style] == kPDFBorderStyleDashed) {
@@ -439,7 +439,7 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
             }
         } else {
             [fdfString appendFDFName:SKFDFAnnotationLineWidthKey];
-            [fdfString appendString:@" 0.0"];
+            [fdfString appendString:@" 0"];
         }
         [fdfString appendString:@">>"];
     }
@@ -462,16 +462,16 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
         [[[self interiorColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] getRed:&r green:&g blue:&b alpha:&a];
         if (a > 0.0) {
             [fdfString appendFDFName:SKFDFAnnotationInteriorColorKey];
-            [fdfString appendFormat:@"[%f %f %f]", r, g, b];
+            [fdfString appendFormat:@"[%g %g %g]", r, g, b];
         }
     }
     if ([type isEqualToString:SKNFreeTextString]) {
         [[[self fontColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] getRed:&r green:&g blue:&b alpha:&a];
         [fdfString appendFDFName:SKFDFDefaultAppearanceKey];
-        [fdfString appendFormat:@"(/%@ %f Tf %f %f %f rg)", [self fontName], [self fontSize], r, g, b];
+        [fdfString appendFormat:@"(/%@ %g Tf %g %g %g rg)", [self fontName], [self fontSize], r, g, b];
         [fdfString appendFDFName:SKFDFDefaultStyleKey];
         [[[self fontColor] colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&r green:&g blue:&b alpha:&a];
-        [fdfString appendFormat:@"(font: %@ %fpt; text-align:%@; color:#%.2x%.2x%.2x)", [self fontName], [self fontSize], alignmentStyleKeyword([self alignment]), (unsigned int)(255*r), (unsigned int)(255*g), (unsigned int)(255*b)];
+        [fdfString appendFormat:@"(font: %@ %gpt; text-align:%@; color:#%.2x%.2x%.2x)", [self fontName], [self fontSize], alignmentStyleKeyword([self alignment]), (unsigned int)(255*r), (unsigned int)(255*g), (unsigned int)(255*b)];
         [fdfString appendFDFName:SKFDFAnnotationAlignmentKey];
         [fdfString appendFormat:@" %ld", (long)SKFDFFreeTextAnnotationAlignmentFromPDFFreeTextAnnotationAlignment([self alignment])];
     } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString]) {
@@ -479,7 +479,7 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
         [fdfString appendString:@"["];
         for (NSValue *value in [self quadrilateralPoints]) {
             NSPoint point = [value pointValue];
-            [fdfString appendFormat:@"%f %f ", point.x + NSMinX(bounds), point.y + NSMinY(bounds)];
+            [fdfString appendFormat:@"%g %g ", point.x + NSMinX(bounds), point.y + NSMinY(bounds)];
         }
         [fdfString appendString:@"]"];
     } else if ([type isEqualToString:SKNLineString]) {
@@ -491,7 +491,7 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
         NSPoint startPoint = SKAddPoints([self startPoint], bounds.origin);
         NSPoint endPoint = SKAddPoints([self endPoint], bounds.origin);
         [fdfString appendFDFName:SKFDFAnnotationLinePointsKey];
-        [fdfString appendFormat:@"[%f %f %f %f]", startPoint.x, startPoint.y, endPoint.x, endPoint.y];
+        [fdfString appendFormat:@"[%g %g %g %g]", startPoint.x, startPoint.y, endPoint.x, endPoint.y];
     } else if ([type isEqualToString:SKNInkString]) {
         NSPoint point;
         NSInteger i, iMax;
@@ -502,7 +502,7 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
             [fdfString appendString:@"["];
             for (i = 0; i < iMax; i++) {
                 point = [path associatedPointForElementAtIndex:i];
-                [fdfString appendFormat:@"%f %f ", point.x + NSMinX(bounds), point.y + NSMinY(bounds)];
+                [fdfString appendFormat:@"%g %g ", point.x + NSMinX(bounds), point.y + NSMinY(bounds)];
             }
             [fdfString appendString:@"]"];
         }
