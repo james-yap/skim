@@ -720,7 +720,6 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     if ([self respondsToSelector:@selector(valueForAnnotationKey:)]) {
         
         NSString *type = [self type];
-        PDFRect bounds = [self bounds];
         id value = nil;
         Class arrayClass = [NSArray class];
         Class stringClass = [NSString class];
@@ -776,6 +775,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                     [dict setValue:SKNStringFromPoint([(id)self endPoint]) forKey:SKNPDFAnnotationEndPointKey];
                 } else if ((value = [self valueForAnnotationKey:@"/L"])) {
                     if ([value isKindOfClass:arrayClass] && [value count] == 4) {
+                        PDFRect bounds = [self bounds];
                         PDFPoint p = SKNMakePoint([[value objectAtIndex:0] doubleValue] - bounds.origin.x, [[value objectAtIndex:1] doubleValue] - bounds.origin.y);
                         [dict setValue:SKNStringFromPoint(p) forKey:SKNPDFAnnotationStartPointKey];
                         p = SKNMakePoint([[value objectAtIndex:2] doubleValue] - bounds.origin.x, [[value objectAtIndex:3] doubleValue] - bounds.origin.y);
@@ -797,6 +797,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                 }
             } else if ((value = [self valueForAnnotationKey:@"/QuadPoints"])) {
                 if ([value isKindOfClass:arrayClass] && [value count] % 4 == 0) {
+                    PDFRect bounds = [self bounds];
                     Class numberClass = [NSNumber class];
                     Class valueClass = [NSValue class];
                     NSMutableArray *quadPoints = [NSMutableArray array];
@@ -845,6 +846,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                         if ([path isKindOfClass:pathClass]) {
                             [points addObjectsFromArray:[[self class] pointsFromSkimNotePath:path]];
                         } else if ([path isKindOfClass:arrayClass]) {
+                            PDFRect bounds = [self bounds];
                             NSUInteger i, iMax = [path count];
                             for (i = 0; i < iMax; i++) {
                                 NSValue *val = [path objectAtIndex:i];
