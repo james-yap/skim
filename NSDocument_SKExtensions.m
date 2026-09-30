@@ -299,24 +299,24 @@ enum { SKAddBookmarkTypeBookmark, SKAddBookmarkTypeSetup, SKAddBookmarkTypeSessi
     NSMutableString *string = [NSMutableString stringWithFormat:@"%%FDF-1.2\n%%%C%C%C%C\n", (unichar)0xe2, (unichar)0xe3, (unichar)0xcf, (unichar)0xd3];
     NSMutableString *annots = [NSMutableString string];
     for (PDFAnnotation *note in [self notes]) {
-        [string appendFormat:@"%ld 0 obj << %@>>\nendobj\n", (long)(++i), [note fdfString]];
+        [string appendFormat:@"%ld 0 obj<<%@>>\nendobj\n", (long)(++i), [note fdfString]];
         [annots appendFormat:@"%ld 0 R ", (long)i];
     }
-    [string appendFormat:@"%ld 0 obj << ", (long)(++i)];
+    [string appendFormat:@"%ld 0 obj<<", (long)(++i)];
     [string appendFDFName:SKFDFFDFKey];
-    [string appendString:@"<< "];
+    [string appendString:@"<<"];
     [string appendFDFName:SKFDFAnnotationsKey];
-    [string appendFormat:@"[ %@] ", annots];
+    [string appendFormat:@"[%@]", annots];
     [string appendFDFName:SKFDFFileKey];
     [string appendString:@"("];
     if (filename)
         [string appendString:[[filename lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
-    [string appendString:@") "];
+    [string appendString:@")"];
     if ([fileIDStrings count] == 2) {
         [string appendFDFName:SKFDFFileIDKey];
-        [string appendFormat:@"[<%@><%@>] ", [fileIDStrings objectAtIndex:0], [fileIDStrings objectAtIndex:1]];
+        [string appendFormat:@"[<%@><%@>]", [fileIDStrings objectAtIndex:0], [fileIDStrings objectAtIndex:1]];
     }
-    [string appendString:@">> "];
+    [string appendString:@">>"];
     [string appendString:@">>\nendobj\n"];
     [string appendString:@"trailer\n<<"];
     [string appendFDFName:SKFDFRootKey];

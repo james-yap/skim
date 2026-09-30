@@ -414,44 +414,44 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
     [fdfString appendFDFName:SKFDFTypeKey];
     [fdfString appendFDFName:SKFDFAnnotation];
     [fdfString appendFDFName:SKFDFAnnotationTypeKey];
-    [fdfString appendFormat:@"%@ ", [self valueForAnnotationKey:PDFAnnotationKeySubtype]];
+    [fdfString appendString:[self valueForAnnotationKey:PDFAnnotationKeySubtype]];
     [fdfString appendFDFName:SKFDFAnnotationBoundsKey];
-    [fdfString appendFormat:@"[ %g %g %g %g ] ", NSMinX(bounds), NSMinY(bounds), NSMaxX(bounds), NSMaxY(bounds)];
+    [fdfString appendFormat:@"[%g %g %g %g]", NSMinX(bounds), NSMinY(bounds), NSMaxX(bounds), NSMaxY(bounds)];
     [fdfString appendFDFName:SKFDFAnnotationPageIndexKey];
-    [fdfString appendFormat:@"%lu ", (unsigned long)[self pageIndex]];
+    [fdfString appendFormat:@" %lu", (unsigned long)[self pageIndex]];
     [fdfString appendFDFName:SKFDFAnnotationFlagsKey];
-    [fdfString appendString:@"4 "];
+    [fdfString appendString:@" 4"];
     if (a > 0.0) {
         [fdfString appendFDFName:SKFDFAnnotationColorKey];
-        [fdfString appendFormat:@"[ %g %g %g ] ", r, g, b];
+        [fdfString appendFormat:@"[%g %g %g]", r, g, b];
     }
     if (border) {
         [fdfString appendFDFName:SKFDFAnnotationBorderStylesKey];
-        [fdfString appendString:@"<< "];
+        [fdfString appendString:@"<<"];
         if ([border lineWidth] > 0.0) {
             [fdfString appendFDFName:SKFDFAnnotationLineWidthKey];
-            [fdfString appendFormat:@"%g ", [border lineWidth]];
+            [fdfString appendFormat:@" %g", [border lineWidth]];
             [fdfString appendFDFName:SKFDFAnnotationBorderStyleKey];
             [fdfString appendFDFName:SKFDFBorderStyleFromPDFBorderStyle([border style])];
             if ([border style] == kPDFBorderStyleDashed) {
                 [fdfString appendFDFName:SKFDFAnnotationDashPatternKey];
-                [fdfString appendFormat:@"[ %@ ] ", [[[border dashPattern] valueForKey:@"stringValue"] componentsJoinedByString:@" "]];
+                [fdfString appendFormat:@"[%@]", [[[border dashPattern] valueForKey:@"stringValue"] componentsJoinedByString:@" "]];
             }
         } else {
             [fdfString appendFDFName:SKFDFAnnotationLineWidthKey];
-            [fdfString appendString:@"0 "];
+            [fdfString appendString:@" 0"];
         }
-        [fdfString appendString:@">> "];
+        [fdfString appendString:@">>"];
     }
     if (contents) {
         [fdfString appendFDFName:SKFDFAnnotationContentsKey];
         [fdfString appendString:@"("];
         [fdfString appendString:[[contents lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
-        [fdfString appendString:@") "];
+        [fdfString appendString:@")"];
     }
     if (modDate) {
         [fdfString appendFDFName:SKFDFAnnotationModificationDateKey];
-        [fdfString appendFormat:@"(%@) ", [modDate PDFDescription]];
+        [fdfString appendFormat:@"(%@)", [modDate PDFDescription]];
     }
     if (userName) {
         [fdfString appendFDFName:SKFDFAnnotationUserNameKey];
@@ -462,65 +462,65 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
         [[[self interiorColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] getRed:&r green:&g blue:&b alpha:&a];
         if (a > 0.0) {
             [fdfString appendFDFName:SKFDFAnnotationInteriorColorKey];
-            [fdfString appendFormat:@"[ %g %g %g ] ", r, g, b];
+            [fdfString appendFormat:@"[%g %g %g]", r, g, b];
         }
     }
     if ([type isEqualToString:SKNFreeTextString]) {
         [[[self fontColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] getRed:&r green:&g blue:&b alpha:&a];
         [fdfString appendFDFName:SKFDFDefaultAppearanceKey];
-        [fdfString appendFormat:@"(/%@ %g Tf %g %g %g rg) ", [self fontName], [self fontSize], r, g, b];
+        [fdfString appendFormat:@"(/%@ %g Tf %g %g %g rg)", [self fontName], [self fontSize], r, g, b];
         [fdfString appendFDFName:SKFDFDefaultStyleKey];
         [[[self fontColor] colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&r green:&g blue:&b alpha:&a];
-        [fdfString appendFormat:@"(font: %@ %gpt; text-align:%@; color:#%.2x%.2x%.2x) ", [self fontName], [self fontSize], alignmentStyleKeyword([self alignment]), (unsigned int)(255*r), (unsigned int)(255*g), (unsigned int)(255*b)];
+        [fdfString appendFormat:@"(font: %@ %gpt; text-align:%@; color:#%.2x%.2x%.2x)", [self fontName], [self fontSize], alignmentStyleKeyword([self alignment]), (unsigned int)(255*r), (unsigned int)(255*g), (unsigned int)(255*b)];
         [fdfString appendFDFName:SKFDFAnnotationAlignmentKey];
-        [fdfString appendFormat:@"%ld ", (long)SKFDFFreeTextAnnotationAlignmentFromPDFFreeTextAnnotationAlignment([self alignment])];
+        [fdfString appendFormat:@" %ld", (long)SKFDFFreeTextAnnotationAlignmentFromPDFFreeTextAnnotationAlignment([self alignment])];
     } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString]) {
         [fdfString appendFDFName:SKFDFAnnotationQuadrilateralPointsKey];
-        [fdfString appendString:@"[ "];
+        [fdfString appendString:@"["];
         for (NSValue *value in [self quadrilateralPoints]) {
             NSPoint point = [value pointValue];
             [fdfString appendFormat:@"%g %g ", point.x + NSMinX(bounds), point.y + NSMinY(bounds)];
         }
-        [fdfString appendString:@"] "];
+        [fdfString appendString:@"]"];
     } else if ([type isEqualToString:SKNLineString]) {
         [fdfString appendFDFName:SKFDFAnnotationLineStylesKey];
-        [fdfString appendString:@"[ "];
+        [fdfString appendString:@"["];
         [fdfString appendFDFName:SKFDFLineStyleFromPDFLineStyle([self startLineStyle])];
         [fdfString appendFDFName:SKFDFLineStyleFromPDFLineStyle([self endLineStyle])];
-        [fdfString appendString:@"] "];
+        [fdfString appendString:@"]"];
         NSPoint startPoint = SKAddPoints([self startPoint], bounds.origin);
         NSPoint endPoint = SKAddPoints([self endPoint], bounds.origin);
         [fdfString appendFDFName:SKFDFAnnotationLinePointsKey];
-        [fdfString appendFormat:@"[ %g %g %g %g ] ", startPoint.x, startPoint.y, endPoint.x, endPoint.y];
+        [fdfString appendFormat:@"[%g %g %g %g]", startPoint.x, startPoint.y, endPoint.x, endPoint.y];
     } else if ([type isEqualToString:SKNInkString]) {
         NSPoint point;
         NSInteger i, iMax;
         [fdfString appendFDFName:SKFDFAnnotationInkListKey];
-        [fdfString appendString:@"[ "];
+        [fdfString appendString:@"["];
         for (NSBezierPath *path in [self paths]) {
             iMax = [path elementCount];
-            [fdfString appendString:@"[ "];
+            [fdfString appendString:@"["];
             for (i = 0; i < iMax; i++) {
                 point = [path associatedPointForElementAtIndex:i];
                 [fdfString appendFormat:@"%g %g ", point.x + NSMinX(bounds), point.y + NSMinY(bounds)];
             }
-            [fdfString appendString:@"] "];
+            [fdfString appendString:@"]"];
         }
-        [fdfString appendString:@"] "];
+        [fdfString appendString:@"]"];
     } else if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString]) {
         [fdfString appendFDFName:SKFDFAnnotationIconTypeKey];
         [fdfString appendFDFName:SKFDFTextAnnotationIconTypeFromPDFTextAnnotationIconType([self iconType])];
     } else if ([type isEqualToString:SKNWidgetString]) {
         NSString *ft = [self widgetFieldType];
         [fdfString appendFDFName:SKFDFAnnotationFieldTypeKey];
-        [fdfString appendFormat:@"%@ ", ft];
+        [fdfString appendString:ft];
         [fdfString appendFDFName:SKFDFAnnotationFieldNameKey];
-        [fdfString appendFormat:@"(%@) ", [[[self fieldName] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
+        [fdfString appendFormat:@"(%@)", [[[self fieldName] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
         [fdfString appendFDFName:SKFDFAnnotationFieldValueKey];
         if ([ft isEqualToString:PDFAnnotationWidgetSubtypeButton]) {
-            [fdfString appendFormat:@"/%@ ", [self buttonWidgetState] == kPDFWidgetOnState ? [self buttonWidgetStateString] : @"Off"];
+            [fdfString appendFormat:@"/%@", [self buttonWidgetState] == kPDFWidgetOnState ? [self buttonWidgetStateString] : @"Off"];
         } else {
-            [fdfString appendFormat:@"(%@) ", [[[self widgetStringValue] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
+            [fdfString appendFormat:@"(%@)", [[[self widgetStringValue] ?: @"" lossyStringUsingEncoding:NSISOLatin1StringEncoding] stringByEscapingParenthesis]];
         }
         
     }

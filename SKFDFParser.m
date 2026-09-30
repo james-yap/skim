@@ -479,6 +479,6 @@ SKFDFString SKFDFLineStyleFromPDFLineStyle(PDFLineStyle lineStyle) {
 
 @implementation NSMutableString (SKFDFExtensions)
 - (void)appendFDFName:(SKFDFString)name {
-    [self appendFormat:@"/%s ", name];
+    [self appendFormat:@"/%s", name];
 }
 @end
