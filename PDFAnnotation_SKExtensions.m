@@ -295,15 +295,26 @@ static void replacement_setBounds(id self, SEL _cmd , NSRect newBounds) {
         return properties;
     NSMutableDictionary *mutableProperties = [properties mutableCopy];
     [mutableProperties setObject:SKNNoteString forKey:SKNPDFAnnotationTypeKey];
-    NSString *contents = [properties objectForKey:SKNPDFAnnotationContentsKey];
-    if (contents) {
+    NSAttributedString *attrString = [properties objectForKey:SKNPDFAnnotationTextKey];
+    NSString *contents;
+    if (attrString) {
+        if ([attrString isKindOfClass:[NSData class]])
+            attrString = [[NSAttributedString alloc] initWithData:(NSData *)attrString options:@{} documentAttributes:NULL error:NULL];
+        NSRange r;
+        if ([[attrString attributesAtIndex:0 effectiveRange:&r] count] == 0 && r.length == [attrString length]) {
+            NSFont *font = [[NSUserDefaults standardUserDefaults] fontForNameKey:SKAnchoredNoteFontNameKey sizeKey:SKAnchoredNoteFontSizeKey];
+            attrString = [[NSAttributedString alloc] initWithString:[attrString string]
+                                                attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil]];
+            [mutableProperties setObject:attrString forKey:SKNPDFAnnotationTextKey];
+        }
+    } else if ((contents = [properties objectForKey:SKNPDFAnnotationContentsKey])) {
         NSRange r = [contents rangeOfString:@"  "];
         NSRange r1 = [contents rangeOfString:@"\n"];
         if (r1.location < r.location)
             r = r1;
         if (NSMaxRange(r) < [contents length]) {
             NSFont *font = [[NSUserDefaults standardUserDefaults] fontForNameKey:SKAnchoredNoteFontNameKey sizeKey:SKAnchoredNoteFontSizeKey];
-            NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:[contents substringFromIndex:NSMaxRange(r)]
+            attrString = [[NSAttributedString alloc] initWithString:[contents substringFromIndex:NSMaxRange(r)]
                                                 attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil]];
             [mutableProperties setObject:attrString forKey:SKNPDFAnnotationTextKey];
             [mutableProperties setObject:[contents substringToIndex:r.location] forKey:SKNPDFAnnotationContentsKey];
