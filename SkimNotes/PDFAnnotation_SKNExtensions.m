@@ -279,10 +279,24 @@ static inline Class SKNAnnotationClassForWidgetType(SKNPDFWidgetType widgetType)
 
 #endif
 
+static BOOL isMarkupType(NSString *type) {
+    static NSSet *markupTypes = nil;
+    if (markupTypes == nil)
+        markupTypes = [[NSSet alloc] initWithObjects:SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNMarkUpString, SKNSquigglyString, nil];
+    return [markupTypes containsObject:type];
+}
+
+static BOOL isNoteType(NSString *type) {
+    static NSSet *noteTypes = nil;
+    if (noteTypes == nil)
+        noteTypes = [[NSSet alloc] initWithObjects:SKNNoteString, SKNTextString, SKNStampString, nil];
+    return [noteTypes containsObject:type];
+}
+
 static inline Class SKNAnnotationClassForType(NSString *type) {
     if ([type isKindOfClass:[NSString class]] == NO)
         return Nil;
-    else if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString])
+    else if (isNoteType(type))
         return [SKNPDFAnnotationNote class];
 #ifndef SKIMNOTES_USE_LEGACY_PDFANNOTATION_SUBCLASSES
     else
@@ -296,7 +310,7 @@ static inline Class SKNAnnotationClassForType(NSString *type) {
         return [PDFAnnotationCircle class];
     else if ([type isEqualToString:SKNSquareString])
         return [PDFAnnotationSquare class];
-    else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNSquigglyString])
+    else if (isMarkupType(type]))
         return [PDFAnnotationMarkup class];
     else if ([type isEqualToString:SKNLineString])
         return [PDFAnnotationLine class];
@@ -476,7 +490,7 @@ char SKNIsSkimNoteKey;
             if ([alignment respondsToSelector:@selector(integerValue)])
                 [self setAlignment:SKNTextAlignmentFromAlignment([alignment integerValue])];
             
-        } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNSquigglyString]) {
+        } else if (isMarkupType(type)) {
             
             NSArray *pointStrings = [dict objectForKey:SKNPDFAnnotationQuadrilateralPointsKey];
             if ([pointStrings isKindOfClass:arrayClass])
@@ -495,7 +509,7 @@ char SKNIsSkimNoteKey;
                 }
             }
             
-        } else if ([type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString] || [type isEqualToString:SKNNoteString]) {
+        } else if (isNoteType(type)) {
             
             NSString *name = [dict objectForKey:SKNPDFAnnotationNameKey];
             NSNumber *iconType = [dict objectForKey:SKNPDFAnnotationIconTypeKey];
@@ -741,7 +755,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             if (fontColor)
                 [dict setObject:fontColor forKey:SKNPDFAnnotationFontColorKey];
             
-        } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNSquigglyString]) {
+        } else if (isMarkupType(type)) {
             
             if ([self respondsToSelector:@selector(quadrilateralPoints)]) {
                 NSArray *quadPoints = [(id)self quadrilateralPoints];
@@ -824,7 +838,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                 }
             }
             
-        } else if ([type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString] || [type isEqualToString:SKNNoteString]) {
+        } else if (isNoteType(type)) {
             
             value = [self valueForAnnotationKey:@"/SkimContents"];
             if ([value isKindOfClass:stringClass]) {
@@ -919,10 +933,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 - (NSString *)string {
 #if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13 && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10)
     if (@available(macOS 27.0, iOS 27.0, *)) {
-        static NSSet *markupTypes = nil;
-        if (markupTypes == nil)
-            markupTypes = [[NSSet alloc] initWithObjects:SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNMarkUpString, SKNSquigglyString, nil];
-        if ([markupTypes containsObject:[self type]]) {
+        if (isMarkupType([self type])) {
             return [self valueForAnnotationKey:@"/SkimContents"] ?: [self contents];
         }
     }
@@ -953,10 +964,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 - (void)setString:(NSString *)string {
 #if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_13) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_13 && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_10)
     if (@available(macOS 27.0, iOS 27.0, *)) {
-        static NSSet *markupTypes = nil;
-        if (markupTypes == nil)
-            markupTypes = [[NSSet alloc] initWithObjects:SKNHighlightString, SKNUnderlineString, SKNStrikeOutString, SKNMarkUpString, SKNSquigglyString, nil];
-        if ([markupTypes containsObject:[self type]]) {
+        if (isMarkupType([self type])) {
             if (string)
                 [self setValue:[string copy] forAnnotationKey:@"/SkimContents"];
             else
