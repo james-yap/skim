@@ -1047,9 +1047,9 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         if (i == 0) {
             [path moveToPoint:point];
         } else if (i == 1) {
-            d2 = sqrt(diff.x * diff.x + diff.y * diff.y);
             diff.x = point.x - prevPoint.x;
             diff.y = point.y - prevPoint.y;
+            d2 = sqrt(diff.x * diff.x + diff.y * diff.y);
             controlPoint1 = prevPoint;
         } else {
             PDFPoint diff1, controlPoint2;
