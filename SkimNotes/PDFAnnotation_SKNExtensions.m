@@ -1788,7 +1788,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 #if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12
     return _string;
 #else
-    return [self valueForAnnotationKey:@"/SkimComment"];
+    return [self valueForAnnotationKey:@"/SkimContents"];
 #endif
 }
 
@@ -1797,9 +1797,9 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     _string = [string copy];
 #else
     if (string)
-        [self setValue:[string copy] forAnnotationKey:@"/SkimComment"];
+        [self setValue:[string copy] forAnnotationKey:@"/SkimContents"];
     else
-        [self removeValueForAnnotationKey:@"/SkimComment"];
+        [self removeValueForAnnotationKey:@"/SkimContents"];
 #endif
     // update the contents to string + text
     [self updateContents];
