@@ -323,13 +323,13 @@ static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings
 @interface PDFAnnotationMarkup (SKNExtensions)
 @end
 
+@interface PDFAnnotationInk (SKNExtensions)
+@end
+
 @interface PDFAnnotationText (SKNExtensions)
 @end
 
 @interface PDFAnnotationStamp (SKNExtensions)
-@end
-
-@interface PDFAnnotationInk (SKNExtensions)
 @end
 
 @interface PDFAnnotationTextWidget (SKNExtensions)
@@ -562,15 +562,6 @@ char SKNIsSkimNoteKey;
             if ([pointStrings isKindOfClass:arrayClass])
                 [self setQuadrilateralPoints:quadrilateralPointsFromPointStrings(pointStrings)];
             
-        } else if ([type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString] || [type isEqualToString:SKNNoteString]) {
-            
-            NSString *name = [dict objectForKey:SKNPDFAnnotationNameKey];
-            NSNumber *iconType = [dict objectForKey:SKNPDFAnnotationIconTypeKey];
-            if ([iconType respondsToSelector:@selector(integerValue)])
-                [self setIconType:[iconType integerValue]];
-            if ([name isKindOfClass:stringClass])
-                [self setStampName:name];
-            
         } else if ([type isEqualToString:SKNInkString]) {
             
             NSArray *pointLists = [dict objectForKey:SKNPDFAnnotationPointListsKey];
@@ -583,6 +574,15 @@ char SKNIsSkimNoteKey;
                     }
                 }
             }
+            
+        } else if ([type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString] || [type isEqualToString:SKNNoteString]) {
+            
+            NSString *name = [dict objectForKey:SKNPDFAnnotationNameKey];
+            NSNumber *iconType = [dict objectForKey:SKNPDFAnnotationIconTypeKey];
+            if ([iconType respondsToSelector:@selector(integerValue)])
+                [self setIconType:[iconType integerValue]];
+            if ([name isKindOfClass:stringClass])
+                [self setStampName:name];
             
         } else if ([type isEqualToString:SKNWidgetString]) {
             
@@ -728,7 +728,44 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         Class arrayClass = [NSArray class];
         Class stringClass = [NSString class];
         
-        if ([type isEqualToString:SKNFreeTextString]) {
+        if (([type isEqualToString:SKNCircleString] || [type isEqualToString:SKNSquareString]) || [type isEqualToString:SKNLineString]) {
+            
+            PDFKitPlatformColor *color = nil;
+            if ([self respondsToSelector:@selector(interiorColor)])
+                color = [(id)self interiorColor];
+            if (color == nil && (value = [self valueForAnnotationKey:@"/IC"]))
+                color = SKNColorFromAnnotationValue(value);
+            if (color)
+                [dict setValue:color forKey:SKNPDFAnnotationInteriorColorKey];
+            
+            if ([type isEqualToString:SKNLineString]) {
+                
+                if ([self respondsToSelector:@selector(startLineStyle)] && [self respondsToSelector:@selector(endLineStyle)]) {
+                    [dict setValue:[NSNumber numberWithInteger:[(id)self startLineStyle]] forKey:SKNPDFAnnotationStartLineStyleKey];
+                    [dict setValue:[NSNumber numberWithInteger:[(id)self endLineStyle]] forKey:SKNPDFAnnotationStartLineStyleKey];
+                } else if ((value = [self valueForAnnotationKey:@"/LE"])) {
+                    if ([value isKindOfClass:arrayClass] && [value count] == 2) {
+                        [dict setValue:[NSNumber numberWithInteger:SKNPDFLineStyleFromAnnotationValue([value objectAtIndex:0])] forKey:SKNPDFAnnotationStartLineStyleKey];
+                        [dict setValue:[NSNumber numberWithInteger:SKNPDFLineStyleFromAnnotationValue([value objectAtIndex:1])] forKey:SKNPDFAnnotationEndLineStyleKey];
+                    }
+                }
+                
+                if ([self respondsToSelector:@selector(startPoint)] && [self respondsToSelector:@selector(endPoint)]) {
+                    [dict setValue:SKNStringFromPoint([(id)self startPoint]) forKey:SKNPDFAnnotationStartPointKey];
+                    [dict setValue:SKNStringFromPoint([(id)self endPoint]) forKey:SKNPDFAnnotationEndPointKey];
+                } else if ((value = [self valueForAnnotationKey:@"/L"])) {
+                    if ([value isKindOfClass:arrayClass] && [value count] == 4) {
+                        PDFRect bounds = [self bounds];
+                        PDFPoint p = SKNMakePoint([[value objectAtIndex:0] doubleValue] - bounds.origin.x, [[value objectAtIndex:1] doubleValue] - bounds.origin.y);
+                        [dict setValue:SKNStringFromPoint(p) forKey:SKNPDFAnnotationStartPointKey];
+                        p = SKNMakePoint([[value objectAtIndex:2] doubleValue] - bounds.origin.x, [[value objectAtIndex:3] doubleValue] - bounds.origin.y);
+                        [dict setValue:SKNStringFromPoint(p) forKey:SKNPDFAnnotationEndPointKey];
+                    }
+                }
+                
+            }
+            
+        } else if ([type isEqualToString:SKNFreeTextString]) {
             
             if ([self respondsToSelector:@selector(alignment)]) {
                 [dict setValue:[NSNumber numberWithInteger:SKNAlignmentFromTextAlignment([(id)self alignment])] forKey:SKNPDFAnnotationAlignmentKey];
@@ -783,43 +820,6 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             }
             if (fontColor)
                 [dict setObject:fontColor forKey:SKNPDFAnnotationFontColorKey];
-            
-        } else if (([type isEqualToString:SKNCircleString] || [type isEqualToString:SKNSquareString]) || [type isEqualToString:SKNLineString]) {
-            
-            PDFKitPlatformColor *color = nil;
-            if ([self respondsToSelector:@selector(interiorColor)])
-                color = [(id)self interiorColor];
-            if (color == nil && (value = [self valueForAnnotationKey:@"/IC"]))
-                color = SKNColorFromAnnotationValue(value);
-            if (color)
-                [dict setValue:color forKey:SKNPDFAnnotationInteriorColorKey];
-            
-            if ([type isEqualToString:SKNLineString]) {
-                
-                if ([self respondsToSelector:@selector(startLineStyle)] && [self respondsToSelector:@selector(endLineStyle)]) {
-                    [dict setValue:[NSNumber numberWithInteger:[(id)self startLineStyle]] forKey:SKNPDFAnnotationStartLineStyleKey];
-                    [dict setValue:[NSNumber numberWithInteger:[(id)self endLineStyle]] forKey:SKNPDFAnnotationStartLineStyleKey];
-                } else if ((value = [self valueForAnnotationKey:@"/LE"])) {
-                    if ([value isKindOfClass:arrayClass] && [value count] == 2) {
-                        [dict setValue:[NSNumber numberWithInteger:SKNPDFLineStyleFromAnnotationValue([value objectAtIndex:0])] forKey:SKNPDFAnnotationStartLineStyleKey];
-                        [dict setValue:[NSNumber numberWithInteger:SKNPDFLineStyleFromAnnotationValue([value objectAtIndex:1])] forKey:SKNPDFAnnotationEndLineStyleKey];
-                    }
-                }
-                
-                if ([self respondsToSelector:@selector(startPoint)] && [self respondsToSelector:@selector(endPoint)]) {
-                    [dict setValue:SKNStringFromPoint([(id)self startPoint]) forKey:SKNPDFAnnotationStartPointKey];
-                    [dict setValue:SKNStringFromPoint([(id)self endPoint]) forKey:SKNPDFAnnotationEndPointKey];
-                } else if ((value = [self valueForAnnotationKey:@"/L"])) {
-                    if ([value isKindOfClass:arrayClass] && [value count] == 4) {
-                        PDFRect bounds = [self bounds];
-                        PDFPoint p = SKNMakePoint([[value objectAtIndex:0] doubleValue] - bounds.origin.x, [[value objectAtIndex:1] doubleValue] - bounds.origin.y);
-                        [dict setValue:SKNStringFromPoint(p) forKey:SKNPDFAnnotationStartPointKey];
-                        p = SKNMakePoint([[value objectAtIndex:2] doubleValue] - bounds.origin.x, [[value objectAtIndex:3] doubleValue] - bounds.origin.y);
-                        [dict setValue:SKNStringFromPoint(p) forKey:SKNPDFAnnotationEndPointKey];
-                    }
-                }
-                
-            }
             
         } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNMarkUpString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString] || [type isEqualToString:SKNSquigglyString]) {
             
@@ -1500,6 +1500,55 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 
 #pragma mark -
 
+@implementation PDFAnnotationInk (SKNExtensions)
+
+- (id)initSkimNoteWithProperties:(NSDictionary *)dict{
+    self = [super initSkimNoteWithProperties:dict];
+    if (self) {
+        Class arrayClass = [NSArray class];
+        Class selfClass = [self class];
+        NSArray *pointLists = [dict objectForKey:SKNPDFAnnotationPointListsKey];
+        if ([pointLists isKindOfClass:arrayClass]) {
+            for (NSArray *pointStrings in pointLists) {
+                if ([pointStrings isKindOfClass:arrayClass]) {
+                    NSBezierPath *path = [[NSBezierPath alloc] init];
+                    [selfClass setPoints:pointStrings ofSkimNotePath:path];
+                    [self addBezierPath:path];
+                }
+            }
+        }
+    }
+    return self;
+}
+
+- (NSDictionary *)SkimNoteProperties{
+    NSMutableDictionary *dict = [self genericSkimNoteProperties];
+    NSArray *paths = [self paths];
+    if (paths) {
+        Class selfClass = [self class];
+        NSMutableArray *pointLists = [[NSMutableArray alloc] initWithCapacity:[paths count]];
+        for (NSBezierPath *path in paths) {
+            NSArray *pointStrings = [selfClass pointsFromSkimNotePath:path];
+            if ([pointStrings count])
+                [pointLists addObject:pointStrings];
+        }
+        [dict setValue:pointLists forKey:SKNPDFAnnotationPointListsKey];
+    }
+    return dict;
+}
+
+- (NSString *)string {
+    return [self contents];
+}
+
+- (void)setString:(NSString *)string {
+    [self setContents:string];
+}
+
+@end
+
+#pragma mark -
+
 @implementation PDFAnnotationText (SKNExtensions)
 
 - (id)initSkimNoteWithProperties:(NSDictionary *)dict{
@@ -1546,55 +1595,6 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         [dict setValue:[NSNumber numberWithInteger:[self iconType]] forKey:SKNPDFAnnotationIconTypeKey];
     [dict setValue:appearanceImageForAnnotation(self) forKey:SKNPDFAnnotationImageKey];
     return dict;
-}
-
-@end
-
-#pragma mark -
-
-@implementation PDFAnnotationInk (SKNExtensions)
-
-- (id)initSkimNoteWithProperties:(NSDictionary *)dict{
-    self = [super initSkimNoteWithProperties:dict];
-    if (self) {
-        Class arrayClass = [NSArray class];
-        Class selfClass = [self class];
-        NSArray *pointLists = [dict objectForKey:SKNPDFAnnotationPointListsKey];
-        if ([pointLists isKindOfClass:arrayClass]) {
-            for (NSArray *pointStrings in pointLists) {
-                if ([pointStrings isKindOfClass:arrayClass]) {
-                    NSBezierPath *path = [[NSBezierPath alloc] init];
-                    [selfClass setPoints:pointStrings ofSkimNotePath:path];
-                    [self addBezierPath:path];
-                }
-            }
-        }
-    }
-    return self;
-}
-
-- (NSDictionary *)SkimNoteProperties{
-    NSMutableDictionary *dict = [self genericSkimNoteProperties];
-    NSArray *paths = [self paths];
-    if (paths) {
-        Class selfClass = [self class];
-        NSMutableArray *pointLists = [[NSMutableArray alloc] initWithCapacity:[paths count]];
-        for (NSBezierPath *path in paths) {
-            NSArray *pointStrings = [selfClass pointsFromSkimNotePath:path];
-            if ([pointStrings count])
-                [pointLists addObject:pointStrings];
-        }
-        [dict setValue:pointLists forKey:SKNPDFAnnotationPointListsKey];
-    }
-    return dict;
-}
-
-- (NSString *)string {
-    return [self contents];
-}
-
-- (void)setString:(NSString *)string {
-    [self setContents:string];
 }
 
 @end
