@@ -169,88 +169,6 @@ static PDFKitPlatformColor *SKNColorFromArray(NSArray *array) {
     }
 }
 
-#ifdef PDFKIT_PLATFORM_IOS
-
-static UIImage *appearanceImageForAnnotation(PDFAnnotation *annotation) {
-    CGRect rect = [annotation bounds];
-    if (CGRectIsEmpty(rect))
-        return nil;
-    BOOL needsRemove = NO;
-    PDFPage *page = [annotation page];
-    if (page == nil) {
-        page = [[PDFPage alloc] init];
-        [page setBounds:CGRectMake(0.0, 0.0, CGRectGetMaxX(rect), CGRectGetMaxY(rect)) forBox:kPDFDisplayBoxMediaBox];
-        [page addAnnotation:annotation];
-        needsRemove = YES;
-    }
-    CGRect bounds = [page boundsForBox:kPDFDisplayBoxMediaBox];
-    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:rect.size];
-    UIImage *image = [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
-        CGContextRef *ctxt = [context CGContext];
-        CGContextScaleCTM(ctxt, 1.0, -1.0);
-        switch ([page rotation]) {
-            case 0:
-                CGContextTranslateCTM(ctxt, CGRectGetMinX(bounds) - CGRectGetMinX(rect), CGRectGetMinY(bounds) - CGRectGetMaxY(rect));
-                break;
-            case 90:
-                CGContextTranslateCTM(ctxt, CGRectGetMaxX(bounds) - CGRectGetMinX(rect), CGRectGetMinY(bounds) - CGRectGetMaxY(rect));
-                break;
-            case 180:
-                CGContextTranslateCTM(ctxt, CGRectGetMaxX(bounds) - CGRectGetMinX(rect), CGRectGetMaxY(bounds) - CGRectGetMaxY(rect));
-                break;
-            case 270:
-                CGContextTranslateCTM(ctxt, CGRectGetMinX(bounds) - CGRectGetMinX(rect), CGRectGetMaxY(bounds) - CGRectGetMaxY(rect));
-                break;
-        }
-        CGContextRotateCTM(ctx, [page rotation] * M_PI / 180.0);
-        [annotation drawWithBox:kPDFDisplayBoxMediaBox inContext:ctxt];
-    }];
-    if (needsRmove)
-        [page removeAnnotation:annotation];
-    return image;
-}
-
-#else
-
-static NSImage *appearanceImageForAnnotation(PDFAnnotation *annotation) {
-    NSRect rect = [annotation bounds];
-    if (NSIsEmptyRect(rect))
-        return nil;
-    BOOL needsRemove = NO;
-    PDFPage *page = [annotation page];
-    if (page == nil) {
-        page = [[PDFPage alloc] init];
-        [page setBounds:NSMakeRect(0.0, 0.0, NSMaxX(rect), NSMaxY(rect)) forBox:kPDFDisplayBoxMediaBox];
-        [page addAnnotation:annotation];
-        needsRemove = YES;
-    }
-    NSRect bounds = [page boundsForBox:kPDFDisplayBoxMediaBox];
-    NSImage *image = [[NSImage alloc] initWithSize:rect.size];
-    [image lockFocus];
-    NSAffineTransform *transform = [NSAffineTransform transform];
-    switch ([page rotation]) {
-        case 0:   [transform translateXBy:NSMinX(bounds) - NSMinX(rect) yBy:NSMinY(bounds) - NSMinY(rect)]; break;
-        case 90:  [transform translateXBy:NSMaxX(bounds) - NSMinX(rect) yBy:NSMinY(bounds) - NSMinY(rect)]; break;
-        case 180: [transform translateXBy:NSMaxX(bounds) - NSMinX(rect) yBy:NSMaxY(bounds) - NSMinY(rect)]; break;
-        case 270: [transform translateXBy:NSMinX(bounds) - NSMinX(rect) yBy:NSMaxY(bounds) - NSMinY(rect)]; break;
-    }
-    [transform rotateByDegrees:[page rotation]];
-    [transform concat];
-#if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12
-    if ([annotation respondsToSelector:@selector(drawWithBox:inContext:)])
-        [annotation drawWithBox:kPDFDisplayBoxMediaBox inContext:[[NSGraphicsContext currentContext] graphicsPort]];
-    else
-        [annotation drawWithBox:kPDFDisplayBoxMediaBox];
-#else
-    [annotation drawWithBox:kPDFDisplayBoxMediaBox inContext:[[NSGraphicsContext currentContext] CGContext]];
-#endif
-    [image unlockFocus];
-    if (needsRemove)
-        [page removeAnnotation:annotation];
-    return image;
-}
-#endif
-
 #if defined(PDFKIT_PLATFORM_IOS) || (defined(MAC_OS_X_VERSION_10_11) && MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_11)
 
 static inline NSInteger SKNAlignmentFromTextAlignment(NSTextAlignment alignment) {
@@ -301,6 +219,8 @@ static inline NSTextAlignment SKNTextAlignmentFromAlignment(NSInteger alignment)
 @end
 
 #endif
+
+static inline PDFKitPlatformImage *appearanceImageForAnnotation(PDFAnnotation *annotation);
 
 static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings);
 
@@ -1954,7 +1874,126 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
 
 #pragma mark -
 
-#if !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_15) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_15)
+#ifdef PDFKIT_PLATFORM_IOS
+
+static inline UIImage *appearanceImageForAnnotation(PDFAnnotation *annotation) {
+    CGRect rect = [annotation bounds];
+    if (CGRectIsEmpty(rect))
+        return nil;
+    BOOL needsRemove = NO;
+    PDFPage *page = [annotation page];
+    if (page == nil) {
+        page = [[PDFPage alloc] init];
+        [page setBounds:CGRectMake(0.0, 0.0, CGRectGetMaxX(rect), CGRectGetMaxY(rect)) forBox:kPDFDisplayBoxMediaBox];
+        [page addAnnotation:annotation];
+        needsRemove = YES;
+    }
+    CGRect bounds = [page boundsForBox:kPDFDisplayBoxMediaBox];
+    UIGraphicsImageRenderer *renderer = [[UIGraphicsImageRenderer alloc] initWithSize:rect.size];
+    UIImage *image = [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
+        CGContextRef *ctxt = [context CGContext];
+        CGContextScaleCTM(ctxt, 1.0, -1.0);
+        switch ([page rotation]) {
+            case 0:
+                CGContextTranslateCTM(ctxt, CGRectGetMinX(bounds) - CGRectGetMinX(rect), CGRectGetMinY(bounds) - CGRectGetMaxY(rect));
+                break;
+            case 90:
+                CGContextTranslateCTM(ctxt, CGRectGetMaxX(bounds) - CGRectGetMinX(rect), CGRectGetMinY(bounds) - CGRectGetMaxY(rect));
+                break;
+            case 180:
+                CGContextTranslateCTM(ctxt, CGRectGetMaxX(bounds) - CGRectGetMinX(rect), CGRectGetMaxY(bounds) - CGRectGetMaxY(rect));
+                break;
+            case 270:
+                CGContextTranslateCTM(ctxt, CGRectGetMinX(bounds) - CGRectGetMinX(rect), CGRectGetMaxY(bounds) - CGRectGetMaxY(rect));
+                break;
+        }
+        CGContextRotateCTM(ctx, [page rotation] * M_PI / 180.0);
+        [annotation drawWithBox:kPDFDisplayBoxMediaBox inContext:ctxt];
+    }];
+    if (needsRmove)
+        [page removeAnnotation:annotation];
+    return image;
+}
+
+static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings) {
+    NSMutableArray *quadPoints = [[NSMutableArray alloc] initWithCapacity:[pointStrings count]];
+    for (NSString *pointString in pointStrings) {
+        CGPoint p = CGPointFromString(pointString);
+        [quadPoints addObject:[[NSValue alloc] initWithBytes:&p objCType:@encode(CGPoint)]];
+    }
+}
+
+#else
+
+static inline NSImage *appearanceImageForAnnotation(PDFAnnotation *annotation) {
+    NSRect rect = [annotation bounds];
+    if (NSIsEmptyRect(rect))
+        return nil;
+    BOOL needsRemove = NO;
+    PDFPage *page = [annotation page];
+    if (page == nil) {
+        page = [[PDFPage alloc] init];
+        [page setBounds:NSMakeRect(0.0, 0.0, NSMaxX(rect), NSMaxY(rect)) forBox:kPDFDisplayBoxMediaBox];
+        [page addAnnotation:annotation];
+        needsRemove = YES;
+    }
+    NSRect bounds = [page boundsForBox:kPDFDisplayBoxMediaBox];
+    NSImage *image = [[NSImage alloc] initWithSize:rect.size];
+    [image lockFocus];
+    NSAffineTransform *transform = [NSAffineTransform transform];
+    switch ([page rotation]) {
+        case 0:   [transform translateXBy:NSMinX(bounds) - NSMinX(rect) yBy:NSMinY(bounds) - NSMinY(rect)]; break;
+        case 90:  [transform translateXBy:NSMaxX(bounds) - NSMinX(rect) yBy:NSMinY(bounds) - NSMinY(rect)]; break;
+        case 180: [transform translateXBy:NSMaxX(bounds) - NSMinX(rect) yBy:NSMaxY(bounds) - NSMinY(rect)]; break;
+        case 270: [transform translateXBy:NSMinX(bounds) - NSMinX(rect) yBy:NSMaxY(bounds) - NSMinY(rect)]; break;
+    }
+    [transform rotateByDegrees:[page rotation]];
+    [transform concat];
+#if !defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12
+    if ([annotation respondsToSelector:@selector(drawWithBox:inContext:)])
+        [annotation drawWithBox:kPDFDisplayBoxMediaBox inContext:[[NSGraphicsContext currentContext] graphicsPort]];
+    else
+        [annotation drawWithBox:kPDFDisplayBoxMediaBox];
+#else
+    [annotation drawWithBox:kPDFDisplayBoxMediaBox inContext:[[NSGraphicsContext currentContext] CGContext]];
+#endif
+    [image unlockFocus];
+    if (needsRemove)
+        [page removeAnnotation:annotation];
+    return image;
+}
+
+/*
+ http://www.cocoabuilder.com/archive/message/cocoa/2007/2/16/178891
+ The docs are wrong (as is Adobe's spec).  The ordering on the rotated page is:
+ --------
+ | 0  1 |
+ | 2  3 |
+ --------
+ */
+
+static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings) {
+    NSMutableArray *quadPoints = [[NSMutableArray alloc] initWithCapacity:[pointStrings count]];
+    // fix the order, as we have done it wrong for a long time
+    NSUInteger i, iMax = [pointStrings count] / 4;
+    for (i = 0; i < iMax; i++) {
+        NSPoint p[4];
+        NSUInteger j;
+        for (j = 0; j < 4; j++)
+            p[j] = NSPointFromString([pointStrings objectAtIndex:4 * i + j]);
+        // p[0]-p[1] should be in the same direction as p[2]-p[3]
+        if ((p[1].x - p[0].x) * (p[3].x - p[2].x) + (p[1].y - p[0].y) * (p[3].y - p[2].y) < 0.0) {
+            NSPoint tmp = p[2];
+            p[2] = p[3];
+            p[3] = tmp;
+        }
+        for (j = 0; j < 4; j++)
+            [quadPoints addObject:[NSValue valueWithPoint:p[j]]];
+    }
+    return quadPoints;
+}
+
+#if !defined(MAC_OS_X_VERSION_10_15) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_15
 
 #define KAPPA   0.552284749830793398402251632279597438
 #define KAPPA2  0.265216489839544009215463496859568305
@@ -2130,39 +2169,4 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
 
 #endif
 
-/*
- http://www.cocoabuilder.com/archive/message/cocoa/2007/2/16/178891
- The docs are wrong (as is Adobe's spec).  The ordering on the rotated page is:
- --------
- | 0  1 |
- | 2  3 |
- --------
- */
-
-static inline NSArray *quadrilateralPointsFromPointStrings(NSArray *pointStrings) {
-    NSMutableArray *quadPoints = [[NSMutableArray alloc] initWithCapacity:[pointStrings count]];
-#ifdef PDFKIT_PLATFORM_IOS
-    for (NSString *pointString in pointStrings) {
-        CGPoint p = CGPointFromString(pointString);
-        [quadPoints addObject:[[NSValue alloc] initWithBytes:&p objCType:@encode(CGPoint)]];
-    }
-#else
-    // fix the order, as we have done it wrong for a long time
-    NSUInteger i, iMax = [pointStrings count] / 4;
-    for (i = 0; i < iMax; i++) {
-        NSPoint p[4];
-        NSUInteger j;
-        for (j = 0; j < 4; j++)
-            p[j] = NSPointFromString([pointStrings objectAtIndex:4 * i + j]);
-        // p[0]-p[1] should be in the same direction as p[2]-p[3]
-        if ((p[1].x - p[0].x) * (p[3].x - p[2].x) + (p[1].y - p[0].y) * (p[3].y - p[2].y) < 0.0) {
-            NSPoint tmp = p[2];
-            p[2] = p[3];
-            p[3] = tmp;
-        }
-        for (j = 0; j < 4; j++)
-            [quadPoints addObject:[NSValue valueWithPoint:p[j]]];
-    }
 #endif
-    return quadPoints;
-}
