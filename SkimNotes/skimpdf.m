@@ -380,16 +380,18 @@ int main (int argc, const char * argv[]) {
                             NSDictionary *note = [annotation SkimNoteProperties];
                             if ([[annotation type] isEqualToString:SKNTextString] || [[annotation type] isEqualToString:SKNStampString]) {
                                 NSMutableDictionary *mutableNote = [note mutableCopy];
-                                NSString *contents = [note objectForKey:SKNPDFAnnotationContentsKey];
-                                if (contents) {
-                                    NSRange r = [contents rangeOfString:@"  "];
-                                    NSRange r1 = [contents rangeOfString:@"\n"];
-                                    if (r1.location < r.location)
-                                        r = r1;
-                                    if (NSMaxRange(r) < [contents length]) {
-                                        NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:[contents substringFromIndex:NSMaxRange(r)]];
-                                        [mutableNote setObject:attrString forKey:SKNPDFAnnotationTextKey];
-                                        [mutableNote setObject:[contents substringToIndex:r.location] forKey:SKNPDFAnnotationContentsKey];
+                                if ([note objectForKey:SKNPDFAnnotationTextKey] == nil) {
+                                    NSString *contents = [note objectForKey:SKNPDFAnnotationContentsKey];
+                                    if (contents) {
+                                        NSRange r = [contents rangeOfString:@"  "];
+                                        NSRange r1 = [contents rangeOfString:@"\n"];
+                                        if (r1.location < r.location)
+                                            r = r1;
+                                        if (NSMaxRange(r) < [contents length]) {
+                                            NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:[contents substringFromIndex:NSMaxRange(r)]];
+                                            [mutableNote setObject:attrString forKey:SKNPDFAnnotationTextKey];
+                                            [mutableNote setObject:[contents substringToIndex:r.location] forKey:SKNPDFAnnotationContentsKey];
+                                        }
                                     }
                                 }
                                 [mutableNote setObject:SKNNoteString forKey:SKNPDFAnnotationTypeKey];
