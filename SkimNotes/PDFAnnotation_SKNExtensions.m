@@ -946,23 +946,6 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                 
             }
             
-        } else if ([type isEqualToString:SKNStampString]) {
-            
-            if ([self respondsToSelector:@selector(stampName)])
-                value = [self stampName];
-            else
-                value = [self valueForAnnotationKey:@"/Name"];
-            if (value) {
-                [dict setValue:value forKey:SKNPDFAnnotationNameKey];
-                if ([[NSSet setWithObjects:@"/Comment", @"/Key", @"/Note", @"/Help", @"/NewParagraph", @"/Paragraph", @"/Insert", nil] containsObject:value]) {
-                    if ([self respondsToSelector:@selector(iconType)])
-                        [dict setValue:[NSNumber numberWithInteger:[(id)self iconType]] forKey:SKNPDFAnnotationIconTypeKey];
-                    else
-                        [dict setValue:[NSNumber numberWithInteger:SKNIconTypeFromAnnotationValue(value)] forKey:SKNPDFAnnotationIconTypeKey];
-                }
-            }
-            [dict setValue:appearanceImageForAnnotation(self) forKey:SKNPDFAnnotationImageKey];
-            
         } else if ([type isEqualToString:SKNWidgetString]) {
             
             [dict removeObjectForKey:SKNPDFAnnotationContentsKey];
