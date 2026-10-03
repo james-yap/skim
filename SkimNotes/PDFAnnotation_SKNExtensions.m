@@ -753,7 +753,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                 }
             }
             if (fontColor)
-                [dict setObject:fontColor forKey:SKNPDFAnnotationFontColorKey];
+                [dict setValue:fontColor forKey:SKNPDFAnnotationFontColorKey];
             
         } else if (isMarkupType(type)) {
             
@@ -893,7 +893,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             } else if ((value = [self valueForAnnotationKey:@"/FT"])) {
                 widgetType = SKNPDFWidgetTypeFromAnnotationValue(value);
             }
-            [dict setObject:[NSNumber numberWithInteger:widgetType] forKey:SKNPDFAnnotationWidgetTypeKey];
+            [dict setValue:[NSNumber numberWithInteger:widgetType] forKey:SKNPDFAnnotationWidgetTypeKey];
             
             NSString *fieldName = nil;
             if ([self respondsToSelector:@selector(fieldName)])
@@ -901,18 +901,18 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             if (fieldName == nil && (value = [self valueForAnnotationKey:@"/T"]) && [value isKindOfClass:stringClass])
                 fieldName = value;
             if (fieldName)
-                [dict setObject:fieldName forKey:SKNPDFAnnotationFieldNameKey];
+                [dict setValue:fieldName forKey:SKNPDFAnnotationFieldNameKey];
             
             if (widgetType == kSKNPDFWidgetTypeButton) {
                 if ([self respondsToSelector:@selector(buttonWidgetState)])
-                    [dict setObject:[NSNumber numberWithInteger:[self buttonWidgetState]] forKey:SKNPDFAnnotationStateKey];
+                    [dict setValue:[NSNumber numberWithInteger:[self buttonWidgetState]] forKey:SKNPDFAnnotationStateKey];
                 else if ((value = [self valueForAnnotationKey:@"/V"]))
-                    [dict setObject:[NSNumber numberWithInteger:[value isEqualToString:@"Off"] ? 0 : 1] forKey:SKNPDFAnnotationStateKey];
+                    [dict setValue:[NSNumber numberWithInteger:[value isEqualToString:@"Off"] ? 0 : 1] forKey:SKNPDFAnnotationStateKey];
             } else {
                 if ([self respondsToSelector:@selector(widgetStringValue)])
-                    [dict setObject:[self widgetStringValue] forKey:SKNPDFAnnotationStringValueKey];
+                    [dict setValue:[self widgetStringValue] forKey:SKNPDFAnnotationStringValueKey];
                 else if ((value = [self valueForAnnotationKey:@"/V"]))
-                    [dict setObject:value forKey:SKNPDFAnnotationStringValueKey];
+                    [dict setValue:value forKey:SKNPDFAnnotationStringValueKey];
             }
             
         }
