@@ -662,7 +662,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         Class arrayClass = [NSArray class];
         Class stringClass = [NSString class];
         
-        if (([type isEqualToString:SKNCircleString] || [type isEqualToString:SKNSquareString]) || [type isEqualToString:SKNLineString]) {
+        if ([type isEqualToString:SKNCircleString] || [type isEqualToString:SKNSquareString] || [type isEqualToString:SKNLineString]) {
             
             PDFKitPlatformColor *color = nil;
             if ([self respondsToSelector:@selector(interiorColor)])
