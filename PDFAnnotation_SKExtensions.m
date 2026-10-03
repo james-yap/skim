@@ -480,10 +480,10 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
         [fdfString appendFDFName:SKFDFDefaultAppearanceKey];
         NSColor *color = [self fontColor];
         if ([[color colorSpace] colorSpaceModel] == NSGrayColorSpaceModel) {
-            [[color colorUsingColorSpaceName:NSCalibratedWhiteColorSpace] getWhite:&g alpha:&a];
+            [[color colorUsingColorSpaceName:NSDeviceWhiteColorSpace] getWhite:&g alpha:&a];
             [fdfString appendFormat:@"(/%@ %g Tf %g g)", [self fontName], [self fontSize], g];
         } else {
-            [[color colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getRed:&r green:&g blue:&b alpha:&a];
+            [[color colorUsingColorSpaceName:NSDeviceRGBColorSpace] getRed:&r green:&g blue:&b alpha:&a];
             [fdfString appendFormat:@"(/%@ %g Tf %g %g %g rg)", [self fontName], [self fontSize], r, g, b];
         }
         [fdfString appendFDFName:SKFDFAnnotationAlignmentKey];
