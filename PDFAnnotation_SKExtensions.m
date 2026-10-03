@@ -480,9 +480,6 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
         [[[self fontColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] getRed:&r green:&g blue:&b alpha:&a];
         [fdfString appendFDFName:SKFDFDefaultAppearanceKey];
         [fdfString appendFormat:@"(/%@ %g Tf %g %g %g rg)", [self fontName], [self fontSize], r, g, b];
-        [fdfString appendFDFName:SKFDFDefaultStyleKey];
-        [[[self fontColor] colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] getRed:&r green:&g blue:&b alpha:&a];
-        [fdfString appendFormat:@"(font: %@ %gpt; text-align:%@; color:#%.2x%.2x%.2x)", [self fontName], [self fontSize], alignmentStyleKeyword([self alignment]), (unsigned int)(255*r), (unsigned int)(255*g), (unsigned int)(255*b)];
         [fdfString appendFDFName:SKFDFAnnotationAlignmentKey];
         [fdfString appendFormat:@" %ld", (long)SKFDFFreeTextAnnotationAlignmentFromPDFFreeTextAnnotationAlignment([self alignment])];
     } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString]) {
