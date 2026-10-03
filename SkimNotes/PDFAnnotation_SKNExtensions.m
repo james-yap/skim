@@ -882,10 +882,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             
         } else if ([type isEqualToString:SKNWidgetString]) {
             
-            [dict removeObjectForKey:SKNPDFAnnotationContentsKey];
-            [dict removeObjectForKey:SKNPDFAnnotationColorKey];
-            [dict removeObjectForKey:SKNPDFAnnotationModificationDateKey];
-            [dict removeObjectForKey:SKNPDFAnnotationUserNameKey];
+            [dict removeObjectsForKeys:[NSArray arrayWithObjects:SKNPDFAnnotationContentsKey, SKNPDFAnnotationColorKey, SKNPDFAnnotationModificationDateKey, SKNPDFAnnotationUserNameKey, nil]];
             
             SKNPDFWidgetType widgetType = kSKNPDFWidgetTypeUnknown;
             if ([self respondsToSelector:@selector(widgetFieldType)]) {
