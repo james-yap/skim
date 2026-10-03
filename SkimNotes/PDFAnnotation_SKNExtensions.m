@@ -706,55 +706,55 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             }
             
             PDFKitPlatformFont *font = nil;
-            if ([self respondsToSelector:@selector(font)]) {
+            if ([self respondsToSelector:@selector(font)])
                 font = [(id)self font];
-            }
-            if (font == nil && (value = [self valueForAnnotationKey:@"/DA"])) {
+            PDFKitPlatformColor *fontColor = nil;
+            if ([self respondsToSelector:@selector(fontColor)])
+                fontColor = [(id)self fontColor];
+            if ((font == nil || fontColor == nil) && (value = [self valueForAnnotationKey:@"/DA"])) {
                 NSScanner *scanner = [[NSScanner alloc] initWithString:value];
-                NSString *fontName;
-                double fontSize;
-                if ([scanner scanUpToString:@"Tf" intoString:NULL] && [scanner isAtEnd] == NO) {
-                    NSUInteger location = [scanner scanLocation];
-                    NSRange r = [value rangeOfString:@"/" options:NSBackwardsSearch range:NSMakeRange(0, location)];
-                    if (r.location != NSNotFound) {
-                        [scanner setScanLocation:NSMaxRange(r)];
-                        if ([scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&fontName] &&
-                            [scanner scanDouble:&fontSize] &&
-                            [scanner scanString:@"Tf" intoString:NULL] &&
-                            [scanner scanLocation] == location + 2) {
-                            font = [PDFKitPlatformFont fontWithName:fontName size:fontSize];
+                if (font == nil) {
+                    NSString *fontName;
+                    double fontSize;
+                    if ([scanner scanUpToString:@"Tf" intoString:NULL] && [scanner isAtEnd] == NO) {
+                        NSUInteger location = [scanner scanLocation];
+                        NSRange r = [value rangeOfString:@"/" options:NSBackwardsSearch range:NSMakeRange(0, location)];
+                        if (r.location != NSNotFound) {
+                            [scanner setScanLocation:NSMaxRange(r)];
+                            if ([scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&fontName] &&
+                                [scanner scanDouble:&fontSize] &&
+                                [scanner scanString:@"Tf" intoString:NULL] &&
+                                [scanner scanLocation] == location + 2) {
+                                font = [PDFKitPlatformFont fontWithName:fontName size:fontSize];
+                            }
                         }
                     }
                 }
+                if (fontColor == nil) {
+                    NSUInteger end = [value rangeOfString:@"rg"].location;
+                    if (end == NSNotFound) {
+                        end = [value rangeOfString:@"g"].location;
+                        if (end == NSNotFound)
+                            end = [value rangeOfString:@"k"].location;
+                    }
+                    if (end != NSNotFound) {
+                        NSCharacterSet *numberChars = [NSCharacterSet characterSetWithCharactersInString:@"0123456789. "];
+                        NSUInteger start = end;
+                        while (start > 0 && [numberChars characterIsMember:[value characterAtIndex:start--]]) {}
+                        if (start < end) {
+                            [scanner setScanLocation:start];
+                            CGFloat c;
+                            NSMutableArray *array = [NSMutableArray array];
+                            while ([scanner scanDouble:&c])
+                                [array addObject:[NSNumber numberWithDouble:c]];
+                            fontColor = SKNColorFromArray(array);
+                        }
+                    }
+                }
+                
             }
             if (font)
                 [dict setValue:font forKey:SKNPDFAnnotationFontKey];
-            
-            PDFKitPlatformColor *fontColor = nil;
-            if ([self respondsToSelector:@selector(fontColor)]) {
-                fontColor = [(id)self fontColor];
-            }
-            if (fontColor == nil && (value = [self valueForAnnotationKey:@"/DA"])) {
-                NSUInteger end = [value rangeOfString:@"rg"].location;
-                if (end == NSNotFound) {
-                    end = [value rangeOfString:@"g"].location;
-                    if (end == NSNotFound)
-                        end = [value rangeOfString:@"k"].location;
-                }
-                if (end != NSNotFound) {
-                    NSCharacterSet *numberChars = [NSCharacterSet characterSetWithCharactersInString:@"0123456789. "];
-                    NSUInteger start = end;
-                    while (start > 0 && [numberChars characterIsMember:[value characterAtIndex:start--]]) {}
-                    if (start < end) {
-                        NSScanner *scanner = [[NSScanner alloc] initWithString:[value substringWithRange:NSMakeRange(start, end - start)]];
-                        CGFloat c;
-                        NSMutableArray *array = [NSMutableArray array];
-                        while ([scanner scanDouble:&c])
-                            [array addObject:[NSNumber numberWithDouble:c]];
-                        fontColor = SKNColorFromArray(array);
-                    }
-                }
-            }
             if (fontColor)
                 [dict setValue:fontColor forKey:SKNPDFAnnotationFontColorKey];
             
