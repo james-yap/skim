@@ -477,9 +477,15 @@ static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
         }
     }
     if ([type isEqualToString:SKNFreeTextString]) {
-        [[[self fontColor] colorUsingColorSpaceName:NSDeviceRGBColorSpace] getRed:&r green:&g blue:&b alpha:&a];
         [fdfString appendFDFName:SKFDFDefaultAppearanceKey];
-        [fdfString appendFormat:@"(/%@ %g Tf %g %g %g rg)", [self fontName], [self fontSize], r, g, b];
+        NSColor *color = [self fontColor];
+        if ([[color colorSpace] colorSpaceModel] == NSGrayColorSpaceModel) {
+            [[color colorUsingColorSpaceName:NSCalibratedWhiteColorSpace] getWhite:&g alpha:&a];
+            [fdfString appendFormat:@"(/%@ %g Tf %g g)", [self fontName], [self fontSize], g];
+        } else {
+            [[color colorUsingColorSpaceName:NSCalibratedRGBColorSpace] getRed:&r green:&g blue:&b alpha:&a];
+            [fdfString appendFormat:@"(/%@ %g Tf %g %g %g rg)", [self fontName], [self fontSize], r, g, b];
+        }
         [fdfString appendFDFName:SKFDFAnnotationAlignmentKey];
         [fdfString appendFormat:@" %ld", (long)SKFDFFreeTextAnnotationAlignmentFromPDFFreeTextAnnotationAlignment([self alignment])];
     } else if ([type isEqualToString:SKNHighlightString] || [type isEqualToString:SKNUnderlineString] || [type isEqualToString:SKNStrikeOutString]) {
