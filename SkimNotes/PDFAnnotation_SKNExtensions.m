@@ -736,8 +736,11 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             }
             if (fontColor == nil && (value = [self valueForAnnotationKey:@"/DA"])) {
                 NSUInteger end = [value rangeOfString:@"rg"].location;
-                if (end == NSNotFound)
+                if (end == NSNotFound) {
                     end = [value rangeOfString:@"g"].location;
+                    if (end == NSNotFound)
+                        end = [value rangeOfString:@"k"].location;
+                }
                 if (end != NSNotFound) {
                     NSCharacterSet *numberChars = [NSCharacterSet characterSetWithCharactersInString:@"0123456789. "];
                     NSUInteger start = end;
