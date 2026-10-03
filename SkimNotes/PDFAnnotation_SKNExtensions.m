@@ -730,7 +730,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                 }
             }
             if (font)
-                [dict setObject:font forKey:SKNPDFAnnotationFontKey];
+                [dict setValue:font forKey:SKNPDFAnnotationFontKey];
             
             PDFKitPlatformColor *fontColor = nil;
             if ([self respondsToSelector:@selector(fontColor)]) {
