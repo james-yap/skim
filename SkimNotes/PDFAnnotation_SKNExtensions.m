@@ -421,9 +421,9 @@ char SKNIsSkimNoteKey;
             [self setColor:color];
         else if ([color isKindOfClass:arrayClass])
             [self setColor:SKNColorFromArray((NSArray *)color)];
-        if ([modificationDate isKindOfClass:dateClass] && [self respondsToSelector:@selector(setModificationDate:)])
+        if ([modificationDate isKindOfClass:dateClass])
             [self setModificationDate:modificationDate];
-        if ([userName isKindOfClass:stringClass] && [self respondsToSelector:@selector(setUserName:)])
+        if ([userName isKindOfClass:stringClass])
             [self setUserName:userName];
         if (lineWidth || borderStyle || dashPattern) {
             if ([borderStyle respondsToSelector:@selector(integerValue)] == NO)
@@ -559,10 +559,8 @@ char SKNIsSkimNoteKey;
     [dict setValue:[self type] forKey:SKNPDFAnnotationTypeKey];
     [dict setValue:[self string] forKey:SKNPDFAnnotationContentsKey];
     [dict setValue:[self color] forKey:SKNPDFAnnotationColorKey];
-    if ([self respondsToSelector:@selector(modificationDate)])
-        [dict setValue:[self modificationDate] forKey:SKNPDFAnnotationModificationDateKey];
-    if ([self respondsToSelector:@selector(userName)])
-        [dict setValue:[self userName] forKey:SKNPDFAnnotationUserNameKey];
+    [dict setValue:[self modificationDate] forKey:SKNPDFAnnotationModificationDateKey];
+    [dict setValue:[self userName] forKey:SKNPDFAnnotationUserNameKey];
     [dict setValue:SKNStringFromRect([self bounds]) forKey:SKNPDFAnnotationBoundsKey];
     [dict setValue:[NSNumber numberWithUnsignedInteger:pageIndex == NSNotFound ? 0 : pageIndex] forKey:SKNPDFAnnotationPageIndexKey];
     if ([self border] && [[self border] lineWidth] > 0.0) {
@@ -1178,8 +1176,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     if (self) {
         [self setShouldPrint:YES];
         [self setSkimNote:YES];
-        if ([self respondsToSelector:@selector(setUserName:)])
-            [self setUserName:nil];
+        [self setUserName:nil];
     }
     return self;
 }
@@ -1518,8 +1515,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         NSString *stringValue = [dict objectForKey:SKNPDFAnnotationStringValueKey];
         if ([stringValue isKindOfClass:stringClass])
             [self setStringValue:stringValue];
-        if ([self respondsToSelector:@selector(setModificationDate:)])
-            [self setModificationDate:nil];
+        [self setModificationDate:nil];
     }
     return self;
 }
@@ -1557,8 +1553,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         NSNumber *state = [dict objectForKey:SKNPDFAnnotationStateKey];
         if ([state respondsToSelector:@selector(integerValue)])
             [self setState:[state integerValue]];
-        if ([self respondsToSelector:@selector(setModificationDate:)])
-            [self setModificationDate:nil];
+        [self setModificationDate:nil];
     }
     return self;
 }
@@ -1597,8 +1592,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         NSString *stringValue = [dict objectForKey:SKNPDFAnnotationStringValueKey];
         if ([stringValue isKindOfClass:stringClass])
             [self setStringValue:stringValue];
-        if ([self respondsToSelector:@selector(setModificationDate:)])
-            [self setModificationDate:nil];
+        [self setModificationDate:nil];
     }
     return self;
 }
