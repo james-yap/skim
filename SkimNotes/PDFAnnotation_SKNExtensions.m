@@ -714,12 +714,12 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             if ((font == nil || fontColor == nil) && (value = [self valueForAnnotationKey:@"/DA"])) {
                 NSScanner *scanner = [[NSScanner alloc] initWithString:value];
                 if (font == nil) {
-                    NSString *fontName;
-                    double fontSize;
                     if ([scanner scanUpToString:@"Tf" intoString:NULL] && [scanner isAtEnd] == NO) {
                         NSUInteger location = [scanner scanLocation];
                         NSRange r = [value rangeOfString:@"/" options:NSBackwardsSearch range:NSMakeRange(0, location)];
                         if (r.location != NSNotFound) {
+                            NSString *fontName;
+                            double fontSize;
                             [scanner setScanLocation:NSMaxRange(r)];
                             if ([scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceAndNewlineCharacterSet] intoString:&fontName] &&
                                 [scanner scanDouble:&fontSize] &&
