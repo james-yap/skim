@@ -223,7 +223,7 @@ static void replacement_setBounds(id self, SEL _cmd , NSRect newBounds) {
     return nil;
 }
 
-+ (Class)annotationClassForType:(NSString *)type {return self;
++ (Class)annotationClassForType:(NSString *)type {
     if ([type isEqualToString:SKNNoteString] || [type isEqualToString:SKNTextString] || [type isEqualToString:SKNStampString])
         return [SKNPDFAnnotationNote class];
     else
