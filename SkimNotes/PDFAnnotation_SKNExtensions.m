@@ -336,7 +336,9 @@ char SKNIsSkimNoteKey;
         // possibly replace by a subclass
         Class annotationClass = SKNAnnotationClassForType(type);
         if ([self isMemberOfClass:annotationClass] == NO) {
+#if !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12)
             self = [self init];
+#endif
             self = [[annotationClass alloc] initSkimNoteWithBounds:bounds forType:type];
             return self;
         }
@@ -394,7 +396,9 @@ char SKNIsSkimNoteKey;
             annotationClass = SKNAnnotationClassForWidgetType([[dict objectForKey:SKNPDFAnnotationWidgetTypeKey] integerValue]);
 #endif
         if ([self isMemberOfClass:annotationClass] == NO) {
+#if !defined(PDFKIT_PLATFORM_IOS) && (!defined(MAC_OS_X_VERSION_10_12) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_12)
             self = [self init];
+#endif
             self = [[annotationClass alloc] initSkimNoteWithProperties:dict];
             return self;
         }
