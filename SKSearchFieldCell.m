@@ -65,10 +65,8 @@
 }
 
 - (void)drawFocusRingMaskWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
-    if (@available(macOS 11.0, *)) {
-        CGFloat r = 5.0;
-        if (@available(macOS 26.0, *))
-            r = 0.5 * NSHeight(cellFrame) - 1.0;
+    if (@available(macOS 26.0, *)) {
+        CGFloat r = 0.5 * NSHeight(cellFrame) - 1.0;
         [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 1.0, 1.0) xRadius:r yRadius:r] fill];
     } else {
         [super drawFocusRingMaskWithFrame:cellFrame inView:controlView];
