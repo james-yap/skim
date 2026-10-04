@@ -1475,6 +1475,14 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     return dict;
 }
 
+- (NSString *)string {
+    return [self contents];
+}
+
+- (void)setString:(NSString *)string {
+    [self setContents:string];
+}
+
 @end
 
 #pragma mark -
@@ -1503,6 +1511,14 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         [dict setValue:[NSNumber numberWithInteger:[self iconType]] forKey:SKNPDFAnnotationIconTypeKey];
     [dict setValue:appearanceImageForAnnotation(self) forKey:SKNPDFAnnotationImageKey];
     return dict;
+}
+
+- (NSString *)string {
+    return [self contents];
+}
+
+- (void)setString:(NSString *)string {
+    [self setContents:string];
 }
 
 @end
