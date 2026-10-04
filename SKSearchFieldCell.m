@@ -42,6 +42,9 @@
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
     if (@available(macOS 11.0, *)) {
+        CGFloat r = 5.0;
+        if (@available(macOS 26.0, *))
+            r = 0.5 * NSHeight(cellFrame) - 1.0;
         [NSGraphicsContext saveGraphicsState];
         if ([[NSWorkspace sharedWorkspace] accessibilityDisplayShouldIncreaseContrast]) {
             [[NSColor controlTextColor] setStroke];
@@ -51,13 +54,24 @@
             [[[NSColor controlTextColor] colorWithAlphaComponent:0.1] setStroke];
         } else {
             [[[NSColor controlTextColor] colorWithAlphaComponent:0.05] set];
-            [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 1.0, 1.0) xRadius:5.0 yRadius:5.0] fill];
+            [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 1.0, 1.0) xRadius:r yRadius:r] fill];
         }
-        [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 1.5, 1.5) xRadius:4.5 yRadius:4.5] stroke];
+        [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 1.5, 1.5) xRadius:r - 0.5 yRadius:r - 0.5] stroke];
         [NSGraphicsContext restoreGraphicsState];
         [self drawInteriorWithFrame:cellFrame inView:controlView];
     } else {
         [super drawWithFrame:cellFrame inView:controlView];
+    }
+}
+
+- (void)drawFocusRingMaskWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
+    if (@available(macOS 11.0, *)) {
+        CGFloat r = 5.0;
+        if (@available(macOS 26.0, *))
+            r = 0.5 * NSHeight(cellFrame) - 1.0;
+        [[NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 1.0, 1.0) xRadius:r yRadius:r] fill];
+    } else {
+        [super drawFocusRingMaskWithFrame:cellFrame inView:controlView];
     }
 }
 
