@@ -4309,7 +4309,7 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
             if (bezierPath == nil) {
                 bezierPath = [NSBezierPath bezierPath];
                 [bezierPath moveToPoint:point];
-            } else if (wantsBreak && NO == NSEqualPoints(point, [bezierPath associatedPointForElementAtIndex:[bezierPath elementCount] - 2])) {
+            } else if (wantsBreak && [bezierPath elementCount] > 1 && NO == NSEqualPoints(point, [bezierPath associatedPointForElementAtIndex:[bezierPath elementCount] - 2])) {
                 [PDFAnnotation addPoint:point toSkimNotesPath:bezierPath];
             }
             
@@ -4318,11 +4318,8 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
             if (isOption && wantsBreak == NO) {
                 NSInteger eltCount = [bezierPath elementCount];
                 NSPoint points[3] = {point, point, point};
-                if (NSCurveToBezierPathElement == [bezierPath elementAtIndex:eltCount - 1]) {
+                if (NSCurveToBezierPathElement == [bezierPath elementAtIndex:eltCount - 1])
                     points[0] = [bezierPath associatedPointForElementAtIndex:eltCount - 2];
-                    points[0].x += ( point.x - points[0].x ) / 3.0;
-                    points[0].y += ( point.y - points[0].y ) / 3.0;
-                }
                 [bezierPath setAssociatedPoints:points atIndex:eltCount - 1];
             } else {
                 [PDFAnnotation addPoint:point toSkimNotesPath:bezierPath];
