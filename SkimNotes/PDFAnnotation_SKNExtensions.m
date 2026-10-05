@@ -1054,17 +1054,17 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             CGFloat d0, d1;
             
             diff1 = diff;
+            d1 = d2;
+            
             diff.x = point.x - prevPoint.x;
             diff.y = point.y - prevPoint.y;
-            
-            d1 = d2;
             d2 = sqrt(diff.x * diff.x + diff.y * diff.y);
             
             controlPoint2 = prevPoint;
             if (d1 > 0.0 && d2 > 0.0) {
-                d0 = sqrt(d1 * d2);
                 diff1.x = d2 * diff1.x + d1 * diff.x;
                 diff1.y = d2 * diff1.y + d1 * diff.y;
+                d0 = sqrt(d1 * d2);
                 
                 controlPoint2.x -= diff1.x / (3.0 * (d0 + d2));
                 controlPoint2.y -= diff1.y / (3.0 * (d0 + d2));
