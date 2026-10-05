@@ -1849,7 +1849,7 @@ static inline void drawIcon(CGContextRef context, NSRect bounds, PDFTextAnnotati
         [NSGraphicsContext restoreGraphicsState];
         CGContextRestoreGState(context);
 #if !defined(MAC_OS_X_VERSION_10_15) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_15
-    } else if ([self hasAppearanceStream] == NO && floor(NSAppKitVersionNumber) <= SKNAppKitVersionNumber10_14 && floor(NSAppKitVersionNumber) >= SKNAppKitVersionNumber10_12) {
+    } else if ([self drawsImage] == NO && [self hasAppearanceStream] == NO && floor(NSAppKitVersionNumber) <= SKNAppKitVersionNumber10_14 && floor(NSAppKitVersionNumber) >= SKNAppKitVersionNumber10_12) {
         // on 10.12 through 10.14 draws based on the type rather than the /Subtype
         // as PDFKit does not know type Note we need to draw ourselves
         // type Text does just draws a dumb filled square anyway
