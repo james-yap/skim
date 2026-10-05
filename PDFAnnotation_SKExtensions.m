@@ -403,15 +403,6 @@ static void replacement_setBounds(id self, SEL _cmd , NSRect newBounds) {
     }
 }
 
-static inline NSString *alignmentStyleKeyword(NSTextAlignment alignment) {
-    switch (alignment) {
-        case NSTextAlignmentLeft: return @"left";
-        case NSTextAlignmentRight: return @"right";
-        case NSTextAlignmentCenter: return @"center";
-        default: return @"left";
-    }
-}
-
 - (NSString *)fdfString {
     NSMutableString *fdfString = [NSMutableString string];
     NSRect bounds = [self bounds];
