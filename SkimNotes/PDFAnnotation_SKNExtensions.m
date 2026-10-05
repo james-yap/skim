@@ -1125,18 +1125,18 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         
         diff1.x = point1.x - point0.x;
         diff1.y = point1.y - point0.y;
+        d1 = sqrt(diff1.x * diff1.x + diff1.y * diff1.y);
+        
         diff2.x = point.x - point1.x;
         diff2.y = point.y - point1.y;
-        
-        d1 = sqrt(diff1.x * diff1.x + diff1.y * diff1.y);
         d2 = sqrt(diff2.x * diff2.x + diff2.y * diff2.y);
-        d0 = sqrt(d1 * d2);
-        
-        diff1.x = d2 * diff1.x + d1 * diff2.x;
-        diff1.y = d2 * diff1.y + d1 * diff2.y;
         
         controlPoint = point1;
-        if (d2 > 0.0) {
+        if (d1 > 0.0 && d2 > 0.0) {
+            diff1.x = d2 * diff1.x + d1 * diff2.x;
+            diff1.y = d2 * diff1.y + d1 * diff2.y;
+            d0 = sqrt(d1 * d2);
+            
             controlPoint.x -= diff1.x / (3.0 * (d0 + d2));
             controlPoint.y -= diff1.y / (3.0 * (d0 + d2));
         }
@@ -1151,7 +1151,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         }
         
         controlPoint = point1;
-        if (d1 > 0.0) {
+        if (d1 > 0.0 && d2 > 0.0) {
             controlPoint.x += diff1.x / (3.0 * (d0 + d1));
             controlPoint.y += diff1.y / (3.0 * (d0 + d1));
         }
