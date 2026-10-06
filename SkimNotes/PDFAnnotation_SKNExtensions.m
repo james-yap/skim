@@ -1097,7 +1097,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 #endif
 }
 
-+ (void)addPoint:(NSPoint)point toSkimNotesPath:(NSBezierPath *)path {
++ (void)addPoint:(PDFPoint)point toSkimNotesPath:(PDFKitPlatformBezierPath *)path {
 #ifdef PDFKIT_PLATFORM_IOS
     NSMutableArray *points = [NSMutableArray array];
     
