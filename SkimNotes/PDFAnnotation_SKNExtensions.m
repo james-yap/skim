@@ -1110,10 +1110,10 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             case kCGPathElementCloseSubpath: return;
             default: i = 0; break;
         }
-        [points addObject:[NSValue valueWithBytes:&p[i] objCType:@encode(CGPoint)]];
+        [points addObject:[NSValue valueWithCGPoint:p[i]]];
     });
     
-    [points addObject:[NSValue valueWithBytes:&point objCType:@encode(CGPoint)]];
+    [points addObject:[NSValue valueWithCGPoint:point]];
     
     [self setPoints:points ofSkimNotePath:path];
 #else
