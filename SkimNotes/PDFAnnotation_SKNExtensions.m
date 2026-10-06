@@ -1036,6 +1036,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     NSUInteger i, iMax = [points count];
     PDFPoint point, controlPoint1, diff;
     CGFloat d2;
+    BOOL wasEdge = YES;
     
     for (i = 0; i < iMax; i++) {
         id pointValue = [points objectAtIndex:i];
@@ -1071,15 +1072,15 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             }
             
 #ifdef PDFKIT_PLATFORM_IOS
-            if (d1 > 0.0)
-                [path addCurveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
-            else
+            if (d1 <= 0.0 || (d2 <= 0 && wasEdge))
                 [path addLineToPoint:prevPoint];
-#else
-            if (d1 > 0.0)
-                [path curveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
             else
+                [path addCurveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
+#else
+            if (d1 <= 0.0 || (d2 <= 0 && wasEdge))
                 [path lineToPoint:prevPoint];
+            else
+                [path curveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
 #endif
             
             controlPoint1 = prevPoint;
@@ -1087,16 +1088,18 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
                 controlPoint1.x += diff1.x / (3.0 * (d0 + d1));
                 controlPoint1.y += diff1.y / (3.0 * (d0 + d1));
             }
+            
+            wasEdge = d1 <= 0.0;
         }
     }
     
 #ifdef PDFKIT_PLATFORM_IOS
-    if (iMax == 2 || d2 <= 0.0)
+    if (iMax == 2 || d2 <= 0.0 || wasEdge)
         [path addLineToPoint:point];
     else if (iMax > 2)
         [path addCurveToPoint:point controlPoint1:controlPoint1 controlPoint2:point];
 #else
-    if (iMax == 2 || d2 <= 0.0)
+    if (iMax == 2 || d2 <= 0.0 || wasEdge)
         [path lineToPoint:point];
     else if (iMax > 2)
         [path curveToPoint:point controlPoint1:controlPoint1 controlPoint2:point];

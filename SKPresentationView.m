@@ -1013,13 +1013,14 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
                 if (NSCurveToBezierPathElement == [bezierPath elementAtIndex:eltCount - 1])
                     points[0] = prevPoint;
                 [bezierPath setAssociatedPoints:points atIndex:eltCount - 1];
+            } else if (bezierPath == nil) {
+                bezierPath = [NSBezierPath bezierPath];
+                [bezierPath moveToPoint:prevPoint];
+                [bezierPath lineToPoint:point];
+            } else if (wantsBreak && NO == NSEqualPoints(prevPoint, oldPrevPoint)) {
+                [bezierPath lineToPoint:prevPoint];
+                [bezierPath lineToPoint:point];
             } else {
-                if (bezierPath == nil) {
-                    bezierPath = [NSBezierPath bezierPath];
-                    [bezierPath moveToPoint:prevPoint];
-                } else if (wantsBreak && NO == NSEqualPoints(prevPoint, oldPrevPoint)) {
-                    [PDFAnnotation addPoint:prevPoint toSkimNotesPath:bezierPath];
-                }
                 [PDFAnnotation addPoint:point toSkimNotesPath:bezierPath];
             }
             
