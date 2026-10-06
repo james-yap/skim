@@ -1097,9 +1097,26 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
 #endif
 }
 
-#ifndef PDFKIT_PLATFORM_IOS
-
 + (void)addPoint:(NSPoint)point toSkimNotesPath:(NSBezierPath *)path {
+#ifdef PDFKIT_PLATFORM_IOS
+    NSMutableArray *points = [NSMutableArray array];
+    
+    CGPathApplyWithBlock([path CGPath], ^(const CGPathElement *element){
+        CGPoint *p = element->points;
+        NSUInteger i = 0;
+        switch (element->type) {
+            case kCGPathElementAddQuadCurveToPoint: i = 1; break;
+            case kCGPathElementAddCurveToPoint: i = 2; break;
+            case kCGPathElementCloseSubpath: return;
+            default: i = 0; break;
+        }
+        [points addObject:[NSValue valueWithBytes:&p[i] objCType:@encode(CGPoint)]];
+    });
+    
+    [points addObject:[NSValue valueWithBytes:&point objCType:@encode(CGPoint)]];
+    
+    [self setPoints:points ofSkimNotePath:path];
+#else
     NSUInteger count = [path elementCount];
     
     if (count == 0) {
@@ -1159,9 +1176,8 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         [path curveToPoint:point controlPoint1:controlPoint controlPoint2:point];
         
     }
-}
-
 #endif
+}
 
 @end
 

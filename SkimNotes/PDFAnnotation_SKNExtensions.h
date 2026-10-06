@@ -353,15 +353,13 @@ typedef NS_ENUM(NSInteger, SKNPDFWidgetType) {
 */
 + (void)setPoints:(NSArray *)points ofSkimNotePath:(PDFKitPlatformBezierPath *)path;
 
-#ifndef PDFKIT_PLATFORM_IOS
 /*!
     @abstract   Method to add a point to a path, to be used to build the path for a Skim note.
     @param      point The point to add to the path.
     @param      path The bezier path to add the point to.
-    @discussion This method adds a cubic curve element to path to point.  It is used to build up paths for the Skim note from the points.  This method is only available on macOS.
+    @discussion This method adds a cubic curve element to path to point.  It is used to build up paths for the Skim note from the points.
 */
 + (void)addPoint:(NSPoint)point toSkimNotesPath:(NSBezierPath *)path;
-#endif
 
 @end
 
