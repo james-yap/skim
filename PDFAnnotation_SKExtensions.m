@@ -511,7 +511,8 @@ static void replacement_setBounds(id self, SEL _cmd , NSRect newBounds) {
             iMax = [path elementCount];
             [fdfString appendString:@"["];
             for (i = 0; i < iMax; i++) {
-                point = [path associatedPointForElementAtIndex:i];
+                NSPoint p[3];
+                point = NSCurveToBezierPathElement == [path elementAtIndex:i associatedPoints:p] ? p[2] : p[0];
                 [fdfString appendFormat:@"%g %g ", point.x + NSMinX(bounds), point.y + NSMinY(bounds)];
             }
             [fdfString appendString:@"]"];
@@ -1643,7 +1644,8 @@ static NSArray *invalidScriptingKeysForType(NSString *type) {
             iMax = [path elementCount];
             pointValues = [[NSMutableArray alloc] initWithCapacity:iMax];
             for (i = 0; i < iMax; i++) {
-                point = [path associatedPointForElementAtIndex:i];
+                NSPoint p[3];
+                point = NSCurveToBezierPathElement == [path elementAtIndex:i associatedPoints:p] ? p[2] : p[0];
                 [pointValues addObject:[NSData dataWithPointAsNSPoint:SKAddPoints(point, origin)]];
             }
             [pointLists addObject:pointValues];

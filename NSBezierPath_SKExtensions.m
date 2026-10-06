@@ -63,21 +63,14 @@
     [self setLineDash:pattern count:count phase:0];
 }
 
-- (NSPoint)associatedPointForElementAtIndex:(NSUInteger)anIndex {
-    NSPoint points[3];
-    if (NSCurveToBezierPathElement == [self elementAtIndex:anIndex associatedPoints:points])
-        return points[2];
-    else
-        return points[0];
-}
-
 - (NSRect)nonEmptyBounds {
     NSRect bounds = [self bounds];
     if (NSIsEmptyRect(bounds) && [self elementCount]) {
         NSPoint point, minPoint = NSZeroPoint, maxPoint = NSZeroPoint;
         NSUInteger i, count = [self elementCount];
         for (i = 0; i < count; i++) {
-            point = [self associatedPointForElementAtIndex:i];
+            NSPoint p[3];
+            point = NSCurveToBezierPathElement == [self elementAtIndex:i associatedPoints:p] ? p[2] : p[0];
             if (i == 0) {
                 minPoint = maxPoint = point;
             } else {

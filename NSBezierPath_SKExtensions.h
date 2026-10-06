@@ -45,8 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSRect nonEmptyBounds;
 
-- (NSPoint)associatedPointForElementAtIndex:(NSUInteger)anIndex;
-
 - (void)addToCGPath:(CGMutablePathRef)path transform:(const CGAffineTransform * __nullable)m;
 
 - (void)halfEllipseFromPoint:(NSPoint)halfwayPoint toPoint:(NSPoint)endPoint;
