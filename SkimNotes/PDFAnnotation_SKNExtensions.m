@@ -1071,9 +1071,15 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             }
             
 #ifdef PDFKIT_PLATFORM_IOS
-            [path addCurveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
+            if (d1 > 0.0)
+                [path addCurveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
+            else
+                [path addLineToPoint:prevPoint];
 #else
-            [path curveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
+            if (d1 > 0.0)
+                [path curveToPoint:prevPoint controlPoint1:controlPoint1 controlPoint2:controlPoint2];
+            else
+                [path lineToPoint:prevPoint];
 #endif
             
             controlPoint1 = prevPoint;
@@ -1085,12 +1091,12 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
     }
     
 #ifdef PDFKIT_PLATFORM_IOS
-    if (iMax == 2)
+    if (iMax == 2 || d2 <= 0.0)
         [path addLineToPoint:point];
     else if (iMax > 2)
         [path addCurveToPoint:point controlPoint1:controlPoint1 controlPoint2:point];
 #else
-    if (iMax == 2)
+    if (iMax == 2 || d2 <= 0.0)
         [path lineToPoint:point];
     else if (iMax > 2)
         [path curveToPoint:point controlPoint1:controlPoint1 controlPoint2:point];
@@ -1161,7 +1167,7 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
         if (elt == NSCurveToBezierPathElement) {
             points[1] = controlPoint;
             [path setAssociatedPoints:points atIndex:count - 1];
-        } else if (count == 2) {
+        } else if (count == 2 && d1 > 0.0) {
             [path removeAllPoints];
             [path moveToPoint:point0];
             [path curveToPoint:point1 controlPoint1:point0 controlPoint2:controlPoint];
@@ -1173,7 +1179,10 @@ static inline SKNPDFWidgetType SKNPDFWidgetTypeFromAnnotationValue(id value) {
             controlPoint.y += diff1.y / (3.0 * (d0 + d1));
         }
         
-        [path curveToPoint:point controlPoint1:controlPoint controlPoint2:point];
+        if (d2 > 0.0)
+            [path curveToPoint:point controlPoint1:controlPoint controlPoint2:point];
+        else
+            [path lineToPoint:point];
         
     }
 #endif
