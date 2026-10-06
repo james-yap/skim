@@ -4242,13 +4242,13 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
 - (void)doDrawFreehandNoteWithEvent:(NSEvent *)theEvent {
     NSPoint point = NSZeroPoint;
     PDFPage *page = [self pageAndPoint:&point forEvent:theEvent nearest:YES];
+    NSPoint prevPoint = point;
     NSWindow *window = [self window];
     BOOL wasMouseCoalescingEnabled = [NSEvent isMouseCoalescingEnabled];
     BOOL isOption = ([theEvent modifierFlags] & NSEventModifierFlagOption) != 0;
     BOOL wasOption = NO;
     BOOL wantsBreak = isOption;
     NSBezierPath *bezierPath = nil;
-    CGMutablePathRef cgPath = NULL;
     CGFloat scale = [self scaleFactor];
     CAShapeLayer *layer = nil;
     NSRect boxBounds = NSIntersectionRect([page boundsForBox:[self displayBox]], [self convertRect:[self unobscuredContentRect] toPage:page]);
@@ -4306,29 +4306,34 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
             
         } else if ([theEvent type] == NSEventTypeLeftMouseDragged) {
             
-            if (bezierPath == nil) {
-                bezierPath = [NSBezierPath bezierPath];
-                [bezierPath moveToPoint:point];
-            } else if (wantsBreak && NO == NSEqualPoints(point, [bezierPath associatedPointForElementAtIndex:[bezierPath elementCount] - 2])) {
-                [PDFAnnotation addPoint:point toSkimNotesPath:bezierPath];
-            }
-            
+            NSPoint oldPrevPoint = prevPoint;
+            prevPoint = point;
             point = [self convertPoint:[self convertPoint:[theEvent locationInWindow] fromView:nil] toPage:page];
             
-            if (isOption && wantsBreak == NO) {
+            if (NSEqualPoints(point, prevPoint)) {
+                prevPoint = oldPrevPoint;
+                continue;
+            } else if (isOption && wantsBreak == NO) {
                 NSInteger eltCount = [bezierPath elementCount];
                 NSPoint points[3] = {point, point, point};
+                prevPoint = oldPrevPoint;
                 if (NSCurveToBezierPathElement == [bezierPath elementAtIndex:eltCount - 1])
-                    points[0] = [bezierPath associatedPointForElementAtIndex:eltCount - 2];
+                    points[0] = prevPoint;
                 [bezierPath setAssociatedPoints:points atIndex:eltCount - 1];
             } else {
+                if (bezierPath == nil) {
+                    bezierPath = [NSBezierPath bezierPath];
+                    [bezierPath moveToPoint:point];
+                } else if (wantsBreak && NO == NSEqualPoints(point, oldPrevPoint)) {
+                    [PDFAnnotation addPoint:point toSkimNotesPath:bezierPath];
+                }
                 [PDFAnnotation addPoint:point toSkimNotesPath:bezierPath];
             }
             
             wasOption = isOption;
             wantsBreak = NO;
             
-            cgPath = CGPathCreateMutable();
+            CGMutablePathRef cgPath = CGPathCreateMutable();
             [bezierPath addToCGPath:cgPath transform:&t];
             [layer setPath:cgPath];
             CGPathRelease(cgPath);
