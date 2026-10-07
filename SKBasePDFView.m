@@ -526,7 +526,7 @@ static inline NSArray *defaultKeysToObserve() {
             [self verticallyScrollToTop];
         else if (currentPageIndex < pageIndex)
             [self verticallyScrollToBottom];
-    } else if (clipView && fabs(NSMinY([clipView bounds]) - NSMinY(bounds)) <= 0.0) {
+    } else if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
         if (keyDirection == -1) {
             [self goToPreviousPage:sender];
             [self verticallyScrollToBottom];
@@ -584,7 +584,7 @@ static inline NSArray *defaultKeysToObserve() {
             [self verticallyScrollToBottom];
         else if (currentPageIndex > pageIndex)
             [self verticallyScrollToTop];
-    } else if (clipView && fabs(NSMinY([clipView bounds]) - NSMinY(bounds)) <= 0.0) {
+    } else if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
         if (keyDirection == 1) {
             [self goToNextPage:sender];
             [self verticallyScrollToTop];
