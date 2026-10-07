@@ -954,9 +954,9 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
     NSPoint prevPoint = point;
     NSWindow *window = [self window];
     BOOL wasMouseCoalescingEnabled = [NSEvent isMouseCoalescingEnabled];
-    BOOL isOption = ([theEvent modifierFlags] & NSEventModifierFlagOption) != 0;
-    BOOL wasOption = NO;
-    BOOL wantsBreak = isOption;
+    BOOL addLine = ([theEvent modifierFlags] & NSEventModifierFlagOption) != 0;
+    BOOL addedLine = NO;
+    BOOL wantsBreak = addLine;
     NSBezierPath *bezierPath = nil;
     NSUserDefaults *sud = [NSUserDefaults standardUserDefaults];
     CAShapeLayer *layer = nil;
@@ -1006,7 +1006,7 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
             if (NSEqualPoints(point, prevPoint)) {
                 prevPoint = oldPrevPoint;
                 continue;
-            } else if (isOption && wantsBreak == NO) {
+            } else if (addLine && wantsBreak == NO) {
                 NSInteger eltCount = [bezierPath elementCount];
                 NSPoint points[3] = {point, point, point};
                 prevPoint = oldPrevPoint;
@@ -1020,14 +1020,14 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
             } else {
                 if (wantsBreak && NO == NSEqualPoints(prevPoint, oldPrevPoint))
                     [bezierPath lineToPoint:prevPoint];
-                if (isOption)
+                if (addLine)
                     [bezierPath lineToPoint:point];
                 else
                     [PDFAnnotation addPoint:point toSkimNotesPath:bezierPath];
 
             }
             
-            wasOption = isOption;
+            addedLine = addLine;
             wantsBreak = NO;
             
             CGMutablePathRef cgPath = CGPathCreateMutable();
@@ -1035,10 +1035,10 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
             [layer setPath:cgPath];
             CGPathRelease(cgPath);
             
-        } else if ((([theEvent modifierFlags] & NSEventModifierFlagOption) != 0) != isOption) {
+        } else if ((([theEvent modifierFlags] & NSEventModifierFlagOption) != 0) != addLine) {
             
-            isOption = isOption == NO;
-            wantsBreak = isOption || wasOption;
+            addLine = addLine == NO;
+            wantsBreak = addLine || addedLine;
             
         }
     }
