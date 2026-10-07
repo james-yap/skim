@@ -462,13 +462,15 @@ static inline NSArray *defaultKeysToObserve() {
 }
 
 - (void)keyDown:(NSEvent *)event {
-    unichar ch = [event firstCharacter];
-    if (ch == NSPageDownFunctionKey || ch == NSDownArrowFunctionKey)
-        keyDirection = 1;
-    else if (ch == NSPageUpFunctionKey || ch == NSUpArrowFunctionKey)
-        keyDirection = -1;
-    else if (ch == SKSpaceCharacter)
-        keyDirection = ([event modifierFlags] & NSEventModifierFlagShift) ? -1 : 1;
+    if ([self displayDirection]) {
+        unichar ch = [event firstCharacter];
+        if (ch == NSPageDownFunctionKey || ch == NSDownArrowFunctionKey)
+            keyDirection = 1;
+        else if (ch == NSPageUpFunctionKey || ch == NSUpArrowFunctionKey)
+            keyDirection = -1;
+        else if (ch == SKSpaceCharacter)
+            keyDirection = ([event modifierFlags] & NSEventModifierFlagShift) ? -1 : 1;
+    }
     [super keyDown:event];
     keyDirection = 0;
 }
