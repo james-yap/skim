@@ -1654,17 +1654,17 @@ static inline NSInteger indexOfCharInString(char ch, char *str) {
 }
 
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent {
-    if ([self hasReadingBar] == NO)
-        return NO;
-    unichar eventChar = [theEvent firstCharacter];
-    if (IS_UP_DOWN_ARROW(eventChar) == NO)
-        return NO;
-    NSEventModifierFlags modifiers = [theEvent deviceIndependentModifierFlags] & ~NSEventModifierFlagNumericPad & ~NSEventModifierFlagFunction;
-    if (modifiers == moveReadingBarModifiers) {
-        [self doMoveReadingBarForKey:eventChar];
-        return YES;
+    if ([self hasReadingBar]) {
+        unichar eventChar = [theEvent firstCharacter];
+        if (IS_UP_DOWN_ARROW(eventChar)) {
+            NSEventModifierFlags modifiers = [theEvent deviceIndependentModifierFlags] & ~NSEventModifierFlagNumericPad & ~NSEventModifierFlagFunction;
+            if (modifiers == moveReadingBarModifiers) {
+                [self doMoveReadingBarForKey:eventChar];
+                return YES;
+            }
+        }
     }
-    return NO;
+    return [super performKeyEquivalent:theEvent];
 }
 
 - (void)performMarkupToolMode {

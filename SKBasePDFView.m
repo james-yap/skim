@@ -252,9 +252,6 @@ static inline NSArray *defaultKeysToObserve() {
 // we don't want to steal the printDocument: action from the responder chain
 - (void)printDocument:(id)sender{}
 
-// PDFView has duplicated key equivalents for Cmd-+/- as well as Opt-Cmd-+/-, which is totoally unnecessary and harmful
-- (BOOL)performKeyEquivalent:(NSEvent *)theEvent { return NO; }
-
 #pragma mark Bug fixes
 
 - (void)setDocument:(PDFDocument *)document {
