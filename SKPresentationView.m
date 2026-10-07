@@ -1017,15 +1017,14 @@ static NSArray *scaledDashPattern(NSArray *dashPattern, CGFloat scale) {
                 bezierPath = [NSBezierPath bezierPath];
                 [bezierPath moveToPoint:prevPoint];
                 [bezierPath lineToPoint:point];
-            } else if (wantsBreak) {
-                if (NO == NSEqualPoints(prevPoint, oldPrevPoint))
+            } else {
+                if (wantsBreak && NO == NSEqualPoints(prevPoint, oldPrevPoint))
                     [bezierPath lineToPoint:prevPoint];
                 if (isOption)
                     [bezierPath lineToPoint:point];
                 else
                     [PDFAnnotation addPoint:point toSkimNotesPath:bezierPath];
-            } else {
-                [PDFAnnotation addPoint:point toSkimNotesPath:bezierPath];
+
             }
             
             wasOption = isOption;
