@@ -480,7 +480,7 @@ static inline NSArray *defaultKeysToObserve() {
     keyDirection = 0;
 }
 
-// PDFView binds PageDown to scrollPageUp: and ArrowDown to scrollPageUp: and v.v. (wrong!)
+// PDFView binds PageDown to scrollPageUp: and ArrowDown to scrollLineUp: and v.v. (wrong!)
 // the clipView is not flipped (wrong!)
 // ... at least until macOS 15, but macOS 26 seems to scroll in the wrong direction
 
