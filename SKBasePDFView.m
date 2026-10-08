@@ -380,7 +380,7 @@ static inline NSArray *defaultKeysToObserve() {
     } else {
         PDFDocument *doc = [self document];
         NSUInteger i = [doc indexForPage:[self currentPage]];
-        if (displayMode == kPDFDisplayTwoUpContinuous && (i > 1 || [self displaysAsBook] == NO))
+        if (displayMode == kPDFDisplayTwoUpContinuous && (i > 1 || (i == 1 && [self displaysAsBook] == NO)))
             --i;
         [super goToPreviousPage:sender];
         if (i-- > 0)
