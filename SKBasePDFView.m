@@ -500,6 +500,7 @@ static inline NSArray *defaultKeysToObserve() {
         clipView = [scrollView contentView];
         bounds = [clipView bounds];
     } else if ((keyDirection == -1 ? [self canGoToPreviousPage] : keyDirection == 1 ? [self canGoToNextPage] : NO)) {
+        // Apple does not navigate in horizontal mode
         clipView = [[self embeddedScrollView] contentView];
         bounds = [clipView bounds];
     }
@@ -508,18 +509,18 @@ static inline NSArray *defaultKeysToObserve() {
     [super scrollPageUp:sender];
     
     if (scrollView) {
-        CGFloat inset = [clipView contentInsets].top;
-        CGFloat height = NSHeight(bounds) - inset;
-        CGFloat offset = fmax(height - [scrollView verticalPageScroll], 0.5 * height);
         CGFloat scroll = NSMinY([clipView bounds]) - NSMinY(bounds);
+        CGFloat offset = NSHeight(bounds) - [clipView contentInsets].top;
+        if (offset <= 0.0)
+            return;
+        offset = fmax(offset - [scrollView verticalPageScroll], 0.5 * offset);
         // check whether we have scrolled and in which direction
         // consider all implementation details as they are wrong and can change
-        if ([clipView isFlipped] == NO)
-            inset = 0.0;
+        // this cannot overshoot when scroll does not overshoot
         if (scroll < -offset)
-            bounds.origin.y = fmax(NSMinY([[scrollView documentView] frame]) - inset, NSMinY(bounds) - offset);
+            bounds.origin.y -= offset;
         else if (scroll > offset)
-            bounds.origin.y = fmin(NSMaxY([[scrollView documentView] frame]) - height - inset, NSMinY(bounds) + offset);
+            bounds.origin.y += offset;
         else
             return;
         [clipView scrollToPoint:bounds.origin];
@@ -558,6 +559,7 @@ static inline NSArray *defaultKeysToObserve() {
         clipView = [scrollView contentView];
         bounds = [clipView bounds];
     } else if ((keyDirection == 1 ? [self canGoToNextPage] : keyDirection == -1 ? [self canGoToPreviousPage] : NO)) {
+        // Apple does not navigate in horizontal mode
         clipView = [[self embeddedScrollView] contentView];
         bounds = [clipView bounds];
     }
@@ -566,18 +568,18 @@ static inline NSArray *defaultKeysToObserve() {
     [super scrollPageDown:sender];
     
     if (scrollView) {
-        CGFloat inset = [clipView contentInsets].top;
-        CGFloat height = NSHeight(bounds) - inset;
-        CGFloat offset = fmax(height - [scrollView verticalPageScroll], 0.5 * height);
         CGFloat scroll = NSMinY([clipView bounds]) - NSMinY(bounds);
+        CGFloat offset = NSHeight(bounds) - [clipView contentInsets].top;
+        if (offset <= 0.0)
+            return;
+        offset = fmax(offset - [scrollView verticalPageScroll], 0.5 * offset);
         // check whether we have scrolled and in which direction
         // consider all implementation details as they are wrong and can change
-        if ([clipView isFlipped] == NO)
-            inset = 0.0;
+        // this cannot overshoot when scroll does not overshoot
         if (scroll > offset)
-            bounds.origin.y = fmin(NSMaxY([[scrollView documentView] frame]) - height - inset, NSMinY(bounds) + offset);
+            bounds.origin.y += offset;
         else if (scroll < -offset)
-            bounds.origin.y = fmax(NSMinY([[scrollView documentView] frame]) - inset, NSMinY(bounds) - offset);
+            bounds.origin.y -= offset;
         else
             return;
         [clipView scrollToPoint:bounds.origin];
