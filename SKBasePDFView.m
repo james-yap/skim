@@ -280,7 +280,7 @@ static inline NSArray *defaultKeysToObserve() {
     }
 }
 
-- (void)horizontallyGoToPage:(PDFPage *)page {
+- (void)horizontallyGoToPage:(PDFPage *)page action:(SEL)action {
     if (page == [self currentPage])
         return;
     NSScrollView *scrollView = [self embeddedScrollView];
@@ -294,7 +294,16 @@ static inline NSArray *defaultKeysToObserve() {
     if ([self displaysPageBreaks])
         margin = [self pageBreakMargins].left;
     bounds.origin.x = fmin(fmax(fmin(NSMidX(pageBounds) - 0.5 * NSWidth(bounds), NSMinX(pageBounds) - margin), NSMinX(docRect)), NSMaxX(docRect) - NSWidth(bounds));
-    [self goToPage:page];
+    if (action == @selector(goToPreviousPage:))
+        [super goToPreviousPage:nil];
+    else if (action == @selector(goToNextPage:))
+        [super goToNextPage:nil];
+    else if (action == @selector(goToFirstPage:))
+        [super goToFirstPage:nil];
+    else if (action == @selector(goToLastPage:))
+        [super goToLastPage:nil];
+    else
+        [self goToPage:page];
     [clipView scrollToPoint:bounds.origin];
     [scrollView reflectScrolledClipView:clipView];
 }
@@ -376,7 +385,9 @@ static inline NSArray *defaultKeysToObserve() {
         [super goToPreviousPage:sender];
     } else if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
         PDFDocument *doc = [self document];
-        [self horizontallyGoToPage:[doc pageAtIndex:[doc indexForPage:[self currentPage]] - 1]];
+        NSUInteger i = [doc indexForPage:[self currentPage]];
+        if (i > 0)
+            [self horizontallyGoToPage:[doc pageAtIndex:i - 1] action:_cmd];
     } else {
         PDFDocument *doc = [self document];
         NSUInteger i = [doc indexForPage:[self currentPage]];
@@ -394,7 +405,9 @@ static inline NSArray *defaultKeysToObserve() {
         [super goToNextPage:sender];
     } else if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
         PDFDocument *doc = [self document];
-        [self horizontallyGoToPage:[doc pageAtIndex:[doc indexForPage:[self currentPage]] + 1]];
+        NSUInteger i = [doc indexForPage:[self currentPage]];
+        if (i + 1 < [doc pageCount])
+            [self horizontallyGoToPage:[doc pageAtIndex:i + 1] action:_cmd];
     } else {
         PDFDocument *doc = [self document];
         NSUInteger i = [doc indexForPage:[self currentPage]];
@@ -410,7 +423,7 @@ static inline NSArray *defaultKeysToObserve() {
     PDFDisplayMode displayMode = [self displayMode];
     if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection] && [self canGoToFirstPage]) {
         PDFDocument *doc = [self document];
-        [self horizontallyGoToPage:[doc pageAtIndex:0]];
+        [self horizontallyGoToPage:[doc pageAtIndex:0] action:_cmd];
     } else {
         [super goToFirstPage:sender];
     }
@@ -420,7 +433,7 @@ static inline NSArray *defaultKeysToObserve() {
     PDFDisplayMode displayMode = [self displayMode];
     if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection] && [self canGoToLastPage]) {
         PDFDocument *doc = [self document];
-        [self horizontallyGoToPage:[doc pageAtIndex:[doc pageCount] - 1]];
+        [self horizontallyGoToPage:[doc pageAtIndex:[doc pageCount] - 1] action:_cmd];
     } else {
         [super goToLastPage:sender];
     }
@@ -429,7 +442,7 @@ static inline NSArray *defaultKeysToObserve() {
 - (void)goAndScrollToPage:(PDFPage *)page {
     PDFDisplayMode displayMode = [self displayMode];
     if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
-        [self horizontallyGoToPage:page];
+        [self horizontallyGoToPage:page action:NULL];
     } else {
         [self goToPage:page];
         if (displayMode != kPDFDisplaySinglePage)
