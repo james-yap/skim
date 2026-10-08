@@ -385,9 +385,7 @@ static inline NSArray *defaultKeysToObserve() {
         [super goToPreviousPage:sender];
     } else if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
         PDFDocument *doc = [self document];
-        NSUInteger i = [doc indexForPage:[self currentPage]];
-        if (i > 0)
-            [self horizontallyGoToPage:[doc pageAtIndex:i - 1] action:_cmd];
+        [self horizontallyGoToPage:[doc pageAtIndex:[doc indexForPage:[self currentPage]] - 1] action:_cmd];
     } else {
         PDFDocument *doc = [self document];
         NSUInteger i = [doc indexForPage:[self currentPage]];
@@ -405,9 +403,7 @@ static inline NSArray *defaultKeysToObserve() {
         [super goToNextPage:sender];
     } else if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection]) {
         PDFDocument *doc = [self document];
-        NSUInteger i = [doc indexForPage:[self currentPage]];
-        if (i + 1 < [doc pageCount])
-            [self horizontallyGoToPage:[doc pageAtIndex:i + 1] action:_cmd];
+        [self horizontallyGoToPage:[doc pageAtIndex:[doc indexForPage:[self currentPage]] + 1] action:_cmd];
     } else {
         PDFDocument *doc = [self document];
         NSUInteger i = [doc indexForPage:[self currentPage]];
