@@ -246,7 +246,12 @@ static inline NSArray *defaultKeysToObserve() {
 #pragma mark Responding overrides
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
-    return aSelector != @selector(printDocument:) && [super respondsToSelector:aSelector];
+    if (aSelector == @selector(printDocument:))
+        return NO;
+    else if (aSelector == @selector(scrollPageUp:) || aSelector == @selector(scrollPageDown:) || aSelector == @selector(scrollLineUp:) || aSelector == @selector(scrollLineDown:))
+        return [PDFView instancesRespondToSelector:aSelector];
+    else
+        return [super respondsToSelector:aSelector];
 }
 
 // we don't want to steal the printDocument: action from the responder chain
