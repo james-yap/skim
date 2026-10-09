@@ -514,7 +514,7 @@ static inline NSArray *defaultKeysToObserve() {
         scrollView = [self embeddedScrollView];
         clipView = [scrollView contentView];
         bounds = [clipView bounds];
-    } else if ((keyDirection == -1 ? [self canGoToPreviousPage] : keyDirection == 1 ? [self canGoToNextPage] : NO)) {
+    } else if ((keyDirection == 1 ? [self canGoToNextPage] : keyDirection == -1 ? [self canGoToPreviousPage] : NO)) {
         // Apple does not navigate in horizontal mode
         clipView = [[self embeddedScrollView] contentView];
         bounds = [clipView bounds];
