@@ -308,12 +308,12 @@ static inline NSArray *defaultKeysToObserve() {
     [scrollView reflectScrolledClipView:clipView];
 }
 
-- (void)scrollToPage:(PDFPage *)page mode:(PDFDisplayMode)mode {
+- (void)scrollToPage:(PDFPage *)page horizontally:(BOOL)horizontally vertically:(BOOL)vertically {
     NSScrollView *scrollView = [self embeddedScrollView];
     NSRect pageRect = [self convertRect:[page boundsForBox:[self displayBox]] fromPage:page];
     NSPoint center = SKCenterPoint([self bounds]);
-    BOOL vertically = (mode & kPDFDisplaySinglePageContinuous) && (NSMinY(pageRect) > center.y - 0.5 * [scrollView contentInsets].top || NSMaxY(pageRect) < center.y);
-    BOOL horizontally = (mode & kPDFDisplayTwoUp) && (NSMinX(pageRect) > center.x || NSMaxX(pageRect) < center.x);
+    vertically = vertically && (NSMinY(pageRect) > center.y - 0.5 * [scrollView contentInsets].top || NSMaxY(pageRect) < center.y);
+    horizontally = horizontally && (NSMinX(pageRect) > center.x || NSMaxX(pageRect) < center.x);
     if (vertically == NO && horizontally == NO)
         return;
     NSClipView *clipView = [scrollView contentView];
@@ -378,7 +378,7 @@ static inline NSArray *defaultKeysToObserve() {
             --i;
         [super goToPreviousPage:sender];
         if (i-- > 0)
-            [self scrollToPage:[doc pageAtIndex:i] mode:kPDFDisplaySinglePageContinuous];
+            [self scrollToPage:[doc pageAtIndex:i] horizontally:NO vertically:YES];
     }
 }
 
@@ -396,7 +396,7 @@ static inline NSArray *defaultKeysToObserve() {
             ++i;
         [super goToNextPage:sender];
         if (++i  < [doc pageCount])
-            [self scrollToPage:[doc pageAtIndex:i] mode:kPDFDisplaySinglePageContinuous];
+            [self scrollToPage:[doc pageAtIndex:i] horizontally:NO vertically:YES];
     }
 }
 
@@ -427,7 +427,7 @@ static inline NSArray *defaultKeysToObserve() {
     } else {
         [self goToPage:page];
         if (displayMode != kPDFDisplaySinglePage)
-            [self scrollToPage:page mode:displayMode];
+            [self scrollToPage:page horizontally:(displayMode & kPDFDisplayTwoUp) != 0 vertically:(displayMode & kPDFDisplaySinglePageContinuous) != 0];
    }
 }
 
@@ -449,7 +449,7 @@ static inline NSArray *defaultKeysToObserve() {
             [scrollView reflectScrolledClipView:clipView];
         }
     } else if ([self displayDirection] == kPDFDisplayDirectionVertical && ([self displayMode] & kPDFDisplaySinglePageContinuous)) {
-        [self scrollToPage:page mode:kPDFDisplaySinglePageContinuous];
+        [self scrollToPage:page horizontally:NO vertically:YES];
     }
 }
 
