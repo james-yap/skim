@@ -478,9 +478,9 @@ static inline NSArray *defaultKeysToObserve() {
 - (void)keyDown:(NSEvent *)event {
     if ([self displayDirection] || ([self displayMode] & kPDFDisplaySinglePageContinuous) == 0) {
         unichar ch = [event firstCharacter];
-        if (ch == NSPageDownFunctionKey || ch == NSDownArrowFunctionKey)
+        if (ch == NSPageDownFunctionKey)
             keyDirection = 1;
-        else if (ch == NSPageUpFunctionKey || ch == NSUpArrowFunctionKey)
+        else if (ch == NSPageUpFunctionKey)
             keyDirection = -1;
         else if (ch == SKSpaceCharacter)
             keyDirection = ([event modifierFlags] & NSEventModifierFlagShift) ? -1 : 1;
