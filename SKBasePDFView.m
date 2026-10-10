@@ -531,7 +531,7 @@ static inline NSArray *defaultKeysToObserve() {
         offset = fmax(offset - [scrollView verticalPageScroll], 0.5 * offset);
         // check whether we have scrolled and in which direction
         // consider all implementation details as they are wrong and can change
-        // this cannot overshoot when scroll does not overshoot
+        // this cannot overshoot past the documentView when scroll does not overshoot
         if (scroll < -offset)
             bounds.origin.y -= offset;
         else if (scroll > offset)
@@ -605,7 +605,7 @@ static inline NSArray *defaultKeysToObserve() {
         offset = fmax(offset - [scrollView verticalPageScroll], 0.5 * offset);
         // check whether we have scrolled and in which direction
         // consider all implementation details as they are wrong and can change
-        // this cannot overshoot when scroll does not overshoot
+        // this cannot overshoot past the documentView when scroll does not overshoot
         if (scroll > offset)
             bounds.origin.y += offset;
         else if (scroll < -offset)
