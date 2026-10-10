@@ -126,6 +126,11 @@
     return rect;
 }
 
+- (void)didChangeBounds:(NSRect)oldBounds onPage:(PDFPage *)oldPage scroll:(BOOL)shouldScroll {
+    if (delegate)
+        [delegate readingBarDidChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:shouldScroll];
+}
+
 #pragma mark Accessors
 
 - (void)setNumberOfLines:(NSUInteger)number {
@@ -136,8 +141,8 @@
         numberOfLines = number;
         [self setCurrentBounds:[self currentBoundsFromLineRects:nil]];
         [[NSUserDefaults standardUserDefaults] setInteger:numberOfLines forKey:SKReadingBarNumberOfLinesKey];
-        if (delegate && NSEqualRects(oldBounds, currentBounds) == NO)
-            [delegate readingBarDidChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:NO];
+        if (NSEqualRects(oldBounds, currentBounds) == NO)
+            [self didChangeBounds:oldBounds onPage:oldPage scroll:NO];
     }
 }
 
@@ -198,8 +203,8 @@
     } else if ([self goToNextPageAtTop:YES]) {
         didMove = YES;
     }
-    if (didMove && delegate)
-        [delegate readingBarDidChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:YES];
+    if (didMove)
+        [self didChangeBounds:oldBounds onPage:oldPage scroll:YES];
     return didMove;
 }
 
@@ -216,8 +221,8 @@
     } else if ([self goToPreviousPageAtTop:NO]) {
         didMove = YES;
     }
-    if (didMove && delegate)
-        [delegate readingBarDidChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:YES];
+    if (didMove)
+        [self didChangeBounds:oldBounds onPage:oldPage scroll:YES];
     return didMove;
 }
 
@@ -225,8 +230,8 @@
     PDFPage *oldPage = currentLine != -1 ? page : nil;
     NSRect oldBounds = currentBounds;
     BOOL didMove = [self goToNextPageAtTop:YES];
-    if (didMove && delegate)
-        [delegate readingBarDidChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:YES];
+    if (didMove)
+        [self didChangeBounds:oldBounds onPage:oldPage scroll:YES];
     return didMove;
 }
 
@@ -234,8 +239,8 @@
     PDFPage *oldPage = currentLine != -1 ? page : nil;
     NSRect oldBounds = currentBounds;
     BOOL didMove = [self goToPreviousPageAtTop:YES];
-    if (didMove && delegate)
-        [delegate readingBarDidChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:YES];
+    if (didMove)
+        [self didChangeBounds:oldBounds onPage:oldPage scroll:YES];
     return didMove;
 }
 
@@ -253,8 +258,8 @@
     } else {
         [self goToNextPageAtTop:YES] || [self goToPreviousPageAtTop:NO];
     }
-    if (delegate && (page != oldPage || NSEqualRects(oldBounds, currentBounds) == NO))
-        [delegate readingBarDidChangeBounds:oldBounds onPage:oldPage toBounds:currentBounds onPage:page scroll:shouldScroll];
+    if (page != oldPage || NSEqualRects(oldBounds, currentBounds) == NO)
+        [self didChangeBounds:oldBounds onPage:oldPage scroll:shouldScroll];
 }
 
 - (void)goToLine:(NSInteger)line onPage:(PDFPage *)aPage {
