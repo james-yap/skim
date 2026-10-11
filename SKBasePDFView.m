@@ -450,8 +450,8 @@ static inline NSArray *defaultKeysToObserve() {
             [clipView scrollToPoint:bounds.origin];
             [scrollView reflectScrolledClipView:clipView];
         }
-    } else if ([self displayDirection] == kPDFDisplayDirectionVertical && ([self displayMode] & kPDFDisplaySinglePageContinuous)) {
-        [self scrollToPage:page horizontally:NO vertically:YES];
+    } else if (([self displayMode] & kPDFDisplaySinglePageContinuous)) {
+        [self scrollToPage:page horizontally:[self displayDirection] == kPDFDisplayDirectionHorizontal vertically:[self displayDirection] == kPDFDisplayDirectionVertical];
     }
 }
 
