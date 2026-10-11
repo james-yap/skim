@@ -534,10 +534,10 @@ static inline NSArray *defaultKeysToObserve() {
             [self verticallyScrollToTop:NO];
         } else if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
             if (keyDirection == 1) {
-                [self goToNextPage:sender];
+                [super goToNextPage:sender];
                 [self verticallyScrollToTop:YES];
             } else {
-                [self goToPreviousPage:sender];
+                [super goToPreviousPage:sender];
                 [self verticallyScrollToTop:NO];
             }
         }
@@ -608,10 +608,10 @@ static inline NSArray *defaultKeysToObserve() {
             [self verticallyScrollToTop:YES];
         } else if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
             if (keyDirection == -1) {
-                [self goToPreviousPage:sender];
+                [super goToPreviousPage:sender];
                 [self verticallyScrollToTop:NO];
             } else {
-                [self goToNextPage:sender];
+                [super goToNextPage:sender];
                 [self verticallyScrollToTop:YES];
             }
         }
