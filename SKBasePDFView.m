@@ -527,24 +527,22 @@ static inline NSArray *defaultKeysToObserve() {
             return;
         [clipView scrollToPoint:bounds.origin];
         [scrollView reflectScrolledClipView:clipView];
-    } else if (pageIndex != NSNotFound) {
-        // check whether we jumped pages
-        NSUInteger currentPageIndex = [[self currentPage] pageIndex];
-        if (currentPageIndex != pageIndex) {
-            [self verticallyScrollToTop:currentPageIndex > pageIndex];
-        } else if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
+    } else {
+        if (pageIndex != NSNotFound) {
+            // check whether we jumped pages
+            NSUInteger currentPageIndex = [[self currentPage] pageIndex];
+            if (currentPageIndex != pageIndex) {
+                [self verticallyScrollToTop:currentPageIndex > pageIndex];
+                return;
+            }
+        }
+        if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
             if (keyDirection == 1)
-                [super goToNextPage:sender];
+                [self goToNextPage:nil];
             else
-                [super goToPreviousPage:sender];
+                [self goToPreviousPage:nil];
             [self verticallyScrollToTop:keyDirection == 1];
         }
-    } else if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
-        if (keyDirection == 1)
-            [self goToNextPage:sender];
-        else
-            [self goToPreviousPage:sender];
-        [self verticallyScrollToTop:keyDirection == 1];
     }
 }
 
@@ -595,24 +593,22 @@ static inline NSArray *defaultKeysToObserve() {
             return;
         [clipView scrollToPoint:bounds.origin];
         [scrollView reflectScrolledClipView:clipView];
-    } else if (pageIndex != NSNotFound) {
-        // check whether we jumped pages
-        NSUInteger currentPageIndex = [[self currentPage] pageIndex];
-        if (currentPageIndex != pageIndex) {
-            [self verticallyScrollToTop:currentPageIndex > pageIndex];
-        } else if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
+    } else {
+        if (pageIndex != NSNotFound) {
+            // check whether we jumped pages
+            NSUInteger currentPageIndex = [[self currentPage] pageIndex];
+            if (currentPageIndex != pageIndex) {
+                [self verticallyScrollToTop:currentPageIndex > pageIndex];
+                return;
+            }
+        }
+        if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
             if (keyDirection == -1)
-                [super goToPreviousPage:sender];
+                [self goToPreviousPage:nil];
             else
-                [super goToNextPage:sender];
+                [self goToNextPage:nil];
             [self verticallyScrollToTop:keyDirection == 1];
         }
-    } else if (clipView && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
-        if (keyDirection == -1)
-            [self goToPreviousPage:sender];
-        else
-            [self goToNextPage:sender];
-        [self verticallyScrollToTop:keyDirection == 1];
     }
 }
 
