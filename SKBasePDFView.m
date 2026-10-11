@@ -356,10 +356,12 @@ static inline NSArray *defaultKeysToObserve() {
     NSRect docRect = [[scrollView documentView] frame];
     if (NSHeight(docRect) <= NSHeight(bounds) - inset)
         return;
-    if ([clipView isFlipped])
-        bounds.origin.y = toTop ? NSMinY(docRect) - inset : NSMaxY(docRect) - NSHeight(bounds);
+    if (toTop == NO)
+        inset = 0.0;
+    if ([clipView isFlipped] == toTop)
+        bounds.origin.y = NSMinY(docRect) - inset;
     else
-        bounds.origin.y = toTop ? NSMaxY(docRect) - NSHeight(bounds) + inset : NSMinY(docRect);
+        bounds.origin.y = NSMaxY(docRect) - NSHeight(bounds) + inset;
     [clipView scrollToPoint:bounds.origin];
     [scrollView reflectScrolledClipView:clipView];
 }
