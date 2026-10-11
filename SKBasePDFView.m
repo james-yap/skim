@@ -219,7 +219,7 @@ static inline NSArray *defaultKeysToObserve() {
 
 - (BOOL)canGoBack {
     BOOL canGoBack = [super canGoBack];
-    if (minHistoryIndex > 0) {
+    if (canGoBack && minHistoryIndex > 0) {
         if ([self respondsToSelector:@selector(currentHistoryIndex)]) {
             canGoBack = minHistoryIndex < [self currentHistoryIndex];
         } else {
