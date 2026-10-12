@@ -480,7 +480,7 @@ static inline NSArray *defaultKeysToObserve() {
 // the clipView is not flipped (wrong!)
 // ... at least until macOS 15, but macOS 26 seems to scroll in the wrong direction
 
-- (void)scrollPageUp:(id)sender {
+- (void)scrollPageWithSelector:(SEL)aSelector {
     NSScrollView *scrollView = [self embeddedScrollView];
     NSClipView *clipView = [scrollView contentView];
     NSRect bounds = [clipView bounds];
@@ -498,7 +498,10 @@ static inline NSArray *defaultKeysToObserve() {
     }
     
     // always call super, as it also updates the current page
-    [super scrollPageUp:sender];
+    if (aSelector == @selector(scrollPageUp:))
+        [super scrollPageUp:nil];
+    else if (aSelector == @selector(scrollPageDown:))
+        [super scrollPageDown:nil];
     
     if (pageIndex != NSNotFound) {
         // check whether we jumped pages
@@ -533,84 +536,38 @@ static inline NSArray *defaultKeysToObserve() {
     }
 }
 
+- (void)scrollPageUp:(id)sender {
+    [self scrollPageWithSelector:_cmd];
+}
+
 - (void)scrollPageDown:(id)sender {
-    NSScrollView *scrollView = [self embeddedScrollView];
-    NSClipView *clipView = [scrollView contentView];
-    NSRect bounds = [clipView bounds];
-    NSUInteger pageIndex = NSNotFound;
-    BOOL canNavigate = NO;
-    PDFDisplayMode displayMode = [self displayMode];
-    
-    if ((displayMode & kPDFDisplaySinglePageContinuous) == 0) {
-        pageIndex = [[self currentPage] pageIndex];
-        if (@available(macOS 27.0, *))
-            canNavigate = (keyDirection == -1 ? [self canGoToPreviousPage] : keyDirection == 1 ? [self canGoToNextPage] : NO);
-    } else if (displayMode == kPDFDisplaySinglePageContinuous || [self displayDirection]) {
-        canNavigate = (keyDirection == -1 ? [self canGoToPreviousPage] : keyDirection == 1 ? [self canGoToNextPage] : NO);
-    }
-    
-    // always call super, as it also updates the current page
-    [super scrollPageDown:sender];
+    [self scrollPageWithSelector:_cmd];
+}
+
+- (void)scrollLineWithSelector:(SEL)aSelector {
+    NSUInteger pageIndex = ([self displayMode] & kPDFDisplaySinglePageContinuous) ? NSNotFound : [[self currentPage] pageIndex];
+
+    if (aSelector == @selector(scrollLineUp:))
+        [super scrollLineUp:nil];
+    else if (aSelector == @selector(scrollLineDown:))
+        [super scrollLineDown:nil];
     
     if (pageIndex != NSNotFound) {
+        // Apple scrolls to the bottom of the next page rather than the top
+        // or the top of the previous page rather than the bottom
         // check whether we jumped pages
         NSUInteger currentPageIndex = [[self currentPage] pageIndex];
-        if (currentPageIndex != pageIndex) {
-            // Apple scrolls to the top of the previous page rather than the bottom
+        if (currentPageIndex != pageIndex)
             [self verticallyScrollToTop:currentPageIndex > pageIndex];
-            return;
-        }
-    }
-    
-    NSPoint origin = [clipView bounds].origin;
-    CGFloat scroll = origin.y - NSMinY(bounds);
-    CGFloat offset = NSHeight(bounds) - [clipView contentInsets].top;
-    if (offset <= 2.0 || fabs(origin.x - NSMinX(bounds)) > 2.0)
-        return;
-    offset = fmax(offset - [scrollView verticalPageScroll], 0.5 * offset);
-    // check whether we have scrolled too much, as Apple does, and in which direction
-    if (fabs(scroll) > offset) {
-        // consider both directions as this is wrong and can change
-        // this cannot overshoot past the documentView when scroll does not overshoot
-        bounds.origin.y += scroll > 0.0 ? offset : -offset;
-        [clipView scrollToPoint:bounds.origin];
-        [scrollView reflectScrolledClipView:clipView];
-    } else if (canNavigate && NSEqualPoints(origin, bounds.origin)) {
-        // Apple does not navigate in horizontal mode or in non-scrolling mode on macOS 27
-        if (keyDirection == -1)
-            [self goToPreviousPage:nil];
-        else
-            [self goToNextPage:nil];
-        [self verticallyScrollToTop:keyDirection == 1];
     }
 }
 
 - (void)scrollLineUp:(id)sender {
-    NSUInteger pageIndex = ([self displayMode] & kPDFDisplaySinglePageContinuous) ? NSNotFound : [[self currentPage] pageIndex];
-    
-    [super scrollLineUp:sender];
-    
-    if (pageIndex != NSNotFound) {
-        // Apple scrolls to the bottom of the next page rather than the top
-        // check whether we jumped pages
-        NSUInteger currentPageIndex = [[self currentPage] pageIndex];
-        if (currentPageIndex != pageIndex)
-            [self verticallyScrollToTop:currentPageIndex > pageIndex];
-    }
+    [self scrollLineWithSelector:_cmd];
 }
 
 - (void)scrollLineDown:(id)sender {
-    NSUInteger pageIndex = ([self displayMode] & kPDFDisplaySinglePageContinuous) ? NSNotFound : [[self currentPage] pageIndex];
-    
-    [super scrollLineDown:sender];
-    
-    if (pageIndex != NSNotFound) {
-        // Apple scrolls to the top of the next page rather than the bottom
-        // check whether we jumped pages
-        NSUInteger currentPageIndex = [[self currentPage] pageIndex];
-        if (currentPageIndex != pageIndex)
-            [self verticallyScrollToTop:currentPageIndex > pageIndex];
-    }
+    [self scrollLineWithSelector:_cmd];
 }
 
 @end
