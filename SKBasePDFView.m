@@ -513,7 +513,7 @@ static inline NSArray *defaultKeysToObserve() {
     NSPoint origin = [clipView bounds].origin;
     CGFloat scroll = origin.y - NSMinY(bounds);
     CGFloat offset = NSHeight(bounds) - [clipView contentInsets].top;
-    if (offset <= 2.0)
+    if (offset <= 2.0 || fabs(origin.x - NSMinX(bounds)) > 2.0)
         return;
     offset = fmax(offset - [scrollView verticalPageScroll], 0.5 * offset);
     // check whether we have scrolled too much, as Apple does, and in which direction
@@ -565,7 +565,7 @@ static inline NSArray *defaultKeysToObserve() {
     NSPoint origin = [clipView bounds].origin;
     CGFloat scroll = origin.y - NSMinY(bounds);
     CGFloat offset = NSHeight(bounds) - [clipView contentInsets].top;
-    if (offset <= 2.0)
+    if (offset <= 2.0 || fabs(origin.x - NSMinX(bounds)) > 2.0)
         return;
     offset = fmax(offset - [scrollView verticalPageScroll], 0.5 * offset);
     // check whether we have scrolled too much, as Apple does, and in which direction
