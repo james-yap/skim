@@ -510,7 +510,8 @@ static inline NSArray *defaultKeysToObserve() {
         }
     }
     
-    CGFloat scroll = NSMinY([clipView bounds]) - NSMinY(bounds);
+    NSPoint origin = [clipView bounds].origin;
+    CGFloat scroll = origin.y - NSMinY(bounds);
     CGFloat offset = NSHeight(bounds) - [clipView contentInsets].top;
     if (offset <= 2.0)
         return;
@@ -522,7 +523,7 @@ static inline NSArray *defaultKeysToObserve() {
         bounds.origin.y += scroll < 0.0 ? -offset : offset;
         [clipView scrollToPoint:bounds.origin];
         [scrollView reflectScrolledClipView:clipView];
-    } else if (canNavigate && fabs(scroll) <= 0.0 && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
+    } else if (canNavigate && NSEqualPoints(origin, bounds.origin)) {
         // Apple does not navigate in horizontal mode or in non-scrolling mode on macOS 27
         if (keyDirection == 1)
             [self goToNextPage:nil];
@@ -561,7 +562,8 @@ static inline NSArray *defaultKeysToObserve() {
         }
     }
     
-    CGFloat scroll = NSMinY([clipView bounds]) - NSMinY(bounds);
+    NSPoint origin = [clipView bounds].origin;
+    CGFloat scroll = origin.y - NSMinY(bounds);
     CGFloat offset = NSHeight(bounds) - [clipView contentInsets].top;
     if (offset <= 2.0)
         return;
@@ -573,7 +575,7 @@ static inline NSArray *defaultKeysToObserve() {
         bounds.origin.y += scroll > 0.0 ? offset : -offset;
         [clipView scrollToPoint:bounds.origin];
         [scrollView reflectScrolledClipView:clipView];
-    } else if (canNavigate && fabs(scroll) <= 0.0 && NSEqualPoints([clipView bounds].origin, bounds.origin)) {
+    } else if (canNavigate && NSEqualPoints(origin, bounds.origin)) {
         // Apple does not navigate in horizontal mode or in non-scrolling mode on macOS 27
         if (keyDirection == -1)
             [self goToPreviousPage:nil];
