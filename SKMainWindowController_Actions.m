@@ -704,15 +704,13 @@
                 }
             }
         }
-        [rectArray addPointer:rect];
-        [rectArray addPointer:rect+1];
         
         [self dismissProgressSheet];
     } else {
         rect[[[pdfView selectToolPage] pageIndex] % 2] = selRect;
-        [rectArray addPointer:rect];
-        [rectArray addPointer:rect+1];
     }
+    [rectArray addPointer:rect];
+    [rectArray addPointer:rect+1];
     
     [self cropPagesToRects:rectArray];
 }
