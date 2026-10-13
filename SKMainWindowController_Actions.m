@@ -601,11 +601,16 @@
     NSInteger rectCount = [rects count];
     NSPointerArray *oldRects = [[NSPointerArray alloc] initForRectPointers];
     for (i = 0; i < count; i++) {
-        PDFPage *page = [[pdfView document] pageAtIndex:i];
-        NSRect rect = NSIntersectionRect([rects rectAtIndex:i % rectCount], [page boundsForBox:kPDFDisplayBoxMediaBox]);
-        NSRect oldRect = [page boundsForBox:kPDFDisplayBoxCropBox];
-        [oldRects addPointer:&oldRect];
-        [page setBounds:rect forBox:kPDFDisplayBoxCropBox];
+        NSRect rect = [rects rectAtIndex:i % rectCount];
+        if (NSEqualRects(rect, NSZeroRect)) {
+            [oldRects addPointer:&rect];
+        } else {
+            PDFPage *page = [[pdfView document] pageAtIndex:i];
+            rect = NSIntersectionRect(rect, [page boundsForBox:kPDFDisplayBoxMediaBox]);
+            NSRect oldRect = [page boundsForBox:kPDFDisplayBoxCropBox];
+            [oldRects addPointer:&oldRect];
+            [page setBounds:rect forBox:kPDFDisplayBoxCropBox];
+        }
     }
     
     NSUndoManager *undoManager = [[self document] undoManager];
@@ -662,6 +667,52 @@
         [self dismissProgressSheet];
     } else {
         [rectArray addPointer:rect];
+    }
+    
+    [self cropPagesToRects:rectArray];
+    
+    if (emptySelection == NO)
+        [pdfView setSelectToolRect:NSZeroRect];
+}
+
+- (IBAction)cropHalf:(id)sender {
+    NSRect selRect = NSIntegralRect([pdfView selectToolRect]);
+    NSRect rect[2] = {NSZeroRect, NSZeroRect};
+    NSPointerArray *rectArray = [[NSPointerArray alloc] initForRectPointers];
+    BOOL emptySelection = NSIsEmptyRect(selRect);
+    
+    if ([[pdfView document] pageCount] < 2) {
+        NSBeep();
+        return;
+    }
+    
+    if (emptySelection) {
+        NSInteger i, j, count = [[pdfView document] pageCount], k = [[pdfView currentPage] pageIndex] % 2;
+        
+        [self beginProgressSheetWithMessage:[NSLocalizedString(@"Cropping Pages", @"Message for progress sheet") stringByAppendingEllipsis] maxValue:MIN(18, count)];
+        
+        if (count < 19) {
+            for (i = k; i < count; i += 2) {
+                rect[k] = NSUnionRect(rect[k], [[[pdfView document] pageAtIndex:i] autoCropBox]);
+                [self incrementProgressSheet];
+            }
+        } else {
+            NSInteger start[3] = {2 - k, 2 * ((count - 5) / 4) + k, 2 * ((count - k) / 2) - 6 + k};
+            for (j = 0; j < 3; j++) {
+                for (i = start[j]; i < start[j] + 6; i += 2) {
+                    rect[k] = NSUnionRect(rect[k], [[[pdfView document] pageAtIndex:i] autoCropBox]);
+                    [self incrementProgressSheet];
+                }
+            }
+        }
+        [rectArray addPointer:rect];
+        [rectArray addPointer:rect+1];
+        
+        [self dismissProgressSheet];
+    } else {
+        rect[[[pdfView selectToolPage] pageIndex] % 2] = selRect;
+        [rectArray addPointer:rect];
+        [rectArray addPointer:rect+1];
     }
     
     [self cropPagesToRects:rectArray];

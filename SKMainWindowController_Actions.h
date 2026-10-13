@@ -86,6 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (IBAction)rotateAllLeft:(nullable id)sender;
 - (IBAction)crop:(nullable id)sender;
 - (IBAction)cropAll:(nullable id)sender;
+- (IBAction)cropHalf:(nullable id)sender;
 - (IBAction)autoCropAll:(nullable id)sender;
 - (IBAction)smartAutoCropAll:(nullable id)sender;
 - (IBAction)resetCrop:(nullable id)sender;

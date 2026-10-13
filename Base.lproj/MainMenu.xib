@@ -1197,6 +1197,12 @@
                                     <action selector="crop:" target="-1" id="769"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Crop Odd Pages" alternate="YES" keyEquivalent="k" id="c8k-Ij-2Cy">
+                                <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="cropHalf:" target="-1" id="PNJ-Ag-Bbw"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Reset Crop" keyEquivalent="K" id="3CO-Cw-8Fj">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                 <connections>

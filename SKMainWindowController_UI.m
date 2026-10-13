@@ -1844,6 +1844,13 @@
         return [self interactionMode] != SKPresentationMode && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(cropAll:) || action == @selector(crop:) || action == @selector(autoCropAll:) || action == @selector(smartAutoCropAll:)) {
         return [self interactionMode] != SKPresentationMode && [[self pdfDocument] isLocked] == NO;
+    } else if (action == @selector(cropHalf:)) {
+        PDFPage *page = [pdfView selectToolPage] ?: [pdfView currentPage];
+        if (([page pageIndex] % 2))
+            [menuItem setTitle:NSLocalizedString(@"Crop Even Pages", @"Menu item title")];
+        else
+            [menuItem setTitle:NSLocalizedString(@"Crop Odd Pages", @"Menu item title")];
+        return [self interactionMode] != SKPresentationMode && [[self pdfDocument] isLocked] == NO && [[self pdfDocument] pageCount] > 1;
     } else if (action == @selector(resetCrop:)) {
         return mwcFlags.hasCropped && [self interactionMode] != SKPresentationMode && [[self pdfDocument] isLocked] == NO;
     } else if (action == @selector(autoSelectContent:)) {
