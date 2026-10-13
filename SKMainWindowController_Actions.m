@@ -679,14 +679,13 @@
     NSRect selRect = NSIntegralRect([pdfView selectToolRect]);
     NSRect rect[2] = {NSZeroRect, NSZeroRect};
     NSPointerArray *rectArray = [[NSPointerArray alloc] initForRectPointers];
-    BOOL emptySelection = NSIsEmptyRect(selRect);
     
     if ([[pdfView document] pageCount] < 2) {
         NSBeep();
         return;
     }
     
-    if (emptySelection) {
+    if (NSIsEmptyRect(selRect)) {
         NSInteger i, j, count = [[pdfView document] pageCount], k = [[pdfView currentPage] pageIndex] % 2;
         
         [self beginProgressSheetWithMessage:[NSLocalizedString(@"Cropping Pages", @"Message for progress sheet") stringByAppendingEllipsis] maxValue:MIN(18, count)];
@@ -716,9 +715,6 @@
     }
     
     [self cropPagesToRects:rectArray];
-    
-    if (emptySelection == NO)
-        [pdfView setSelectToolRect:NSZeroRect];
 }
 
 - (IBAction)autoCropAll:(id)sender {
