@@ -508,6 +508,7 @@ static inline NSArray *defaultKeysToObserve() {
         NSUInteger currentPageIndex = [[self currentPage] pageIndex];
         if (currentPageIndex != pageIndex) {
             // Apple scrolls to the bottom of the next page rather than the top
+            // or the top of the previous page rather than the bottom
             [self verticallyScrollToTop:currentPageIndex > pageIndex];
             return;
         }
