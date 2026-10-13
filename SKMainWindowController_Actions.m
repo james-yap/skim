@@ -692,12 +692,12 @@
         [self beginProgressSheetWithMessage:[NSLocalizedString(@"Cropping Pages", @"Message for progress sheet") stringByAppendingEllipsis] maxValue:MIN(18, count)];
         
         if (count < 19) {
-            for (i = k; i < count; i += 2) {
+            for (i = 2 - k; i < count; i += 2) {
                 rect[k] = NSUnionRect(rect[k], [[[pdfView document] pageAtIndex:i] autoCropBox]);
                 [self incrementProgressSheet];
             }
         } else {
-            NSInteger start[3] = {2 - k, 2 * ((count - 5) / 4) + k, 2 * ((count - k) / 2) - 6 + k};
+            NSInteger start[3] = {2 - k, 2 * ((count - 3 - 2 * k) / 4), 2 * ((count - 3 + k) / 2)};
             for (j = 0; j < 3; j++) {
                 for (i = start[j]; i < start[j] + 6; i += 2) {
                     rect[k] = NSUnionRect(rect[k], [[[pdfView document] pageAtIndex:i] autoCropBox]);
