@@ -45,7 +45,7 @@
 #import "NSPointerArray_SKExtensions.h"
 #import "NSColor_SKExtensions.h"
 #import "NSCharacterSet_SKExtensions.h"
-#import <objc/objc-runtime.h>
+#import <objc/runtime.h>
 
 #define SKIncludeNewlinesFromEnclosedTextKey @"SKIncludeNewlinesFromEnclosedText"
 

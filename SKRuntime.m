@@ -37,7 +37,7 @@
  */
 
 #import "SKRuntime.h"
-#import <objc/objc-runtime.h>
+#import <objc/runtime.h>
 
 // this is essentially class_replaceMethod, but returns any inherited implementation, and can get the types from an inherited implementation
 IMP SKReplaceInstanceMethodImplementation(Class aClass, SEL aSelector, IMP anImp) {

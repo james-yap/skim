@@ -59,7 +59,7 @@
 #import "NSShadow_SKExtensions.h"
 #import "NSCharacterSet_SKExtensions.h"
 #import "SKRuntime.h"
-#import <objc/objc-runtime.h>
+#import <objc/runtime.h>
 
 NSString * const SKPDFAnnotationBezierPathsKey = @"bezierPaths";
 
