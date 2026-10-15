@@ -286,6 +286,16 @@
     }
 }
 
+- (BOOL)windowShouldClose:(NSWindow *)window {
+    if (mwcFlags.isSwitchingFullScreen)
+        return NO;
+    if ([self interactionMode] == SKPresentationMode)
+        return [self canExitPresentation];
+    if (mwcFlags.isEditingTable || [pdfView isEditing])
+        return [self commitEditing];
+    return YES;
+}
+
 - (void)windowWillClose:(NSNotification *)notification {
     [(id)[self document] windowWillClose:notification];
     

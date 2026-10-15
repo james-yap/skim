@@ -37,6 +37,7 @@
  */
 
 #import "SKFullScreenWindow.h"
+#import "SKMainWindowController_Actions.h"
 
 @implementation SKFullScreenWindow
 
@@ -63,6 +64,20 @@
 - (void)cancelOperation:(id)sender {
     // for some reason this action method is not passed on to the window controller, so we do this ourselves
     [[self windowController] tryToPerform:_cmd with:self];
+}
+
+- (void)performClose:(id)sender {
+    if ([self delegate] == nil || [[self windowController] respondsToSelector:@selector(togglePresentation:)] == NO)
+        return;
+    if ([[self delegate] respondsToSelector:@selector(windowShouldClose:)] && [[self delegate] windowShouldClose:self] == NO)
+        return;
+    [[self windowController] tryToPerform:@selector(togglePresentation:) with:self];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+    if ([menuItem action] == @selector(performClose:))
+        return [self delegate] && [[self windowController] respondsToSelector:@selector(togglePresentation:)];
+    return [super validateMenuItem:menuItem];
 }
 
 @end
