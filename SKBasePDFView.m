@@ -403,8 +403,7 @@ static inline NSArray *defaultKeysToObserve() {
 }
 
 - (void)goToFirstPage:(id)sender {
-    PDFDisplayMode displayMode = [self displayMode];
-    if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection] && [self canGoToFirstPage]) {
+    if ([self displayMode] == kPDFDisplaySinglePageContinuous && [self displayDirection] && [self canGoToFirstPage]) {
         PDFDocument *doc = [self document];
         [self horizontallyGoToPage:[doc pageAtIndex:0] action:_cmd];
     } else {
@@ -413,8 +412,7 @@ static inline NSArray *defaultKeysToObserve() {
 }
 
 - (void)goToLastPage:(id)sender {
-    PDFDisplayMode displayMode = [self displayMode];
-    if (displayMode == kPDFDisplaySinglePageContinuous && [self displayDirection] && [self canGoToLastPage]) {
+    if ([self displayMode] == kPDFDisplaySinglePageContinuous && [self displayDirection] && [self canGoToLastPage]) {
         PDFDocument *doc = [self document];
         [self horizontallyGoToPage:[doc pageAtIndex:[doc pageCount] - 1] action:_cmd];
     } else {
