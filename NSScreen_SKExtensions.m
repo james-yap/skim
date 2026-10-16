@@ -98,19 +98,13 @@ static inline CGFloat SKSquaredDistanceFromPointToRect(NSPoint point, NSRect rec
     return self;
 }
 
-static inline BOOL insufficientScreenSize(NSValue *value) {
-    NSSize size = [value sizeValue];
-    return size.height < 100.0 || size.width < 100.0;
-}
-
 - (NSArray *)alternateScreens {
     NSMutableDictionary *screens = [NSMutableDictionary dictionary];
     NSMutableArray *screenNumbers = [NSMutableArray array];
     NSNumber *screenNumber = nil;
     for (NSScreen *aScreen in [NSScreen screens]) {
         NSDictionary *deviceDescription = [aScreen deviceDescription];
-        if ([deviceDescription objectForKey:NSDeviceIsScreen] == nil ||
-            insufficientScreenSize([deviceDescription objectForKey:NSDeviceSize]))
+        if ([deviceDescription objectForKey:NSDeviceIsScreen] == nil)
             continue;
         NSNumber *aScreenNumber = [deviceDescription objectForKey:@"NSScreenNumber"];
         [screens setObject:aScreen forKey:aScreenNumber];
