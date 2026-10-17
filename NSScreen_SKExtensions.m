@@ -64,7 +64,7 @@ static inline CGFloat SKSquaredDistanceFromPointToRect(NSPoint point, NSRect rec
     NSScreen *screen = nil;
     CGFloat distanceSquared = CGFLOAT_MAX;
     
-    for (NSScreen *aScreen in [NSScreen screens]) {
+    for (NSScreen *aScreen in [self screens]) {
         NSRect frame = [aScreen frame];
         
         if (NSPointInRect(point, frame))
@@ -132,7 +132,7 @@ static inline CGFloat SKSquaredDistanceFromPointToRect(NSPoint point, NSRect rec
     NSMutableDictionary *screens = [NSMutableDictionary dictionary];
     NSMutableArray *screenNumbers = [NSMutableArray array];
     NSNumber *builtinScreenNumber = nil;
-    for (NSScreen *aScreen in [NSScreen screens]) {
+    for (NSScreen *aScreen in [self screens]) {
         NSDictionary *deviceDescription = [aScreen deviceDescription];
         if ([deviceDescription objectForKey:NSDeviceIsScreen] == nil)
             continue;
@@ -157,7 +157,7 @@ static inline CGFloat SKSquaredDistanceFromPointToRect(NSPoint point, NSRect rec
 
 + (CGFloat)maxBackingScaleFactor {
     CGFloat scale = 1.0;
-    for (NSScreen *screen in [NSScreen screens]) {
+    for (NSScreen *screen in [self screens]) {
         if (NSHeight([screen frame]) > 100.0)
             scale = fmax(scale, [screen backingScaleFactor]);
     }
