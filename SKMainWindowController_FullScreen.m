@@ -158,8 +158,10 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         
         [preview setDelegate:self];
         
-        NSScreen *screen = [window screen];
-        screen = [[screen alternateScreens] firstObject] ?: screen;
+        NSScreen *screen = [savedNormalWindow screen];
+        NSArray *screens = [[window screen] alternateScreens];
+        if ([screens count] > 0 && [screens containsObject:[screen primaryScreen]] == NO)
+            screen = [[screen alternateScreens] firstObject];
         
         [preview setPdfDocument:[pdfView document] previewPageNumber:pageIndex displayOnScreen:screen];
     
