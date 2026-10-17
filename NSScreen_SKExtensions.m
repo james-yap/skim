@@ -80,10 +80,14 @@ static inline CGFloat SKSquaredDistanceFromPointToRect(NSPoint point, NSRect rec
     return screen;
 }
 
-+ (BOOL)screenForWindowHasMenuBar:(NSWindow *)window {
-    if ([self screensHaveSeparateSpaces])
+- (BOOL)hasMenuBar {
+    if ([NSScreen screensHaveSeparateSpaces])
         return YES;
-    return [[window screen] isEqual:[[self screens] firstObject]];
+    NSArray *screens = [NSScreen screens];
+    if ([screens count] == 1)
+        return YES;
+    NSScreen *screen = [screens firstObject];
+    return [self isEqual:screen] || [[self primaryScreen] isEqual:[screen primaryScreen]];
 }
 
 - (NSScreen *)primaryScreen {

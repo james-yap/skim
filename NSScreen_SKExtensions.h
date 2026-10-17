@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSScreen *)screenForPoint:(NSPoint)point;
 
-+ (BOOL)screenForWindowHasMenuBar:(NSWindow *)window;
+@property (nonatomic, readonly) BOOL hasMenuBar;
 
 @property (nonatomic, readonly) NSScreen *primaryScreen;
 

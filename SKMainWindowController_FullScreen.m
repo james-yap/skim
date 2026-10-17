@@ -304,7 +304,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         }
         completionHandler:^{
             // only hide the dock and menubar when the presentation window is on the primary screen, otherwise no need to block main menu and dock
-            if ([NSScreen screenForWindowHasMenuBar:presentationWindow])
+            if ([[presentationWindow screen] hasMenuBar])
                 [NSApp setPresentationOptions:NSApplicationPresentationHideDock | NSApplicationPresentationHideMenuBar];
             
             [normalWindow orderOutWithoutAnimation];
