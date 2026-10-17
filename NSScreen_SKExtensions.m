@@ -107,11 +107,12 @@ static inline CGFloat SKSquaredDistanceFromPointToRect(NSPoint point, NSRect rec
         if ([deviceDescription objectForKey:NSDeviceIsScreen] == nil)
             continue;
         NSNumber *aScreenNumber = [deviceDescription objectForKey:@"NSScreenNumber"];
-        [screens setObject:aScreen forKey:aScreenNumber];
         CGDirectDisplayID displayID = (CGDirectDisplayID)[aScreenNumber unsignedIntValue];
         displayID = CGDisplayMirrorsDisplay(displayID);
-        if (displayID == kCGNullDirectDisplay)
+        if (displayID == kCGNullDirectDisplay) {
             [screenNumbers addObject:aScreenNumber];
+            [screens setObject:aScreen forKey:aScreenNumber];
+        }
         if ([aScreen isEqual:self])
             screenNumber = displayID == kCGNullDirectDisplay ? aScreenNumber : [NSNumber numberWithUnsignedInt:displayID];
     }
@@ -132,12 +133,13 @@ static inline CGFloat SKSquaredDistanceFromPointToRect(NSPoint point, NSRect rec
         if ([deviceDescription objectForKey:NSDeviceIsScreen] == nil)
             continue;
         NSNumber *aScreenNumber = [deviceDescription objectForKey:@"NSScreenNumber"];
-        [screens setObject:aScreen forKey:aScreenNumber];
         CGDirectDisplayID displayID = (CGDirectDisplayID)[aScreenNumber unsignedIntValue];
         BOOL isBuiltin = builtinScreenNumber == nil && CGDisplayIsBuiltin(displayID);
         displayID = CGDisplayMirrorsDisplay(displayID);
-        if (displayID == kCGNullDirectDisplay)
+        if (displayID == kCGNullDirectDisplay) {
             [screenNumbers addObject:aScreenNumber];
+            [screens setObject:aScreen forKey:aScreenNumber];
+        }
         if (isBuiltin)
             builtinScreenNumber = displayID == kCGNullDirectDisplay ? aScreenNumber : [NSNumber numberWithUnsignedInt:displayID];
     }
