@@ -169,7 +169,6 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     } else {
         [notesDocument setCurrentPage:[pdfDoc pageAtIndex:pageIndex]];
     }
-    [self addPresentationNotesNavigation];
 }
 
 - (void)handlePresentationViewPageChanged:(NSNotification *)notification {
@@ -321,6 +320,9 @@ static CGFloat fullScreenToolbarOffset = 0.0;
             }
             
             [presentationView didOpen];
+            
+            if ([self presentationNotesDocument])
+                [self addPresentationNotesNavigation];
             
             mwcFlags.isSwitchingFullScreen = 0;
         }];
