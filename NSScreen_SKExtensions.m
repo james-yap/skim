@@ -123,6 +123,32 @@ static inline CGFloat SKSquaredDistanceFromPointToRect(NSPoint point, NSRect rec
     return alternateScreens;
 }
 
++ (NSArray *)alternateScreens {
+    NSMutableDictionary *screens = [NSMutableDictionary dictionary];
+    NSMutableArray *screenNumbers = [NSMutableArray array];
+    NSNumber *builtinScreenNumber = nil;
+    for (NSScreen *aScreen in [NSScreen screens]) {
+        NSDictionary *deviceDescription = [aScreen deviceDescription];
+        if ([deviceDescription objectForKey:NSDeviceIsScreen] == nil)
+            continue;
+        NSNumber *aScreenNumber = [deviceDescription objectForKey:@"NSScreenNumber"];
+        [screens setObject:aScreen forKey:aScreenNumber];
+        CGDirectDisplayID displayID = (CGDirectDisplayID)[aScreenNumber unsignedIntValue];
+        BOOL isBuiltin = builtinScreenNumber == nil && CGDisplayIsBuiltin(displayID);
+        displayID = CGDisplayMirrorsDisplay(displayID);
+        if (displayID == kCGNullDirectDisplay)
+            [screenNumbers addObject:aScreenNumber];
+        if (isBuiltin)
+            builtinScreenNumber = displayID == kCGNullDirectDisplay ? aScreenNumber : [NSNumber numberWithUnsignedInt:displayID];
+    }
+    NSMutableArray *alternateScreens = [NSMutableArray array];
+    for (NSNumber *aScreenNumber in screenNumbers) {
+        if ([aScreenNumber isEqual:builtinScreenNumber] == NO)
+            [alternateScreens addObject:[screens objectForKey:aScreenNumber]];
+    }
+    return alternateScreens;
+}
+
 + (CGFloat)maxBackingScaleFactor {
     CGFloat scale = 1.0;
     for (NSScreen *screen in [NSScreen screens]) {

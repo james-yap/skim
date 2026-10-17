@@ -50,6 +50,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSArray<NSScreen *> *alternateScreens;
 
+// gives the alternate screens for the builtin screen, i.e. external screens
+@property (nonatomic, class, readonly) NSArray<NSScreen *> *alternateScreens;
+
 @property (class, readonly) CGFloat maxBackingScaleFactor;
 
 @end

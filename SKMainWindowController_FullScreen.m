@@ -246,8 +246,12 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     interactionMode = SKPresentationMode;
     
     NSScreen *screen = [normalWindow screen];
-    if ([self presentationNotesDocument] && [self presentationNotesDocument] != [self document]) {
-        NSArray *screens = [[[[self presentationNotesDocument] primaryWindow] screen] alternateScreens];
+    if ([self presentationNotesDocument]) {
+        NSArray *screens = nil;
+        if ([self presentationNotesDocument] == [self document])
+            screens = [NSScreen alternateScreens];
+        else
+            screens = [[[[self presentationNotesDocument] primaryWindow] screen] alternateScreens];
         if ([screens count] > 0 && [screens containsObject:[screen primaryScreen]] == NO)
             screen = [screens firstObject];
     }
