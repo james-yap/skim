@@ -172,7 +172,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     return mainScreen;
 }
 
-- (void)showNotesForPresentationWindow:(NSWindow *)window {
+- (void)showNotesForPresentationScreen:(NSScreen *)presentationScreen {
     NSDocument *notesDocument = [self presentationNotesDocument];
     if (notesDocument == nil)
         return;
@@ -191,7 +191,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         
         [preview setDelegate:self];
         
-        NSScreen *screen = [self screenForPresentationWindowAvoidingScreen:[window screen]];
+        NSScreen *screen = [self screenForPresentationWindowAvoidingScreen:presentationScreen];
         [preview setPdfDocument:[pdfView document] previewPageNumber:pageIndex displayOnScreen:screen];
     
         [[self document] addWindowController:preview];
@@ -299,7 +299,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     
     [presentationWindow orderFront:nil];
     
-    [self showNotesForPresentationWindow:presentationWindow];
+    [self showNotesForPresentationScreen:screen];
     
     BOOL shouldFadeOut = NO;
     if ([[normalWindow tabbedWindows] count] > 1) {
