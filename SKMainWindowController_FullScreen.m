@@ -139,6 +139,39 @@ static CGFloat fullScreenToolbarOffset = 0.0;
 
 #pragma mark Presentation Support Methods
 
+- (NSScreen *)screenForPresentationWindowAvoidingScreen:(NSScreen *)screenToAvoid {
+    NSScreen *mainScreen = [savedNormalWindow screen];
+    NSArray *allScreens = [NSScreen screens];
+    if ([allScreens count] > 1) {
+        NSMutableDictionary *screens = [NSMutableDictionary dictionary];
+        NSMutableArray *screenNumbers = [NSMutableArray array];
+        NSNumber *avoidScreenNumber = nil;
+        NSNumber *mainScreenNumber = nil;
+        for (NSScreen *aScreen in allScreens) {
+            NSDictionary *deviceDescription = [aScreen deviceDescription];
+            if ([deviceDescription objectForKey:NSDeviceIsScreen] == nil)
+                continue;
+            NSNumber *aScreenNumber = [deviceDescription objectForKey:@"NSScreenNumber"];
+            CGDirectDisplayID displayID = (CGDirectDisplayID)[aScreenNumber unsignedIntValue];
+            BOOL isBuiltin = screenToAvoid == nil && avoidScreenNumber == nil && CGDisplayIsBuiltin(displayID);
+            displayID = CGDisplayMirrorsDisplay(displayID);
+            if (displayID == kCGNullDirectDisplay) {
+                [screenNumbers addObject:aScreenNumber];
+                [screens setObject:aScreen forKey:aScreenNumber];
+            }
+            if (avoidScreenNumber == nil && (isBuiltin || [aScreen isEqual:screenToAvoid]))
+                avoidScreenNumber = displayID == kCGNullDirectDisplay ? aScreenNumber : [NSNumber numberWithUnsignedInt:displayID];
+            if ([aScreen isEqual:mainScreen])
+                mainScreenNumber = displayID == kCGNullDirectDisplay ? aScreenNumber : [NSNumber numberWithUnsignedInt:displayID];
+        }
+        if (avoidScreenNumber)
+            [screenNumbers removeObject:avoidScreenNumber];
+        if ([screenNumbers count] > 0 && [screenNumbers containsObject:mainScreenNumber] == NO)
+            return [screens objectForKey:[screenNumbers firstObject]];
+    }
+    return mainScreen;
+}
+
 - (void)showNotesForPresentationWindow:(NSWindow *)window {
     NSDocument *notesDocument = [self presentationNotesDocument];
     if (notesDocument == nil)
@@ -158,11 +191,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         
         [preview setDelegate:self];
         
-        NSScreen *screen = [savedNormalWindow screen];
-        NSArray *screens = [[window screen] alternateScreens];
-        if ([screens count] > 0 && [screens containsObject:[screen primaryScreen]] == NO)
-            screen = [[screen alternateScreens] firstObject];
-        
+        NSScreen *screen = [self screenForPresentationWindowAvoidingScreen:[window screen]];
         [preview setPdfDocument:[pdfView document] previewPageNumber:pageIndex displayOnScreen:screen];
     
         [[self document] addWindowController:preview];
@@ -246,15 +275,13 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     
     interactionMode = SKPresentationMode;
     
-    NSScreen *screen = [normalWindow screen];
+    NSScreen *screen = nil;
     if ([self presentationNotesDocument]) {
-        NSArray *screens = nil;
-        if ([self presentationNotesDocument] == [self document])
-            screens = [NSScreen alternateScreens];
-        else
-            screens = [[[[self presentationNotesDocument] primaryWindow] screen] alternateScreens];
-        if ([screens count] > 0 && [screens containsObject:[screen primaryScreen]] == NO)
-            screen = [screens firstObject];
+        if ([self presentationNotesDocument] != [self document])
+            screen = [[[self presentationNotesDocument] primaryWindow] screen];
+        screen = [self screenForPresentationWindowAvoidingScreen:screen];
+    } else {
+        screen = [normalWindow screen];
     }
     
     NSWindow *presentationWindow = [[SKFullScreenWindow alloc] initWithContentRect:[screen frame]];
