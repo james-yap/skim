@@ -46,8 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) BOOL hasMenuBar;
 
-@property (nonatomic, readonly) NSScreen *primaryScreen;
-
 @property (class, readonly) CGFloat maxBackingScaleFactor;
 
 @end

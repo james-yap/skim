@@ -86,20 +86,12 @@ static inline CGFloat SKSquaredDistanceFromPointToRect(NSPoint point, NSRect rec
     NSArray *screens = [NSScreen screens];
     if ([screens count] == 1)
         return YES;
-    NSScreen *screen = [screens firstObject];
-    return [self isEqual:screen] || [[self primaryScreen] isEqual:[screen primaryScreen]];
-}
-
-- (NSScreen *)primaryScreen {
+    NSScreen *primaryScreen = [screens firstObject];
+    if ([self isEqual:primaryScreen])
+        return YES;
     CGDirectDisplayID displayID = [[[self deviceDescription] objectForKey:@"NSScreenNumber"] unsignedIntValue];
-    displayID = CGDisplayMirrorsDisplay(displayID);
-    if (displayID != kCGNullDirectDisplay) {
-        for (NSScreen *screen in [NSScreen screens]) {
-            if ([[[screen deviceDescription] objectForKey:@"NSScreenNumber"] unsignedIntValue] == displayID)
-                 return screen;
-        }
-    }
-    return self;
+    CGDirectDisplayID primaryDisplayID = [[[primaryScreen deviceDescription] objectForKey:@"NSScreenNumber"] unsignedIntValue];
+    return CGDisplayPrimaryDisplay(displayID) == CGDisplayPrimaryDisplay(primaryDisplayID);
 }
 
 + (CGFloat)maxBackingScaleFactor {
