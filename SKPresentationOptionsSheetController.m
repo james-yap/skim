@@ -160,8 +160,10 @@ static char *SKTransitionPropertiesObservationContext;
         [[notesDocumentPopUpButton lastItem] setRepresentedObject:doc];
     }
     
-    NSInteger docIndex = [notesDocumentPopUpButton indexOfItemWithRepresentedObject:currentDoc];
-    [notesDocumentPopUpButton selectItemAtIndex:docIndex == -1 ? 0 : docIndex];
+    if (currentDoc && currentDoc != document) {
+        NSInteger docIndex = [notesDocumentPopUpButton indexOfItemWithRepresentedObject:currentDoc];
+        [notesDocumentPopUpButton selectItemAtIndex:docIndex == -1 ? 0 : docIndex];
+    }
 }
 
 - (NSArray *)makeTransitions:(NSArray *)properties {
