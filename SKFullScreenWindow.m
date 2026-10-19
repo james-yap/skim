@@ -67,10 +67,14 @@
 }
 
 - (void)performClose:(id)sender {
-    if ([self delegate] == nil || [[self windowController] respondsToSelector:@selector(togglePresentation:)] == NO)
+    if ([self delegate] == nil || [[self windowController] respondsToSelector:@selector(togglePresentation:)] == NO) {
+        NSBeep();
         return;
-    if ([[self delegate] respondsToSelector:@selector(windowShouldClose:)] && [[self delegate] windowShouldClose:self] == NO)
+    }
+    if ([[self delegate] respondsToSelector:@selector(windowShouldClose:)] && [[self delegate] windowShouldClose:self] == NO) {
+        NSBeep();
         return;
+    }
     [[self windowController] tryToPerform:@selector(togglePresentation:) with:self];
 }
 
