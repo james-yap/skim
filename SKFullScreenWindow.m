@@ -79,8 +79,11 @@
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
-    if ([menuItem action] == @selector(performClose:))
+    SEL action = [menuItem action];
+    if (action == @selector(performClose:))
         return [self delegate] && [[self windowController] respondsToSelector:@selector(togglePresentation:)];
+    else if (action == @selector(performZoom:))
+        return NO;
     return [super validateMenuItem:menuItem];
 }
 
