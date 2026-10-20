@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSImageView *imageView;
     NSVisualEffectView *bgView;
     NSTimer *timer;
-    NSUInteger time;
+    NSDate *startDate;
     NSLayoutConstraint *widthConstraint;
     BOOL active;
 }

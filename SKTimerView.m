@@ -82,16 +82,21 @@
 }
 
 - (void)updateTime {
-    ++time;
-    if (time >= 3600)
-        [textField setStringValue:[NSString stringWithFormat:@"%lu:%.2lu:%.2lu", time / 3600, (time / 60) % 60, time % 60]];
+    NSUInteger time = round(-[startDate timeIntervalSinceNow]);
+    NSUInteger sec = time % 60;
+    NSUInteger min = time / 60;
+    NSUInteger hour = min / 60;
+    min = min % 60;
+    if (hour > 0)
+        [textField setStringValue:[NSString stringWithFormat:@"%lu:%.2lu:%.2lu", hour, min, sec]];
     else
-        [textField setStringValue:[NSString stringWithFormat:@"%.2lu:%.2lu", time / 60, time % 60]];
+        [textField setStringValue:[NSString stringWithFormat:@"%.2lu:%.2lu", min, sec]];
 }
 
 - (void)mouseDown:(NSEvent *)event {
     if (active == NO) {
         if (timer == nil) {
+            startDate = [NSDate date];
             __weak SKTimerView *weakSelf = self;
             timer = [NSTimer scheduledTimerWithTimeInterval:1.0 repeats:YES block:^(NSTimer *aTimer){
                 [weakSelf updateTime];
