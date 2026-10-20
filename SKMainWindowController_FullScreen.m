@@ -834,6 +834,7 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
             }]];
             [button setTarget:self];
             [button setAction:@selector(doGoToNextPage:)];
+            [button setToolTip:NSLocalizedString(@"Next", @"Tool tip message")];
             [button setTranslatesAutoresizingMaskIntoConstraints:NO];
             [NSLayoutConstraint activateConstraints:@[
                 [[button widthAnchor] constraintEqualToConstant:30.0],

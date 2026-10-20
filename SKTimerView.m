@@ -60,6 +60,7 @@
             [path stroke];
             return YES;
         }]];
+        [imageView setToolTip:NSLocalizedString(@"Start timer", @"Tool tip message")];
         [imageView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addSubview:imageView];
         [NSLayoutConstraint activateConstraints:@[
@@ -119,6 +120,8 @@
             [textField setAlignment:NSTextAlignmentCenter];
             [textField setTranslatesAutoresizingMaskIntoConstraints:NO];
             [textField setStringValue:@"00:00"];
+            [textField setToolTip:NSLocalizedString(@"Hide timer", @"Tool tip message")];
+            [imageView setToolTip:NSLocalizedString(@"Show timer", @"Tool tip message")];
             [self setTranslatesAutoresizingMaskIntoConstraints:NO];
             [NSLayoutConstraint activateConstraints:@[
                 (widthConstraint = [[self widthAnchor] constraintEqualToConstant:40.0]),
