@@ -315,7 +315,7 @@ static char SKSnaphotWindowDefaultsObservationContext;
         [window setFrameAutosaveName:SKSnapshotWindowFrameAutosaveName];
     } else if (openType == SKSnapshotOpenPreview) {
         [pdfView setDisplayMode:kPDFDisplaySinglePage];
-        frame = SKRectFromCenterAndSize(SKCenterPoint([screen frame]), frame.size);
+        frame = SKConstrainRect(SKRectFromCenterAndSize(SKCenterPoint([screen frame]), frame.size), [screen visibleFrame]);
         [(SKSnapshotWindow *)[self window] setWindowControllerMiniaturizesWindow:NO];
     }
     
