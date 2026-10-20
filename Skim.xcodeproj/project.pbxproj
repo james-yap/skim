@@ -65,6 +65,7 @@
 		CE12A73E134F215F003AED67 /* SKSelectCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = CE12A73D134F215F003AED67 /* SKSelectCommand.m */; };
 		CE139A171450207500E9C069 /* NSGraphics_SKExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = CE139A161450207500E9C069 /* NSGraphics_SKExtensions.m */; };
 		CE13EC13255F41CA000F47CF /* ViewSettings.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE13EC01255F41CA000F47CF /* ViewSettings.strings */; };
+		CE15D7E63087D6980049CDF6 /* SKTimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = CE15D7E53087D6980049CDF6 /* SKTimerView.m */; };
 		CE171E3512C3AC1600291179 /* SKFileUpdateChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = CE171E3412C3AC1600291179 /* SKFileUpdateChecker.m */; };
 		CE19446410627483007E8770 /* ConversionProgressWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE19445D10627483007E8770 /* ConversionProgressWindow.xib */; };
 		CE19446510627483007E8770 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE19445E10627483007E8770 /* MainWindow.xib */; };
@@ -820,6 +821,8 @@
 		CE157F0A12D4EBE600515B85 /* ja */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE157F0B12D4EBE600515B85 /* ja */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/ServicesMenu.strings; sourceTree = "<group>"; };
 		CE157F0C12D4EBE600515B85 /* ja */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/ZoomValues.strings; sourceTree = "<group>"; };
+		CE15D7E43087D6980049CDF6 /* SKTimerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SKTimerView.h; sourceTree = "<group>"; };
+		CE15D7E53087D6980049CDF6 /* SKTimerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SKTimerView.m; sourceTree = "<group>"; };
 		CE1632AA1582AC0600CFF419 /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/BookmarkSheet.strings; sourceTree = "<group>"; };
 		CE1632AB1582AC0D00CFF419 /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/BookmarksWindow.strings; sourceTree = "<group>"; };
 		CE1632AC1582AC1300CFF419 /* zh_CN */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/DisplayPreferences.strings; sourceTree = "<group>"; };
@@ -2007,6 +2010,8 @@
 				CED4DA242707B330001E09A8 /* SKThumbnailImageView.m */,
 				CE1CF48323FAA2DD005B5B40 /* SKThumbnailView.h */,
 				CE1CF48423FAA2DD005B5B40 /* SKThumbnailView.m */,
+				CE15D7E43087D6980049CDF6 /* SKTimerView.h */,
+				CE15D7E53087D6980049CDF6 /* SKTimerView.m */,
 				CE20938E0C5F9A8D009D3EFB /* SKTopBarView.h */,
 				CE20938F0C5F9A8D009D3EFB /* SKTopBarView.m */,
 			);
@@ -3149,6 +3154,7 @@
 				CEDE68E5201FDCB5000D881A /* SKKeychain.m in Sources */,
 				CE05A86F0E90ED950060BB07 /* SKTextFieldSheetController.m in Sources */,
 				CEAA8F2F0EA2A86200C16FE4 /* SKNoteText.m in Sources */,
+				CE15D7E63087D6980049CDF6 /* SKTimerView.m in Sources */,
 				CE7611650EA49D1400301E45 /* SKPrintableView.m in Sources */,
 				CE19E7A9275B7BC1007EBD8B /* SKDisplayPrefs.m in Sources */,
 				CE32531F0F4723EA0021BADD /* SKMainWindowController_Actions.m in Sources */,

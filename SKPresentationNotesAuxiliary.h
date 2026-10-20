@@ -40,13 +40,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class SKSnapshotWindowController, PDFAnnotation;
+@class SKSnapshotWindowController, PDFAnnotation, SKTimerView;
 
 @interface SKPresentationNotesAuxiliary : NSObject {
     SKSnapshotWindowController *previewController;
     
     NSButton *button;
     NSTrackingArea *trackingArea;
+    
+    SKTimerView *timerView;
     
     NSUndoManager *undoManager;
     NSMutableArray<PDFAnnotation *> *notes;
@@ -56,6 +58,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, nullable, strong) NSButton *button;
 @property (nonatomic, nullable, strong) NSTrackingArea *trackingArea;
+
+@property (nonatomic, nullable, strong) SKTimerView *timerView;
 
 @property (nonatomic, nullable, strong) NSUndoManager *undoManager;
 @property (nonatomic, nullable, readonly) NSArray<PDFAnnotation *> *notes;

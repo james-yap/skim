@@ -68,6 +68,7 @@
 #import "SKImageToolTipWindow.h"
 #import "SKNoteToolbarController.h"
 #import "SKPresentationNotesAuxiliary.h"
+#import "SKTimerView.h"
 
 #define MAINWINDOWFRAME_KEY         @"windowFrame"
 #define TABGROUP_KEY                @"tabGroup"
@@ -803,13 +804,17 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         [[self presentationNotesView] removeTrackingArea:[presentationNotesAuxiliary trackingArea]];
     if ([presentationNotesAuxiliary button])
         [[presentationNotesAuxiliary button] removeFromSuperview];
+    if ([presentationNotesAuxiliary timerView])
+        [[presentationNotesAuxiliary timerView] removeFromSuperview];
 }
 
 - (void)mouseEntered:(NSEvent *)event {
     if ([event trackingArea] == [presentationNotesAuxiliary trackingArea]) {
         NSView *notesView = [self presentationNotesView];
         NSButton *button = [presentationNotesAuxiliary button];
-        if ([presentationNotesAuxiliary button] == nil) {
+        SKTimerView *timerView = [presentationNotesAuxiliary timerView];
+        BOOL shouldAddTimer = [timerView superview] == nil;
+        if (button == nil) {
             button = [[NSButton alloc] initWithFrame:NSMakeRect(0.0, 0.0, 30.0, 50.0)];
             [button setButtonType:NSMomentaryChangeButton];
             [button setBordered:NO];
@@ -829,15 +834,35 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
             }]];
             [button setTarget:self];
             [button setAction:@selector(doGoToNextPage:)];
-            [button setAutoresizingMask:NSViewMinXMargin | NSViewMaxXMargin | NSViewMinYMargin | NSViewMaxYMargin];
+            [button setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [NSLayoutConstraint activateConstraints:@[
+                [[button widthAnchor] constraintEqualToConstant:30.0],
+                [[button heightAnchor] constraintEqualToConstant:50.0]
+            ]];
             [[button cell] setAccessibilityLabel:NSLocalizedString(@"Next", @"")];
             [presentationNotesAuxiliary setButton:button];
         }
         [button setAlphaValue:0.0];
-        [button setFrame:SKRectFromCenterAndSize(SKCenterPoint([notesView frame]), [button frame].size)];
         [notesView addSubview:button positioned:NSWindowAbove relativeTo:nil];
+        [NSLayoutConstraint activateConstraints:@[
+            [[button centerXAnchor] constraintEqualToAnchor:[notesView centerXAnchor]],
+            [[notesView centerYAnchor] constraintEqualToAnchor:[button centerYAnchor]]]];
+        if (timerView == nil) {
+            timerView = [[SKTimerView alloc] init];
+            [presentationNotesAuxiliary setTimerView:timerView];
+        }
+        if (shouldAddTimer) {
+            [timerView setAlphaValue:0.0];
+            [timerView setFrame:SKRectFromCenterAndSize(NSMakePoint(NSMidX([notesView bounds]), 40.0), [timerView frame].size)];
+            [notesView addSubview:timerView positioned:NSWindowAbove relativeTo:nil];
+            [NSLayoutConstraint activateConstraints:@[
+                [[timerView centerXAnchor] constraintEqualToAnchor:[notesView centerXAnchor]],
+                [[notesView bottomAnchor] constraintEqualToAnchor:[timerView bottomAnchor] constant:20.0]]];
+        }
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
             [[button animator] setAlphaValue:1.0];
+            if (shouldAddTimer)
+                [[timerView animator] setAlphaValue:1.0];
         } completionHandler:^{}];
         NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor(notesView), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildrenForOnlyChild(button), NSAccessibilityUIElementsKey, nil]);
     } else if ([[SKMainWindowController superclass] instancesRespondToSelector:_cmd]) {
@@ -847,10 +872,15 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
 
 - (void)mouseExited:(NSEvent *)event {
     if ([event trackingArea] == [presentationNotesAuxiliary trackingArea] && [presentationNotesAuxiliary button]) {
+        BOOL shouldRemoveTimer = [[presentationNotesAuxiliary timerView] isActive] == NO;
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
             [[[presentationNotesAuxiliary button] animator] setAlphaValue:0.0];
+            if (shouldRemoveTimer)
+                [[[presentationNotesAuxiliary timerView] animator] setAlphaValue:0.0];
         } completionHandler:^{
             [[presentationNotesAuxiliary button] removeFromSuperview];
+            if (shouldRemoveTimer)
+                [[presentationNotesAuxiliary timerView] removeFromSuperview];
         }];
         NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor([self presentationNotesView]), NSAccessibilityLayoutChangedNotification, nil);
     } else if ([[SKMainWindowController superclass] instancesRespondToSelector:_cmd]) {
