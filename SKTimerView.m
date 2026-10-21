@@ -134,8 +134,7 @@
             ]];
         }
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-            [[imageView animator] removeFromSuperview];
-            [[self animator] addSubview:textField positioned:NSWindowAbove relativeTo:nil];
+            [[self animator] replaceSubview:imageView with:textField];
             [NSLayoutConstraint activateConstraints:@[
                 [[textField centerXAnchor] constraintEqualToAnchor:[self centerXAnchor]],
                 [[self centerYAnchor] constraintEqualToAnchor:[textField centerYAnchor] constant:2.0]
@@ -152,9 +151,8 @@
         active = YES;
     } else {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
-            [[textField animator] removeFromSuperview];
             [[bgView animator] removeFromSuperview];
-            [[self animator] addSubview:imageView];
+            [[self animator] replaceSubview:textField with:imageView];
             [NSLayoutConstraint activateConstraints:@[
                 [[imageView widthAnchor] constraintEqualToConstant:40.0],
                 [[imageView heightAnchor] constraintEqualToConstant:40.0],
