@@ -143,8 +143,7 @@
                     [NSLayoutConstraint activateConstraints:constraints];
                     if ([NSView shouldShowSlideAnimation])
                         [[window animator] setFrame:frame display:YES];
-                }
-                completionHandler:^{}];
+                }];
         } else {
             [contentView replaceSubview:oldView with:view];
             [NSLayoutConstraint activateConstraints:constraints];

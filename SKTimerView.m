@@ -156,7 +156,7 @@
                 [[self bottomAnchor] constraintEqualToAnchor:[bgView bottomAnchor]]
             ]];
             [[widthConstraint animator] setConstant:[textField intrinsicContentSize].width + 30.0];
-        } completionHandler:^{}];
+        }];
         active = YES;
     } else {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
@@ -169,7 +169,7 @@
                 [[self centerYAnchor] constraintEqualToAnchor:[imageView centerYAnchor]]
             ]];
             [[widthConstraint animator] setConstant:40.0];
-        } completionHandler:^{}];
+        }];
         active = NO;
     }
 }

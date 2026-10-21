@@ -864,7 +864,7 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
             [[button animator] setAlphaValue:1.0];
             if (shouldAddTimer)
                 [[timerView animator] setAlphaValue:1.0];
-        } completionHandler:^{}];
+        }];
         NSAccessibilityPostNotificationWithUserInfo(NSAccessibilityUnignoredAncestor(notesView), NSAccessibilityLayoutChangedNotification, [NSDictionary dictionaryWithObjectsAndKeys:NSAccessibilityUnignoredChildrenForOnlyChild(button), NSAccessibilityUIElementsKey, nil]);
     } else if ([[SKMainWindowController superclass] instancesRespondToSelector:_cmd]) {
         [super mouseEntered:event];
