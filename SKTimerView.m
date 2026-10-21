@@ -50,7 +50,7 @@
             NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(4.0, 4.0, 32.0, 32.0)];
             [path moveToPoint:NSMakePoint(20.0, 30.0)];
             [path lineToPoint:NSMakePoint(20.0, 20.0)];
-            [path lineToPoint:NSMakePoint(15.0, 15.0)];
+            [path lineToPoint:NSMakePoint(25.0, 17.0)];
             [path setLineCapStyle:NSRoundLineCapStyle];
             [path setLineWidth:4.0];
             [[NSColor whiteColor] setStroke];
