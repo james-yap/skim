@@ -87,10 +87,18 @@
     NSUInteger min = time / 60;
     NSUInteger hour = min / 60;
     min = min % 60;
-    if (hour > 0)
+    BOOL shouldResize = NO;
+    if (hour > 0) {
+        if (sec < 2 && min == 0 && (hour == 1 || hour == 10))
+            shouldResize = [[textField stringValue] length] < (hour == 10 ? 8 : 7);
         [textField setStringValue:[NSString stringWithFormat:@"%lu:%.2lu:%.2lu", hour, min, sec]];
-    else
-        [textField setStringValue:[NSString stringWithFormat:@"%.2lu:%.2lu", min, sec]];
+    } else {
+        if (sec < 2 && min == 10)
+            shouldResize = [[textField stringValue] length] < 5;
+        [textField setStringValue:[NSString stringWithFormat:@"%lu:%.2lu", min, sec]];
+    }
+    if (shouldResize)
+        [[widthConstraint animator] setConstant:[textField intrinsicContentSize].width + 30.0];
 }
 
 - (void)mouseDown:(NSEvent *)event {
@@ -124,7 +132,7 @@
             [textField setFont:[NSFont monospacedDigitSystemFontOfSize:36.0 weight:NSFontWeightMedium]];
             [textField setAlignment:NSTextAlignmentCenter];
             [textField setTranslatesAutoresizingMaskIntoConstraints:NO];
-            [textField setStringValue:@"00:00"];
+            [textField setStringValue:@"0:00"];
             [textField setToolTip:NSLocalizedString(@"Hide timer", @"Tool tip message")];
             [imageView setToolTip:NSLocalizedString(@"Show timer", @"Tool tip message")];
             [self setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -146,7 +154,7 @@
                 [[bgView topAnchor] constraintEqualToAnchor:[self topAnchor]],
                 [[self bottomAnchor] constraintEqualToAnchor:[bgView bottomAnchor]]
             ]];
-            [[widthConstraint animator] setConstant:150.0];
+            [[widthConstraint animator] setConstant:[textField intrinsicContentSize].width + 30.0];
         } completionHandler:^{}];
         active = YES;
     } else {
