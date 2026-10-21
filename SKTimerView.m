@@ -69,6 +69,12 @@
             [[imageView centerXAnchor] constraintEqualToAnchor:[self centerXAnchor]],
             [[self centerYAnchor] constraintEqualToAnchor:[imageView centerYAnchor]]
         ]];
+        [self setTranslatesAutoresizingMaskIntoConstraints:NO];
+        widthConstraint = [[self widthAnchor] constraintEqualToConstant:40.0];
+        [NSLayoutConstraint activateConstraints:@[
+            widthConstraint,
+            [[self heightAnchor] constraintEqualToConstant:40.0]
+        ]];
         [self setWantsLayer:YES];
         [[self layer] setCornerRadius:20.0];
         [[self layer] setMasksToBounds:YES];
@@ -135,11 +141,6 @@
             [textField setStringValue:@"0:00"];
             [textField setToolTip:NSLocalizedString(@"Hide timer", @"Tool tip message")];
             [imageView setToolTip:NSLocalizedString(@"Show timer", @"Tool tip message")];
-            [self setTranslatesAutoresizingMaskIntoConstraints:NO];
-            [NSLayoutConstraint activateConstraints:@[
-                (widthConstraint = [[self widthAnchor] constraintEqualToConstant:40.0]),
-                [[self heightAnchor] constraintEqualToConstant:40.0]
-            ]];
         }
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
             [[self animator] replaceSubview:imageView with:textField];
