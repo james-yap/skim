@@ -127,6 +127,7 @@
             else
                 [bgView setMaterial:NSVisualEffectMaterialDark];
             [bgView setState:NSVisualEffectStateActive];
+            [bgView setBlendingMode:NSVisualEffectBlendingModeWithinWindow];
             if (@available(macOS 10.14, *))
                 [bgView setAppearance:[NSAppearance appearanceNamed:NSAppearanceNameDarkAqua]];
             [bgView setTranslatesAutoresizingMaskIntoConstraints:NO];
