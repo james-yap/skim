@@ -70,8 +70,6 @@
         [imageView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addSubview:imageView];
         [NSLayoutConstraint activateConstraints:@[
-            [[imageView widthAnchor] constraintEqualToConstant:DEFAULT_WIDTH],
-            [[imageView heightAnchor] constraintEqualToConstant:DEFAULT_HEIGHT],
             [[imageView centerXAnchor] constraintEqualToAnchor:[self centerXAnchor]],
             [[self centerYAnchor] constraintEqualToAnchor:[imageView centerYAnchor]]
         ]];
