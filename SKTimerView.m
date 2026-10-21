@@ -38,19 +38,25 @@
 
 #import "SKTimerView.h"
 
+#define DEFAULT_WIDTH 40.0
+#define DEFAULT_HEIGHT 40.0
+#define DEFAULT_OUTSET 30.0
+#define FONT_SIZE 36.0
+#define TEXT_OFFSET 2.0
+
 @implementation SKTimerView
 
 @synthesize active;
 
 - (instancetype)init {
-    self = [self initWithFrame:NSMakeRect(0.0, 0.0, 40.0, 40.0)];
+    self = [self initWithFrame:NSMakeRect(0.0, 0.0, DEFAULT_WIDTH, DEFAULT_HEIGHT)];
     if (self) {
-        imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 40.0, 40.0)];
-        [imageView setImage:[NSImage imageWithSize:NSMakeSize(40.0, 40.0) flipped:NO drawingHandler:^(NSRect rect){
-            NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:NSMakeRect(4.0, 4.0, 32.0, 32.0)];
-            [path moveToPoint:NSMakePoint(20.0, 30.0)];
-            [path lineToPoint:NSMakePoint(20.0, 20.0)];
-            [path lineToPoint:NSMakePoint(25.0, 17.0)];
+        imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0.0, 0.0, DEFAULT_WIDTH, DEFAULT_HEIGHT)];
+        [imageView setImage:[NSImage imageWithSize:NSMakeSize(DEFAULT_WIDTH, DEFAULT_HEIGHT) flipped:NO drawingHandler:^(NSRect rect){
+            NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:NSInsetRect(rect, 4.0, 4.0)];
+            [path moveToPoint:NSMakePoint(NSMidX(rect), NSMidY(rect) + 10.0)];
+            [path relativeLineToPoint:NSMakePoint(0.0, -10.0)];
+            [path relativeLineToPoint:NSMakePoint(5.0, -3.0)];
             [path setLineCapStyle:NSRoundLineCapStyle];
             [path setLineWidth:4.0];
             [[NSColor whiteColor] setStroke];
@@ -64,19 +70,19 @@
         [imageView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addSubview:imageView];
         [NSLayoutConstraint activateConstraints:@[
-            [[imageView widthAnchor] constraintEqualToConstant:40.0],
-            [[imageView heightAnchor] constraintEqualToConstant:40.0],
+            [[imageView widthAnchor] constraintEqualToConstant:DEFAULT_WIDTH],
+            [[imageView heightAnchor] constraintEqualToConstant:DEFAULT_HEIGHT],
             [[imageView centerXAnchor] constraintEqualToAnchor:[self centerXAnchor]],
             [[self centerYAnchor] constraintEqualToAnchor:[imageView centerYAnchor]]
         ]];
         [self setTranslatesAutoresizingMaskIntoConstraints:NO];
-        widthConstraint = [[self widthAnchor] constraintEqualToConstant:40.0];
+        widthConstraint = [[self widthAnchor] constraintEqualToConstant:DEFAULT_WIDTH];
         [NSLayoutConstraint activateConstraints:@[
             widthConstraint,
-            [[self heightAnchor] constraintEqualToConstant:40.0]
+            [[self heightAnchor] constraintEqualToConstant:DEFAULT_HEIGHT]
         ]];
         [self setWantsLayer:YES];
-        [[self layer] setCornerRadius:20.0];
+        [[self layer] setCornerRadius:0.5 * DEFAULT_HEIGHT];
         [[self layer] setMasksToBounds:YES];
     }
     return self;
@@ -104,7 +110,7 @@
         [textField setStringValue:[NSString stringWithFormat:@"%lu:%.2lu", min, sec]];
     }
     if (shouldResize)
-        [[widthConstraint animator] setConstant:[textField intrinsicContentSize].width + 30.0];
+        [[widthConstraint animator] setConstant:[textField intrinsicContentSize].width + DEFAULT_OUTSET];
 }
 
 - (void)mouseDown:(NSEvent *)event {
@@ -117,7 +123,7 @@
             }];
         }
         if (bgView == nil) {
-            bgView = [[NSVisualEffectView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 40.0, 40.0)];
+            bgView = [[NSVisualEffectView alloc] initWithFrame:NSMakeRect(0.0, 0.0, DEFAULT_WIDTH, DEFAULT_HEIGHT)];
             if (@available(macOS 10.14, *))
                 [bgView setMaterial:NSVisualEffectMaterialHUDWindow];
             else
@@ -135,7 +141,7 @@
             [textField setEditable:NO];
             [textField setSelectable:NO];
             [textField setTextColor:[NSColor whiteColor]];
-            [textField setFont:[NSFont monospacedDigitSystemFontOfSize:36.0 weight:NSFontWeightMedium]];
+            [textField setFont:[NSFont monospacedDigitSystemFontOfSize:FONT_SIZE weight:NSFontWeightMedium]];
             [textField setAlignment:NSTextAlignmentCenter];
             [textField setTranslatesAutoresizingMaskIntoConstraints:NO];
             [textField setStringValue:@"0:00"];
@@ -146,7 +152,7 @@
             [[self animator] replaceSubview:imageView with:textField];
             [NSLayoutConstraint activateConstraints:@[
                 [[textField centerXAnchor] constraintEqualToAnchor:[self centerXAnchor]],
-                [[self centerYAnchor] constraintEqualToAnchor:[textField centerYAnchor] constant:2.0]
+                [[self centerYAnchor] constraintEqualToAnchor:[textField centerYAnchor] constant:TEXT_OFFSET]
             ]];
             [[self animator] addSubview:bgView positioned:NSWindowBelow relativeTo:nil];
             [NSLayoutConstraint activateConstraints:@[
@@ -155,7 +161,7 @@
                 [[bgView topAnchor] constraintEqualToAnchor:[self topAnchor]],
                 [[self bottomAnchor] constraintEqualToAnchor:[bgView bottomAnchor]]
             ]];
-            [[widthConstraint animator] setConstant:[textField intrinsicContentSize].width + 30.0];
+            [[widthConstraint animator] setConstant:[textField intrinsicContentSize].width + DEFAULT_OUTSET];
         }];
         active = YES;
     } else {
@@ -163,12 +169,10 @@
             [[bgView animator] removeFromSuperview];
             [[self animator] replaceSubview:textField with:imageView];
             [NSLayoutConstraint activateConstraints:@[
-                [[imageView widthAnchor] constraintEqualToConstant:40.0],
-                [[imageView heightAnchor] constraintEqualToConstant:40.0],
                 [[imageView centerXAnchor] constraintEqualToAnchor:[self centerXAnchor]],
                 [[self centerYAnchor] constraintEqualToAnchor:[imageView centerYAnchor]]
             ]];
-            [[widthConstraint animator] setConstant:40.0];
+            [[widthConstraint animator] setConstant:DEFAULT_WIDTH];
         }];
         active = NO;
     }
