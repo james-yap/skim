@@ -878,7 +878,7 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
 
 - (void)mouseExited:(NSEvent *)event {
     if ([[event trackingArea] isEqual:[presentationNotesAuxiliary trackingArea]] && [presentationNotesAuxiliary button]) {
-        BOOL shouldRemoveTimer = [[presentationNotesAuxiliary timerView] isActive] == NO;
+        BOOL shouldRemoveTimer = [[presentationNotesAuxiliary timerView] showsTime] == NO;
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
             [[[presentationNotesAuxiliary button] animator] setAlphaValue:0.0];
             if (shouldRemoveTimer)

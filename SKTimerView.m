@@ -46,7 +46,7 @@
 
 @implementation SKTimerView
 
-@synthesize active;
+@synthesize showsTime;
 
 - (instancetype)init {
     self = [self initWithFrame:NSMakeRect(0.0, 0.0, DEFAULT_WIDTH, DEFAULT_HEIGHT)];
@@ -99,11 +99,11 @@
     min = min % 60;
     BOOL shouldResize = NO;
     if (hour > 0) {
-        if (sec < 2 && min == 0 && (hour == 1 || hour == 10))
+        if (showsTime && sec < 2 && min == 0 && (hour == 1 || hour == 10))
             shouldResize = [[textField stringValue] length] < (hour == 10 ? 8 : 7);
         [textField setStringValue:[NSString stringWithFormat:@"%lu:%.2lu:%.2lu", hour, min, sec]];
     } else {
-        if (sec < 2 && min == 10)
+        if (showsTime && sec < 2 && min == 10)
             shouldResize = [[textField stringValue] length] < 5;
         [textField setStringValue:[NSString stringWithFormat:@"%lu:%.2lu", min, sec]];
     }
@@ -112,7 +112,7 @@
 }
 
 - (void)mouseDown:(NSEvent *)event {
-    if (active == NO) {
+    if (showsTime == NO) {
         if (timer == nil) {
             startDate = [NSDate date];
             __weak SKTimerView *weakSelf = self;
@@ -162,7 +162,7 @@
             ]];
             [[widthConstraint animator] setConstant:[textField intrinsicContentSize].width + DEFAULT_OUTSET];
         }];
-        active = YES;
+        showsTime = YES;
     } else {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context){
             [[bgView animator] removeFromSuperview];
@@ -173,7 +173,7 @@
             ]];
             [[widthConstraint animator] setConstant:DEFAULT_WIDTH];
         }];
-        active = NO;
+        showsTime = NO;
     }
 }
 

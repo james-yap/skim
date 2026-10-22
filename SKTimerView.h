@@ -47,10 +47,10 @@ NS_ASSUME_NONNULL_BEGIN
     NSTimer *timer;
     NSDate *startDate;
     NSLayoutConstraint *widthConstraint;
-    BOOL active;
+    BOOL showsTime;
 }
 
-@property (nonatomic, readonly, getter=isActive) BOOL active;
+@property (nonatomic, readonly) BOOL showsTime;
 
 @end
 
