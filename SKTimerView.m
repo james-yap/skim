@@ -48,8 +48,8 @@
 
 @synthesize showsTime;
 
-- (instancetype)init {
-    self = [self initWithFrame:NSMakeRect(0.0, 0.0, DEFAULT_WIDTH, DEFAULT_HEIGHT)];
+- (instancetype)initWithFrame:(NSRect)frameRect {
+    self = [super initWithFrame:NSMakeRect(0.0, 0.0, DEFAULT_WIDTH, DEFAULT_HEIGHT)];
     if (self) {
         imageView = [[NSImageView alloc] initWithFrame:NSMakeRect(0.0, 0.0, DEFAULT_WIDTH, DEFAULT_HEIGHT)];
         [imageView setImage:[NSImage imageWithSize:NSMakeSize(DEFAULT_WIDTH, DEFAULT_HEIGHT) flipped:NO drawingHandler:^(NSRect rect){
