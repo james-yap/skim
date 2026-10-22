@@ -800,12 +800,18 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
 }
 
 - (void)removePresentationNotesNavigation {
-    if ([presentationNotesAuxiliary trackingArea])
+    if ([presentationNotesAuxiliary trackingArea]) {
         [[self presentationNotesView] removeTrackingArea:[presentationNotesAuxiliary trackingArea]];
-    if ([presentationNotesAuxiliary button])
+        [presentationNotesAuxiliary setTrackingArea:nil];
+    }
+    if ([presentationNotesAuxiliary button]) {
         [[presentationNotesAuxiliary button] removeFromSuperview];
-    if ([presentationNotesAuxiliary timerView])
+        [presentationNotesAuxiliary setButton:nil];
+    }
+    if ([presentationNotesAuxiliary timerView]) {
         [[presentationNotesAuxiliary timerView] removeFromSuperview];
+        [presentationNotesAuxiliary setTimerView:nil];
+    }
 }
 
 - (void)mouseEntered:(NSEvent *)event {
