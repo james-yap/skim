@@ -69,15 +69,13 @@
         [imageView setToolTip:NSLocalizedString(@"Start timer", @"Tool tip message")];
         [imageView setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self addSubview:imageView];
-        [NSLayoutConstraint activateConstraints:@[
-            [[imageView centerXAnchor] constraintEqualToAnchor:[self centerXAnchor]],
-            [[self centerYAnchor] constraintEqualToAnchor:[imageView centerYAnchor]]
-        ]];
         [self setTranslatesAutoresizingMaskIntoConstraints:NO];
         widthConstraint = [[self widthAnchor] constraintEqualToConstant:DEFAULT_WIDTH];
         [NSLayoutConstraint activateConstraints:@[
             widthConstraint,
-            [[self heightAnchor] constraintEqualToConstant:DEFAULT_HEIGHT]
+            [[self heightAnchor] constraintEqualToConstant:DEFAULT_HEIGHT],
+            [[imageView centerXAnchor] constraintEqualToAnchor:[self centerXAnchor]],
+            [[self centerYAnchor] constraintEqualToAnchor:[imageView centerYAnchor]]
         ]];
         [self setWantsLayer:YES];
         [[self layer] setCornerRadius:0.5 * DEFAULT_HEIGHT];
