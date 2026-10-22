@@ -45,9 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface SKPresentationNotesAuxiliary : NSObject {
     SKSnapshotWindowController *previewController;
     
-    NSButton *button;
     NSTrackingArea *trackingArea;
-    
+    NSButton *button;
     SKTimerView *timerView;
     
     NSUndoManager *undoManager;
