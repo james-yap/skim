@@ -854,7 +854,6 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
         }
         if (shouldAddTimer) {
             [timerView setAlphaValue:0.0];
-            [timerView setFrame:SKRectFromCenterAndSize(NSMakePoint(NSMidX([notesView bounds]), 40.0), [timerView frame].size)];
             [notesView addSubview:timerView positioned:NSWindowAbove relativeTo:nil];
             [NSLayoutConstraint activateConstraints:@[
                 [[timerView centerXAnchor] constraintEqualToAnchor:[notesView centerXAnchor]],
