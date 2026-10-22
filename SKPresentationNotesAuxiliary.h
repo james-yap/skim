@@ -56,9 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, nullable, strong) SKSnapshotWindowController *previewController;
 
-@property (nonatomic, nullable, strong) NSButton *button;
 @property (nonatomic, nullable, strong) NSTrackingArea *trackingArea;
-
+@property (nonatomic, nullable, strong) NSButton *button;
 @property (nonatomic, nullable, strong) SKTimerView *timerView;
 
 @property (nonatomic, nullable, strong) NSUndoManager *undoManager;

@@ -40,7 +40,7 @@
 
 @implementation SKPresentationNotesAuxiliary
 
-@synthesize previewController, button, trackingArea, timerView, undoManager, notes;
+@synthesize previewController, trackingArea, button, timerView, undoManager, notes;
 
 - (void)addNote:(PDFAnnotation *)note {
     if (notes == nil)
