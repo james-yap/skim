@@ -213,7 +213,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         if ([self presentationNotesDocument]) {
             PDFDocument *pdfDoc = [[self presentationNotesDocument] pdfDocument];
             NSInteger offset = [self presentationNotesOffset];
-            NSUInteger pageIndex = (NSUInteger)MAX(0, MIN((NSInteger)[pdfDoc pageCount], (NSInteger)[[pdfView currentPage] pageIndex] + offset));
+            NSUInteger pageIndex = (NSUInteger)MAX(0, MIN((NSInteger)[pdfDoc pageCount] - 1, (NSInteger)[[pdfView currentPage] pageIndex] + offset));
             if ([self presentationNotesDocument] == [self document])
                 [[[presentationNotesAuxiliary previewController] pdfView] goAndScrollToPage:[pdfDoc pageAtIndex:pageIndex]];
             else
