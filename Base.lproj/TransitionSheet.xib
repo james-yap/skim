@@ -180,6 +180,7 @@ Gw
                                 <constraint firstItem="28" firstAttribute="baseline" secondItem="25" secondAttribute="baseline" id="JCu-xg-iA0"/>
                                 <constraint firstItem="13" firstAttribute="leading" secondItem="30" secondAttribute="leading" id="JMT-YD-n5O"/>
                                 <constraint firstItem="CAb-kL-2uK" firstAttribute="leading" secondItem="30" secondAttribute="leading" id="K5H-23-cSs"/>
+                                <constraint firstItem="CAb-kL-2uK" firstAttribute="top" secondItem="30" secondAttribute="bottom" constant="8" symbolic="YES" id="KBj-IG-fHv"/>
                                 <constraint firstItem="CAb-kL-2uK" firstAttribute="firstBaseline" secondItem="26" secondAttribute="firstBaseline" id="Kfn-D7-aFG"/>
                                 <constraint firstItem="pat-NC-2oO" firstAttribute="firstBaseline" secondItem="26" secondAttribute="firstBaseline" id="MbR-Li-of3"/>
                                 <constraint firstItem="26" firstAttribute="trailing" secondItem="9" secondAttribute="trailing" id="Pa9-Dg-HDo"/>
@@ -193,7 +194,6 @@ Gw
                                 <constraint firstItem="13" firstAttribute="leading" secondItem="9" secondAttribute="trailing" constant="8" symbolic="YES" id="iJT-sy-v0J"/>
                                 <constraint firstItem="30" firstAttribute="top" secondItem="13" secondAttribute="bottom" constant="8" symbolic="YES" id="lGB-0X-jac"/>
                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="pat-NC-2oO" secondAttribute="trailing" constant="20" symbolic="YES" id="qJp-gL-u6X"/>
-                                <constraint firstItem="pat-NC-2oO" firstAttribute="top" secondItem="28" secondAttribute="bottom" constant="8" symbolic="YES" id="qsy-mn-Ocd"/>
                                 <constraint firstItem="13" firstAttribute="top" secondItem="xml-gy-Une" secondAttribute="top" constant="10" id="rs0-jG-GnG"/>
                                 <constraint firstItem="25" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="xml-gy-Une" secondAttribute="leading" constant="10" id="yuh-QM-CcU"/>
                             </constraints>
@@ -241,7 +241,7 @@ Gw
                             </constraints>
                         </view>
                     </box>
-                    <button translatesAutoresizingMaskIntoConstraints="NO" id="138">
+                    <button verticalHuggingPriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="138">
                         <rect key="frame" x="157" y="235" width="174" height="20"/>
                         <buttonCell key="cell" type="check" title="Distinct page transitions" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="445">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>

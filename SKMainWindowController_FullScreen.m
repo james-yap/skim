@@ -79,6 +79,7 @@
 #define SKShowToolbarInFullScreenKey @"SKShowToolbarInFullScreen"
 #define SKShowSidePanesInFullScreenKey @"SKShowSidePanesInFullScreen"
 #define SKResizablePresentationKey @"SKResizablePresentation"
+#define SKPreferExternalDisplayForPresentationKey @"SKPreferExternalDisplayForPresentation"
 
 #define AppleMenuBarVisibleInFullscreenKey @"AppleMenuBarVisibleInFullscreen"
 
@@ -140,35 +141,43 @@ static CGFloat fullScreenToolbarOffset = 0.0;
 
 #pragma mark Presentation Support Methods
 
-- (NSScreen *)screenForPresentationWindowAvoidingScreen:(NSScreen *)screenToAvoid {
+- (NSScreen *)screenForPresentationWindowAvoidingScreen:(NSScreen *)screenToAvoid preferExternal:(BOOL)preferExternal {
     NSScreen *mainScreen = [savedNormalWindow screen];
-    NSArray *allScreens = [NSScreen screens];
-    if ([allScreens count] > 1) {
-        NSMutableDictionary *screens = [NSMutableDictionary dictionary];
-        NSMutableArray *screenNumbers = [NSMutableArray array];
-        NSNumber *avoidScreenNumber = nil;
-        NSNumber *mainScreenNumber = nil;
-        for (NSScreen *aScreen in allScreens) {
-            NSDictionary *deviceDescription = [aScreen deviceDescription];
-            if ([deviceDescription objectForKey:NSDeviceIsScreen] == nil)
-                continue;
-            NSNumber *aScreenNumber = [deviceDescription objectForKey:@"NSScreenNumber"];
-            CGDirectDisplayID displayID = (CGDirectDisplayID)[aScreenNumber unsignedIntValue];
-            BOOL isBuiltin = screenToAvoid == nil && avoidScreenNumber == nil && CGDisplayIsBuiltin(displayID);
-            displayID = CGDisplayMirrorsDisplay(displayID);
-            if (displayID == kCGNullDirectDisplay) {
-                [screenNumbers addObject:aScreenNumber];
-                [screens setObject:aScreen forKey:aScreenNumber];
+    if (screenToAvoid || preferExternal) {
+        NSArray *allScreens = [NSScreen screens];
+        if ([allScreens count] > 1) {
+            NSMutableDictionary *screens = [NSMutableDictionary dictionary];
+            NSMutableArray *screenNumbers = [NSMutableArray array];
+            NSNumber *avoidScreenNumber = nil;
+            NSNumber *builtinScreenNumber = nil;
+            NSNumber *mainScreenNumber = nil;
+            for (NSScreen *aScreen in allScreens) {
+                NSDictionary *deviceDescription = [aScreen deviceDescription];
+                if ([deviceDescription objectForKey:NSDeviceIsScreen] == nil)
+                    continue;
+                NSNumber *aScreenNumber = [deviceDescription objectForKey:@"NSScreenNumber"];
+                CGDirectDisplayID displayID = (CGDirectDisplayID)[aScreenNumber unsignedIntValue];
+                CGDirectDisplayID primaryDisplayID = CGDisplayMirrorsDisplay(displayID);
+                if (primaryDisplayID == kCGNullDirectDisplay) {
+                    [screenNumbers addObject:aScreenNumber];
+                    [screens setObject:aScreen forKey:aScreenNumber];
+                } else {
+                    aScreenNumber = [NSNumber numberWithUnsignedInt:primaryDisplayID];
+                }
+                if (avoidScreenNumber == nil && [aScreen isEqual:screenToAvoid])
+                    avoidScreenNumber = aScreenNumber;
+                if (preferExternal && builtinScreenNumber == nil && CGDisplayIsBuiltin(displayID))
+                    builtinScreenNumber = aScreenNumber;
+                if (mainScreenNumber == nil && [aScreen isEqual:mainScreen])
+                    mainScreenNumber = aScreenNumber;
             }
-            if (avoidScreenNumber == nil && (isBuiltin || [aScreen isEqual:screenToAvoid]))
-                avoidScreenNumber = displayID == kCGNullDirectDisplay ? aScreenNumber : [NSNumber numberWithUnsignedInt:displayID];
-            if ([aScreen isEqual:mainScreen])
-                mainScreenNumber = displayID == kCGNullDirectDisplay ? aScreenNumber : [NSNumber numberWithUnsignedInt:displayID];
+            if (avoidScreenNumber)
+                [screenNumbers removeObject:avoidScreenNumber];
+            if (builtinScreenNumber && [screenNumbers count] > 1)
+                [screenNumbers removeObject:builtinScreenNumber];
+            if ([screenNumbers count] > 0 && [screenNumbers containsObject:mainScreenNumber] == NO)
+                return [screens objectForKey:[screenNumbers firstObject]];
         }
-        if (avoidScreenNumber)
-            [screenNumbers removeObject:avoidScreenNumber];
-        if ([screenNumbers count] > 0 && [screenNumbers containsObject:mainScreenNumber] == NO)
-            return [screens objectForKey:[screenNumbers firstObject]];
     }
     return mainScreen;
 }
@@ -192,7 +201,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
         
         [preview setDelegate:self];
         
-        NSScreen *screen = [self screenForPresentationWindowAvoidingScreen:presentationScreen];
+        NSScreen *screen = [self screenForPresentationWindowAvoidingScreen:presentationScreen preferExternal:NO];
         [preview setPdfDocument:[pdfView document] previewPageNumber:pageIndex displayOnScreen:screen];
     
         [[self document] addWindowController:preview];
@@ -277,12 +286,13 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     interactionMode = SKPresentationMode;
     
     NSScreen *screen = nil;
+    BOOL preferExternal = [[NSUserDefaults standardUserDefaults] boolForKey:SKPreferExternalDisplayForPresentationKey];
     if ([self presentationNotesDocument]) {
         if ([self presentationNotesDocument] != [self document])
             screen = [[[self presentationNotesDocument] primaryWindow] screen];
-        screen = [self screenForPresentationWindowAvoidingScreen:screen];
+        screen = [self screenForPresentationWindowAvoidingScreen:screen preferExternal:preferExternal];
     } else {
-        screen = [normalWindow screen];
+        screen = [self screenForPresentationWindowAvoidingScreen:nil preferExternal:preferExternal];
     }
     
     NSWindow *presentationWindow = [[SKFullScreenWindow alloc] initWithContentRect:[screen frame]];
