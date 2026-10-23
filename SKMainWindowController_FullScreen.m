@@ -286,13 +286,9 @@ static CGFloat fullScreenToolbarOffset = 0.0;
     
     NSScreen *screen = nil;
     BOOL preferExternal = [[NSUserDefaults standardUserDefaults] boolForKey:SKPreferExternalDisplayForPresentationKey];
-    if ([self presentationNotesDocument]) {
-        if ([self presentationNotesDocument] != [self document])
-            screen = [[[self presentationNotesDocument] primaryWindow] screen];
-        screen = [self screenForPresentationWindowAvoidingScreen:screen preferExternal:preferExternal];
-    } else {
-        screen = [self screenForPresentationWindowAvoidingScreen:nil preferExternal:preferExternal];
-    }
+    if ([self presentationNotesDocument] && [self presentationNotesDocument] != [self document])
+        screen = [[[self presentationNotesDocument] primaryWindow] screen];
+    screen = [self screenForPresentationWindowAvoidingScreen:screen preferExternal:preferExternal];
     
     NSWindow *presentationWindow = [[SKFullScreenWindow alloc] initWithContentRect:[screen frame]];
     [presentationWindow setAlphaValue:0.0];
