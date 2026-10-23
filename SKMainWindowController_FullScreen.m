@@ -349,8 +349,7 @@ static CGFloat fullScreenToolbarOffset = 0.0;
             
             [presentationView didOpen];
             
-            if ([self presentationNotesDocument])
-                [self addPresentationNotesNavigation];
+            [self addPresentationNotesNavigation];
             
             mwcFlags.isSwitchingFullScreen = 0;
         }];
@@ -783,14 +782,16 @@ static inline void saveFullScreenToolbarOffset(NSWindow *window) {
 #pragma mark Presentation Notes Navigation
 
 - (NSView *)presentationNotesView {
-    if ([[self presentationNotesDocument] isEqual:[self document]])
+    NSDocument *notesDocument = [self presentationNotesDocument];
+    if (notesDocument == nil)
+        return nil;
+    else if ([notesDocument isEqual:[self document]])
         return [[presentationNotesAuxiliary previewController] pdfView];
     else
-        return [(SKMainDocument *)[self presentationNotesDocument] pdfView];
+        return [(SKMainDocument *)notesDocument pdfView];
 }
 
 - (void)addPresentationNotesNavigation {
-    [self removePresentationNotesNavigation];
     NSView *notesView = [self presentationNotesView];
     if (notesView) {
         NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:NSZeroRect options:NSTrackingMouseEnteredAndExited | NSTrackingActiveInActiveApp | NSTrackingInVisibleRect owner:self userInfo:nil];
