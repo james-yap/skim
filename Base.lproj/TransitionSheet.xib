@@ -11,6 +11,7 @@
                 <outlet property="arrayController" destination="127" id="148"/>
                 <outlet property="boxLeadingConstraint" destination="m1r-zo-sbv" id="qKm-vB-g0G"/>
                 <outlet property="cancelButton" destination="31" id="KWh-6S-Kx4"/>
+                <outlet property="externalDisplayButton" destination="35v-cP-yDQ" id="gdB-Jj-DFC"/>
                 <outlet property="notesDocumentPopUpButton" destination="69" id="99"/>
                 <outlet property="okButton" destination="27" id="vvD-TX-nTy"/>
                 <outlet property="stylePopUpButton" destination="13" id="ckf-of-OsA"/>
@@ -27,7 +28,7 @@
             <rect key="contentRect" x="282" y="439" width="426" height="280"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="775"/>
             <view key="contentView" id="8">
-                <rect key="frame" x="0.0" y="0.0" width="458" height="274"/>
+                <rect key="frame" x="0.0" y="0.0" width="458" height="298"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="27">
@@ -58,7 +59,7 @@ Gw
                         </connections>
                     </button>
                     <box borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="67" userLabel="Transitions Box">
-                        <rect key="frame" x="156" y="118" width="285" height="110"/>
+                        <rect key="frame" x="156" y="142" width="285" height="110"/>
                         <view key="contentView" id="xml-gy-Une">
                             <rect key="frame" x="3" y="3" width="279" height="92"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -206,7 +207,7 @@ Gw
                         </connections>
                     </box>
                     <box borderType="line" title="Synchronized Notes Document" translatesAutoresizingMaskIntoConstraints="NO" id="68">
-                        <rect key="frame" x="156" y="56" width="285" height="58"/>
+                        <rect key="frame" x="156" y="80" width="285" height="58"/>
                         <view key="contentView" id="Lxe-e1-2ne">
                             <rect key="frame" x="3" y="3" width="279" height="40"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -241,7 +242,7 @@ Gw
                         </view>
                     </box>
                     <button verticalHuggingPriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="138">
-                        <rect key="frame" x="157" y="235" width="174" height="20"/>
+                        <rect key="frame" x="157" y="259" width="174" height="20"/>
                         <buttonCell key="cell" type="check" title="Distinct page transitions" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="445">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -251,13 +252,13 @@ Gw
                         </connections>
                     </button>
                     <scrollView hidden="YES" horizontalLineScroll="34" horizontalPageScroll="10" verticalLineScroll="34" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="276">
-                        <rect key="frame" x="20" y="20" width="131" height="234"/>
+                        <rect key="frame" x="20" y="20" width="131" height="258"/>
                         <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Pco-4B-JYU">
-                            <rect key="frame" x="1" y="1" width="129" height="232"/>
+                            <rect key="frame" x="1" y="1" width="129" height="256"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" emptySelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="32" viewBased="YES" id="279" customClass="SKTableView">
-                                    <rect key="frame" x="0.0" y="0.0" width="129" height="232"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="129" height="256"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -384,12 +385,12 @@ Gw
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                         <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="447" userLabel="Vertical Scroller">
-                            <rect key="frame" x="116" y="1" width="14" height="232"/>
+                            <rect key="frame" x="116" y="1" width="14" height="256"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </scroller>
                     </scrollView>
                     <button toolTip="Preview" translatesAutoresizingMaskIntoConstraints="NO" id="pxs-bg-YUv">
-                        <rect key="frame" x="417" y="234" width="21.5" height="13"/>
+                        <rect key="frame" x="417" y="258" width="21.5" height="13"/>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSQuickLookTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="E0O-Sq-w0l">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -404,15 +405,24 @@ Gw
                             </binding>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="35v-cP-yDQ">
+                        <rect key="frame" x="157" y="59" width="162" height="18"/>
+                        <buttonCell key="cell" type="check" title="Prefer external display" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eYj-yL-4m2">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="67" firstAttribute="leading" secondItem="276" secondAttribute="trailing" constant="8" id="2rg-eT-ead"/>
                     <constraint firstAttribute="bottom" secondItem="276" secondAttribute="bottom" constant="20" symbolic="YES" id="3T0-cp-NvT"/>
+                    <constraint firstItem="35v-cP-yDQ" firstAttribute="top" secondItem="68" secondAttribute="bottom" constant="8" symbolic="YES" id="5Yh-hZ-1Ou"/>
                     <constraint firstItem="67" firstAttribute="top" secondItem="138" secondAttribute="bottom" constant="8" symbolic="YES" id="72r-F8-Uf4"/>
                     <constraint firstItem="138" firstAttribute="top" secondItem="8" secondAttribute="top" constant="20" symbolic="YES" id="GHg-dB-8ix"/>
                     <constraint firstAttribute="bottom" secondItem="27" secondAttribute="bottom" constant="20" symbolic="YES" id="MIv-MP-aBB"/>
                     <constraint firstItem="27" firstAttribute="leading" secondItem="31" secondAttribute="trailing" constant="12" symbolic="YES" id="NR2-CA-Nxl"/>
                     <constraint firstItem="138" firstAttribute="leading" secondItem="67" secondAttribute="leading" id="UBr-68-Taj"/>
+                    <constraint firstItem="27" firstAttribute="top" secondItem="35v-cP-yDQ" secondAttribute="bottom" constant="20" symbolic="YES" id="UPU-25-8Hz"/>
                     <constraint firstAttribute="trailing" secondItem="pxs-bg-YUv" secondAttribute="trailing" constant="20" symbolic="YES" id="Uly-Ma-CUU"/>
                     <constraint firstItem="276" firstAttribute="top" secondItem="8" secondAttribute="top" constant="20" symbolic="YES" id="Wa7-gP-eSb"/>
                     <constraint firstItem="27" firstAttribute="baseline" secondItem="31" secondAttribute="firstBaseline" id="brZ-zc-ukR"/>
@@ -422,9 +432,10 @@ Gw
                     <constraint firstItem="67" firstAttribute="top" secondItem="pxs-bg-YUv" secondAttribute="bottom" constant="8" symbolic="YES" id="kvG-WQ-MuV"/>
                     <constraint firstItem="67" firstAttribute="leading" secondItem="8" secondAttribute="leading" constant="159" id="m1r-zo-sbv"/>
                     <constraint firstItem="pxs-bg-YUv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="138" secondAttribute="trailing" constant="8" symbolic="YES" id="soM-cY-JW3"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="35v-cP-yDQ" secondAttribute="trailing" constant="20" symbolic="YES" id="uIx-Dy-395"/>
                     <constraint firstItem="67" firstAttribute="leading" secondItem="68" secondAttribute="leading" id="v0Q-OP-dRP"/>
+                    <constraint firstItem="35v-cP-yDQ" firstAttribute="leading" secondItem="138" secondAttribute="leading" id="vw0-hz-i8L"/>
                     <constraint firstItem="68" firstAttribute="trailing" secondItem="27" secondAttribute="trailing" id="wWN-IL-GxM"/>
-                    <constraint firstItem="27" firstAttribute="top" secondItem="68" secondAttribute="bottom" constant="20" symbolic="YES" id="wjE-G9-oeP"/>
                     <constraint firstItem="31" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="276" secondAttribute="trailing" constant="8" id="yC7-35-7YN"/>
                     <constraint firstItem="67" firstAttribute="trailing" secondItem="68" secondAttribute="trailing" id="zVh-sb-5Vc"/>
                 </constraints>

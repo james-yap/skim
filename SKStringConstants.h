@@ -121,6 +121,7 @@ extern NSString * const SKSavePasswordOptionKey;
 extern NSString * const SKPresentationNavigationOptionKey;
 extern NSString * const SKAutoHidePresentationContentsKey;
 extern NSString * const SKUseNormalLevelForPresentationKey;
+extern NSString * const SKPreferExternalDisplayForPresentationKey;
 extern NSString * const SKAutoOpenDownloadsWindowKey;
 extern NSString * const SKAutoRemoveFinishedDownloadsKey;
 extern NSString * const SKAutoCloseDownloadsWindowKey;

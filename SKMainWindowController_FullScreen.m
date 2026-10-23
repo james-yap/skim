@@ -79,7 +79,6 @@
 #define SKShowToolbarInFullScreenKey @"SKShowToolbarInFullScreen"
 #define SKShowSidePanesInFullScreenKey @"SKShowSidePanesInFullScreen"
 #define SKResizablePresentationKey @"SKResizablePresentation"
-#define SKPreferExternalDisplayForPresentationKey @"SKPreferExternalDisplayForPresentation"
 
 #define AppleMenuBarVisibleInFullscreenKey @"AppleMenuBarVisibleInFullscreen"
 

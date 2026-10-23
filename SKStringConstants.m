@@ -121,6 +121,7 @@ NSString * const SKSavePasswordOptionKey = @"SKSavePasswordOption";
 NSString * const SKPresentationNavigationOptionKey = @"SKPresentationNavigationOption";
 NSString * const SKAutoHidePresentationContentsKey = @"SKAutoHidePresentationContents";
 NSString * const SKUseNormalLevelForPresentationKey = @"SKUseNormalLevelForPresentation";
+NSString * const SKPreferExternalDisplayForPresentationKey = @"SKPreferExternalDisplayForPresentation";
 NSString * const SKAutoOpenDownloadsWindowKey = @"SKAutoOpenDownloadsWindow";
 NSString * const SKAutoRemoveFinishedDownloadsKey = @"SKAutoRemoveFinishedDownloads";
 NSString * const SKAutoCloseDownloadsWindowKey = @"SKAutoCloseDownloadsWindow";

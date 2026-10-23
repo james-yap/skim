@@ -47,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSPopUpButton *notesDocumentPopUpButton;
     SKTableView *tableView;
     NSPopUpButton *stylePopUpButton;
+    NSButton *externalDisplayButton;
     NSButton *okButton;
     NSButton *cancelButton;
     NSButton *previewButton;
@@ -67,6 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, nullable, strong) IBOutlet NSPopUpButton *notesDocumentPopUpButton;
 @property (nonatomic, nullable, strong) IBOutlet SKTableView *tableView;
 @property (nonatomic, nullable, strong) IBOutlet NSPopUpButton *stylePopUpButton;
+@property (nonatomic, nullable, strong) IBOutlet NSButton *externalDisplayButton;
 @property (nonatomic, nullable, strong) IBOutlet NSButton *okButton, *cancelButton, *previewButton;
 @property (nonatomic, nullable, strong) IBOutlet NSLayoutConstraint *boxLeadingConstraint, *tableWidthConstraint;
 @property (nonatomic, nullable, strong) IBOutlet NSArrayController *arrayController;

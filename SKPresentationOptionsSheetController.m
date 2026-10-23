@@ -51,6 +51,7 @@
 #import "NSView_SKExtensions.h"
 #import "SKPresentationView.h"
 #import "SKAnimatedBorderlessWindow.h"
+#import "SKStringConstants.h"
 
 #define PAGE_COLUMNID @"page"
 #define IMAGE_COLUMNID @"image"
@@ -93,7 +94,7 @@ static char *SKTransitionPropertiesObservationContext;
 
 @implementation SKPresentationOptionsSheetController
 
-@synthesize notesDocumentPopUpButton, tableView, stylePopUpButton, okButton, cancelButton, previewButton, tableWidthConstraint, boxLeadingConstraint, arrayController, separate, transitions;
+@synthesize notesDocumentPopUpButton, tableView, stylePopUpButton, externalDisplayButton, okButton, cancelButton, previewButton, tableWidthConstraint, boxLeadingConstraint, arrayController, separate, transitions;
 @dynamic availableTransitions;
 
 + (void)initialize {
@@ -277,6 +278,7 @@ static char *SKTransitionPropertiesObservationContext;
                                                  name:SKDocumentDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDocumentsDidChangeNotification:)
                                                  name:SKDocumentControllerDidRemoveDocumentNotification object:nil];
+    [externalDisplayButton setState:[[NSUserDefaults standardUserDefaults] boolForKey:SKPreferExternalDisplayForPresentationKey]];
 }
 
 - (void)dismissSheet:(id)sender {
@@ -299,6 +301,7 @@ static char *SKTransitionPropertiesObservationContext;
         NSMenuItem *notesDocumentItem = [notesDocumentPopUpButton selectedItem];
         [controller setPresentationNotesDocument:[notesDocumentItem representedObject]];
         [controller setPresentationNotesOffset:[notesDocumentItem tag]];
+        [[NSUserDefaults standardUserDefaults] setBool:[externalDisplayButton state] == NSControlStateValueOn forKey:SKPreferExternalDisplayForPresentationKey];
         [super dismissSheet:sender];
     }
 }
