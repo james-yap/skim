@@ -148,7 +148,7 @@ Gw
                                 </textField>
                                 <button horizontalHuggingPriority="502" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CAb-kL-2uK">
                                     <rect key="frame" x="72" y="9" width="69" height="18"/>
-                                    <buttonCell key="cell" type="radio" title="Screen" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="bxV-SU-fcX">
+                                    <buttonCell key="cell" type="radio" title="Screen" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="bxV-SU-fcX">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
@@ -162,7 +162,7 @@ Gw
                                 </button>
                                 <button horizontalHuggingPriority="502" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pat-NC-2oO">
                                     <rect key="frame" x="147" y="9" width="57" height="18"/>
-                                    <buttonCell key="cell" type="radio" title="Page" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="OvS-2A-vcg">
+                                    <buttonCell key="cell" type="radio" title="Page" bezelStyle="regularSquare" imagePosition="left" inset="2" id="OvS-2A-vcg">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
@@ -243,7 +243,7 @@ Gw
                     </box>
                     <button verticalHuggingPriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="138">
                         <rect key="frame" x="157" y="259" width="174" height="20"/>
-                        <buttonCell key="cell" type="check" title="Distinct page transitions" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="445">
+                        <buttonCell key="cell" type="check" title="Distinct page transitions" bezelStyle="regularSquare" imagePosition="left" inset="2" id="445">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -407,7 +407,7 @@ Gw
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="35v-cP-yDQ">
                         <rect key="frame" x="157" y="59" width="162" height="18"/>
-                        <buttonCell key="cell" type="check" title="Prefer external display" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="eYj-yL-4m2">
+                        <buttonCell key="cell" type="check" title="Prefer external display" bezelStyle="regularSquare" imagePosition="left" inset="2" id="eYj-yL-4m2">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
