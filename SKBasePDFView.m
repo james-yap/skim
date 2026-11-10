@@ -463,9 +463,9 @@ static inline NSArray *defaultKeysToObserve() {
 - (void)keyDown:(NSEvent *)event {
     if ([self displayDirection] || ([self displayMode] & kPDFDisplaySinglePageContinuous) == 0) {
         unichar ch = [event firstCharacter];
-        if (ch == NSPageDownFunctionKey)
+        if (ch == NSPageDownFunctionKey || ch == NSDownArrowFunctionKey)
             keyDirection = 1;
-        else if (ch == NSPageUpFunctionKey)
+        else if (ch == NSPageUpFunctionKey || ch == NSUpArrowFunctionKey)
             keyDirection = -1;
         else if (ch == SKSpaceCharacter)
             keyDirection = ([event modifierFlags] & NSEventModifierFlagShift) ? -1 : 1;
@@ -544,8 +544,21 @@ static inline NSArray *defaultKeysToObserve() {
 }
 
 - (void)scrollLineWithSelector:(SEL)aSelector {
-    NSUInteger pageIndex = ([self displayMode] & kPDFDisplaySinglePageContinuous) ? NSNotFound : [[self currentPage] pageIndex];
-
+    NSClipView *clipView = nil;
+    NSPoint origin = NSZeroPoint;
+    BOOL canNavigate = NO;
+    NSUInteger pageIndex = NSNotFound;
+    PDFDisplayMode displayMode = [self displayMode];
+    
+    if ((displayMode & kPDFDisplaySinglePageContinuous) == 0) {
+        pageIndex = [[self currentPage] pageIndex];
+        if (@available(macOS 27.0, *)) {
+            clipView = [[self embeddedScrollView] contentView];
+            origin = [clipView bounds].origin;
+            canNavigate = (keyDirection == 1 ? [self canGoToNextPage] : keyDirection == -1 ? [self canGoToPreviousPage] : NO);
+        }
+    }
+    
     if (aSelector == @selector(scrollLineUp:))
         [super scrollLineUp:nil];
     else if (aSelector == @selector(scrollLineDown:))
@@ -556,8 +569,16 @@ static inline NSArray *defaultKeysToObserve() {
         // or the top of the previous page rather than the bottom
         // check whether we jumped pages
         NSUInteger currentPageIndex = [[self currentPage] pageIndex];
-        if (currentPageIndex != pageIndex)
+        if (currentPageIndex != pageIndex) {
             [self verticallyScrollToTop:currentPageIndex > pageIndex];
+        } else if (canNavigate && NSEqualPoints([clipView bounds].origin, origin)) {
+            // Apple does not navigate in non-scrolling mode on macOS 27
+            if (keyDirection == 1)
+                [self goToNextPage:nil];
+            else
+                [self goToPreviousPage:nil];
+            [self verticallyScrollToTop:keyDirection == 1];
+        }
     }
 }
 
